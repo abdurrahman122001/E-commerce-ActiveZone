@@ -1,0 +1,7 @@
+[2026-02-04 17:25:53] local.INFO: Installation: Started system_settings  
+[2026-02-04 17:25:53] local.INFO: Installation: Settings saved, checking APP_KEY  
+[2026-02-04 17:25:53] local.INFO: Installation: Handling Admin User  
+[2026-02-04 17:25:54] local.INFO: Installation: Assigning Role  
+[2026-02-04 17:25:54] local.INFO: Installation: Updating RouteServiceProvider  
+[2026-02-04 17:25:54] local.INFO: Installation: Clearing optimization  
+[2026-02-04 17:25:55] local.INFO: Installation: Rendering Step 6  
