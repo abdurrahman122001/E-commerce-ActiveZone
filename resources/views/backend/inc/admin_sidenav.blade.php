@@ -28,7 +28,7 @@
             <ul class="aiz-side-nav-list" id="main-menu" data-toggle="aiz-side-menu">
 
                 {{-- Dashboard --}}
-                @can('admin_dashboard')
+                @if(auth()->user()->can('admin_dashboard') || in_array(auth()->user()->user_type, ['franchise', 'sub_franchise']))
                 <li class="aiz-side-nav-item">
                     <a href="{{route('admin.dashboard')}}" class="aiz-side-nav-link">
                         <div class="aiz-side-nav-icon">
@@ -42,7 +42,7 @@
                         <span class="aiz-side-nav-text">{{translate('Dashboard')}}</span>
                     </a>
                 </li>
-                @endcan
+                @endif
 
                 <!-- POS Addon-->
                 @if (addon_is_activated('pos_system') && (auth()->user()->can('pos_manager') || auth()->user()->can('pos_configuration')))
@@ -113,8 +113,8 @@
                 @endif
 
                 <!-- Product -->
-                @canany(['add_new_product', 'show_all_products','show_in_house_products','show_seller_products','add_digital_product','edit_digital_product','product_bulk_import',
-                        'product_bulk_export','view_product_categories','view_all_brands', 'brand_bulk_upload','view_product_attributes','view_colors','view_product_warranties', 'smart-bar', 'view_custom_label', 'view_product_reviews'])
+                @if(auth()->user()->canany(['add_new_product', 'show_all_products','show_in_house_products','show_seller_products','add_digital_product','edit_digital_product','product_bulk_import',
+                        'product_bulk_export','view_product_categories','view_all_brands', 'brand_bulk_upload','view_product_attributes','view_colors','view_product_warranties', 'smart-bar', 'view_custom_label', 'view_product_reviews']) || in_array(auth()->user()->user_type, ['franchise', 'sub_franchise']))
                     <li class="aiz-side-nav-item">
                         <a href="#" class="aiz-side-nav-link">
                             <div class="aiz-side-nav-icon">
@@ -134,20 +134,20 @@
                         </a>
                         <!--Submenu-->
                         <ul class="aiz-side-nav-list level-2">
-                            @can('add_new_product')
+                            @if(auth()->user()->can('add_new_product') || in_array(auth()->user()->user_type, ['franchise', 'sub_franchise']))
                             <li class="aiz-side-nav-item">
                                 <a class="aiz-side-nav-link" href="{{route('products.create')}}">
                                     <span class="aiz-side-nav-text">{{translate('Add New product')}}</span>
                                 </a>
                             </li>
-                            @endcan
-                            @can('show_all_products')
+                            @endif
+                            @if(auth()->user()->can('show_all_products') || in_array(auth()->user()->user_type, ['franchise', 'sub_franchise']))
                             <li class="aiz-side-nav-item">
                                 <a href="{{route('products.all')}}" class="aiz-side-nav-link {{ areActiveRoutes(['digitalproducts.edit']) }}">
                                     <span class="aiz-side-nav-text">{{ translate('All Products') }}</span>
                                 </a>
                             </li>
-                            @endcan
+                            @endif
                             @can('show_in_house_products')
                             <li class="aiz-side-nav-item">
                                 <a href="{{route('products.admin')}}"
@@ -1547,6 +1547,29 @@
                 </li>
                 @endcanany
                 @endif
+
+                <!-- Franchise System -->
+                <li class="aiz-side-nav-item">
+                    <a href="#" class="aiz-side-nav-link">
+                        <div class="aiz-side-nav-icon">
+                            <i class="las la-handshake"></i>
+                        </div>
+                        <span class="aiz-side-nav-text">{{translate('Franchise System')}}</span>
+                        <span class="aiz-side-nav-arrow"></span>
+                    </a>
+                    <ul class="aiz-side-nav-list level-2">
+                        <li class="aiz-side-nav-item">
+                            <a href="{{ route('admin.franchises.index') }}" class="aiz-side-nav-link">
+                                <span class="aiz-side-nav-text">{{translate('City Franchises')}}</span>
+                            </a>
+                        </li>
+                        <li class="aiz-side-nav-item">
+                            <a href="{{ route('admin.sub_franchises.index') }}" class="aiz-side-nav-link">
+                                <span class="aiz-side-nav-text">{{translate('Sub Franchises')}}</span>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
 
                
 

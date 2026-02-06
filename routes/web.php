@@ -63,6 +63,26 @@ use App\Http\Controllers\SizeChartController;
   |
  */
 
+// Franchise Routes
+Route::controller(App\Http\Controllers\FranchiseController::class)->group(function () {
+    Route::get('/franchise/registration', 'showRegistrationForm')->name('franchise.registration');
+    Route::post('/franchise/register', 'register')->name('franchise.register');
+    
+    // Admin Routes (to be moved to admin.php or protected group later)
+    Route::group(['middleware' => ['auth', 'admin']], function () {
+        Route::get('/admin/franchises', 'index')->name('admin.franchises.index');
+        Route::get('/admin/franchises/create', 'createFranchise')->name('admin.franchises.create');
+        Route::post('/admin/franchises/store', 'storeFranchise')->name('admin.franchises.store');
+        
+        Route::get('/admin/sub-franchises', 'indexSub')->name('admin.sub_franchises.index');
+        Route::get('/admin/sub-franchises/create', 'createSubFranchise')->name('admin.sub_franchises.create');
+        Route::post('/admin/sub-franchises/store', 'storeSubFranchise')->name('admin.sub_franchises.store');
+        
+        Route::get('/admin/franchise/approve/{id}/{type}', 'approve')->name('admin.franchise.approve');
+        Route::get('/admin/franchise/reject/{id}/{type}', 'reject')->name('admin.franchise.reject');
+    });
+});
+
 Route::controller(DemoController::class)->group(function () {
     Route::get('/demo/cron_1', 'cron_1');
     Route::get('/demo/cron_2', 'cron_2');

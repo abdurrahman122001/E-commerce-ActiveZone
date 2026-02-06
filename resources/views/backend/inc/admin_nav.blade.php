@@ -45,6 +45,7 @@
                 </div>
             </div>
             @endif
+            @if(in_array(auth()->user()->user_type, ['admin', 'staff']))
             <!-- Clear Cache -->
             <div class="aiz-topbar-item mr-3">
                 <div class="d-flex align-items-center">
@@ -56,27 +57,28 @@
                     </a>
                 </div>
             </div>
+            @endif
             <!-- Topbar menus -->
             <div class="aiz-topbar-item mr-2 d-none d-xl-block">
                 <div class="d-flex align-items-center h-100">
                     <a class="aiz-topbar-menu fs-13 fw-600 d-flex align-items-center justify-content-center {{ areActiveRoutes(['admin.dashboard']) }}"
                         href="{{ route('admin.dashboard') }}">{{ translate('Dashboard') }}</a>
-                    @can('view_all_orders')
+                    @if(auth()->user()->can('view_all_orders'))
                         <a class="aiz-topbar-menu fs-13 fw-600 d-flex align-items-center justify-content-center {{ areActiveRoutes(['all_orders.index']) }}"
                             href="{{ route('all_orders.index') }}">{{ translate('Orders') }}</a>
-                    @endcan
-                    @if (addon_is_activated('preorder'))
+                    @endif
+                    @if (addon_is_activated('preorder') && auth()->user()->can('view_all_preorders'))
                     <a class="aiz-topbar-menu fs-13 fw-600 d-flex align-items-center justify-content-center {{ areActiveRoutes(['all_orders.index']) }}"
                             href="{{ route('all_preorder.list') }}">{{ translate('Preorders') }}</a>
                     @endif
-                    @can('earning_report')
+                    @if(auth()->user()->can('earning_report'))
                         <a class="aiz-topbar-menu fs-13 fw-600 d-flex align-items-center justify-content-center {{ areActiveRoutes(['earning_payout_report.index']) }}"
                             href="{{ route('earning_payout_report.index') }}">{{ translate('Earnings') }}</a>
-                    @endcan
-                    @can('edit_website_page')
+                    @endif
+                    @if(auth()->user()->can('edit_website_page'))
                         <a class="aiz-topbar-menu fs-13 fw-600 d-flex align-items-center justify-content-center {{ (url()->current() == url('/admin/website/custom-pages/edit/home')) ? 'active' : '' }}"
                             href="{{ route('custom-pages.edit', ['id'=>'home', 'lang'=>env('DEFAULT_LANGUAGE'), 'page'=>'home']) }}">{{ translate('Homepage Settings') }}</a>
-                    @endcan
+                    @endif
                 </div>
             </div>
             <!-- Add New Button -->
@@ -92,24 +94,24 @@
                         </a>
 
                         <div class="dropdown-menu dropdown-menu-left dropdown-menu-animated dropdown-menu-md" style="top: 15px !important;">
-                            @can('add_new_product')
+                            @if(auth()->user()->can('add_new_product') || in_array(auth()->user()->user_type, ['franchise', 'sub_franchise']))
                                 <a href="{{ route('products.create') }}" class="dropdown-item">
                                     <i class="las la-plus"></i>
                                     <span>{{ translate('New Product') }}</span>
                                 </a>
-                            @endcan
-                            @can('add_product_category')
+                            @endif
+                            @if(auth()->user()->can('add_product_category'))
                                 <a href="{{ route('categories.create') }}" class="dropdown-item">
                                     <i class="las la-plus"></i>
                                     <span>{{ translate('New Category') }}</span>
                                 </a>
-                            @endcan
-                            @can('add_brand')
+                            @endif
+                            @if(auth()->user()->can('add_brand'))
                                 <a href="{{ route('brands.create') }}" class="dropdown-item">
                                     <i class="las la-plus"></i>
                                     <span>{{ translate('New Brand') }}</span>
                                 </a>
-                            @endcan
+                            @endif
                         </div>
 
                     </div>

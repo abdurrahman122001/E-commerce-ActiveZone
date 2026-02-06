@@ -264,6 +264,8 @@ class HomeController extends Controller
             return view('frontend.user.customer.dashboard');
         } elseif (Auth::user()->user_type == 'delivery_boy') {
             return view('delivery_boys.dashboard');
+        } elseif (in_array(Auth::user()->user_type, ['franchise', 'sub_franchise'])) {
+            return redirect()->route('franchise.dashboard');
         } else {
             abort(404);
         }
@@ -275,6 +277,8 @@ class HomeController extends Controller
             return redirect()->route('seller.profile.index');
         } elseif (Auth::user()->user_type == 'delivery_boy') {
             return view('delivery_boys.profile');
+        } elseif (in_array(Auth::user()->user_type, ['franchise', 'sub_franchise'])) {
+            return redirect()->route('franchise.profile.index');
         } else {
             return view('frontend.user.profile');
         }

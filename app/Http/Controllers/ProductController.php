@@ -146,10 +146,17 @@ class ProductController extends Controller
         $sort_search = null;
         $products = Product::where('auction_product', 0)->where('wholesale_product', 0);  
         if ($request->product_type == 'drafts') {
-            $products = $products->where('draft', 1)->where('added_by', 'admin');
+            $products = $products->where('draft', 1);
+            if (in_array(Auth::user()->user_type, ['franchise', 'sub_franchise'])) {
+                $products = $products->where('user_id', Auth::user()->id);
+            } else {
+                $products = $products->where('added_by', 'admin');
+            }
         } else {
             $products = $products->where('draft', 0);
-            if ($request->seller_type == 'admin') {
+            if (in_array(Auth::user()->user_type, ['franchise', 'sub_franchise'])) {
+                $products = $products->where('user_id', Auth::user()->id);
+            } elseif ($request->seller_type == 'admin') {
                 $products = $products->where('added_by', 'admin');
             } elseif ($request->seller_type == 'seller') {
                 $products = $products->where('added_by', 'seller');

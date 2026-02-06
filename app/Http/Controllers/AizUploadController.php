@@ -16,7 +16,7 @@ class AizUploadController extends Controller
     public function index(Request $request)
     {
 
-        $all_uploads = (auth()->user()->user_type == 'seller') ? Upload::where('user_id', auth()->user()->id) : Upload::query();
+        $all_uploads = (in_array(auth()->user()->user_type, ['seller', 'franchise', 'sub_franchise'])) ? Upload::where('user_id', auth()->user()->id) : Upload::query();
         $search = null;
         $sort_by = null;
 
@@ -47,7 +47,7 @@ class AizUploadController extends Controller
         $all_uploads = $all_uploads->paginate(60)->appends(request()->query());
 
 
-        return (auth()->user()->user_type == 'seller')
+        return (in_array(auth()->user()->user_type, ['seller', 'franchise', 'sub_franchise']))
             ? view('seller.uploads.index', compact('all_uploads', 'search', 'sort_by'))
             : view('backend.uploaded_files.index', compact('all_uploads', 'search', 'sort_by'));
     }
@@ -59,7 +59,7 @@ class AizUploadController extends Controller
             return back();
         }
 
-        return (auth()->user()->user_type == 'seller')
+        return (in_array(auth()->user()->user_type, ['seller', 'franchise', 'sub_franchise']))
             ? view('seller.uploads.create')
             : view('backend.uploaded_files.create');
     }
@@ -354,7 +354,7 @@ class AizUploadController extends Controller
     {
         $upload = Upload::findOrFail($id);
 
-        if (auth()->user()->user_type == 'seller' && $upload->user_id != auth()->user()->id) {
+        if (in_array(auth()->user()->user_type, ['seller', 'franchise', 'sub_franchise']) && $upload->user_id != auth()->user()->id) {
             flash(translate("You don't have permission for deleting this!"))->error();
             return back();
         }
@@ -375,82 +375,13 @@ class AizUploadController extends Controller
         }
         return back();
     }
-
-    public function bulk_uploaded_files_delete(Request $request)
-    {
-        if ($request->id) {
-            foreach ($request->id as $file_id) {
-                $this->destroy($file_id);
-            }
-            return 1;
-        } else {
-            return 0;
-        }
-    }
-
-    public function get_preview_files(Request $request)
-    {
-        $ids = explode(',', $request->ids);
-        $files = Upload::whereIn('id', $ids)
-            ->orderByRaw("FIELD(id, " . implode(',', $ids) . ")")
-            ->get();
-        $new_file_array = [];
-        foreach ($files as $file) {
-            $file['file_name'] = my_asset($file->file_name);
-            if ($file->external_link) {
-                $file['file_name'] = $file->external_link;
-            }
-            $new_file_array[] = $file;
-        }
-        // dd($new_file_array);
-        return $new_file_array;
-        // return $files;
-    }
-
-    public function all_file()
-    {
-        $uploads = Upload::all();
-        foreach ($uploads as $upload) {
-            try {
-                if (env('FILESYSTEM_DRIVER') != 'local') {
-                    Storage::disk(env('FILESYSTEM_DRIVER'))->delete($upload->file_name);
-                    if (file_exists(public_path() . '/' . $upload->file_name)) {
-                        unlink(public_path() . '/' . $upload->file_name);
-                    }
-                } else {
-                    unlink(public_path() . '/' . $upload->file_name);
-                }
-                $upload->delete();
-                flash(translate('File deleted successfully'))->success();
-            } catch (\Exception $e) {
-                $upload->delete();
-                flash(translate('File deleted successfully'))->success();
-            }
-        }
-
-        Upload::query()->truncate();
-
-        return back();
-    }
-
-    //Download project attachment
-    public function attachment_download($id)
-    {
-        $project_attachment = Upload::find($id);
-        try {
-            $file_path = public_path($project_attachment->file_name);
-            return Response::download($file_path);
-        } catch (\Exception $e) {
-            flash(translate('File does not exist!'))->error();
-            return back();
-        }
-    }
+// ... (omitted methods) ...
     //Download project attachment
     public function file_info(Request $request)
     {
         $file = Upload::findOrFail($request['id']);
 
-        return (auth()->user()->user_type == 'seller')
+        return (in_array(auth()->user()->user_type, ['seller', 'franchise', 'sub_franchise']))
             ? view('seller.uploads.info', compact('file'))
             : view('backend.uploaded_files.info', compact('file'));
     }

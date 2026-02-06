@@ -164,8 +164,23 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $this->hasMany(PreorderProduct::class);
     }
-    public function preorders()
+    public function franchise()
     {
-        return $this->hasMany(Preorder::class);
+        return $this->hasOne(Franchise::class);
+    }
+
+    public function sub_franchise()
+    {
+        return $this->hasOne(SubFranchise::class);
+    }
+
+    public function referred_by_user()
+    {
+        return $this->belongsTo(User::class, 'referred_by');
+    }
+
+    public function referrals()
+    {
+        return $this->hasMany(User::class, 'referred_by');
     }
 }

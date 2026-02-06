@@ -89,6 +89,28 @@
                             </div>
                         </li>
                     @endif
+
+                    <!-- Franchise Dropdown -->
+                    <li class="list-inline-item d-flex ml-3">
+                        <div class="dropdown">
+                            <a href="{{ route('franchise.registration') }}"
+                                class="fs-12 dropdown-toggle top-text-color-visibility"
+                                style="color: {{ $topHeaderTextColor }}" data-toggle="dropdown"
+                                aria-haspopup="true" aria-expanded="false">
+                                {{ translate('Become a Franchise Partner !') }}
+                            </a>
+                            <div class="dropdown-menu fs-12 p-0 mt-1">
+                                <a class="dropdown-item py-2 px-2 text-dark"
+                                    href="{{ route('franchise.registration') }}">
+                                    {{ translate('City Franchise') }}
+                                </a>
+                                <a class="dropdown-item py-2 px-2 text-dark"
+                                    href="{{ route('franchise.registration') }}">
+                                    {{ translate('Sub-Franchise') }}
+                                </a>
+                            </div>
+                        </div>
+                    </li>
                     @if (get_setting('helpline_number'))
                         <li class="list-inline-item ml-3 pl-3 mr-0 pr-0 top-text-color-visibility"
                             style="color: {{ $topHeaderTextColor }}">

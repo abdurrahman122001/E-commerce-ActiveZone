@@ -1,0 +1,94 @@
+<?php
+
+namespace App\Http\Controllers\Franchise;
+
+use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
+use App\Models\SubFranchise;
+use App\Models\User;
+use App\Models\City;
+use App\Models\Area;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
+use Auth;
+
+class SubFranchiseController extends Controller
+{
+    public function index()
+    {
+        $franchise = Auth::user()->franchise;
+        if (!$franchise) {
+            flash(translate('Franchise record not found.'))->error();
+            return back();
+        }
+        $subFranchises = SubFranchise::where('franchise_id', $franchise->id)->with('user', 'city', 'area')->paginate(15);
+        return view('franchise.sub_franchise.index', compact('subFranchises'));
+    }
+
+    public function create()
+    {
+        $franchise = Auth::user()->franchise;
+        if (!$franchise) {
+            flash(translate('Franchise record not found.'))->error();
+            return back();
+        }
+        // Sub-franchises should be in the same city as the parent franchise
+        $city = City::find($franchise->city_id);
+        $areas = Area::where('city_id', $franchise->city_id)->get();
+        return view('franchise.sub_franchise.create', compact('franchise', 'city', 'areas'));
+    }
+
+    public function store(Request $request)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email',
+            'phone' => 'required|string|unique:users,phone',
+            'password' => 'required|string|min:6',
+            'area_id' => 'required|exists:areas,id',
+            'investment_capacity' => 'required|numeric',
+        ]);
+
+        $franchise = Auth::user()->franchise;
+
+        \DB::beginTransaction();
+        try {
+            // Create User
+            $user = new User();
+            $user->name = $request->name;
+            $user->email = $request->email;
+            $user->phone = $request->phone;
+            $user->password = Hash::make($request->password);
+            $user->user_type = 'sub_franchise';
+            $user->verification_status = 1;
+            $user->save();
+            
+            // Handle ID Proof Upload
+            $id_proof_path = null;
+            if ($request->hasFile('id_proof')) {
+                $id_proof_path = $request->file('id_proof')->store('uploads/franchise/id_proofs', 'public');
+            }
+
+            $subFranchise = new SubFranchise();
+            $subFranchise->user_id = $user->id;
+            $subFranchise->city_id = $franchise->city_id;
+            $subFranchise->area_id = $request->area_id;
+            $subFranchise->referral_code = 'SF' . strtoupper(Str::random(8));
+            $subFranchise->investment_capacity = $request->investment_capacity;
+            $subFranchise->business_experience = $request->business_experience;
+            $subFranchise->id_proof = $id_proof_path;
+            $subFranchise->status = 'approved'; // Automatically approved if added by parent franchise? Or pending?
+            $subFranchise->franchise_id = $franchise->id;
+            $subFranchise->save();
+
+            \DB::commit();
+            flash(translate('Sub-Franchise created successfully'))->success();
+            return redirect()->route('franchise.sub_franchises.index');
+
+        } catch (\Exception $e) {
+            \DB::rollback();
+            flash(translate('Something went wrong: ') . $e->getMessage())->error();
+            return back()->withInput();
+        }
+    }
+}

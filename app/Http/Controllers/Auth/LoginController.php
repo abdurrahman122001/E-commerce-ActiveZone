@@ -119,6 +119,8 @@ class LoginController extends Controller
         } else {
             if (auth()->user()->user_type == 'seller') {
                 return redirect()->route('seller.dashboard');
+            } elseif (in_array(auth()->user()->user_type, ['franchise', 'sub_franchise'])) {
+                return redirect()->route('franchise.dashboard');
             }
             return redirect()->route('dashboard');
         }
@@ -299,6 +301,8 @@ class LoginController extends Controller
                 'time' => now()->toDateTimeString(),
             ]);
             return redirect()->route('seller.dashboard');
+        } elseif (in_array(auth()->user()->user_type, ['franchise', 'sub_franchise'])) {
+            return redirect()->route('franchise.dashboard');
         } else {
 
             if (session('link') != null) {

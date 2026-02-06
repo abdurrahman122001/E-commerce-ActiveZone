@@ -32,6 +32,29 @@ class AdminController extends Controller
     public function admin_dashboard(Request $request)
     {
         CoreComponentRepository::initializeCache();
+        $user = Auth::user();
+        
+        // If franchise/sub_franchise, show restricted dashboard
+        if (in_array($user->user_type, ['franchise', 'sub_franchise'])) {
+            $data['total_products'] = Product::where('user_id', $user->id)->count();
+            $data['total_sale'] = \App\Models\OrderDetail::where('seller_id', $user->id)->where('delivery_status', 'delivered')->sum('price');
+            $data['total_order'] = \App\Models\OrderDetail::where('seller_id', $user->id)->count();
+            $data['total_pending_order'] = \App\Models\OrderDetail::where('seller_id', $user->id)->where('delivery_status', 'pending')->count();
+            
+            // Re-use some admin dashboard variables but filter them
+            $data['top_categories'] = Product::select('categories.name', 'categories.id', DB::raw('SUM(order_details.price) as total'))
+                ->join('order_details', 'order_details.product_id', '=', 'products.id')
+                ->join('categories', 'products.category_id', '=', 'categories.id')
+                ->where('products.user_id', $user->id)
+                ->where('order_details.delivery_status', 'delivered')
+                ->groupBy('categories.id')
+                ->orderBy('total', 'desc')
+                ->limit(3)
+                ->get();
+
+            return view('backend.dashboard', $data);
+        }
+
         $root_categories = Category::where('level', 0)->get();
 
         $data['cached_graph_data'] = Cache::remember('cached_graph_data', 86400, function () use ($root_categories) {

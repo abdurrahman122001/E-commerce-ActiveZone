@@ -31,7 +31,7 @@ class ProductService
         }   
 
         $approved = 1;
-        if (auth()->user()->user_type == 'seller') {
+        if (in_array(auth()->user()->user_type, ['seller', 'franchise', 'sub_franchise'])) {
             $user_id = auth()->user()->id;
             if (get_setting('product_approve_by_admin') == 1) {
                 $approved = 0;
@@ -40,7 +40,7 @@ class ProductService
             $user_id = User::where('user_type', 'admin')->first()->id;
         }
         $tags = array();
-        if ($collection['tags'][0] != null) {
+        if (isset($collection['tags']) && $collection['tags'][0] != null) {
             foreach (json_decode($collection['tags'][0]) as $key => $tag) {
                 array_push($tags, $tag->value);
             }
@@ -48,22 +48,22 @@ class ProductService
         $collection['tags'] = implode(',', $tags);
         $discount_start_date = null;
         $discount_end_date   = null;
-        if ($collection['date_range'] != null) {
+        if (isset($collection['date_range']) && $collection['date_range'] != null) {
             $date_var               = explode(" to ", $collection['date_range']);
             $discount_start_date = strtotime($date_var[0]);
             $discount_end_date   = strtotime($date_var[1]);
+            unset($collection['date_range']);
         }
-        unset($collection['date_range']);
         
-        if ($collection['meta_title'] == null) {
-            $collection['meta_title'] = $collection['name'];
+        if (!isset($collection['meta_title']) || $collection['meta_title'] == null) {
+            $collection['meta_title'] = $collection['name'] ?? null;
         }
-        if ($collection['meta_description'] == null) {
-            $collection['meta_description'] = strip_tags($collection['description']);
+        if (!isset($collection['meta_description']) || $collection['meta_description'] == null) {
+            $collection['meta_description'] = isset($collection['description']) ? strip_tags($collection['description']) : null;
         }
 
-        if ($collection['meta_img'] == null) {
-            $collection['meta_img'] = $collection['thumbnail_img'];
+        if (!isset($collection['meta_img']) || $collection['meta_img'] == null) {
+            $collection['meta_img'] = $collection['thumbnail_img'] ?? null;
         }
 
 
@@ -139,7 +139,7 @@ class ProductService
         }
 
         $published = 1;
-        if ($collection['button'] == 'unpublish' || $collection['button'] == 'draft') {
+        if (isset($collection['button']) && ($collection['button'] == 'unpublish' || $collection['button'] == 'draft')) {
             $published = 0;
         }
         unset($collection['button']);
@@ -200,7 +200,7 @@ class ProductService
 
 
         $tags = array();
-        if ($collection['tags'][0] != null) {
+        if (isset($collection['tags']) && $collection['tags'][0] != null) {
             foreach (json_decode($collection['tags'][0]) as $key => $tag) {
                 array_push($tags, $tag->value);
             }
@@ -208,22 +208,22 @@ class ProductService
         $collection['tags'] = implode(',', $tags);
         $discount_start_date = null;
         $discount_end_date   = null;
-        if ($collection['date_range'] != null) {
+        if (isset($collection['date_range']) && $collection['date_range'] != null) {
             $date_var               = explode(" to ", $collection['date_range']);
             $discount_start_date = strtotime($date_var[0]);
             $discount_end_date   = strtotime($date_var[1]);
+            unset($collection['date_range']);
         }
-        unset($collection['date_range']);
         
-        if ($collection['meta_title'] == null) {
+        if (!isset($collection['meta_title']) || $collection['meta_title'] == null) {
             $collection['meta_title'] = $collection['name'];
         }
-        if ($collection['meta_description'] == null) {
-            $collection['meta_description'] = strip_tags($collection['description']);
+        if (!isset($collection['meta_description']) || $collection['meta_description'] == null) {
+            $collection['meta_description'] = isset($collection['description']) ? strip_tags($collection['description']) : null;
         }
 
-        if ($collection['meta_img'] == null) {
-            $collection['meta_img'] = $collection['thumbnail_img'];
+        if (!isset($collection['meta_img']) || $collection['meta_img'] == null) {
+            $collection['meta_img'] = $collection['thumbnail_img'] ?? null;
         }
 
         if (isset($collection['lang']) && $collection['lang'] != env('DEFAULT_LANGUAGE')) {
@@ -232,7 +232,7 @@ class ProductService
             unset($collection['description']);
         }
         unset($collection['lang']);
-
+        
         
         $shipping_cost = 0;
         if (isset($collection['shipping_type'])) {
@@ -342,13 +342,13 @@ class ProductService
         if(addon_is_activated('club_point')){
             $product_new->earn_point = 0.0;
         }
-        $product_new->added_by = auth()->user()->user_type != 'seller' ? 'admin' : 'seller';
-        if($product_new->added_by != 'seller'){
+        $product_new->added_by = in_array(auth()->user()->user_type, ['seller', 'franchise', 'sub_franchise']) ? 'seller' : 'admin';
+        if($product_new->added_by != 'seller' && auth()->user()->user_type != 'franchise' && auth()->user()->user_type != 'sub_franchise'){
             $product_new->draft = 1; 
         }
-        $product_new->user_id = auth()->user()->user_type == 'seller' ? auth()->user()->id : User::where('user_type', 'admin')->first()->id;
+        $product_new->user_id = in_array(auth()->user()->user_type, ['seller', 'franchise', 'sub_franchise']) ? auth()->user()->id : User::where('user_type', 'admin')->first()->id;
 
-        $product_new->approved = (get_setting('product_approve_by_admin') == 1 && $product_new->added_by != 'admin') ? 0 : 1;
+        $product_new->approved = (get_setting('product_approve_by_admin') == 1 && !in_array($product_new->added_by, ['admin', 'franchise', 'sub_franchise'])) ? 0 : 1;
         $product_new->save();
 
         return $product_new;
@@ -527,7 +527,7 @@ class ProductService
         $collection['discount']= $collection['discount'] ?? 0.00;
         $collection['weight']= $collection['weight'] ?? 0.00;
 
-        $user_id= auth()->user()->user_type == 'seller' ? auth()->user()->id : User::where('user_type', 'admin')->first()->id;
+        $user_id = in_array(auth()->user()->user_type, ['seller', 'franchise', 'sub_franchise']) ? auth()->user()->id : User::where('user_type', 'admin')->first()->id;
         $approved = 1;
         if (auth()->user()->user_type == 'seller') {
             if (get_setting('product_approve_by_admin') == 1) {
@@ -654,7 +654,7 @@ class ProductService
             $products = $category->products();
         }
         
-        $products = ($auth_user->user_type === 'seller') ? $products->where('products.user_id', $auth_user->id): $products;
+        $products = in_array($auth_user->user_type, ['seller', 'franchise', 'sub_franchise']) ? $products->where('products.user_id', $auth_user->id) : $products;
         $products->where('published', '1')->where('auction_product', 0)->where('approved', '1');
 
         if($productType == 'physical'){

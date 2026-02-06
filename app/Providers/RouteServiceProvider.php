@@ -47,7 +47,7 @@ class RouteServiceProvider extends ServiceProvider
     $this->mapAdminRoutes();
 
     $this->mapSellerRoutes();
-
+    $this->mapFranchiseRoutes();
     $this->mapAffiliateRoutes();
 
     $this->mapRefundRoutes();
@@ -330,6 +330,20 @@ class RouteServiceProvider extends ServiceProvider
     Route::middleware('web')
        ->namespace($this->namespace)
        ->group(base_path('routes/seller.php'));
+  }
+
+  /**
+   * Define the "franchise" routes for the application.
+   *
+   * These routes all receive session state, CSRF protection, etc.
+   *
+   * @return void
+   */
+  protected function mapFranchiseRoutes()
+  {
+    Route::middleware('web')
+       ->namespace($this->namespace)
+       ->group(base_path('routes/franchise.php'));
   }
 
 	 /**

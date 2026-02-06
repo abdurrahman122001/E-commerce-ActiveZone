@@ -54,6 +54,15 @@
                     </a>
                 </li>
 
+                @if (in_array(Auth::user()->user_type, ['franchise', 'sub_franchise']))
+                <li class="aiz-side-nav-item">
+                    <a href="{{ route('franchise.dashboard') }}" class="aiz-side-nav-link">
+                        <i class="las la-building aiz-side-nav-icon"></i>
+                        <span class="aiz-side-nav-text ml-3">{{ translate('Franchise Dashboard') }}</span>
+                    </a>
+                </li>
+                @endif
+
                 @php
                     $delivery_viewed = get_count_by_delivery_viewed();
                     $payment_status_viewed = get_count_by_payment_status_viewed();
