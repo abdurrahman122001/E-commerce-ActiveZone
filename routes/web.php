@@ -83,6 +83,17 @@ Route::controller(App\Http\Controllers\FranchiseController::class)->group(functi
     });
 });
 
+// Vendor Routes
+Route::controller(App\Http\Controllers\VendorController::class)->group(function () {
+    Route::group(['middleware' => ['auth']], function () { // Add appropriate middleware (e.g., 'role:Franchise|SubFranchise') later
+          Route::get('/vendors', 'index')->name('vendors.index');
+          Route::get('/vendors/create', 'create')->name('vendors.create');
+          Route::post('/vendors/store', 'store')->name('vendors.store');
+          Route::get('/vendor/dashboard', 'dashboard')->name('vendor.dashboard');
+          Route::get('/vendors/commission-history', 'commissionHistory')->name('vendors.commission_history');
+    });
+});
+
 Route::controller(DemoController::class)->group(function () {
     Route::get('/demo/cron_1', 'cron_1');
     Route::get('/demo/cron_2', 'cron_2');

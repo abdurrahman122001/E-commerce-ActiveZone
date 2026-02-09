@@ -5,21 +5,16 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class SubFranchise extends Model
+class Vendor extends Model
 {
     use HasFactory;
 
     protected $fillable = [
         'user_id',
         'franchise_id',
-        'city_id',
-        'area_id',
-        'referral_code',
-        'investment_capacity',
-        'business_experience',
-        'id_proof',
+        'sub_franchise_id',
         'status',
-        'balance'
+        'commission_percentage',
     ];
 
     public function user()
@@ -32,18 +27,13 @@ class SubFranchise extends Model
         return $this->belongsTo(Franchise::class);
     }
 
-    public function city()
+    public function sub_franchise()
     {
-        return $this->belongsTo(City::class);
+        return $this->belongsTo(SubFranchise::class);
     }
 
-    public function area()
+    public function orders()
     {
-        return $this->belongsTo(Area::class);
-    }
-
-    public function vendors()
-    {
-        return $this->hasMany(Vendor::class);
+        return $this->hasMany(Order::class);
     }
 }

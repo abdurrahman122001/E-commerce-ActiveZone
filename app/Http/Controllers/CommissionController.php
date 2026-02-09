@@ -161,5 +161,27 @@ class CommissionController extends Controller
             $seller->admin_to_pay -= $order->coupon_discount;
             $seller->save();
         }
+
+        // Calculate Vendor Commission
+        if ($order->vendor_id) {
+            $vendor = \App\Models\Vendor::find($order->vendor_id);
+            if ($vendor && $vendor->commission_percentage > 0) {
+                 foreach ($order->orderDetails as $orderDetail) {
+                     $commission_amount = ($orderDetail->price * $vendor->commission_percentage) / 100;
+                     
+                     $vendor->balance += $commission_amount;
+                     $vendor->save();
+
+                     $vendor_commission_history = new \App\Models\VendorCommissionHistory();
+                     $vendor_commission_history->order_id = $order->id;
+                     $vendor_commission_history->order_detail_id = $orderDetail->id;
+                     $vendor_commission_history->vendor_id = $vendor->id;
+                     $vendor_commission_history->franchise_id = $vendor->franchise_id;
+                     $vendor_commission_history->sub_franchise_id = $vendor->sub_franchise_id;
+                     $vendor_commission_history->commission_amount = $commission_amount;
+                     $vendor_commission_history->save();
+                 }
+            }
+        }
     }
 }

@@ -33,6 +33,11 @@ class Order extends Model
         return $this->belongsTo(User::class, 'seller_id');
     }
 
+    public function vendor()
+    {
+        return $this->belongsTo(Vendor::class);
+    }
+
     public function pickup_point()
     {
         return $this->belongsTo(PickupPoint::class);

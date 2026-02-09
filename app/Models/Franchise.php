@@ -35,4 +35,9 @@ class Franchise extends Model
     {
         return $this->hasMany(SubFranchise::class);
     }
+
+    public function vendors()
+    {
+        return $this->hasMany(Vendor::class);
+    }
 }
