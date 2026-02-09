@@ -15,6 +15,44 @@
                         <span class="aiz-side-nav-text">{{ translate('Dashboard') }}</span>
                     </a>
                 </li>
+                <li class="aiz-side-nav-item">
+                    <a href="#" class="aiz-side-nav-link">
+                        <i class="las la-shopping-cart aiz-side-nav-icon"></i>
+                        <span class="aiz-side-nav-text">{{ translate('Products') }}</span>
+                        <span class="aiz-side-nav-arrow"></span>
+                    </a>
+                    <ul class="aiz-side-nav-list level-2">
+                        <li class="aiz-side-nav-item">
+                            <a href="{{ route('vendor.products') }}" class="aiz-side-nav-link">
+                                <span class="aiz-side-nav-text">{{ translate('Products') }}</span>
+                            </a>
+                        </li>
+                        <li class="aiz-side-nav-item">
+                            <a href="{{ route('vendor.products.create') }}" class="aiz-side-nav-link">
+                                <span class="aiz-side-nav-text">{{ translate('Add New Product') }}</span>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="aiz-side-nav-item">
+                    <a href="#" class="aiz-side-nav-link">
+                        <i class="las la-list aiz-side-nav-icon"></i>
+                        <span class="aiz-side-nav-text">{{ translate('Categories') }}</span>
+                        <span class="aiz-side-nav-arrow"></span>
+                    </a>
+                    <ul class="aiz-side-nav-list level-2">
+                        <li class="aiz-side-nav-item">
+                            <a href="{{ route('vendor.categories.index') }}" class="aiz-side-nav-link">
+                                <span class="aiz-side-nav-text">{{ translate('All Categories') }}</span>
+                            </a>
+                        </li>
+                        <li class="aiz-side-nav-item">
+                            <a href="{{ route('vendor.categories.create') }}" class="aiz-side-nav-link">
+                                <span class="aiz-side-nav-text">{{ translate('Add New Category') }}</span>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
                  <li class="aiz-side-nav-item">
                     <a href="{{ route('vendors.commission_history') }}" class="aiz-side-nav-link">
                         <i class="las la-money-bill aiz-side-nav-icon"></i>

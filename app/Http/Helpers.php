@@ -173,7 +173,9 @@ if (!function_exists('verified_sellers_id')) {
     function verified_sellers_id()
     {
         return Cache::rememberForever('verified_sellers_id', function () {
-            return Shop::where('verification_status', 1)->pluck('user_id')->toArray();
+            $verified_shop_users = Shop::where('verification_status', 1)->pluck('user_id')->toArray();
+            $privileged_users = App\Models\User::whereIn('user_type', ['vendor', 'franchise', 'sub_franchise'])->pluck('id')->toArray();
+            return array_unique(array_merge($verified_shop_users, $privileged_users));
         });
     }
 }
@@ -298,9 +300,11 @@ if (!function_exists('cart_product_price')) {
             $product_stock = $product->stocks->where('variant', $str)->first();
             if ($product_stock) {
                 $price = $product_stock->price;
+            } else {
+                $price = $product->unit_price;
             }
 
-            if ($product->wholesale_product) {
+            if ($product->wholesale_product && $product_stock) {
                 $wholesalePrice = $product_stock->wholesalePrices->where('min_qty', '<=', $cart_product['quantity'])->where('max_qty', '>=', $cart_product['quantity'])->first();
                 if ($wholesalePrice) {
                     $price = $wholesalePrice->price;
@@ -358,7 +362,7 @@ if (!function_exists('cart_product_tax')) {
             $str = $cart_product['variation'];
         }
         $product_stock = $product->stocks->where('variant', $str)->first();
-        $price = $product_stock->price;
+        $price = $product_stock ? $product_stock->price : $product->unit_price;
 
         //discount calculation
         $discount_applicable = false;
@@ -415,9 +419,11 @@ if (!function_exists('cart_product_gst')) {
         $product_stock = $product->stocks->where('variant', $str)->first();
         if ($product_stock) {
             $price = $product_stock->price * $cart_product['quantity'];
+        } else {
+            $price = $product->unit_price * $cart_product['quantity'];
         }
 
-        if ($product->wholesale_product) {
+        if ($product->wholesale_product && $product_stock) {
             $wholesalePrice = $product_stock->wholesalePrices->where('min_qty', '<=', $cart_product['quantity'])->where('max_qty', '>=', $cart_product['quantity'])->first();
             if ($wholesalePrice) {
                 $price = $wholesalePrice->price * $cart_product['quantity'];
@@ -1068,7 +1074,8 @@ function getShippingCost($carts, $index, $shipping_info = '', $carrier = '')
         if ($product->added_by == 'admin') {
             return get_setting('shipping_cost_admin') / count($admin_products);
         } else {
-            return Shop::where('user_id', $product->user_id)->first()->shipping_cost / count($seller_products[$product->user_id]);
+            $shop = Shop::where('user_id', $product->user_id)->first();
+            return ($shop ? $shop->shipping_cost : 0) / count($seller_products[$product->user_id]);
         }
     } elseif ($shipping_type == 'area_wise_shipping') {
          if (isset($shipping_info['area_id']) && $shipping_info['area_id'] !== null && $shipping_info['area_id']!=0) {

@@ -115,7 +115,7 @@
                     </svg>
                 </button>
             </div>
-        @elseif (($detailedProduct->stocks->first()->sku))
+        @elseif ($detailedProduct->stocks->isNotEmpty() && $detailedProduct->stocks->first()->sku)
             <!--RIGHT-->
             <div class="d-flex align-items-center mb-2 mb-md-0" id="variant_sku_section">
                 <span class="fs-14 fw-400 text-gray">{{translate('SKU')}}</span>
@@ -268,7 +268,11 @@
                     @if ($detailedProduct->added_by == 'seller' && get_setting('vendor_system_activation') == 1)
                         <p class="m-0 fs-14">
                             <span class="fw-400 text-gray">{{ translate('Sold by') }}</span>
-                            <a href="{{ route('shop.visit', $detailedProduct->user->shop->slug) }}" class="fw-bold text-blue ml-2">{{ $detailedProduct->user->shop->name }}</a>
+                            @if ($detailedProduct->user->shop)
+                                <a href="{{ route('shop.visit', $detailedProduct->user->shop->slug) }}" class="fw-bold text-blue ml-2">{{ $detailedProduct->user->shop->name }}</a>
+                            @else
+                                <span class="fw-bold text-blue ml-2">{{ $detailedProduct->user->name }}</span>
+                            @endif
                         </p>
                     @else
                         <p class="m-0 fs-14">
@@ -382,13 +386,15 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($detailedProduct->stocks->first()->wholesalePrices as $wholesalePrice)
+                            @if($detailedProduct->stocks->isNotEmpty())
+                                @foreach ($detailedProduct->stocks->first()->wholesalePrices as $wholesalePrice)
                                 <tr>
                                     <td>{{ $wholesalePrice->min_qty }}</td>
                                     <td>{{ $wholesalePrice->max_qty }}</td>
                                     <td>{{ single_price($wholesalePrice->price) }}</td>
                                 </tr>
                             @endforeach
+                            @endif
                         </tbody>
                     </table>
                 </div>
@@ -623,7 +629,11 @@
                         @if ($detailedProduct->added_by == 'seller' && get_setting('vendor_system_activation') == 1)
                             <p class="m-0 fs-14">
                                 <span class="fw-400 text-gray">{{ translate('Sold by') }}</span>
-                                <a href="{{ route('shop.visit', $detailedProduct->user->shop->slug) }}" class="fw-bold text-blue pl-15px">{{ $detailedProduct->user->shop->name }}</a>
+                                @if ($detailedProduct->user->shop)
+                                    <a href="{{ route('shop.visit', $detailedProduct->user->shop->slug) }}" class="fw-bold text-blue pl-15px">{{ $detailedProduct->user->shop->name }}</a>
+                                @else
+                                    <span class="fw-bold text-blue pl-15px">{{ $detailedProduct->user->name }}</span>
+                                @endif
                             </p>
                         @else
                             <p class="m-0 fs-14">

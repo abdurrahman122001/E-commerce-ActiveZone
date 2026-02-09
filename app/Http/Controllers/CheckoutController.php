@@ -88,7 +88,7 @@ class CheckoutController extends Controller
             if (get_setting('shipping_type') == 'carrier_wise_shipping') {
                 $default_shipping_type = 'carrier';
                // $zone = $country_id != 0 ? Country::where('id', $country_id)->first()->zone_id : 0;
-               $zone = $country_id != 0 ? Country::where('id', $country_id)->where('status', 1)->first()->zone_id ?? 0 : 0;
+                $zone = $country_id != 0 ? Country::where('id', $country_id)->where('status', 1)->first()?->zone_id ?? 0 : 0;
 
                 $carrier_query = Carrier::where('status', 1);
                 $carrier_query->whereIn('id',function ($query) use ($zone) {
@@ -98,7 +98,7 @@ class CheckoutController extends Controller
                 $carrier_list = $carrier_query->get();
 
                 if (count($carrier_list) > 0) {
-                    $default_carrier_id = $carrier_list->toQuery()->first()->id;
+                    $default_carrier_id = $carrier_list->toQuery()->first()?->id;
                 }
             }
 

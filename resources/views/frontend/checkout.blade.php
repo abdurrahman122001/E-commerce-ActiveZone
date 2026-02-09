@@ -301,8 +301,13 @@
             var btnDisable = true;
             var allOk = false;
             @if (Auth::check())
-                var length = $('input[name="address_id"]:checked').length;
-                if (length > 0) {
+                var shippingAddressOk = $('input[name="address_id"]:checked').length > 0 || $('input[name="single_address_id"]:checked').length > 0;
+                var billingAddressOk = true;
+                @if (get_setting('billing_address_required'))
+                    billingAddressOk = $('input[name="billing_address_id"]:checked').length > 0 || $('input[name="single_billing_address_id"]:checked').length > 0;
+                @endif
+                
+                if (shippingAddressOk && billingAddressOk) {
                     headColor = '#15a405';
                     btnDisable = false;
                     allOk = true;
@@ -327,27 +332,25 @@
             return allOk;
         }
 
-        $('#shipping_info [required]').each(function (i, el) {
-            $(el).change(function(){
-                if ($(el).attr('name') == 'address_id') {
-                    updateDeliveryAddress($(el).val());
-                    setDefaultshippingAddress();
-                    setBillingAddress();
+        $(document).on('change', '#shipping_info [required], #shipping_info input[type="radio"]', function() {
+            var name = $(this).attr('name');
+            if (name == 'address_id' || name == 'single_address_id') {
+                updateDeliveryAddress($(this).val());
+                setDefaultshippingAddress();
+                setBillingAddress();
+            }
+            @if (get_setting('shipping_type') == 'area_wise_shipping')
+                if (name == 'city_id') {
+                    let country_id = $('select[name="country_id"]').length? $('select[name="country_id"]').val() : $('input[name="country_id"]').val();
+                    let city_id = $(this).val();
+                    updateDeliveryAddress(country_id, city_id);
                 }
-                @if (get_setting('shipping_type') == 'area_wise_shipping')
-                    if ($(el).attr('name') == 'city_id') {
-                        let country_id = $('select[name="country_id"]').length? $('select[name="country_id"]').val() : $('input[name="country_id"]').val();
-                        let city_id = $(this).val();
-                        updateDeliveryAddress(country_id, city_id);
-                    }
-                @endif
-                if ($(el).attr('name') == 'billing_address_id') {
-                    setBillingAddress(el);
-                }
-                
-                
-                stepCompletionShippingInfo();
-            });
+            @endif
+            if (name == 'billing_address_id' || name == 'single_billing_address_id') {
+                setBillingAddress(this);
+            }
+            
+            stepCompletionShippingInfo();
         });
 
         $('select[name="area_id"].guest-checkout').change(function () {
@@ -369,39 +372,43 @@
         function stepCompletionDeliveryInfo() {
             var headColor = '#9d9da6';
             var btnDisable = true;
-            var allOk = false;
-            var content = $('#delivery_info [required]');
-            if (content.length > 0) {
-                var content_checked = $('#delivery_info [required]:checked');
-                if (content_checked.length > 0) {
-                    content_checked.each(function (i, el) {
+            var allOk = true;
+            var content_required = $('#delivery_info [required]');
+            
+            if (content_required.length > 0) {
+                // Get unique names of required radio groups
+                var names = {};
+                content_required.each(function() {
+                    names[$(this).attr('name')] = true;
+                });
+                
+                // Check if each group has a checked radio
+                $.each(names, function(name, value) {
+                    var group_checked = $('input[name="' + name + '"]:checked');
+                    if (group_checked.length == 0) {
                         allOk = false;
-                        if($(el).val() == 'carrier'){
-                            var owner = $(el).attr('data-owner');
-                            if ($('input[name=carrier_id_'+owner+']:checked').length > 0) {
-                                allOk = true;
-                            }
-                        }else if($(el).val() == 'pickup_point'){
-                            var owner = $(el).attr('data-owner');
-                            if ($('select[name="pickup_point_id_'+owner+'"]').val() != '') {
-                                allOk = true;
-                            }
-                        }else{
-                            allOk = true;
-                        }
-
-                        if(allOk == false) {
+                        return false; // break loop
+                    }
+                    
+                    // Specific logic for carrier/pickup point
+                    var val = group_checked.val();
+                    if(val == 'carrier'){
+                        var owner = group_checked.attr('data-owner');
+                        if ($('input[name=carrier_id_'+owner+']:checked').length == 0) {
+                            allOk = false;
                             return false;
                         }
-                    });
-
-                    if (allOk) {
-                        headColor = '#15a405';
-                        btnDisable = false;
+                    }else if(val == 'pickup_point'){
+                        var owner = group_checked.attr('data-owner');
+                        if ($('select[name="pickup_point_id_'+owner+'"]').val() == '') {
+                            allOk = false;
+                            return false;
+                        }
                     }
-                }
-            }else{
-                allOk = true
+                });
+            }
+
+            if (allOk) {
                 headColor = '#15a405';
                 btnDisable = false;
             }

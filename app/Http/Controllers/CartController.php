@@ -134,7 +134,8 @@ class CartController extends Controller
                     'nav_cart_view' => view('frontend.partials.cart.cart')->render(),
                 );
             }
-            if ($product_stock->qty < $cart->quantity + $request['quantity']) {
+            
+            if ($product_stock && $product_stock->qty < $cart->quantity + $request['quantity']) {
                 return array(
                     'status' => 0,
                     'cart_count' => count($carts),
@@ -194,8 +195,8 @@ class CartController extends Controller
         if ($cartItem['id'] == $request->id) {
             $product = Product::find($cartItem['product_id']);
             $product_stock = $product->stocks->where('variant', $cartItem['variation'])->first();
-            $quantity = $product_stock->qty;
-            $price = $product_stock->price;
+            $quantity = $product_stock ? $product_stock->qty : $product->current_stock;
+            $price = $product_stock ? $product_stock->price : $product->unit_price;
 
             //discount calculation
             $discount_applicable = false;
@@ -223,7 +224,7 @@ class CartController extends Controller
                 }
             }
 
-            if ($product->wholesale_product) {
+            if ($product->wholesale_product && $product_stock) {
                 $wholesalePrice = $product_stock->wholesalePrices->where('min_qty', '<=', $request->quantity)->where('max_qty', '>=', $request->quantity)->first();
                 if ($wholesalePrice) {
                     $price = $wholesalePrice->price;

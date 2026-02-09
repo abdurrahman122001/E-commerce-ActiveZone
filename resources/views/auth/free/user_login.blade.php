@@ -29,7 +29,7 @@
                                 <!-- Login form -->
                                 <div class="pt-3 pt-lg-4 bg-white">
                                     <div class="">
-                                        <form class="form-default loginForm" id="user-login-form"  role="form" action="{{ route('login') }}" method="POST">
+                                        <form class="form-default loginForm" id="user-login-form" role="form" action="{{ route('login') }}" method="POST">
                                             @csrf
                                             
                                             <!-- Email or Phone -->

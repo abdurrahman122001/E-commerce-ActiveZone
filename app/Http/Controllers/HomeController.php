@@ -216,9 +216,9 @@ class HomeController extends Controller
     {
         $user = null;
         if ($request->get('phone') != null) {
-            $user = User::whereIn('user_type', ['customer', 'seller'])->where('phone', "+{$request['country_code']}{$request['phone']}")->first();
+            $user = User::whereIn('user_type', ['customer', 'seller', 'vendor'])->where('phone', "+{$request['country_code']}{$request['phone']}")->first();
         } elseif ($request->get('email') != null) {
-            $user = User::whereIn('user_type', ['customer', 'seller'])->where('email', $request->email)->first();
+            $user = User::whereIn('user_type', ['customer', 'seller', 'vendor'])->where('email', $request->email)->first();
         }
 
         if ($user != null) {
@@ -227,6 +227,31 @@ class HomeController extends Controller
                     auth()->login($user, true);
                 } else {
                     auth()->login($user, false);
+                }
+                
+                // Handle cart items for customer
+                if (session('temp_user_id') != null && $user->user_type == 'customer') {
+                    Cart::where('temp_user_id', session('temp_user_id'))
+                    ->update(
+                        [
+                            'user_id' => auth()->user()->id,
+                            'temp_user_id' => null
+                        ]
+                    );
+                    Session::forget('temp_user_id');
+                }
+                
+                // Redirect based on user type - check vendor first
+                if ($user->user_type == 'vendor') {
+                    return redirect()->route('vendor.dashboard');
+                } elseif ($user->user_type == 'admin' || $user->user_type == 'staff') {
+                    return redirect()->route('admin.dashboard');
+                } elseif ($user->user_type == 'seller') {
+                    return redirect()->route('seller.dashboard');
+                } elseif (in_array($user->user_type, ['franchise', 'sub_franchise'])) {
+                    return redirect()->route('franchise.dashboard');
+                } else {
+                    return redirect()->route('dashboard');
                 }
             } else {
                 flash(translate('Invalid email or password!'))->warning();
@@ -256,6 +281,8 @@ class HomeController extends Controller
     {
         if (Auth::user()->user_type == 'seller') {
             return redirect()->route('seller.dashboard');
+        } elseif (Auth::user()->user_type == 'vendor') {
+            return redirect()->route('vendor.dashboard');
         } elseif (Auth::user()->user_type == 'customer') {
             $users_cart = Cart::where('user_id', auth()->user()->id)->first();
             if ($users_cart) {
@@ -275,6 +302,8 @@ class HomeController extends Controller
     {
         if (Auth::user()->user_type == 'seller') {
             return redirect()->route('seller.profile.index');
+        } elseif (Auth::user()->user_type == 'vendor') {
+            return redirect()->route('vendor.dashboard'); // Or a specific profile route if exists
         } elseif (Auth::user()->user_type == 'delivery_boy') {
             return view('delivery_boys.profile');
         } elseif (in_array(Auth::user()->user_type, ['franchise', 'sub_franchise'])) {
@@ -689,19 +718,25 @@ class HomeController extends Controller
 
         $product_stock = $product->stocks->where('variant', $str)->first();
 
-        $price = $product_stock->price;
-        $image = $product_stock->image ?? '';
+        if ($product_stock) {
+            $price = $product_stock->price;
+            $image = $product_stock->image ?? '';
 
-
-        if ($product->wholesale_product) {
-            $wholesalePrice = $product_stock->wholesalePrices->where('min_qty', '<=', $request->quantity)->where('max_qty', '>=', $request->quantity)->first();
-            if ($wholesalePrice) {
-                $price = $wholesalePrice->price;
+            if ($product->wholesale_product) {
+                $wholesalePrice = $product_stock->wholesalePrices->where('min_qty', '<=', $request->quantity)->where('max_qty', '>=', $request->quantity)->first();
+                if ($wholesalePrice) {
+                    $price = $wholesalePrice->price;
+                }
             }
-        }
 
-        $quantity = $product_stock->qty;
-        $max_limit = $product_stock->qty;
+            $quantity = $product_stock->qty;
+            $max_limit = $product_stock->qty;
+        } else {
+            $price = $product->unit_price;
+            $image = $product->thumbnail_img ?? '';
+            $quantity = $product->current_stock ?? 0;
+            $max_limit = $product->current_stock ?? 0;
+        }
 
         if ($quantity >= 1 && $product->min_qty <= $quantity) {
             $in_stock = 1;

@@ -33,11 +33,13 @@
                 $cod_on = 1;
                 foreach ($carts as $cartItem) {
                     $product = get_single_product($cartItem['product_id']);
-                    if ($product['digital'] == 1) {
-                        $digital = 1;
-                    }
-                    if ($product['cash_on_delivery'] == 0) {
-                        $cod_on = 0;
+                    if ($product) {
+                        if ($product->digital == 1) {
+                            $digital = 1;
+                        }
+                        if ($product->cash_on_delivery == 0) {
+                            $cod_on = 0;
+                        }
                     }
                 }
             @endphp

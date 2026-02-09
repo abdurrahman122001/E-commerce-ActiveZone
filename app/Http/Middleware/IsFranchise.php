@@ -17,17 +17,21 @@ class IsFranchise
     public function handle($request, Closure $next)
     {
         if (Auth::check() && !Auth::user()->banned) {
+            $status = null;
             if (Auth::user()->user_type == 'franchise') {
-                if (Auth::user()->franchise && (Auth::user()->franchise->status == 'approved' || Auth::user()->franchise->status == 'pending')) {
-                    return $next($request);
-                }
+                $status = Auth::user()->franchise ? Auth::user()->franchise->status : null;
             } elseif (Auth::user()->user_type == 'sub_franchise') {
-                if (Auth::user()->sub_franchise && (Auth::user()->sub_franchise->status == 'approved' || Auth::user()->sub_franchise->status == 'pending')) {
-                    return $next($request);
+                $status = Auth::user()->sub_franchise ? Auth::user()->sub_franchise->status : null;
+            }
+
+            if (in_array($status, ['approved', 'pending'])) {
+                if ($status == 'pending' && !$request->is('franchise/dashboard')) {
+                    return redirect()->route('franchise.dashboard')->with('warning', translate('Your account is pending approval. Please wait for admin verification to access all features.'));
                 }
+                return $next($request);
             }
         }
         
-        return redirect()->route('home')->with('error', 'Access denied. You must be an approved franchise or sub-franchise.');
+        return redirect()->route('home')->with('error', translate('Access denied. You must be an approved franchise or sub-franchise.'));
     }
 }

@@ -84,13 +84,33 @@ Route::controller(App\Http\Controllers\FranchiseController::class)->group(functi
 });
 
 // Vendor Routes
-Route::controller(App\Http\Controllers\VendorController::class)->group(function () {
-    Route::group(['middleware' => ['auth']], function () { // Add appropriate middleware (e.g., 'role:Franchise|SubFranchise') later
-          Route::get('/vendors', 'index')->name('vendors.index');
-          Route::get('/vendors/create', 'create')->name('vendors.create');
-          Route::post('/vendors/store', 'store')->name('vendors.store');
-          Route::get('/vendor/dashboard', 'dashboard')->name('vendor.dashboard');
-          Route::get('/vendors/commission-history', 'commissionHistory')->name('vendors.commission_history');
+Route::group(['middleware' => ['vendor', 'user', 'prevent-back-history']], function () {
+    Route::controller(App\Http\Controllers\VendorController::class)->group(function () {
+        Route::get('/vendors', 'index')->name('vendors.index');
+        Route::get('/vendors/create', 'create')->name('vendors.create');
+        Route::post('/vendors/store', 'store')->name('vendors.store');
+        Route::get('/vendor/dashboard', 'dashboard')->name('vendor.dashboard');
+        Route::get('/vendors/commission-history', 'commissionHistory')->name('vendors.commission_history');
+    });
+
+    // Vendor Products
+    Route::controller(App\Http\Controllers\Vendor\ProductController::class)->group(function () {
+        Route::get('/vendor/products', 'index')->name('vendor.products');
+        Route::get('/vendor/product/create', 'create')->name('vendor.products.create');
+        Route::post('/vendor/products/store', 'store')->name('vendor.products.store');
+        Route::get('/vendor/product/{id}/edit', 'edit')->name('vendor.products.edit');
+        Route::post('/vendor/products/update/{product}', 'update')->name('vendor.products.update');
+        Route::get('/vendor/products/destroy/{id}', 'destroy')->name('vendor.products.destroy');
+    });
+
+    // Vendor Categories
+    Route::controller(App\Http\Controllers\Vendor\CategoryController::class)->group(function () {
+        Route::get('/vendor/categories', 'index')->name('vendor.categories.index');
+        Route::get('/vendor/categories/create', 'create')->name('vendor.categories.create');
+        Route::post('/vendor/categories/store', 'store')->name('vendor.categories.store');
+        Route::get('/vendor/categories/{id}/edit', 'edit')->name('vendor.categories.edit');
+        Route::post('/vendor/categories/update/{id}', 'update')->name('vendor.categories.update');
+        Route::get('/vendor/categories/destroy/{id}', 'destroy')->name('vendor.categories.destroy');
     });
 });
 

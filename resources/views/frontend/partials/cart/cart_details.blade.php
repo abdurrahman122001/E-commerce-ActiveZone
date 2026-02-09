@@ -82,6 +82,7 @@
                                 @foreach ($admin_products as $key => $product_id)
                                     @php
                                         $product = get_single_product($product_id);
+                                        if (!$product) continue;
                                         $cartItem = $carts->toQuery()->where('product_id', $product_id)->where('variation', $admin_product_variation[$key])->first();
                                         $product_stock = $product->stocks->where('variant', $cartItem->variation)->first();
                                         $total = $total + cart_product_price($cartItem, $product, false) * $cartItem->quantity;
@@ -142,7 +143,7 @@
                                                                 class="col border-0 text-center px-0 fs-14 input-number"
                                                                 placeholder="1" value="{{ $cartItem['quantity'] }}"
                                                                 min="{{ $product->min_qty }}"
-                                                                max="{{ $product_stock->qty }}"
+                                                                max="{{ $product_stock ? $product_stock->qty : $product->current_stock }}"
                                                                 onchange="updateQuantity({{ $cartItem->id }}, this)" style="min-width: 45px;">
                                                             <button
                                                                 class="btn col-auto btn-icon btn-sm btn-light rounded-0"
@@ -188,8 +189,11 @@
                                         <div class="aiz-checkbox-inline">
                                             <label class="aiz-checkbox d-block">
                                                 <input type="checkbox" class="check-one check-seller" value="seller-{{ $key }}"  @if($all_seller_products) checked @endif>
+                                                @php
+                                                    $shop = get_shop_by_user_id($key);
+                                                @endphp
                                                 <span class="fs-16 fw-700 text-dark ml-3 pb-3 d-block border-left-0 border-top-0 border-right-0 border-bottom border-dashed">
-                                                    {{ get_shop_by_user_id($key)->name }} {{ translate('Products') }} ({{ count($seller_product) }})
+                                                    {{ $shop ? $shop->name : translate('Seller Products') }} ({{ count($seller_product) }})
                                                 </span>
                                                 <span class="aiz-square-check"></span>
                                             </label>
@@ -198,6 +202,7 @@
                                     @foreach ($seller_product as $key2 => $product_id)
                                         @php
                                             $product = get_single_product($product_id);
+                                            if (!$product) continue;
                                             $cartItem = $carts->toQuery()->where('product_id', $product_id)->where('variation', $seller_product_variation[$key][$key2])->first();
                                             $product_stock = $product->stocks->where('variant', $cartItem->variation)->first();
                                             $total = $total + cart_product_price($cartItem, $product, false) * $cartItem->quantity;
@@ -259,7 +264,7 @@
                                                                     class="col border-0 text-center px-0 fs-14 input-number"
                                                                     placeholder="1" value="{{ $cartItem['quantity'] }}"
                                                                     min="{{ $product->min_qty }}"
-                                                                    max="{{ $product_stock->qty }}"
+                                                                    max="{{ $product_stock ? $product_stock->qty : $product->current_stock }}"
                                                                     onchange="updateQuantity({{ $cartItem->id }}, this)" style="min-width: 45px;">
                                                                 <button
                                                                     class="btn col-auto btn-icon btn-sm btn-light rounded-0"

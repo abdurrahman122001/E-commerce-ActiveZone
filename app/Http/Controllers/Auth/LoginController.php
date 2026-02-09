@@ -40,7 +40,13 @@ class LoginController extends Controller
      *
      * @var string
      */
-    /*protected $redirectTo = '/';*/
+    public function redirectTo()
+    {
+        if (auth()->user()->user_type == 'vendor') {
+            return route('vendor.dashboard');
+        }
+        return '/home';
+    }
 
 
     /**
@@ -117,7 +123,9 @@ class LoginController extends Controller
         if (session('link') != null) {
             return redirect(session('link'));
         } else {
-            if (auth()->user()->user_type == 'seller') {
+            if (auth()->user()->user_type == 'vendor') {
+                return redirect()->route('vendor.dashboard');
+            } elseif (auth()->user()->user_type == 'seller') {
                 return redirect()->route('seller.dashboard');
             } elseif (in_array(auth()->user()->user_type, ['franchise', 'sub_franchise'])) {
                 return redirect()->route('franchise.dashboard');
@@ -206,7 +214,9 @@ class LoginController extends Controller
         if (session('link') != null) {
             return redirect(session('link'));
         } else {
-            if (auth()->user()->user_type == 'seller') {
+            if (auth()->user()->user_type == 'vendor') {
+                return redirect()->route('vendor.dashboard');
+            } elseif (auth()->user()->user_type == 'seller') {
                 return redirect()->route('seller.dashboard');
             }
             return redirect()->route('dashboard');
@@ -268,6 +278,13 @@ class LoginController extends Controller
      */
     public function authenticated()
     {
+        // Debug logging
+        \Log::info('Authenticated method called', [
+            'user_id' => auth()->user()->id,
+            'user_type' => auth()->user()->user_type,
+            'email' => auth()->user()->email,
+        ]);
+
         if (session('temp_user_id') != null) {
             if(auth()->user()->user_type == 'customer'){
                 Cart::where('temp_user_id', session('temp_user_id'))
@@ -284,7 +301,12 @@ class LoginController extends Controller
             Session::forget('temp_user_id');
         }
 
-        if (auth()->user()->user_type == 'admin' || auth()->user()->user_type == 'staff') {
+        // Check vendor first to avoid conflicts
+        if (auth()->user()->user_type == 'vendor') {
+            \Log::info('Redirecting vendor to dashboard');
+            return redirect()->route('vendor.dashboard');
+        } elseif (auth()->user()->user_type == 'admin' || auth()->user()->user_type == 'staff') {
+            \Log::info('Redirecting admin/staff');
             CoreComponentRepository::instantiateShopRepository();
             return redirect()->route('admin.dashboard');
         } elseif (auth()->user()->user_type == 'seller') {
@@ -302,9 +324,10 @@ class LoginController extends Controller
             ]);
             return redirect()->route('seller.dashboard');
         } elseif (in_array(auth()->user()->user_type, ['franchise', 'sub_franchise'])) {
+            \Log::info('Redirecting franchise/sub_franchise');
             return redirect()->route('franchise.dashboard');
         } else {
-
+            \Log::info('Redirecting to default dashboard');
             if (session('link') != null) {
                 return redirect(session('link'));
             } else {

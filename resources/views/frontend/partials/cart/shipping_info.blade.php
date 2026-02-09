@@ -70,7 +70,7 @@
                                 <span class="d-flex p-3 aiz-megabox-elem border-0">
                                     <span class="aiz-rounded-check flex-shrink-0 mt-1"></span>
                                     <span class="pl-3 text-left w-xl-300px"  id="choose-default">
-                                        {{ $address->address }}, {{ $address->area ? $address->area->name . ',' : '' }} {{ $address->postal_code }}-{{ $address->city->name }},{{ $address->state && $address->state->status == 1 ? $address->state->name . ',' : '' }} {{ optional($address->country)->name }}
+                                        {{ $address->address }}, {{ $address->area ? $address->area->name . ',' : '' }} {{ $address->postal_code }}-{{ $address->city ? $address->city->name : '' }},{{ $address->state && $address->state->status == 1 ? $address->state->name . ',' : '' }} {{ optional($address->country)->name }}
                                         <br>  {{ $address->phone }}
                                     </span>
                                 </span>
@@ -157,7 +157,7 @@
                                 <span class="d-flex p-3 aiz-megabox-elem border-0">
                                     <span class="aiz-rounded-check flex-shrink-0 mt-1"></span>
                                     <span class="pl-3 text-left w-xl-300px" id="choose-default-billing">
-                                        {{ $address->address }}, {{ $address->area ? $address->area->name . ',' : '' }} {{ $address->postal_code }}-{{ $address->city->name }},{{ $address->state && $address->state->status == 1 ? $address->state->name . ',' : '' }} {{ optional($address->country)->name }}
+                                        {{ $address->address }}, {{ $address->area ? $address->area->name . ',' : '' }} {{ $address->postal_code }}-{{ $address->city ? $address->city->name : '' }},{{ $address->state && $address->state->status == 1 ? $address->state->name . ',' : '' }} {{ optional($address->country)->name }}
                                         <br>  {{ $address->phone }}
                                     </span>
                                 </span>
@@ -237,7 +237,7 @@
                                         <span class="d-flex p-3 aiz-megabox-elem border-0">
                                             <span class="aiz-rounded-check flex-shrink-0 mt-1"></span>
                                             <span class="pl-3 text-left w-xl-300px address-text">
-                                                {{ $address->address }}, {{ $address->area ? $address->area->name . ',' : '' }} {{ $address->postal_code }}-{{ $address->city->name }},{{ $address->state && $address->state->status == 1 ? $address->state->name . ',' : '' }} {{ optional($address->country)->name }}
+                                                {{ $address->address }}, {{ $address->area ? $address->area->name . ',' : '' }} {{ $address->postal_code }}-{{ $address->city ? $address->city->name : '' }},{{ $address->state && $address->state->status == 1 ? $address->state->name . ',' : '' }} {{ optional($address->country)->name }}
                                               <br>  {{ $address->phone }}
                                             </span>
                                         </span>
@@ -321,7 +321,7 @@
                                         <span class="d-flex p-3 aiz-megabox-elem border-0">
                                             <span class="aiz-rounded-check flex-shrink-0 mt-1"></span>
                                             <span class="pl-3 text-left w-xl-300px address-text">
-                                                {{ $address->address }}, {{ $address->area ? $address->area->name . ',' : '' }} {{ $address->postal_code }}-{{ $address->city->name }},{{ $address->state && $address->state->status == 1 ? $address->state->name . ',' : '' }} {{ optional($address->country)->name }}
+                                                {{ $address->address }}, {{ $address->area ? $address->area->name . ',' : '' }} {{ $address->postal_code }}-{{ $address->city ? $address->city->name : '' }},{{ $address->state && $address->state->status == 1 ? $address->state->name . ',' : '' }} {{ optional($address->country)->name }}
                                                 <br>  {{ $address->phone }}
                                             </span>
                                         </span>
