@@ -12,15 +12,25 @@ class VendorController extends Controller
 {
     public function index()
     {
-        $vendors = Vendor::where('user_id', Auth::user()->id)->orWhere('franchise_id', Auth::user()->franchise->id ?? null)->orWhere('sub_franchise_id', Auth::user()->sub_franchise->id ?? null)
+        $user = Auth::user();
+        \Log::info('Vendor Index Query', [
+            'user_id' => $user->id,
+            'user_type' => $user->user_type,
+            'franchise_id' => $user->franchise->id ?? 'null',
+            'sub_franchise_id' => $user->sub_franchise->id ?? 'null'
+        ]);
+
+        $vendors = Vendor::where('user_id', $user->id)
+            ->orWhere('franchise_id', $user->franchise->id ?? null)
+            ->orWhere('sub_franchise_id', $user->sub_franchise->id ?? null)
             ->withCount('orders')
             ->withSum('orders', 'grand_total')
             ->get();
         
         $layout = 'vendors.layouts.app';
-        if(Auth::user()->user_type == 'franchise' || Auth::user()->user_type == 'sub_franchise'){
+        if($user->user_type == 'franchise' || $user->user_type == 'sub_franchise'){
             $layout = 'franchise.layouts.app';
-        } elseif(Auth::user()->user_type == 'admin' || Auth::user()->user_type == 'staff'){
+        } elseif($user->user_type == 'admin' || $user->user_type == 'staff'){
             $layout = 'backend.layouts.app';
         }
 
@@ -47,29 +57,43 @@ class VendorController extends Controller
             'commission_percentage' => 'required|numeric|min:0|max:100',
         ]);
 
-        $user = User::create([
-            'name' => $validated['name'],
-            'email' => $validated['email'],
-            'password' => Hash::make($validated['password']),
-            'user_type' => 'vendor',
-        ]);
+        \DB::beginTransaction();
+        try {
+            $user = User::create([
+                'name' => $validated['name'],
+                'email' => $validated['email'],
+                'password' => Hash::make($validated['password']),
+                'user_type' => 'vendor',
+                'verification_status' => 1,
+            ]);
 
-        $user->assignRole('Vendor');
+            $user->assignRole('Vendor');
 
-        $vendor = new Vendor();
-        $vendor->user_id = $user->id;
-        
-        if (Auth::user()->franchise) {
-             $vendor->franchise_id = Auth::user()->franchise->id;
-        } elseif (Auth::user()->sub_franchise) {
-             $vendor->sub_franchise_id = Auth::user()->sub_franchise->id;
+            $vendor = new Vendor();
+            $vendor->user_id = $user->id;
+            
+            if (Auth::user()->franchise) {
+                $vendor->franchise_id = Auth::user()->franchise->id;
+            } elseif (Auth::user()->sub_franchise) {
+                $vendor->sub_franchise_id = Auth::user()->sub_franchise->id;
+            }
+            
+            $vendor->commission_percentage = $validated['commission_percentage'];
+            $vendor->status = 'approved'; 
+            $vendor->save();
+
+            \DB::commit();
+            flash(translate('Vendor created successfully.'))->success();
+            return redirect()->route('vendors.index');
+        } catch (\Exception $e) {
+            \DB::rollback();
+            \Log::error('Vendor Store Error: ' . $e->getMessage(), [
+                'exception' => $e,
+                'request' => $request->all()
+            ]);
+            flash(translate('Failed to create vendor: ') . $e->getMessage())->error();
+            return back()->withInput();
         }
-        
-        $vendor->commission_percentage = $validated['commission_percentage'];
-        $vendor->status = 'approved'; 
-        $vendor->save();
-
-        return redirect()->route('vendors.index')->with('success', 'Vendor created successfully.');
     }
     
     public function dashboard() {
