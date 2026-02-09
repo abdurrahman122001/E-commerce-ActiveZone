@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Franchise\DashboardController;
 use App\Http\Controllers\Franchise\ProductController;
+use App\Http\Controllers\Franchise\OrderController;
 use App\Http\Controllers\Franchise\ProfileController;
 
 Route::group(['prefix' => 'franchise', 'middleware' => ['auth', 'franchise', 'prevent-back-history'], 'as' => 'franchise.'], function () {
@@ -32,6 +33,14 @@ Route::group(['prefix' => 'franchise', 'middleware' => ['auth', 'franchise', 'pr
     Route::controller(ProfileController::class)->group(function () {
         Route::get('/profile', 'index')->name('profile.index');
         Route::post('/profile/update/{id}', 'update')->name('profile.update');
+    });
+
+    // Orders
+    Route::controller(App\Http\Controllers\Franchise\OrderController::class)->group(function () {
+        Route::get('/orders', 'index')->name('orders.index');
+        Route::get('/orders/{id}/show', 'show')->name('orders.show');
+        Route::post('/orders/update_delivery_status', 'update_delivery_status')->name('orders.update_delivery_status');
+        Route::post('/orders/update_payment_status', 'update_payment_status')->name('orders.update_payment_status');
     });
 
     // Sub-Franchises

@@ -6111,3 +6111,727 @@
 "} 
 [2026-02-09 14:06:06] local.INFO: Authenticated method called {"user_id":9,"user_type":"admin","email":"qaziabdurrahman12@gmail.com"} 
 [2026-02-09 14:06:06] local.INFO: Redirecting admin/staff  
+[2026-02-09 14:23:19] local.INFO: Filter Orders Request:  {"page":"1","seller_type":"all","search":null,"order_from":null,"payment_status":null,"date":null,"col":null,"status":null} 
+[2026-02-09 14:28:31] local.INFO: Authenticated method called {"user_id":11,"user_type":"vendor","email":"qaziabdurrahman2001@gmail.com"} 
+[2026-02-09 14:28:31] local.INFO: Redirecting vendor to dashboard  
+[2026-02-09 14:29:19] local.INFO: Filter Orders Request:  {"page":"1","seller_type":"all","search":null,"order_from":null,"payment_status":null,"date":null,"col":null,"status":null} 
+[2026-02-09 14:30:00] local.INFO: Filter Orders Request:  {"page":"1","seller_type":"all","search":null,"order_from":null,"payment_status":null,"date":null,"col":null,"status":null} 
+[2026-02-09 14:30:23] local.INFO: Filter Orders Request:  {"page":"1","seller_type":"seller","search":null,"order_from":null,"payment_status":null,"date":null,"col":null,"status":null} 
+[2026-02-09 14:33:52] local.INFO: Authenticated method called {"user_id":10,"user_type":"franchise","email":"qaziabdulrahmannt@gmail.com"} 
+[2026-02-09 14:33:52] local.INFO: Redirecting franchise/sub_franchise  
+[2026-02-09 14:36:33] local.ERROR: Route [franchise.sub_franchises.index] not defined. {"view":{"view":"C:\\Users\\Nash Tech PC 03\\Desktop\\E-Commerce ActiveZone\\resources\\views\\franchise\\inc\\franchise_sidenav.blade.php","data":{"errors":"<pre class=sf-dump id=sf-dump-1855690921 data-indent-pad=\"  \"><span class=sf-dump-note>Illuminate\\Support\\ViewErrorBag</span> {<a class=sf-dump-ref>#3248</a><samp data-depth=1 class=sf-dump-expanded>
+  #<span class=sf-dump-protected title=\"Protected property\">bags</span>: []
+</samp>}
+</pre><script>Sfdump(\"sf-dump-1855690921\", {\"maxDepth\":3,\"maxStringLength\":160})</script>
+","total_products":"<pre class=sf-dump id=sf-dump-1706710362 data-indent-pad=\"  \"><span class=sf-dump-num>1</span>
+</pre><script>Sfdump(\"sf-dump-1706710362\", {\"maxDepth\":3,\"maxStringLength\":160})</script>
+","total_sales":"<pre class=sf-dump id=sf-dump-616859391 data-indent-pad=\"  \"><span class=sf-dump-num>0</span>
+</pre><script>Sfdump(\"sf-dump-616859391\", {\"maxDepth\":3,\"maxStringLength\":160})</script>
+","pending_orders":"<pre class=sf-dump id=sf-dump-966350478 data-indent-pad=\"  \"><span class=sf-dump-num>0</span>
+</pre><script>Sfdump(\"sf-dump-966350478\", {\"maxDepth\":3,\"maxStringLength\":160})</script>
+","delivered_orders":"<pre class=sf-dump id=sf-dump-1524641649 data-indent-pad=\"  \"><span class=sf-dump-num>0</span>
+</pre><script>Sfdump(\"sf-dump-1524641649\", {\"maxDepth\":3,\"maxStringLength\":160})</script>
+","this_month_pending_orders":"<pre class=sf-dump id=sf-dump-1759878333 data-indent-pad=\"  \"><span class=sf-dump-num>0</span>
+</pre><script>Sfdump(\"sf-dump-1759878333\", {\"maxDepth\":3,\"maxStringLength\":160})</script>
+","this_month_cancelled_orders":"<pre class=sf-dump id=sf-dump-1126623079 data-indent-pad=\"  \"><span class=sf-dump-num>0</span>
+</pre><script>Sfdump(\"sf-dump-1126623079\", {\"maxDepth\":3,\"maxStringLength\":160})</script>
+","this_month_on_the_way_orders":"<pre class=sf-dump id=sf-dump-205049883 data-indent-pad=\"  \"><span class=sf-dump-num>0</span>
+</pre><script>Sfdump(\"sf-dump-205049883\", {\"maxDepth\":3,\"maxStringLength\":160})</script>
+","this_month_delivered_orders":"<pre class=sf-dump id=sf-dump-1680962695 data-indent-pad=\"  \"><span class=sf-dump-num>0</span>
+</pre><script>Sfdump(\"sf-dump-1680962695\", {\"maxDepth\":3,\"maxStringLength\":160})</script>
+","this_month_sold_amount":"<pre class=sf-dump id=sf-dump-547695413 data-indent-pad=\"  \"><span class=sf-dump-num>0</span>
+</pre><script>Sfdump(\"sf-dump-547695413\", {\"maxDepth\":3,\"maxStringLength\":160})</script>
+","previous_month_sold_amount":"<pre class=sf-dump id=sf-dump-357159324 data-indent-pad=\"  \"><span class=sf-dump-num>0</span>
+</pre><script>Sfdump(\"sf-dump-357159324\", {\"maxDepth\":3,\"maxStringLength\":160})</script>
+","products":"<pre class=sf-dump id=sf-dump-1180164067 data-indent-pad=\"  \"><span class=sf-dump-note>Illuminate\\Database\\Eloquent\\Collection</span> {<a class=sf-dump-ref>#4232</a><samp data-depth=1 class=sf-dump-expanded>
+  #<span class=sf-dump-protected title=\"Protected property\">items</span>: <span class=sf-dump-note>array:1</span> [<samp data-depth=2 class=sf-dump-compact>
+    <span class=sf-dump-index>0</span> => <span class=sf-dump-note title=\"App\\Models\\Product
+\"><span class=\"sf-dump-ellipsis sf-dump-ellipsis-note\">App\\Models</span><span class=\"sf-dump-ellipsis sf-dump-ellipsis-note\">\\</span>Product</span> {<a class=sf-dump-ref>#4198</a><samp data-depth=3 class=sf-dump-compact>
+      #<span class=sf-dump-protected title=\"Protected property\">connection</span>: \"<span class=sf-dump-str title=\"5 characters\">mysql</span>\"
+      #<span class=sf-dump-protected title=\"Protected property\">table</span>: \"<span class=sf-dump-str title=\"8 characters\">products</span>\"
+      #<span class=sf-dump-protected title=\"Protected property\">primaryKey</span>: \"<span class=sf-dump-str title=\"2 characters\">id</span>\"
+      #<span class=sf-dump-protected title=\"Protected property\">keyType</span>: \"<span class=sf-dump-str title=\"3 characters\">int</span>\"
+      +<span class=sf-dump-public title=\"Public property\">incrementing</span>: <span class=sf-dump-const>true</span>
+      #<span class=sf-dump-protected title=\"Protected property\">with</span>: <span class=sf-dump-note>array:3</span> [ &#8230;3]
+      #<span class=sf-dump-protected title=\"Protected property\">withCount</span>: []
+      +<span class=sf-dump-public title=\"Public property\">preventsLazyLoading</span>: <span class=sf-dump-const>false</span>
+      #<span class=sf-dump-protected title=\"Protected property\">perPage</span>: <span class=sf-dump-num>15</span>
+      +<span class=sf-dump-public title=\"Public property\">exists</span>: <span class=sf-dump-const>true</span>
+      +<span class=sf-dump-public title=\"Public property\">wasRecentlyCreated</span>: <span class=sf-dump-const>false</span>
+      #<span class=sf-dump-protected title=\"Protected property\">escapeWhenCastingToString</span>: <span class=sf-dump-const>false</span>
+      #<span class=sf-dump-protected title=\"Protected property\">attributes</span>: <span class=sf-dump-note>array:70</span> [ &#8230;70]
+      #<span class=sf-dump-protected title=\"Protected property\">original</span>: <span class=sf-dump-note>array:70</span> [ &#8230;70]
+      #<span class=sf-dump-protected title=\"Protected property\">changes</span>: []
+      #<span class=sf-dump-protected title=\"Protected property\">casts</span>: []
+      #<span class=sf-dump-protected title=\"Protected property\">classCastCache</span>: []
+      #<span class=sf-dump-protected title=\"Protected property\">attributeCastCache</span>: []
+      #<span class=sf-dump-protected title=\"Protected property\">dateFormat</span>: <span class=sf-dump-const>null</span>
+      #<span class=sf-dump-protected title=\"Protected property\">appends</span>: []
+      #<span class=sf-dump-protected title=\"Protected property\">dispatchesEvents</span>: []
+      #<span class=sf-dump-protected title=\"Protected property\">observables</span>: []
+      #<span class=sf-dump-protected title=\"Protected property\">relations</span>: <span class=sf-dump-note>array:3</span> [ &#8230;3]
+      #<span class=sf-dump-protected title=\"Protected property\">touches</span>: []
+      +<span class=sf-dump-public title=\"Public property\">timestamps</span>: <span class=sf-dump-const>true</span>
+      +<span class=sf-dump-public title=\"Public property\">usesUniqueIds</span>: <span class=sf-dump-const>false</span>
+      #<span class=sf-dump-protected title=\"Protected property\">hidden</span>: []
+      #<span class=sf-dump-protected title=\"Protected property\">visible</span>: []
+      #<span class=sf-dump-protected title=\"Protected property\">fillable</span>: []
+      #<span class=sf-dump-protected title=\"Protected property\">guarded</span>: <span class=sf-dump-note>array:1</span> [ &#8230;1]
+    </samp>}
+  </samp>]
+  #<span class=sf-dump-protected title=\"Protected property\">escapeWhenCastingToString</span>: <span class=sf-dump-const>false</span>
+</samp>}
+</pre><script>Sfdump(\"sf-dump-1180164067\", {\"maxDepth\":3,\"maxStringLength\":160})</script>
+","last_7_days_sales":"<pre class=sf-dump id=sf-dump-1236418498 data-indent-pad=\"  \"><span class=sf-dump-note>Illuminate\\Support\\Collection</span> {<a class=sf-dump-ref>#4200</a><samp data-depth=1 class=sf-dump-expanded>
+  #<span class=sf-dump-protected title=\"Protected property\">items</span>: []
+  #<span class=sf-dump-protected title=\"Protected property\">escapeWhenCastingToString</span>: <span class=sf-dump-const>false</span>
+</samp>}
+</pre><script>Sfdump(\"sf-dump-1236418498\", {\"maxDepth\":3,\"maxStringLength\":160})</script>
+","total_categories":"<pre class=sf-dump id=sf-dump-347816227 data-indent-pad=\"  \"><span class=sf-dump-num>47</span>
+</pre><script>Sfdump(\"sf-dump-347816227\", {\"maxDepth\":3,\"maxStringLength\":160})</script>
+","total_brands":"<pre class=sf-dump id=sf-dump-857701158 data-indent-pad=\"  \"><span class=sf-dump-num>23</span>
+</pre><script>Sfdump(\"sf-dump-857701158\", {\"maxDepth\":3,\"maxStringLength\":160})</script>
+","sale_this_month":"<pre class=sf-dump id=sf-dump-774922720 data-indent-pad=\"  \"><span class=sf-dump-num>0</span>
+</pre><script>Sfdump(\"sf-dump-774922720\", {\"maxDepth\":3,\"maxStringLength\":160})</script>
+","top_categories":"<pre class=sf-dump id=sf-dump-1322416272 data-indent-pad=\"  \"><span class=sf-dump-note>Illuminate\\Database\\Eloquent\\Collection</span> {<a class=sf-dump-ref>#4288</a><samp data-depth=1 class=sf-dump-expanded>
+  #<span class=sf-dump-protected title=\"Protected property\">items</span>: []
+  #<span class=sf-dump-protected title=\"Protected property\">escapeWhenCastingToString</span>: <span class=sf-dump-const>false</span>
+</samp>}
+</pre><script>Sfdump(\"sf-dump-1322416272\", {\"maxDepth\":3,\"maxStringLength\":160})</script>
+","authUser":"<pre class=sf-dump id=sf-dump-120115770 data-indent-pad=\"  \"><span class=sf-dump-note>App\\Models\\User</span> {<a class=sf-dump-ref>#4062</a><samp data-depth=1 class=sf-dump-expanded>
+  #<span class=sf-dump-protected title=\"Protected property\">connection</span>: \"<span class=sf-dump-str title=\"5 characters\">mysql</span>\"
+  #<span class=sf-dump-protected title=\"Protected property\">table</span>: \"<span class=sf-dump-str title=\"5 characters\">users</span>\"
+  #<span class=sf-dump-protected title=\"Protected property\">primaryKey</span>: \"<span class=sf-dump-str title=\"2 characters\">id</span>\"
+  #<span class=sf-dump-protected title=\"Protected property\">keyType</span>: \"<span class=sf-dump-str title=\"3 characters\">int</span>\"
+  +<span class=sf-dump-public title=\"Public property\">incrementing</span>: <span class=sf-dump-const>true</span>
+  #<span class=sf-dump-protected title=\"Protected property\">with</span>: []
+  #<span class=sf-dump-protected title=\"Protected property\">withCount</span>: []
+  +<span class=sf-dump-public title=\"Public property\">preventsLazyLoading</span>: <span class=sf-dump-const>false</span>
+  #<span class=sf-dump-protected title=\"Protected property\">perPage</span>: <span class=sf-dump-num>15</span>
+  +<span class=sf-dump-public title=\"Public property\">exists</span>: <span class=sf-dump-const>true</span>
+  +<span class=sf-dump-public title=\"Public property\">wasRecentlyCreated</span>: <span class=sf-dump-const>false</span>
+  #<span class=sf-dump-protected title=\"Protected property\">escapeWhenCastingToString</span>: <span class=sf-dump-const>false</span>
+  #<span class=sf-dump-protected title=\"Protected property\">attributes</span>: <span class=sf-dump-note>array:33</span> [<samp data-depth=2 class=sf-dump-compact>
+    \"<span class=sf-dump-key>id</span>\" => <span class=sf-dump-num>10</span>
+    \"<span class=sf-dump-key>referred_by</span>\" => <span class=sf-dump-const>null</span>
+    \"<span class=sf-dump-key>provider</span>\" => <span class=sf-dump-const>null</span>
+    \"<span class=sf-dump-key>provider_id</span>\" => <span class=sf-dump-const>null</span>
+    \"<span class=sf-dump-key>refresh_token</span>\" => <span class=sf-dump-const>null</span>
+    \"<span class=sf-dump-key>access_token</span>\" => <span class=sf-dump-const>null</span>
+    \"<span class=sf-dump-key>user_type</span>\" => \"<span class=sf-dump-str title=\"9 characters\">franchise</span>\"
+    \"<span class=sf-dump-key>name</span>\" => \"<span class=sf-dump-str title=\"12 characters\">Abdur Rahman</span>\"
+    \"<span class=sf-dump-key>email</span>\" => \"<span class=sf-dump-str title=\"27 characters\">qaziabdulrahmannt@gmail.com</span>\"
+    \"<span class=sf-dump-key>email_verified_at</span>\" => <span class=sf-dump-const>null</span>
+    \"<span class=sf-dump-key>verification_code</span>\" => <span class=sf-dump-const>null</span>
+    \"<span class=sf-dump-key>verification_status</span>\" => <span class=sf-dump-num>1</span>
+    \"<span class=sf-dump-key>verification_info</span>\" => <span class=sf-dump-const>null</span>
+    \"<span class=sf-dump-key>new_email_verificiation_code</span>\" => <span class=sf-dump-const>null</span>
+    \"<span class=sf-dump-key>password</span>\" => \"<span class=sf-dump-str title=\"60 characters\">$2y$10$sNGXgqbPE7zKZAg2XpDiXOdzqdNQLeOVJ0q0onfkTrQh0btahpwY6</span>\"
+    \"<span class=sf-dump-key>remember_token</span>\" => <span class=sf-dump-const>null</span>
+    \"<span class=sf-dump-key>device_token</span>\" => <span class=sf-dump-const>null</span>
+    \"<span class=sf-dump-key>avatar</span>\" => <span class=sf-dump-const>null</span>
+    \"<span class=sf-dump-key>avatar_original</span>\" => <span class=sf-dump-const>null</span>
+    \"<span class=sf-dump-key>address</span>\" => <span class=sf-dump-const>null</span>
+    \"<span class=sf-dump-key>country</span>\" => <span class=sf-dump-const>null</span>
+    \"<span class=sf-dump-key>state</span>\" => <span class=sf-dump-const>null</span>
+    \"<span class=sf-dump-key>city</span>\" => <span class=sf-dump-const>null</span>
+    \"<span class=sf-dump-key>postal_code</span>\" => <span class=sf-dump-const>null</span>
+    \"<span class=sf-dump-key>phone</span>\" => \"<span class=sf-dump-str title=\"11 characters\">03171150595</span>\"
+    \"<span class=sf-dump-key>balance</span>\" => <span class=sf-dump-num>0.0</span>
+    \"<span class=sf-dump-key>banned</span>\" => <span class=sf-dump-num>0</span>
+    \"<span class=sf-dump-key>is_suspicious</span>\" => <span class=sf-dump-num>0</span>
+    \"<span class=sf-dump-key>referral_code</span>\" => <span class=sf-dump-const>null</span>
+    \"<span class=sf-dump-key>customer_package_id</span>\" => <span class=sf-dump-const>null</span>
+    \"<span class=sf-dump-key>remaining_uploads</span>\" => <span class=sf-dump-num>0</span>
+    \"<span class=sf-dump-key>created_at</span>\" => \"<span class=sf-dump-str title=\"19 characters\">2026-02-06 13:44:24</span>\"
+    \"<span class=sf-dump-key>updated_at</span>\" => \"<span class=sf-dump-str title=\"19 characters\">2026-02-06 13:44:24</span>\"
+  </samp>]
+  #<span class=sf-dump-protected title=\"Protected property\">original</span>: <span class=sf-dump-note>array:33</span> [<samp data-depth=2 class=sf-dump-compact>
+    \"<span class=sf-dump-key>id</span>\" => <span class=sf-dump-num>10</span>
+    \"<span class=sf-dump-key>referred_by</span>\" => <span class=sf-dump-const>null</span>
+    \"<span class=sf-dump-key>provider</span>\" => <span class=sf-dump-const>null</span>
+    \"<span class=sf-dump-key>provider_id</span>\" => <span class=sf-dump-const>null</span>
+    \"<span class=sf-dump-key>refresh_token</span>\" => <span class=sf-dump-const>null</span>
+    \"<span class=sf-dump-key>access_token</span>\" => <span class=sf-dump-const>null</span>
+    \"<span class=sf-dump-key>user_type</span>\" => \"<span class=sf-dump-str title=\"9 characters\">franchise</span>\"
+    \"<span class=sf-dump-key>name</span>\" => \"<span class=sf-dump-str title=\"12 characters\">Abdur Rahman</span>\"
+    \"<span class=sf-dump-key>email</span>\" => \"<span class=sf-dump-str title=\"27 characters\">qaziabdulrahmannt@gmail.com</span>\"
+    \"<span class=sf-dump-key>email_verified_at</span>\" => <span class=sf-dump-const>null</span>
+    \"<span class=sf-dump-key>verification_code</span>\" => <span class=sf-dump-const>null</span>
+    \"<span class=sf-dump-key>verification_status</span>\" => <span class=sf-dump-num>1</span>
+    \"<span class=sf-dump-key>verification_info</span>\" => <span class=sf-dump-const>null</span>
+    \"<span class=sf-dump-key>new_email_verificiation_code</span>\" => <span class=sf-dump-const>null</span>
+    \"<span class=sf-dump-key>password</span>\" => \"<span class=sf-dump-str title=\"60 characters\">$2y$10$sNGXgqbPE7zKZAg2XpDiXOdzqdNQLeOVJ0q0onfkTrQh0btahpwY6</span>\"
+    \"<span class=sf-dump-key>remember_token</span>\" => <span class=sf-dump-const>null</span>
+    \"<span class=sf-dump-key>device_token</span>\" => <span class=sf-dump-const>null</span>
+    \"<span class=sf-dump-key>avatar</span>\" => <span class=sf-dump-const>null</span>
+    \"<span class=sf-dump-key>avatar_original</span>\" => <span class=sf-dump-const>null</span>
+    \"<span class=sf-dump-key>address</span>\" => <span class=sf-dump-const>null</span>
+    \"<span class=sf-dump-key>country</span>\" => <span class=sf-dump-const>null</span>
+    \"<span class=sf-dump-key>state</span>\" => <span class=sf-dump-const>null</span>
+    \"<span class=sf-dump-key>city</span>\" => <span class=sf-dump-const>null</span>
+    \"<span class=sf-dump-key>postal_code</span>\" => <span class=sf-dump-const>null</span>
+    \"<span class=sf-dump-key>phone</span>\" => \"<span class=sf-dump-str title=\"11 characters\">03171150595</span>\"
+    \"<span class=sf-dump-key>balance</span>\" => <span class=sf-dump-num>0.0</span>
+    \"<span class=sf-dump-key>banned</span>\" => <span class=sf-dump-num>0</span>
+    \"<span class=sf-dump-key>is_suspicious</span>\" => <span class=sf-dump-num>0</span>
+    \"<span class=sf-dump-key>referral_code</span>\" => <span class=sf-dump-const>null</span>
+    \"<span class=sf-dump-key>customer_package_id</span>\" => <span class=sf-dump-const>null</span>
+    \"<span class=sf-dump-key>remaining_uploads</span>\" => <span class=sf-dump-num>0</span>
+    \"<span class=sf-dump-key>created_at</span>\" => \"<span class=sf-dump-str title=\"19 characters\">2026-02-06 13:44:24</span>\"
+    \"<span class=sf-dump-key>updated_at</span>\" => \"<span class=sf-dump-str title=\"19 characters\">2026-02-06 13:44:24</span>\"
+  </samp>]
+  #<span class=sf-dump-protected title=\"Protected property\">changes</span>: []
+  #<span class=sf-dump-protected title=\"Protected property\">casts</span>: []
+  #<span class=sf-dump-protected title=\"Protected property\">classCastCache</span>: []
+  #<span class=sf-dump-protected title=\"Protected property\">attributeCastCache</span>: []
+  #<span class=sf-dump-protected title=\"Protected property\">dateFormat</span>: <span class=sf-dump-const>null</span>
+  #<span class=sf-dump-protected title=\"Protected property\">appends</span>: []
+  #<span class=sf-dump-protected title=\"Protected property\">dispatchesEvents</span>: []
+  #<span class=sf-dump-protected title=\"Protected property\">observables</span>: []
+  #<span class=sf-dump-protected title=\"Protected property\">relations</span>: <span class=sf-dump-note>array:2</span> [<samp data-depth=2 class=sf-dump-compact>
+    \"<span class=sf-dump-key>franchise</span>\" => <span class=sf-dump-note title=\"App\\Models\\Franchise
+\"><span class=\"sf-dump-ellipsis sf-dump-ellipsis-note\">App\\Models</span><span class=\"sf-dump-ellipsis sf-dump-ellipsis-note\">\\</span>Franchise</span> {<a class=sf-dump-ref>#4081</a><samp data-depth=3 class=sf-dump-compact>
+      #<span class=sf-dump-protected title=\"Protected property\">connection</span>: \"<span class=sf-dump-str title=\"5 characters\">mysql</span>\"
+      #<span class=sf-dump-protected title=\"Protected property\">table</span>: \"<span class=sf-dump-str title=\"10 characters\">franchises</span>\"
+      #<span class=sf-dump-protected title=\"Protected property\">primaryKey</span>: \"<span class=sf-dump-str title=\"2 characters\">id</span>\"
+      #<span class=sf-dump-protected title=\"Protected property\">keyType</span>: \"<span class=sf-dump-str title=\"3 characters\">int</span>\"
+      +<span class=sf-dump-public title=\"Public property\">incrementing</span>: <span class=sf-dump-const>true</span>
+      #<span class=sf-dump-protected title=\"Protected property\">with</span>: []
+      #<span class=sf-dump-protected title=\"Protected property\">withCount</span>: []
+      +<span class=sf-dump-public title=\"Public property\">preventsLazyLoading</span>: <span class=sf-dump-const>false</span>
+      #<span class=sf-dump-protected title=\"Protected property\">perPage</span>: <span class=sf-dump-num>15</span>
+      +<span class=sf-dump-public title=\"Public property\">exists</span>: <span class=sf-dump-const>true</span>
+      +<span class=sf-dump-public title=\"Public property\">wasRecentlyCreated</span>: <span class=sf-dump-const>false</span>
+      #<span class=sf-dump-protected title=\"Protected property\">escapeWhenCastingToString</span>: <span class=sf-dump-const>false</span>
+      #<span class=sf-dump-protected title=\"Protected property\">attributes</span>: <span class=sf-dump-note>array:12</span> [ &#8230;12]
+      #<span class=sf-dump-protected title=\"Protected property\">original</span>: <span class=sf-dump-note>array:12</span> [ &#8230;12]
+      #<span class=sf-dump-protected title=\"Protected property\">changes</span>: []
+      #<span class=sf-dump-protected title=\"Protected property\">casts</span>: []
+      #<span class=sf-dump-protected title=\"Protected property\">classCastCache</span>: []
+      #<span class=sf-dump-protected title=\"Protected property\">attributeCastCache</span>: []
+      #<span class=sf-dump-protected title=\"Protected property\">dateFormat</span>: <span class=sf-dump-const>null</span>
+      #<span class=sf-dump-protected title=\"Protected property\">appends</span>: []
+      #<span class=sf-dump-protected title=\"Protected property\">dispatchesEvents</span>: []
+      #<span class=sf-dump-protected title=\"Protected property\">observables</span>: []
+      #<span class=sf-dump-protected title=\"Protected property\">relations</span>: []
+      #<span class=sf-dump-protected title=\"Protected property\">touches</span>: []
+      +<span class=sf-dump-public title=\"Public property\">timestamps</span>: <span class=sf-dump-const>true</span>
+      +<span class=sf-dump-public title=\"Public property\">usesUniqueIds</span>: <span class=sf-dump-const>false</span>
+      #<span class=sf-dump-protected title=\"Protected property\">hidden</span>: []
+      #<span class=sf-dump-protected title=\"Protected property\">visible</span>: []
+      #<span class=sf-dump-protected title=\"Protected property\">fillable</span>: <span class=sf-dump-note>array:9</span> [ &#8230;9]
+      #<span class=sf-dump-protected title=\"Protected property\">guarded</span>: <span class=sf-dump-note>array:1</span> [ &#8230;1]
+    </samp>}
+    \"<span class=sf-dump-key>shop</span>\" => <span class=sf-dump-const>null</span>
+  </samp>]
+  #<span class=sf-dump-protected title=\"Protected property\">touches</span>: []
+  +<span class=sf-dump-public title=\"Public property\">timestamps</span>: <span class=sf-dump-const>true</span>
+  +<span class=sf-dump-public title=\"Public property\">usesUniqueIds</span>: <span class=sf-dump-const>false</span>
+  #<span class=sf-dump-protected title=\"Protected property\">hidden</span>: <span class=sf-dump-note>array:2</span> [<samp data-depth=2 class=sf-dump-compact>
+    <span class=sf-dump-index>0</span> => \"<span class=sf-dump-str title=\"8 characters\">password</span>\"
+    <span class=sf-dump-index>1</span> => \"<span class=sf-dump-str title=\"14 characters\">remember_token</span>\"
+  </samp>]
+  #<span class=sf-dump-protected title=\"Protected property\">visible</span>: []
+  #<span class=sf-dump-protected title=\"Protected property\">fillable</span>: <span class=sf-dump-note>array:13</span> [<samp data-depth=2 class=sf-dump-compact>
+    <span class=sf-dump-index>0</span> => \"<span class=sf-dump-str title=\"4 characters\">name</span>\"
+    <span class=sf-dump-index>1</span> => \"<span class=sf-dump-str title=\"5 characters\">email</span>\"
+    <span class=sf-dump-index>2</span> => \"<span class=sf-dump-str title=\"8 characters\">password</span>\"
+    <span class=sf-dump-index>3</span> => \"<span class=sf-dump-str title=\"7 characters\">address</span>\"
+    <span class=sf-dump-index>4</span> => \"<span class=sf-dump-str title=\"4 characters\">city</span>\"
+    <span class=sf-dump-index>5</span> => \"<span class=sf-dump-str title=\"11 characters\">postal_code</span>\"
+    <span class=sf-dump-index>6</span> => \"<span class=sf-dump-str title=\"5 characters\">phone</span>\"
+    <span class=sf-dump-index>7</span> => \"<span class=sf-dump-str title=\"7 characters\">country</span>\"
+    <span class=sf-dump-index>8</span> => \"<span class=sf-dump-str title=\"11 characters\">provider_id</span>\"
+    <span class=sf-dump-index>9</span> => \"<span class=sf-dump-str title=\"17 characters\">email_verified_at</span>\"
+    <span class=sf-dump-index>10</span> => \"<span class=sf-dump-str title=\"17 characters\">verification_code</span>\"
+    <span class=sf-dump-index>11</span> => \"<span class=sf-dump-str title=\"19 characters\">verification_status</span>\"
+    <span class=sf-dump-index>12</span> => \"<span class=sf-dump-str title=\"9 characters\">user_type</span>\"
+  </samp>]
+  #<span class=sf-dump-protected title=\"Protected property\">guarded</span>: <span class=sf-dump-note>array:1</span> [<samp data-depth=2 class=sf-dump-compact>
+    <span class=sf-dump-index>0</span> => \"<span class=sf-dump-str>*</span>\"
+  </samp>]
+  #<span class=sf-dump-protected title=\"Protected property\">rememberTokenName</span>: \"<span class=sf-dump-str title=\"14 characters\">remember_token</span>\"
+  #<span class=sf-dump-protected title=\"Protected property\">accessToken</span>: <span class=sf-dump-const>null</span>
+  -<span class=sf-dump-private title=\"Private property defined in class:&#10;`App\\Models\\User`\">roleClass</span>: <span class=sf-dump-const>null</span>
+  -<span class=sf-dump-private title=\"Private property defined in class:&#10;`App\\Models\\User`\">permissionClass</span>: <span class=sf-dump-const>null</span>
+  -<span class=sf-dump-private title=\"Private property defined in class:&#10;`App\\Models\\User`\">wildcardClass</span>: <span class=sf-dump-const>null</span>
+</samp>}
+</pre><script>Sfdump(\"sf-dump-120115770\", {\"maxDepth\":3,\"maxStringLength\":160})</script>
+","status":"<pre class=sf-dump id=sf-dump-149115967 data-indent-pad=\"  \">\"<span class=sf-dump-str title=\"8 characters\">approved</span>\"
+</pre><script>Sfdump(\"sf-dump-149115967\", {\"maxDepth\":3,\"maxStringLength\":160})</script>
+","__currentLoopData":"<pre class=sf-dump id=sf-dump-95938603 data-indent-pad=\"  \"><span class=sf-dump-note>Illuminate\\Support\\Collection</span> {<a class=sf-dump-ref>#4200</a><samp data-depth=1 class=sf-dump-expanded>
+  #<span class=sf-dump-protected title=\"Protected property\">items</span>: []
+  #<span class=sf-dump-protected title=\"Protected property\">escapeWhenCastingToString</span>: <span class=sf-dump-const>false</span>
+</samp>}
+</pre><script>Sfdump(\"sf-dump-95938603\", {\"maxDepth\":3,\"maxStringLength\":160})</script>
+","category":"<pre class=sf-dump id=sf-dump-37154996 data-indent-pad=\"  \"><span class=sf-dump-note>App\\Models\\Category</span> {<a class=sf-dump-ref>#4415</a><samp data-depth=1 class=sf-dump-expanded>
+  #<span class=sf-dump-protected title=\"Protected property\">connection</span>: \"<span class=sf-dump-str title=\"5 characters\">mysql</span>\"
+  #<span class=sf-dump-protected title=\"Protected property\">table</span>: \"<span class=sf-dump-str title=\"10 characters\">categories</span>\"
+  #<span class=sf-dump-protected title=\"Protected property\">primaryKey</span>: \"<span class=sf-dump-str title=\"2 characters\">id</span>\"
+  #<span class=sf-dump-protected title=\"Protected property\">keyType</span>: \"<span class=sf-dump-str title=\"3 characters\">int</span>\"
+  +<span class=sf-dump-public title=\"Public property\">incrementing</span>: <span class=sf-dump-const>true</span>
+  #<span class=sf-dump-protected title=\"Protected property\">with</span>: <span class=sf-dump-note>array:1</span> [<samp data-depth=2 class=sf-dump-compact>
+    <span class=sf-dump-index>0</span> => \"<span class=sf-dump-str title=\"21 characters\">category_translations</span>\"
+  </samp>]
+  #<span class=sf-dump-protected title=\"Protected property\">withCount</span>: []
+  +<span class=sf-dump-public title=\"Public property\">preventsLazyLoading</span>: <span class=sf-dump-const>false</span>
+  #<span class=sf-dump-protected title=\"Protected property\">perPage</span>: <span class=sf-dump-num>15</span>
+  +<span class=sf-dump-public title=\"Public property\">exists</span>: <span class=sf-dump-const>true</span>
+  +<span class=sf-dump-public title=\"Public property\">wasRecentlyCreated</span>: <span class=sf-dump-const>false</span>
+  #<span class=sf-dump-protected title=\"Protected property\">escapeWhenCastingToString</span>: <span class=sf-dump-const>false</span>
+  #<span class=sf-dump-protected title=\"Protected property\">attributes</span>: <span class=sf-dump-note>array:24</span> [<samp data-depth=2 class=sf-dump-compact>
+    \"<span class=sf-dump-key>id</span>\" => <span class=sf-dump-num>47</span>
+    \"<span class=sf-dump-key>user_id</span>\" => <span class=sf-dump-const>null</span>
+    \"<span class=sf-dump-key>parent_id</span>\" => <span class=sf-dump-num>1</span>
+    \"<span class=sf-dump-key>level</span>\" => <span class=sf-dump-num>1</span>
+    \"<span class=sf-dump-key>name</span>\" => \"<span class=sf-dump-str title=\"6 characters\">Bottom</span>\"
+    \"<span class=sf-dump-key>order_level</span>\" => <span class=sf-dump-num>0</span>
+    \"<span class=sf-dump-key>commision_rate</span>\" => <span class=sf-dump-num>0.0</span>
+    \"<span class=sf-dump-key>discount</span>\" => <span class=sf-dump-num>0.0</span>
+    \"<span class=sf-dump-key>discount_start_date</span>\" => <span class=sf-dump-const>null</span>
+    \"<span class=sf-dump-key>discount_end_date</span>\" => <span class=sf-dump-const>null</span>
+    \"<span class=sf-dump-key>banner</span>\" => <span class=sf-dump-const>null</span>
+    \"<span class=sf-dump-key>icon</span>\" => <span class=sf-dump-const>null</span>
+    \"<span class=sf-dump-key>cover_image</span>\" => <span class=sf-dump-const>null</span>
+    \"<span class=sf-dump-key>featured</span>\" => <span class=sf-dump-num>0</span>
+    \"<span class=sf-dump-key>hot_category</span>\" => \"<span class=sf-dump-str>0</span>\"
+    \"<span class=sf-dump-key>top</span>\" => <span class=sf-dump-num>0</span>
+    \"<span class=sf-dump-key>digital</span>\" => <span class=sf-dump-num>0</span>
+    \"<span class=sf-dump-key>slug</span>\" => \"<span class=sf-dump-str title=\"12 characters\">Bottom-KVdCm</span>\"
+    \"<span class=sf-dump-key>refund_request_time</span>\" => <span class=sf-dump-const>null</span>
+    \"<span class=sf-dump-key>meta_title</span>\" => \"<span class=sf-dump-str title=\"6 characters\">Bottom</span>\"
+    \"<span class=sf-dump-key>meta_description</span>\" => \"<span class=sf-dump-str title=\"6 characters\">Bottom</span>\"
+    \"<span class=sf-dump-key>meta_keywords</span>\" => <span class=sf-dump-const>null</span>
+    \"<span class=sf-dump-key>created_at</span>\" => \"<span class=sf-dump-str title=\"19 characters\">2023-12-13 21:16:21</span>\"
+    \"<span class=sf-dump-key>updated_at</span>\" => \"<span class=sf-dump-str title=\"19 characters\">2023-12-13 21:16:21</span>\"
+  </samp>]
+  #<span class=sf-dump-protected title=\"Protected property\">original</span>: <span class=sf-dump-note>array:24</span> [<samp data-depth=2 class=sf-dump-compact>
+    \"<span class=sf-dump-key>id</span>\" => <span class=sf-dump-num>47</span>
+    \"<span class=sf-dump-key>user_id</span>\" => <span class=sf-dump-const>null</span>
+    \"<span class=sf-dump-key>parent_id</span>\" => <span class=sf-dump-num>1</span>
+    \"<span class=sf-dump-key>level</span>\" => <span class=sf-dump-num>1</span>
+    \"<span class=sf-dump-key>name</span>\" => \"<span class=sf-dump-str title=\"6 characters\">Bottom</span>\"
+    \"<span class=sf-dump-key>order_level</span>\" => <span class=sf-dump-num>0</span>
+    \"<span class=sf-dump-key>commision_rate</span>\" => <span class=sf-dump-num>0.0</span>
+    \"<span class=sf-dump-key>discount</span>\" => <span class=sf-dump-num>0.0</span>
+    \"<span class=sf-dump-key>discount_start_date</span>\" => <span class=sf-dump-const>null</span>
+    \"<span class=sf-dump-key>discount_end_date</span>\" => <span class=sf-dump-const>null</span>
+    \"<span class=sf-dump-key>banner</span>\" => <span class=sf-dump-const>null</span>
+    \"<span class=sf-dump-key>icon</span>\" => <span class=sf-dump-const>null</span>
+    \"<span class=sf-dump-key>cover_image</span>\" => <span class=sf-dump-const>null</span>
+    \"<span class=sf-dump-key>featured</span>\" => <span class=sf-dump-num>0</span>
+    \"<span class=sf-dump-key>hot_category</span>\" => \"<span class=sf-dump-str>0</span>\"
+    \"<span class=sf-dump-key>top</span>\" => <span class=sf-dump-num>0</span>
+    \"<span class=sf-dump-key>digital</span>\" => <span class=sf-dump-num>0</span>
+    \"<span class=sf-dump-key>slug</span>\" => \"<span class=sf-dump-str title=\"12 characters\">Bottom-KVdCm</span>\"
+    \"<span class=sf-dump-key>refund_request_time</span>\" => <span class=sf-dump-const>null</span>
+    \"<span class=sf-dump-key>meta_title</span>\" => \"<span class=sf-dump-str title=\"6 characters\">Bottom</span>\"
+    \"<span class=sf-dump-key>meta_description</span>\" => \"<span class=sf-dump-str title=\"6 characters\">Bottom</span>\"
+    \"<span class=sf-dump-key>meta_keywords</span>\" => <span class=sf-dump-const>null</span>
+    \"<span class=sf-dump-key>created_at</span>\" => \"<span class=sf-dump-str title=\"19 characters\">2023-12-13 21:16:21</span>\"
+    \"<span class=sf-dump-key>updated_at</span>\" => \"<span class=sf-dump-str title=\"19 characters\">2023-12-13 21:16:21</span>\"
+  </samp>]
+  #<span class=sf-dump-protected title=\"Protected property\">changes</span>: []
+  #<span class=sf-dump-protected title=\"Protected property\">casts</span>: []
+  #<span class=sf-dump-protected title=\"Protected property\">classCastCache</span>: []
+  #<span class=sf-dump-protected title=\"Protected property\">attributeCastCache</span>: []
+  #<span class=sf-dump-protected title=\"Protected property\">dateFormat</span>: <span class=sf-dump-const>null</span>
+  #<span class=sf-dump-protected title=\"Protected property\">appends</span>: []
+  #<span class=sf-dump-protected title=\"Protected property\">dispatchesEvents</span>: []
+  #<span class=sf-dump-protected title=\"Protected property\">observables</span>: []
+  #<span class=sf-dump-protected title=\"Protected property\">relations</span>: <span class=sf-dump-note>array:1</span> [<samp data-depth=2 class=sf-dump-compact>
+    \"<span class=sf-dump-key>category_translations</span>\" => <span class=sf-dump-note title=\"Illuminate\\Database\\Eloquent\\Collection
+\"><span class=\"sf-dump-ellipsis sf-dump-ellipsis-note\">Illuminate\\Database\\Eloquent</span><span class=\"sf-dump-ellipsis sf-dump-ellipsis-note\">\\</span>Collection</span> {<a class=sf-dump-ref>#4418</a><samp data-depth=3 class=sf-dump-compact>
+      #<span class=sf-dump-protected title=\"Protected property\">items</span>: []
+      #<span class=sf-dump-protected title=\"Protected property\">escapeWhenCastingToString</span>: <span class=sf-dump-const>false</span>
+    </samp>}
+  </samp>]
+  #<span class=sf-dump-protected title=\"Protected property\">touches</span>: []
+  +<span class=sf-dump-public title=\"Public property\">timestamps</span>: <span class=sf-dump-const>true</span>
+  +<span class=sf-dump-public title=\"Public property\">usesUniqueIds</span>: <span class=sf-dump-const>false</span>
+  #<span class=sf-dump-protected title=\"Protected property\">hidden</span>: []
+  #<span class=sf-dump-protected title=\"Protected property\">visible</span>: []
+  #<span class=sf-dump-protected title=\"Protected property\">fillable</span>: <span class=sf-dump-note>array:3</span> [<samp data-depth=2 class=sf-dump-compact>
+    <span class=sf-dump-index>0</span> => \"<span class=sf-dump-str title=\"8 characters\">discount</span>\"
+    <span class=sf-dump-index>1</span> => \"<span class=sf-dump-str title=\"19 characters\">discount_start_date</span>\"
+    <span class=sf-dump-index>2</span> => \"<span class=sf-dump-str title=\"17 characters\">discount_end_date</span>\"
+  </samp>]
+  #<span class=sf-dump-protected title=\"Protected property\">guarded</span>: <span class=sf-dump-note>array:1</span> [<samp data-depth=2 class=sf-dump-compact>
+    <span class=sf-dump-index>0</span> => \"<span class=sf-dump-str>*</span>\"
+  </samp>]
+</samp>}
+</pre><script>Sfdump(\"sf-dump-37154996\", {\"maxDepth\":3,\"maxStringLength\":160})</script>
+","key":"<pre class=sf-dump id=sf-dump-334355724 data-indent-pad=\"  \"><span class=sf-dump-num>0</span>
+</pre><script>Sfdump(\"sf-dump-334355724\", {\"maxDepth\":3,\"maxStringLength\":160})</script>
+","loop":"<pre class=sf-dump id=sf-dump-637794054 data-indent-pad=\"  \"><span class=sf-dump-const>null</span>
+</pre><script>Sfdump(\"sf-dump-637794054\", {\"maxDepth\":3,\"maxStringLength\":160})</script>
+","cat_products":"<pre class=sf-dump id=sf-dump-2039702446 data-indent-pad=\"  \"><span class=sf-dump-num>0</span>
+</pre><script>Sfdump(\"sf-dump-2039702446\", {\"maxDepth\":3,\"maxStringLength\":160})</script>
+","product":"<pre class=sf-dump id=sf-dump-1142588588 data-indent-pad=\"  \"><span class=sf-dump-note>App\\Models\\Product</span> {<a class=sf-dump-ref>#4198</a><samp data-depth=1 class=sf-dump-expanded>
+  #<span class=sf-dump-protected title=\"Protected property\">connection</span>: \"<span class=sf-dump-str title=\"5 characters\">mysql</span>\"
+  #<span class=sf-dump-protected title=\"Protected property\">table</span>: \"<span class=sf-dump-str title=\"8 characters\">products</span>\"
+  #<span class=sf-dump-protected title=\"Protected property\">primaryKey</span>: \"<span class=sf-dump-str title=\"2 characters\">id</span>\"
+  #<span class=sf-dump-protected title=\"Protected property\">keyType</span>: \"<span class=sf-dump-str title=\"3 characters\">int</span>\"
+  +<span class=sf-dump-public title=\"Public property\">incrementing</span>: <span class=sf-dump-const>true</span>
+  #<span class=sf-dump-protected title=\"Protected property\">with</span>: <span class=sf-dump-note>array:3</span> [<samp data-depth=2 class=sf-dump-compact>
+    <span class=sf-dump-index>0</span> => \"<span class=sf-dump-str title=\"20 characters\">product_translations</span>\"
+    <span class=sf-dump-index>1</span> => \"<span class=sf-dump-str title=\"5 characters\">taxes</span>\"
+    <span class=sf-dump-index>2</span> => \"<span class=sf-dump-str title=\"9 characters\">thumbnail</span>\"
+  </samp>]
+  #<span class=sf-dump-protected title=\"Protected property\">withCount</span>: []
+  +<span class=sf-dump-public title=\"Public property\">preventsLazyLoading</span>: <span class=sf-dump-const>false</span>
+  #<span class=sf-dump-protected title=\"Protected property\">perPage</span>: <span class=sf-dump-num>15</span>
+  +<span class=sf-dump-public title=\"Public property\">exists</span>: <span class=sf-dump-const>true</span>
+  +<span class=sf-dump-public title=\"Public property\">wasRecentlyCreated</span>: <span class=sf-dump-const>false</span>
+  #<span class=sf-dump-protected title=\"Protected property\">escapeWhenCastingToString</span>: <span class=sf-dump-const>false</span>
+  #<span class=sf-dump-protected title=\"Protected property\">attributes</span>: <span class=sf-dump-note>array:70</span> [<samp data-depth=2 class=sf-dump-compact>
+    \"<span class=sf-dump-key>id</span>\" => <span class=sf-dump-num>22</span>
+    \"<span class=sf-dump-key>name</span>\" => \"<span class=sf-dump-str title=\"12 characters\">Abdur Rahman</span>\"
+    \"<span class=sf-dump-key>added_by</span>\" => \"<span class=sf-dump-str title=\"6 characters\">seller</span>\"
+    \"<span class=sf-dump-key>user_id</span>\" => <span class=sf-dump-num>10</span>
+    \"<span class=sf-dump-key>category_id</span>\" => <span class=sf-dump-num>3</span>
+    \"<span class=sf-dump-key>brand_id</span>\" => <span class=sf-dump-const>null</span>
+    \"<span class=sf-dump-key>photos</span>\" => <span class=sf-dump-const>null</span>
+    \"<span class=sf-dump-key>thumbnail_img</span>\" => <span class=sf-dump-const>null</span>
+    \"<span class=sf-dump-key>short_video</span>\" => <span class=sf-dump-const>null</span>
+    \"<span class=sf-dump-key>short_video_thumbnail</span>\" => <span class=sf-dump-const>null</span>
+    \"<span class=sf-dump-key>video_provider</span>\" => <span class=sf-dump-const>null</span>
+    \"<span class=sf-dump-key>video_link</span>\" => <span class=sf-dump-const>null</span>
+    \"<span class=sf-dump-key>tags</span>\" => \"<span class=sf-dump-str title=\"9 characters\">ggggg,ggg</span>\"
+    \"<span class=sf-dump-key>description</span>\" => \"<span class=sf-dump-str title=\"10 characters\">&lt;p&gt;www&lt;/p&gt;</span>\"
+    \"<span class=sf-dump-key>unit_price</span>\" => <span class=sf-dump-num>23.0</span>
+    \"<span class=sf-dump-key>purchase_price</span>\" => <span class=sf-dump-const>null</span>
+    \"<span class=sf-dump-key>variant_product</span>\" => <span class=sf-dump-num>0</span>
+    \"<span class=sf-dump-key>attributes</span>\" => \"<span class=sf-dump-str title=\"2 characters\">[]</span>\"
+    \"<span class=sf-dump-key>choice_options</span>\" => \"<span class=sf-dump-str title=\"2 characters\">[]</span>\"
+    \"<span class=sf-dump-key>colors</span>\" => \"<span class=sf-dump-str title=\"2 characters\">[]</span>\"
+    \"<span class=sf-dump-key>variations</span>\" => <span class=sf-dump-const>null</span>
+    \"<span class=sf-dump-key>custom_label_id</span>\" => <span class=sf-dump-const>null</span>
+    \"<span class=sf-dump-key>todays_deal</span>\" => <span class=sf-dump-num>0</span>
+    \"<span class=sf-dump-key>published</span>\" => <span class=sf-dump-num>1</span>
+    \"<span class=sf-dump-key>draft</span>\" => <span class=sf-dump-num>0</span>
+    \"<span class=sf-dump-key>pos</span>\" => <span class=sf-dump-num>0</span>
+    \"<span class=sf-dump-key>approved</span>\" => <span class=sf-dump-num>1</span>
+    \"<span class=sf-dump-key>stock_visibility_state</span>\" => \"<span class=sf-dump-str title=\"8 characters\">quantity</span>\"
+    \"<span class=sf-dump-key>cash_on_delivery</span>\" => <span class=sf-dump-num>0</span>
+    \"<span class=sf-dump-key>featured</span>\" => <span class=sf-dump-num>0</span>
+    \"<span class=sf-dump-key>seller_featured</span>\" => <span class=sf-dump-num>0</span>
+    \"<span class=sf-dump-key>current_stock</span>\" => <span class=sf-dump-num>23</span>
+    \"<span class=sf-dump-key>unit</span>\" => \"<span class=sf-dump-str title=\"2 characters\">23</span>\"
+    \"<span class=sf-dump-key>weight</span>\" => <span class=sf-dump-num>0.0</span>
+    \"<span class=sf-dump-key>min_qty</span>\" => <span class=sf-dump-num>23</span>
+    \"<span class=sf-dump-key>low_stock_quantity</span>\" => <span class=sf-dump-const>null</span>
+    \"<span class=sf-dump-key>discount</span>\" => <span class=sf-dump-num>0.0</span>
+    \"<span class=sf-dump-key>discount_type</span>\" => \"<span class=sf-dump-str title=\"6 characters\">amount</span>\"
+    \"<span class=sf-dump-key>discount_start_date</span>\" => <span class=sf-dump-const>null</span>
+    \"<span class=sf-dump-key>discount_end_date</span>\" => <span class=sf-dump-const>null</span>
+    \"<span class=sf-dump-key>tax</span>\" => <span class=sf-dump-const>null</span>
+    \"<span class=sf-dump-key>tax_type</span>\" => <span class=sf-dump-const>null</span>
+    \"<span class=sf-dump-key>hsn_code</span>\" => <span class=sf-dump-const>null</span>
+    \"<span class=sf-dump-key>gst_rate</span>\" => <span class=sf-dump-num>0.0</span>
+    \"<span class=sf-dump-key>shipping_type</span>\" => \"<span class=sf-dump-str title=\"9 characters\">flat_rate</span>\"
+    \"<span class=sf-dump-key>shipping_cost</span>\" => <span class=sf-dump-num>0.0</span>
+    \"<span class=sf-dump-key>is_quantity_multiplied</span>\" => <span class=sf-dump-num>0</span>
+    \"<span class=sf-dump-key>est_shipping_days</span>\" => <span class=sf-dump-const>null</span>
+    \"<span class=sf-dump-key>num_of_sale</span>\" => <span class=sf-dump-num>0</span>
+    \"<span class=sf-dump-key>meta_title</span>\" => \"<span class=sf-dump-str title=\"12 characters\">Abdur Rahman</span>\"
+    \"<span class=sf-dump-key>meta_description</span>\" => \"<span class=sf-dump-str title=\"3 characters\">www</span>\"
+    \"<span class=sf-dump-key>meta_keywords</span>\" => <span class=sf-dump-const>null</span>
+    \"<span class=sf-dump-key>meta_img</span>\" => <span class=sf-dump-const>null</span>
+    \"<span class=sf-dump-key>pdf</span>\" => <span class=sf-dump-const>null</span>
+    \"<span class=sf-dump-key>slug</span>\" => \"<span class=sf-dump-str title=\"12 characters\">abdur-rahman</span>\"
+    \"<span class=sf-dump-key>rating</span>\" => <span class=sf-dump-num>0.0</span>
+    \"<span class=sf-dump-key>barcode</span>\" => <span class=sf-dump-const>null</span>
+    \"<span class=sf-dump-key>digital</span>\" => <span class=sf-dump-num>0</span>
+    \"<span class=sf-dump-key>auction_product</span>\" => <span class=sf-dump-num>0</span>
+    \"<span class=sf-dump-key>file_name</span>\" => <span class=sf-dump-const>null</span>
+    \"<span class=sf-dump-key>file_path</span>\" => <span class=sf-dump-const>null</span>
+    \"<span class=sf-dump-key>external_link</span>\" => <span class=sf-dump-const>null</span>
+    \"<span class=sf-dump-key>external_link_btn</span>\" => \"<span class=sf-dump-str title=\"7 characters\">Buy Now</span>\"
+    \"<span class=sf-dump-key>wholesale_product</span>\" => <span class=sf-dump-num>0</span>
+    \"<span class=sf-dump-key>frequently_bought_selection_type</span>\" => \"<span class=sf-dump-str title=\"7 characters\">product</span>\"
+    \"<span class=sf-dump-key>has_warranty</span>\" => <span class=sf-dump-num>0</span>
+    \"<span class=sf-dump-key>warranty_id</span>\" => <span class=sf-dump-const>null</span>
+    \"<span class=sf-dump-key>warranty_note_id</span>\" => <span class=sf-dump-const>null</span>
+    \"<span class=sf-dump-key>created_at</span>\" => \"<span class=sf-dump-str title=\"19 characters\">2026-02-06 17:12:24</span>\"
+    \"<span class=sf-dump-key>updated_at</span>\" => \"<span class=sf-dump-str title=\"19 characters\">2026-02-06 17:12:24</span>\"
+  </samp>]
+  #<span class=sf-dump-protected title=\"Protected property\">original</span>: <span class=sf-dump-note>array:70</span> [<samp data-depth=2 class=sf-dump-compact>
+    \"<span class=sf-dump-key>id</span>\" => <span class=sf-dump-num>22</span>
+    \"<span class=sf-dump-key>name</span>\" => \"<span class=sf-dump-str title=\"12 characters\">Abdur Rahman</span>\"
+    \"<span class=sf-dump-key>added_by</span>\" => \"<span class=sf-dump-str title=\"6 characters\">seller</span>\"
+    \"<span class=sf-dump-key>user_id</span>\" => <span class=sf-dump-num>10</span>
+    \"<span class=sf-dump-key>category_id</span>\" => <span class=sf-dump-num>3</span>
+    \"<span class=sf-dump-key>brand_id</span>\" => <span class=sf-dump-const>null</span>
+    \"<span class=sf-dump-key>photos</span>\" => <span class=sf-dump-const>null</span>
+    \"<span class=sf-dump-key>thumbnail_img</span>\" => <span class=sf-dump-const>null</span>
+    \"<span class=sf-dump-key>short_video</span>\" => <span class=sf-dump-const>null</span>
+    \"<span class=sf-dump-key>short_video_thumbnail</span>\" => <span class=sf-dump-const>null</span>
+    \"<span class=sf-dump-key>video_provider</span>\" => <span class=sf-dump-const>null</span>
+    \"<span class=sf-dump-key>video_link</span>\" => <span class=sf-dump-const>null</span>
+    \"<span class=sf-dump-key>tags</span>\" => \"<span class=sf-dump-str title=\"9 characters\">ggggg,ggg</span>\"
+    \"<span class=sf-dump-key>description</span>\" => \"<span class=sf-dump-str title=\"10 characters\">&lt;p&gt;www&lt;/p&gt;</span>\"
+    \"<span class=sf-dump-key>unit_price</span>\" => <span class=sf-dump-num>23.0</span>
+    \"<span class=sf-dump-key>purchase_price</span>\" => <span class=sf-dump-const>null</span>
+    \"<span class=sf-dump-key>variant_product</span>\" => <span class=sf-dump-num>0</span>
+    \"<span class=sf-dump-key>attributes</span>\" => \"<span class=sf-dump-str title=\"2 characters\">[]</span>\"
+    \"<span class=sf-dump-key>choice_options</span>\" => \"<span class=sf-dump-str title=\"2 characters\">[]</span>\"
+    \"<span class=sf-dump-key>colors</span>\" => \"<span class=sf-dump-str title=\"2 characters\">[]</span>\"
+    \"<span class=sf-dump-key>variations</span>\" => <span class=sf-dump-const>null</span>
+    \"<span class=sf-dump-key>custom_label_id</span>\" => <span class=sf-dump-const>null</span>
+    \"<span class=sf-dump-key>todays_deal</span>\" => <span class=sf-dump-num>0</span>
+    \"<span class=sf-dump-key>published</span>\" => <span class=sf-dump-num>1</span>
+    \"<span class=sf-dump-key>draft</span>\" => <span class=sf-dump-num>0</span>
+    \"<span class=sf-dump-key>pos</span>\" => <span class=sf-dump-num>0</span>
+    \"<span class=sf-dump-key>approved</span>\" => <span class=sf-dump-num>1</span>
+    \"<span class=sf-dump-key>stock_visibility_state</span>\" => \"<span class=sf-dump-str title=\"8 characters\">quantity</span>\"
+    \"<span class=sf-dump-key>cash_on_delivery</span>\" => <span class=sf-dump-num>0</span>
+    \"<span class=sf-dump-key>featured</span>\" => <span class=sf-dump-num>0</span>
+    \"<span class=sf-dump-key>seller_featured</span>\" => <span class=sf-dump-num>0</span>
+    \"<span class=sf-dump-key>current_stock</span>\" => <span class=sf-dump-num>23</span>
+    \"<span class=sf-dump-key>unit</span>\" => \"<span class=sf-dump-str title=\"2 characters\">23</span>\"
+    \"<span class=sf-dump-key>weight</span>\" => <span class=sf-dump-num>0.0</span>
+    \"<span class=sf-dump-key>min_qty</span>\" => <span class=sf-dump-num>23</span>
+    \"<span class=sf-dump-key>low_stock_quantity</span>\" => <span class=sf-dump-const>null</span>
+    \"<span class=sf-dump-key>discount</span>\" => <span class=sf-dump-num>0.0</span>
+    \"<span class=sf-dump-key>discount_type</span>\" => \"<span class=sf-dump-str title=\"6 characters\">amount</span>\"
+    \"<span class=sf-dump-key>discount_start_date</span>\" => <span class=sf-dump-const>null</span>
+    \"<span class=sf-dump-key>discount_end_date</span>\" => <span class=sf-dump-const>null</span>
+    \"<span class=sf-dump-key>tax</span>\" => <span class=sf-dump-const>null</span>
+    \"<span class=sf-dump-key>tax_type</span>\" => <span class=sf-dump-const>null</span>
+    \"<span class=sf-dump-key>hsn_code</span>\" => <span class=sf-dump-const>null</span>
+    \"<span class=sf-dump-key>gst_rate</span>\" => <span class=sf-dump-num>0.0</span>
+    \"<span class=sf-dump-key>shipping_type</span>\" => \"<span class=sf-dump-str title=\"9 characters\">flat_rate</span>\"
+    \"<span class=sf-dump-key>shipping_cost</span>\" => <span class=sf-dump-num>0.0</span>
+    \"<span class=sf-dump-key>is_quantity_multiplied</span>\" => <span class=sf-dump-num>0</span>
+    \"<span class=sf-dump-key>est_shipping_days</span>\" => <span class=sf-dump-const>null</span>
+    \"<span class=sf-dump-key>num_of_sale</span>\" => <span class=sf-dump-num>0</span>
+    \"<span class=sf-dump-key>meta_title</span>\" => \"<span class=sf-dump-str title=\"12 characters\">Abdur Rahman</span>\"
+    \"<span class=sf-dump-key>meta_description</span>\" => \"<span class=sf-dump-str title=\"3 characters\">www</span>\"
+    \"<span class=sf-dump-key>meta_keywords</span>\" => <span class=sf-dump-const>null</span>
+    \"<span class=sf-dump-key>meta_img</span>\" => <span class=sf-dump-const>null</span>
+    \"<span class=sf-dump-key>pdf</span>\" => <span class=sf-dump-const>null</span>
+    \"<span class=sf-dump-key>slug</span>\" => \"<span class=sf-dump-str title=\"12 characters\">abdur-rahman</span>\"
+    \"<span class=sf-dump-key>rating</span>\" => <span class=sf-dump-num>0.0</span>
+    \"<span class=sf-dump-key>barcode</span>\" => <span class=sf-dump-const>null</span>
+    \"<span class=sf-dump-key>digital</span>\" => <span class=sf-dump-num>0</span>
+    \"<span class=sf-dump-key>auction_product</span>\" => <span class=sf-dump-num>0</span>
+    \"<span class=sf-dump-key>file_name</span>\" => <span class=sf-dump-const>null</span>
+    \"<span class=sf-dump-key>file_path</span>\" => <span class=sf-dump-const>null</span>
+    \"<span class=sf-dump-key>external_link</span>\" => <span class=sf-dump-const>null</span>
+    \"<span class=sf-dump-key>external_link_btn</span>\" => \"<span class=sf-dump-str title=\"7 characters\">Buy Now</span>\"
+    \"<span class=sf-dump-key>wholesale_product</span>\" => <span class=sf-dump-num>0</span>
+    \"<span class=sf-dump-key>frequently_bought_selection_type</span>\" => \"<span class=sf-dump-str title=\"7 characters\">product</span>\"
+    \"<span class=sf-dump-key>has_warranty</span>\" => <span class=sf-dump-num>0</span>
+    \"<span class=sf-dump-key>warranty_id</span>\" => <span class=sf-dump-const>null</span>
+    \"<span class=sf-dump-key>warranty_note_id</span>\" => <span class=sf-dump-const>null</span>
+    \"<span class=sf-dump-key>created_at</span>\" => \"<span class=sf-dump-str title=\"19 characters\">2026-02-06 17:12:24</span>\"
+    \"<span class=sf-dump-key>updated_at</span>\" => \"<span class=sf-dump-str title=\"19 characters\">2026-02-06 17:12:24</span>\"
+  </samp>]
+  #<span class=sf-dump-protected title=\"Protected property\">changes</span>: []
+  #<span class=sf-dump-protected title=\"Protected property\">casts</span>: []
+  #<span class=sf-dump-protected title=\"Protected property\">classCastCache</span>: []
+  #<span class=sf-dump-protected title=\"Protected property\">attributeCastCache</span>: []
+  #<span class=sf-dump-protected title=\"Protected property\">dateFormat</span>: <span class=sf-dump-const>null</span>
+  #<span class=sf-dump-protected title=\"Protected property\">appends</span>: []
+  #<span class=sf-dump-protected title=\"Protected property\">dispatchesEvents</span>: []
+  #<span class=sf-dump-protected title=\"Protected property\">observables</span>: []
+  #<span class=sf-dump-protected title=\"Protected property\">relations</span>: <span class=sf-dump-note>array:3</span> [<samp data-depth=2 class=sf-dump-compact>
+    \"<span class=sf-dump-key>product_translations</span>\" => <span class=sf-dump-note title=\"Illuminate\\Database\\Eloquent\\Collection
+\"><span class=\"sf-dump-ellipsis sf-dump-ellipsis-note\">Illuminate\\Database\\Eloquent</span><span class=\"sf-dump-ellipsis sf-dump-ellipsis-note\">\\</span>Collection</span> {<a class=sf-dump-ref>#4192</a><samp data-depth=3 class=sf-dump-compact>
+      #<span class=sf-dump-protected title=\"Protected property\">items</span>: <span class=sf-dump-note>array:1</span> [ &#8230;1]
+      #<span class=sf-dump-protected title=\"Protected property\">escapeWhenCastingToString</span>: <span class=sf-dump-const>false</span>
+    </samp>}
+    \"<span class=sf-dump-key>taxes</span>\" => <span class=sf-dump-note title=\"Illuminate\\Database\\Eloquent\\Collection
+\"><span class=\"sf-dump-ellipsis sf-dump-ellipsis-note\">Illuminate\\Database\\Eloquent</span><span class=\"sf-dump-ellipsis sf-dump-ellipsis-note\">\\</span>Collection</span> {<a class=sf-dump-ref>#4194</a><samp data-depth=3 class=sf-dump-compact>
+      #<span class=sf-dump-protected title=\"Protected property\">items</span>: []
+      #<span class=sf-dump-protected title=\"Protected property\">escapeWhenCastingToString</span>: <span class=sf-dump-const>false</span>
+    </samp>}
+    \"<span class=sf-dump-key>thumbnail</span>\" => <span class=sf-dump-const>null</span>
+  </samp>]
+  #<span class=sf-dump-protected title=\"Protected property\">touches</span>: []
+  +<span class=sf-dump-public title=\"Public property\">timestamps</span>: <span class=sf-dump-const>true</span>
+  +<span class=sf-dump-public title=\"Public property\">usesUniqueIds</span>: <span class=sf-dump-const>false</span>
+  #<span class=sf-dump-protected title=\"Protected property\">hidden</span>: []
+  #<span class=sf-dump-protected title=\"Protected property\">visible</span>: []
+  #<span class=sf-dump-protected title=\"Protected property\">fillable</span>: []
+  #<span class=sf-dump-protected title=\"Protected property\">guarded</span>: <span class=sf-dump-note>array:1</span> [<samp data-depth=2 class=sf-dump-compact>
+    <span class=sf-dump-index>0</span> => \"<span class=sf-dump-str title=\"17 characters\">choice_attributes</span>\"
+  </samp>]
+</samp>}
+</pre><script>Sfdump(\"sf-dump-1142588588\", {\"maxDepth\":3,\"maxStringLength\":160})</script>
+"}},"userId":10,"exception":"[object] (Spatie\\LaravelIgnition\\Exceptions\\ViewException(code: 0): Route [franchise.sub_franchises.index] not defined. at C:\\Users\\Nash Tech PC 03\\Desktop\\E-Commerce ActiveZone\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\UrlGenerator.php:477)
+[stacktrace]
+#0 C:\\Users\\Nash Tech PC 03\\Desktop\\E-Commerce ActiveZone\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\helpers.php(811): Illuminate\\Routing\\UrlGenerator->route('franchise.sub_f...', Array, true)
+#1 C:\\Users\\Nash Tech PC 03\\Desktop\\E-Commerce ActiveZone\\resources\\views\\franchise\\inc\\franchise_sidenav.blade.php(77): route('franchise.sub_f...')
+#2 C:\\Users\\Nash Tech PC 03\\Desktop\\E-Commerce ActiveZone\\vendor\\laravel\\framework\\src\\Illuminate\\Filesystem\\Filesystem.php(123): require('C:\\\\Users\\\\Nash T...')
+#3 C:\\Users\\Nash Tech PC 03\\Desktop\\E-Commerce ActiveZone\\vendor\\laravel\\framework\\src\\Illuminate\\Filesystem\\Filesystem.php(124): Illuminate\\Filesystem\\Filesystem::Illuminate\\Filesystem\\{closure}()
+#4 C:\\Users\\Nash Tech PC 03\\Desktop\\E-Commerce ActiveZone\\vendor\\laravel\\framework\\src\\Illuminate\\View\\Engines\\PhpEngine.php(58): Illuminate\\Filesystem\\Filesystem->getRequire('C:\\\\Users\\\\Nash T...', Array)
+#5 C:\\Users\\Nash Tech PC 03\\Desktop\\E-Commerce ActiveZone\\vendor\\laravel\\framework\\src\\Illuminate\\View\\Engines\\CompilerEngine.php(72): Illuminate\\View\\Engines\\PhpEngine->evaluatePath('C:\\\\Users\\\\Nash T...', Array)
+#6 C:\\Users\\Nash Tech PC 03\\Desktop\\E-Commerce ActiveZone\\vendor\\laravel\\framework\\src\\Illuminate\\View\\View.php(207): Illuminate\\View\\Engines\\CompilerEngine->get('C:\\\\Users\\\\Nash T...', Array)
+#7 C:\\Users\\Nash Tech PC 03\\Desktop\\E-Commerce ActiveZone\\vendor\\laravel\\framework\\src\\Illuminate\\View\\View.php(190): Illuminate\\View\\View->getContents()
+#8 C:\\Users\\Nash Tech PC 03\\Desktop\\E-Commerce ActiveZone\\vendor\\laravel\\framework\\src\\Illuminate\\View\\View.php(159): Illuminate\\View\\View->renderContents()
+#9 C:\\Users\\Nash Tech PC 03\\Desktop\\E-Commerce ActiveZone\\resources\\views\\franchise\\layouts\\app.blade.php(68): Illuminate\\View\\View->render()
+#10 C:\\Users\\Nash Tech PC 03\\Desktop\\E-Commerce ActiveZone\\vendor\\laravel\\framework\\src\\Illuminate\\Filesystem\\Filesystem.php(123): require('C:\\\\Users\\\\Nash T...')
+#11 C:\\Users\\Nash Tech PC 03\\Desktop\\E-Commerce ActiveZone\\vendor\\laravel\\framework\\src\\Illuminate\\Filesystem\\Filesystem.php(124): Illuminate\\Filesystem\\Filesystem::Illuminate\\Filesystem\\{closure}()
+#12 C:\\Users\\Nash Tech PC 03\\Desktop\\E-Commerce ActiveZone\\vendor\\laravel\\framework\\src\\Illuminate\\View\\Engines\\PhpEngine.php(58): Illuminate\\Filesystem\\Filesystem->getRequire('C:\\\\Users\\\\Nash T...', Array)
+#13 C:\\Users\\Nash Tech PC 03\\Desktop\\E-Commerce ActiveZone\\vendor\\laravel\\framework\\src\\Illuminate\\View\\Engines\\CompilerEngine.php(72): Illuminate\\View\\Engines\\PhpEngine->evaluatePath('C:\\\\Users\\\\Nash T...', Array)
+#14 C:\\Users\\Nash Tech PC 03\\Desktop\\E-Commerce ActiveZone\\vendor\\laravel\\framework\\src\\Illuminate\\View\\View.php(207): Illuminate\\View\\Engines\\CompilerEngine->get('C:\\\\Users\\\\Nash T...', Array)
+#15 C:\\Users\\Nash Tech PC 03\\Desktop\\E-Commerce ActiveZone\\vendor\\laravel\\framework\\src\\Illuminate\\View\\View.php(190): Illuminate\\View\\View->getContents()
+#16 C:\\Users\\Nash Tech PC 03\\Desktop\\E-Commerce ActiveZone\\vendor\\laravel\\framework\\src\\Illuminate\\View\\View.php(159): Illuminate\\View\\View->renderContents()
+#17 C:\\Users\\Nash Tech PC 03\\Desktop\\E-Commerce ActiveZone\\resources\\views\\franchise\\dashboard.blade.php(424): Illuminate\\View\\View->render()
+#18 C:\\Users\\Nash Tech PC 03\\Desktop\\E-Commerce ActiveZone\\vendor\\laravel\\framework\\src\\Illuminate\\Filesystem\\Filesystem.php(123): require('C:\\\\Users\\\\Nash T...')
+#19 C:\\Users\\Nash Tech PC 03\\Desktop\\E-Commerce ActiveZone\\vendor\\laravel\\framework\\src\\Illuminate\\Filesystem\\Filesystem.php(124): Illuminate\\Filesystem\\Filesystem::Illuminate\\Filesystem\\{closure}()
+#20 C:\\Users\\Nash Tech PC 03\\Desktop\\E-Commerce ActiveZone\\vendor\\laravel\\framework\\src\\Illuminate\\View\\Engines\\PhpEngine.php(58): Illuminate\\Filesystem\\Filesystem->getRequire('C:\\\\Users\\\\Nash T...', Array)
+#21 C:\\Users\\Nash Tech PC 03\\Desktop\\E-Commerce ActiveZone\\vendor\\laravel\\framework\\src\\Illuminate\\View\\Engines\\CompilerEngine.php(72): Illuminate\\View\\Engines\\PhpEngine->evaluatePath('C:\\\\Users\\\\Nash T...', Array)
+#22 C:\\Users\\Nash Tech PC 03\\Desktop\\E-Commerce ActiveZone\\vendor\\laravel\\framework\\src\\Illuminate\\View\\View.php(207): Illuminate\\View\\Engines\\CompilerEngine->get('C:\\\\Users\\\\Nash T...', Array)
+#23 C:\\Users\\Nash Tech PC 03\\Desktop\\E-Commerce ActiveZone\\vendor\\laravel\\framework\\src\\Illuminate\\View\\View.php(190): Illuminate\\View\\View->getContents()
+#24 C:\\Users\\Nash Tech PC 03\\Desktop\\E-Commerce ActiveZone\\vendor\\laravel\\framework\\src\\Illuminate\\View\\View.php(159): Illuminate\\View\\View->renderContents()
+#25 C:\\Users\\Nash Tech PC 03\\Desktop\\E-Commerce ActiveZone\\vendor\\laravel\\framework\\src\\Illuminate\\Http\\Response.php(69): Illuminate\\View\\View->render()
+#26 C:\\Users\\Nash Tech PC 03\\Desktop\\E-Commerce ActiveZone\\vendor\\laravel\\framework\\src\\Illuminate\\Http\\Response.php(35): Illuminate\\Http\\Response->setContent(Object(Illuminate\\View\\View))
+#27 C:\\Users\\Nash Tech PC 03\\Desktop\\E-Commerce ActiveZone\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(918): Illuminate\\Http\\Response->__construct(Object(Illuminate\\View\\View), 200, Array)
+#28 C:\\Users\\Nash Tech PC 03\\Desktop\\E-Commerce ActiveZone\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(885): Illuminate\\Routing\\Router::toResponse(Object(Illuminate\\Http\\Request), Object(Illuminate\\View\\View))
+#29 C:\\Users\\Nash Tech PC 03\\Desktop\\E-Commerce ActiveZone\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(805): Illuminate\\Routing\\Router->prepareResponse(Object(Illuminate\\Http\\Request), Object(Illuminate\\View\\View))
+#30 C:\\Users\\Nash Tech PC 03\\Desktop\\E-Commerce ActiveZone\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(144): Illuminate\\Routing\\Router->Illuminate\\Routing\\{closure}(Object(Illuminate\\Http\\Request))
+#31 C:\\Users\\Nash Tech PC 03\\Desktop\\E-Commerce ActiveZone\\app\\Http\\Middleware\\PreventBackHistory.php(25): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#32 C:\\Users\\Nash Tech PC 03\\Desktop\\E-Commerce ActiveZone\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): App\\Http\\Middleware\\PreventBackHistory->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#33 C:\\Users\\Nash Tech PC 03\\Desktop\\E-Commerce ActiveZone\\app\\Http\\Middleware\\IsFranchise.php(31): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#34 C:\\Users\\Nash Tech PC 03\\Desktop\\E-Commerce ActiveZone\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): App\\Http\\Middleware\\IsFranchise->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#35 C:\\Users\\Nash Tech PC 03\\Desktop\\E-Commerce ActiveZone\\app\\Http\\Middleware\\CheckForMaintenanceMode.php(64): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#36 C:\\Users\\Nash Tech PC 03\\Desktop\\E-Commerce ActiveZone\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): App\\Http\\Middleware\\CheckForMaintenanceMode->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#37 C:\\Users\\Nash Tech PC 03\\Desktop\\E-Commerce ActiveZone\\app\\Http\\Middleware\\HttpsProtocol.php(20): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#38 C:\\Users\\Nash Tech PC 03\\Desktop\\E-Commerce ActiveZone\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): App\\Http\\Middleware\\HttpsProtocol->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#39 C:\\Users\\Nash Tech PC 03\\Desktop\\E-Commerce ActiveZone\\app\\Http\\Middleware\\Language.php(35): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#40 C:\\Users\\Nash Tech PC 03\\Desktop\\E-Commerce ActiveZone\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): App\\Http\\Middleware\\Language->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#41 C:\\Users\\Nash Tech PC 03\\Desktop\\E-Commerce ActiveZone\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Middleware\\SubstituteBindings.php(50): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#42 C:\\Users\\Nash Tech PC 03\\Desktop\\E-Commerce ActiveZone\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Routing\\Middleware\\SubstituteBindings->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#43 C:\\Users\\Nash Tech PC 03\\Desktop\\E-Commerce ActiveZone\\vendor\\laravel\\framework\\src\\Illuminate\\Auth\\Middleware\\Authenticate.php(57): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#44 C:\\Users\\Nash Tech PC 03\\Desktop\\E-Commerce ActiveZone\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Auth\\Middleware\\Authenticate->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#45 C:\\Users\\Nash Tech PC 03\\Desktop\\E-Commerce ActiveZone\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\VerifyCsrfToken.php(78): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#46 C:\\Users\\Nash Tech PC 03\\Desktop\\E-Commerce ActiveZone\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Foundation\\Http\\Middleware\\VerifyCsrfToken->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#47 C:\\Users\\Nash Tech PC 03\\Desktop\\E-Commerce ActiveZone\\vendor\\laravel\\framework\\src\\Illuminate\\Cookie\\Middleware\\AddQueuedCookiesToResponse.php(37): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#48 C:\\Users\\Nash Tech PC 03\\Desktop\\E-Commerce ActiveZone\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Cookie\\Middleware\\AddQueuedCookiesToResponse->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#49 C:\\Users\\Nash Tech PC 03\\Desktop\\E-Commerce ActiveZone\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(119): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#50 C:\\Users\\Nash Tech PC 03\\Desktop\\E-Commerce ActiveZone\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(805): Illuminate\\Pipeline\\Pipeline->then(Object(Closure))
+#51 C:\\Users\\Nash Tech PC 03\\Desktop\\E-Commerce ActiveZone\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(784): Illuminate\\Routing\\Router->runRouteWithinStack(Object(Illuminate\\Routing\\Route), Object(Illuminate\\Http\\Request))
+#52 C:\\Users\\Nash Tech PC 03\\Desktop\\E-Commerce ActiveZone\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(748): Illuminate\\Routing\\Router->runRoute(Object(Illuminate\\Http\\Request), Object(Illuminate\\Routing\\Route))
+#53 C:\\Users\\Nash Tech PC 03\\Desktop\\E-Commerce ActiveZone\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(737): Illuminate\\Routing\\Router->dispatchToRoute(Object(Illuminate\\Http\\Request))
+#54 C:\\Users\\Nash Tech PC 03\\Desktop\\E-Commerce ActiveZone\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php(200): Illuminate\\Routing\\Router->dispatch(Object(Illuminate\\Http\\Request))
+#55 C:\\Users\\Nash Tech PC 03\\Desktop\\E-Commerce ActiveZone\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(144): Illuminate\\Foundation\\Http\\Kernel->Illuminate\\Foundation\\Http\\{closure}(Object(Illuminate\\Http\\Request))
+#56 C:\\Users\\Nash Tech PC 03\\Desktop\\E-Commerce ActiveZone\\vendor\\barryvdh\\laravel-debugbar\\src\\Middleware\\InjectDebugbar.php(66): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#57 C:\\Users\\Nash Tech PC 03\\Desktop\\E-Commerce ActiveZone\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Barryvdh\\Debugbar\\Middleware\\InjectDebugbar->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#58 C:\\Users\\Nash Tech PC 03\\Desktop\\E-Commerce ActiveZone\\vendor\\laravel\\framework\\src\\Illuminate\\View\\Middleware\\ShareErrorsFromSession.php(49): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#59 C:\\Users\\Nash Tech PC 03\\Desktop\\E-Commerce ActiveZone\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\View\\Middleware\\ShareErrorsFromSession->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#60 C:\\Users\\Nash Tech PC 03\\Desktop\\E-Commerce ActiveZone\\vendor\\laravel\\framework\\src\\Illuminate\\Session\\Middleware\\StartSession.php(121): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#61 C:\\Users\\Nash Tech PC 03\\Desktop\\E-Commerce ActiveZone\\vendor\\laravel\\framework\\src\\Illuminate\\Session\\Middleware\\StartSession.php(64): Illuminate\\Session\\Middleware\\StartSession->handleStatefulRequest(Object(Illuminate\\Http\\Request), Object(Illuminate\\Session\\Store), Object(Closure))
+#62 C:\\Users\\Nash Tech PC 03\\Desktop\\E-Commerce ActiveZone\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Session\\Middleware\\StartSession->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#63 C:\\Users\\Nash Tech PC 03\\Desktop\\E-Commerce ActiveZone\\vendor\\laravel\\framework\\src\\Illuminate\\Http\\Middleware\\TrustProxies.php(39): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#64 C:\\Users\\Nash Tech PC 03\\Desktop\\E-Commerce ActiveZone\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Http\\Middleware\\TrustProxies->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#65 C:\\Users\\Nash Tech PC 03\\Desktop\\E-Commerce ActiveZone\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\TransformsRequest.php(21): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#66 C:\\Users\\Nash Tech PC 03\\Desktop\\E-Commerce ActiveZone\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\ConvertEmptyStringsToNull.php(31): Illuminate\\Foundation\\Http\\Middleware\\TransformsRequest->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#67 C:\\Users\\Nash Tech PC 03\\Desktop\\E-Commerce ActiveZone\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Foundation\\Http\\Middleware\\ConvertEmptyStringsToNull->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#68 C:\\Users\\Nash Tech PC 03\\Desktop\\E-Commerce ActiveZone\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\TransformsRequest.php(21): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#69 C:\\Users\\Nash Tech PC 03\\Desktop\\E-Commerce ActiveZone\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\TrimStrings.php(40): Illuminate\\Foundation\\Http\\Middleware\\TransformsRequest->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#70 C:\\Users\\Nash Tech PC 03\\Desktop\\E-Commerce ActiveZone\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Foundation\\Http\\Middleware\\TrimStrings->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#71 C:\\Users\\Nash Tech PC 03\\Desktop\\E-Commerce ActiveZone\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\ValidatePostSize.php(27): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#72 C:\\Users\\Nash Tech PC 03\\Desktop\\E-Commerce ActiveZone\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Foundation\\Http\\Middleware\\ValidatePostSize->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#73 C:\\Users\\Nash Tech PC 03\\Desktop\\E-Commerce ActiveZone\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(119): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#74 C:\\Users\\Nash Tech PC 03\\Desktop\\E-Commerce ActiveZone\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php(175): Illuminate\\Pipeline\\Pipeline->then(Object(Closure))
+#75 C:\\Users\\Nash Tech PC 03\\Desktop\\E-Commerce ActiveZone\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php(144): Illuminate\\Foundation\\Http\\Kernel->sendRequestThroughRouter(Object(Illuminate\\Http\\Request))
+#76 C:\\Users\\Nash Tech PC 03\\Desktop\\E-Commerce ActiveZone\\index.php(56): Illuminate\\Foundation\\Http\\Kernel->handle(Object(Illuminate\\Http\\Request))
+#77 C:\\Users\\Nash Tech PC 03\\Desktop\\E-Commerce ActiveZone\\server.php(54): require_once('C:\\\\Users\\\\Nash T...')
+#78 {main}
+
+[previous exception] [object] (Symfony\\Component\\Routing\\Exception\\RouteNotFoundException(code: 0): Route [franchise.sub_franchises.index] not defined. at C:\\Users\\Nash Tech PC 03\\Desktop\\E-Commerce ActiveZone\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\UrlGenerator.php:477)
+[stacktrace]
+#0 C:\\Users\\Nash Tech PC 03\\Desktop\\E-Commerce ActiveZone\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\helpers.php(811): Illuminate\\Routing\\UrlGenerator->route('franchise.sub_f...', Array, true)
+#1 C:\\Users\\Nash Tech PC 03\\Desktop\\E-Commerce ActiveZone\\storage\\framework\\views\\aa54d7aa0fff6b948e46f7caef8b23d1.php(77): route('franchise.sub_f...')
+#2 C:\\Users\\Nash Tech PC 03\\Desktop\\E-Commerce ActiveZone\\vendor\\laravel\\framework\\src\\Illuminate\\Filesystem\\Filesystem.php(123): require('C:\\\\Users\\\\Nash T...')
+#3 C:\\Users\\Nash Tech PC 03\\Desktop\\E-Commerce ActiveZone\\vendor\\laravel\\framework\\src\\Illuminate\\Filesystem\\Filesystem.php(124): Illuminate\\Filesystem\\Filesystem::Illuminate\\Filesystem\\{closure}()
+#4 C:\\Users\\Nash Tech PC 03\\Desktop\\E-Commerce ActiveZone\\vendor\\laravel\\framework\\src\\Illuminate\\View\\Engines\\PhpEngine.php(58): Illuminate\\Filesystem\\Filesystem->getRequire('C:\\\\Users\\\\Nash T...', Array)
+#5 C:\\Users\\Nash Tech PC 03\\Desktop\\E-Commerce ActiveZone\\vendor\\laravel\\framework\\src\\Illuminate\\View\\Engines\\CompilerEngine.php(72): Illuminate\\View\\Engines\\PhpEngine->evaluatePath('C:\\\\Users\\\\Nash T...', Array)
+#6 C:\\Users\\Nash Tech PC 03\\Desktop\\E-Commerce ActiveZone\\vendor\\laravel\\framework\\src\\Illuminate\\View\\View.php(207): Illuminate\\View\\Engines\\CompilerEngine->get('C:\\\\Users\\\\Nash T...', Array)
+#7 C:\\Users\\Nash Tech PC 03\\Desktop\\E-Commerce ActiveZone\\vendor\\laravel\\framework\\src\\Illuminate\\View\\View.php(190): Illuminate\\View\\View->getContents()
+#8 C:\\Users\\Nash Tech PC 03\\Desktop\\E-Commerce ActiveZone\\vendor\\laravel\\framework\\src\\Illuminate\\View\\View.php(159): Illuminate\\View\\View->renderContents()
+#9 C:\\Users\\Nash Tech PC 03\\Desktop\\E-Commerce ActiveZone\\storage\\framework\\views\\e3ebd3c4fb9ba51175f4857541aee442.php(68): Illuminate\\View\\View->render()
+#10 C:\\Users\\Nash Tech PC 03\\Desktop\\E-Commerce ActiveZone\\vendor\\laravel\\framework\\src\\Illuminate\\Filesystem\\Filesystem.php(123): require('C:\\\\Users\\\\Nash T...')
+#11 C:\\Users\\Nash Tech PC 03\\Desktop\\E-Commerce ActiveZone\\vendor\\laravel\\framework\\src\\Illuminate\\Filesystem\\Filesystem.php(124): Illuminate\\Filesystem\\Filesystem::Illuminate\\Filesystem\\{closure}()
+#12 C:\\Users\\Nash Tech PC 03\\Desktop\\E-Commerce ActiveZone\\vendor\\laravel\\framework\\src\\Illuminate\\View\\Engines\\PhpEngine.php(58): Illuminate\\Filesystem\\Filesystem->getRequire('C:\\\\Users\\\\Nash T...', Array)
+#13 C:\\Users\\Nash Tech PC 03\\Desktop\\E-Commerce ActiveZone\\vendor\\laravel\\framework\\src\\Illuminate\\View\\Engines\\CompilerEngine.php(72): Illuminate\\View\\Engines\\PhpEngine->evaluatePath('C:\\\\Users\\\\Nash T...', Array)
+#14 C:\\Users\\Nash Tech PC 03\\Desktop\\E-Commerce ActiveZone\\vendor\\laravel\\framework\\src\\Illuminate\\View\\View.php(207): Illuminate\\View\\Engines\\CompilerEngine->get('C:\\\\Users\\\\Nash T...', Array)
+#15 C:\\Users\\Nash Tech PC 03\\Desktop\\E-Commerce ActiveZone\\vendor\\laravel\\framework\\src\\Illuminate\\View\\View.php(190): Illuminate\\View\\View->getContents()
+#16 C:\\Users\\Nash Tech PC 03\\Desktop\\E-Commerce ActiveZone\\vendor\\laravel\\framework\\src\\Illuminate\\View\\View.php(159): Illuminate\\View\\View->renderContents()
+#17 C:\\Users\\Nash Tech PC 03\\Desktop\\E-Commerce ActiveZone\\storage\\framework\\views\\5b5de2a8f71a8171826043f2f7337ade.php(442): Illuminate\\View\\View->render()
+#18 C:\\Users\\Nash Tech PC 03\\Desktop\\E-Commerce ActiveZone\\vendor\\laravel\\framework\\src\\Illuminate\\Filesystem\\Filesystem.php(123): require('C:\\\\Users\\\\Nash T...')
+#19 C:\\Users\\Nash Tech PC 03\\Desktop\\E-Commerce ActiveZone\\vendor\\laravel\\framework\\src\\Illuminate\\Filesystem\\Filesystem.php(124): Illuminate\\Filesystem\\Filesystem::Illuminate\\Filesystem\\{closure}()
+#20 C:\\Users\\Nash Tech PC 03\\Desktop\\E-Commerce ActiveZone\\vendor\\laravel\\framework\\src\\Illuminate\\View\\Engines\\PhpEngine.php(58): Illuminate\\Filesystem\\Filesystem->getRequire('C:\\\\Users\\\\Nash T...', Array)
+#21 C:\\Users\\Nash Tech PC 03\\Desktop\\E-Commerce ActiveZone\\vendor\\laravel\\framework\\src\\Illuminate\\View\\Engines\\CompilerEngine.php(72): Illuminate\\View\\Engines\\PhpEngine->evaluatePath('C:\\\\Users\\\\Nash T...', Array)
+#22 C:\\Users\\Nash Tech PC 03\\Desktop\\E-Commerce ActiveZone\\vendor\\laravel\\framework\\src\\Illuminate\\View\\View.php(207): Illuminate\\View\\Engines\\CompilerEngine->get('C:\\\\Users\\\\Nash T...', Array)
+#23 C:\\Users\\Nash Tech PC 03\\Desktop\\E-Commerce ActiveZone\\vendor\\laravel\\framework\\src\\Illuminate\\View\\View.php(190): Illuminate\\View\\View->getContents()
+#24 C:\\Users\\Nash Tech PC 03\\Desktop\\E-Commerce ActiveZone\\vendor\\laravel\\framework\\src\\Illuminate\\View\\View.php(159): Illuminate\\View\\View->renderContents()
+#25 C:\\Users\\Nash Tech PC 03\\Desktop\\E-Commerce ActiveZone\\vendor\\laravel\\framework\\src\\Illuminate\\Http\\Response.php(69): Illuminate\\View\\View->render()
+#26 C:\\Users\\Nash Tech PC 03\\Desktop\\E-Commerce ActiveZone\\vendor\\laravel\\framework\\src\\Illuminate\\Http\\Response.php(35): Illuminate\\Http\\Response->setContent(Object(Illuminate\\View\\View))
+#27 C:\\Users\\Nash Tech PC 03\\Desktop\\E-Commerce ActiveZone\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(918): Illuminate\\Http\\Response->__construct(Object(Illuminate\\View\\View), 200, Array)
+#28 C:\\Users\\Nash Tech PC 03\\Desktop\\E-Commerce ActiveZone\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(885): Illuminate\\Routing\\Router::toResponse(Object(Illuminate\\Http\\Request), Object(Illuminate\\View\\View))
+#29 C:\\Users\\Nash Tech PC 03\\Desktop\\E-Commerce ActiveZone\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(805): Illuminate\\Routing\\Router->prepareResponse(Object(Illuminate\\Http\\Request), Object(Illuminate\\View\\View))
+#30 C:\\Users\\Nash Tech PC 03\\Desktop\\E-Commerce ActiveZone\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(144): Illuminate\\Routing\\Router->Illuminate\\Routing\\{closure}(Object(Illuminate\\Http\\Request))
+#31 C:\\Users\\Nash Tech PC 03\\Desktop\\E-Commerce ActiveZone\\app\\Http\\Middleware\\PreventBackHistory.php(25): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#32 C:\\Users\\Nash Tech PC 03\\Desktop\\E-Commerce ActiveZone\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): App\\Http\\Middleware\\PreventBackHistory->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#33 C:\\Users\\Nash Tech PC 03\\Desktop\\E-Commerce ActiveZone\\app\\Http\\Middleware\\IsFranchise.php(31): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#34 C:\\Users\\Nash Tech PC 03\\Desktop\\E-Commerce ActiveZone\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): App\\Http\\Middleware\\IsFranchise->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#35 C:\\Users\\Nash Tech PC 03\\Desktop\\E-Commerce ActiveZone\\app\\Http\\Middleware\\CheckForMaintenanceMode.php(64): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#36 C:\\Users\\Nash Tech PC 03\\Desktop\\E-Commerce ActiveZone\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): App\\Http\\Middleware\\CheckForMaintenanceMode->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#37 C:\\Users\\Nash Tech PC 03\\Desktop\\E-Commerce ActiveZone\\app\\Http\\Middleware\\HttpsProtocol.php(20): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#38 C:\\Users\\Nash Tech PC 03\\Desktop\\E-Commerce ActiveZone\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): App\\Http\\Middleware\\HttpsProtocol->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#39 C:\\Users\\Nash Tech PC 03\\Desktop\\E-Commerce ActiveZone\\app\\Http\\Middleware\\Language.php(35): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#40 C:\\Users\\Nash Tech PC 03\\Desktop\\E-Commerce ActiveZone\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): App\\Http\\Middleware\\Language->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#41 C:\\Users\\Nash Tech PC 03\\Desktop\\E-Commerce ActiveZone\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Middleware\\SubstituteBindings.php(50): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#42 C:\\Users\\Nash Tech PC 03\\Desktop\\E-Commerce ActiveZone\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Routing\\Middleware\\SubstituteBindings->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#43 C:\\Users\\Nash Tech PC 03\\Desktop\\E-Commerce ActiveZone\\vendor\\laravel\\framework\\src\\Illuminate\\Auth\\Middleware\\Authenticate.php(57): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#44 C:\\Users\\Nash Tech PC 03\\Desktop\\E-Commerce ActiveZone\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Auth\\Middleware\\Authenticate->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#45 C:\\Users\\Nash Tech PC 03\\Desktop\\E-Commerce ActiveZone\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\VerifyCsrfToken.php(78): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#46 C:\\Users\\Nash Tech PC 03\\Desktop\\E-Commerce ActiveZone\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Foundation\\Http\\Middleware\\VerifyCsrfToken->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#47 C:\\Users\\Nash Tech PC 03\\Desktop\\E-Commerce ActiveZone\\vendor\\laravel\\framework\\src\\Illuminate\\Cookie\\Middleware\\AddQueuedCookiesToResponse.php(37): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#48 C:\\Users\\Nash Tech PC 03\\Desktop\\E-Commerce ActiveZone\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Cookie\\Middleware\\AddQueuedCookiesToResponse->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#49 C:\\Users\\Nash Tech PC 03\\Desktop\\E-Commerce ActiveZone\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(119): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#50 C:\\Users\\Nash Tech PC 03\\Desktop\\E-Commerce ActiveZone\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(805): Illuminate\\Pipeline\\Pipeline->then(Object(Closure))
+#51 C:\\Users\\Nash Tech PC 03\\Desktop\\E-Commerce ActiveZone\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(784): Illuminate\\Routing\\Router->runRouteWithinStack(Object(Illuminate\\Routing\\Route), Object(Illuminate\\Http\\Request))
+#52 C:\\Users\\Nash Tech PC 03\\Desktop\\E-Commerce ActiveZone\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(748): Illuminate\\Routing\\Router->runRoute(Object(Illuminate\\Http\\Request), Object(Illuminate\\Routing\\Route))
+#53 C:\\Users\\Nash Tech PC 03\\Desktop\\E-Commerce ActiveZone\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(737): Illuminate\\Routing\\Router->dispatchToRoute(Object(Illuminate\\Http\\Request))
+#54 C:\\Users\\Nash Tech PC 03\\Desktop\\E-Commerce ActiveZone\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php(200): Illuminate\\Routing\\Router->dispatch(Object(Illuminate\\Http\\Request))
+#55 C:\\Users\\Nash Tech PC 03\\Desktop\\E-Commerce ActiveZone\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(144): Illuminate\\Foundation\\Http\\Kernel->Illuminate\\Foundation\\Http\\{closure}(Object(Illuminate\\Http\\Request))
+#56 C:\\Users\\Nash Tech PC 03\\Desktop\\E-Commerce ActiveZone\\vendor\\barryvdh\\laravel-debugbar\\src\\Middleware\\InjectDebugbar.php(66): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#57 C:\\Users\\Nash Tech PC 03\\Desktop\\E-Commerce ActiveZone\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Barryvdh\\Debugbar\\Middleware\\InjectDebugbar->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#58 C:\\Users\\Nash Tech PC 03\\Desktop\\E-Commerce ActiveZone\\vendor\\laravel\\framework\\src\\Illuminate\\View\\Middleware\\ShareErrorsFromSession.php(49): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#59 C:\\Users\\Nash Tech PC 03\\Desktop\\E-Commerce ActiveZone\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\View\\Middleware\\ShareErrorsFromSession->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#60 C:\\Users\\Nash Tech PC 03\\Desktop\\E-Commerce ActiveZone\\vendor\\laravel\\framework\\src\\Illuminate\\Session\\Middleware\\StartSession.php(121): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#61 C:\\Users\\Nash Tech PC 03\\Desktop\\E-Commerce ActiveZone\\vendor\\laravel\\framework\\src\\Illuminate\\Session\\Middleware\\StartSession.php(64): Illuminate\\Session\\Middleware\\StartSession->handleStatefulRequest(Object(Illuminate\\Http\\Request), Object(Illuminate\\Session\\Store), Object(Closure))
+#62 C:\\Users\\Nash Tech PC 03\\Desktop\\E-Commerce ActiveZone\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Session\\Middleware\\StartSession->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#63 C:\\Users\\Nash Tech PC 03\\Desktop\\E-Commerce ActiveZone\\vendor\\laravel\\framework\\src\\Illuminate\\Http\\Middleware\\TrustProxies.php(39): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#64 C:\\Users\\Nash Tech PC 03\\Desktop\\E-Commerce ActiveZone\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Http\\Middleware\\TrustProxies->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#65 C:\\Users\\Nash Tech PC 03\\Desktop\\E-Commerce ActiveZone\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\TransformsRequest.php(21): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#66 C:\\Users\\Nash Tech PC 03\\Desktop\\E-Commerce ActiveZone\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\ConvertEmptyStringsToNull.php(31): Illuminate\\Foundation\\Http\\Middleware\\TransformsRequest->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#67 C:\\Users\\Nash Tech PC 03\\Desktop\\E-Commerce ActiveZone\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Foundation\\Http\\Middleware\\ConvertEmptyStringsToNull->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#68 C:\\Users\\Nash Tech PC 03\\Desktop\\E-Commerce ActiveZone\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\TransformsRequest.php(21): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#69 C:\\Users\\Nash Tech PC 03\\Desktop\\E-Commerce ActiveZone\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\TrimStrings.php(40): Illuminate\\Foundation\\Http\\Middleware\\TransformsRequest->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#70 C:\\Users\\Nash Tech PC 03\\Desktop\\E-Commerce ActiveZone\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Foundation\\Http\\Middleware\\TrimStrings->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#71 C:\\Users\\Nash Tech PC 03\\Desktop\\E-Commerce ActiveZone\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\ValidatePostSize.php(27): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#72 C:\\Users\\Nash Tech PC 03\\Desktop\\E-Commerce ActiveZone\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Foundation\\Http\\Middleware\\ValidatePostSize->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#73 C:\\Users\\Nash Tech PC 03\\Desktop\\E-Commerce ActiveZone\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(119): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#74 C:\\Users\\Nash Tech PC 03\\Desktop\\E-Commerce ActiveZone\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php(175): Illuminate\\Pipeline\\Pipeline->then(Object(Closure))
+#75 C:\\Users\\Nash Tech PC 03\\Desktop\\E-Commerce ActiveZone\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php(144): Illuminate\\Foundation\\Http\\Kernel->sendRequestThroughRouter(Object(Illuminate\\Http\\Request))
+#76 C:\\Users\\Nash Tech PC 03\\Desktop\\E-Commerce ActiveZone\\index.php(56): Illuminate\\Foundation\\Http\\Kernel->handle(Object(Illuminate\\Http\\Request))
+#77 C:\\Users\\Nash Tech PC 03\\Desktop\\E-Commerce ActiveZone\\server.php(54): require_once('C:\\\\Users\\\\Nash T...')
+#78 {main}
+"} 
+[2026-02-09 14:39:01] local.INFO: Filter Orders Request:  {"page":"1","seller_type":"seller","search":null,"order_from":null,"payment_status":null,"date":null,"col":null,"status":null} 
+[2026-02-09 14:41:46] local.INFO: Authenticated method called {"user_id":11,"user_type":"vendor","email":"qaziabdurrahman2001@gmail.com"} 
+[2026-02-09 14:41:46] local.INFO: Redirecting vendor to dashboard  
+[2026-02-09 14:42:30] local.INFO: Filter Orders Request:  {"page":"1","seller_type":"seller","search":null,"order_from":null,"payment_status":null,"date":null,"col":null,"status":null} 
+[2026-02-09 15:53:00] local.INFO: Authenticated method called {"user_id":8,"user_type":"customer","email":"customer@example.com"} 
+[2026-02-09 15:53:00] local.INFO: Redirecting to default dashboard  
+[2026-02-09 15:54:32] local.INFO: Authenticated method called {"user_id":10,"user_type":"franchise","email":"qaziabdulrahmannt@gmail.com"} 
+[2026-02-09 15:54:32] local.INFO: Redirecting franchise/sub_franchise  
+[2026-02-09 15:55:58] local.INFO: Authenticated method called {"user_id":11,"user_type":"vendor","email":"qaziabdurrahman2001@gmail.com"} 
+[2026-02-09 15:55:58] local.INFO: Redirecting vendor to dashboard  

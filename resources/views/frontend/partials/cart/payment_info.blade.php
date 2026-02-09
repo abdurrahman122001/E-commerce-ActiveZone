@@ -10,11 +10,17 @@
         {{ translate('Select a payment option') }}
     </h3>
     <div class="row gutters-10">
-        @foreach (get_activate_payment_methods() as $payment_method)
+        @php
+            $has_any_payment_method = false;
+            $activated_payment_methods = get_activate_payment_methods();
+        @endphp
+
+        @foreach ($activated_payment_methods as $key => $payment_method)
+            @php $has_any_payment_method = true; @endphp
             <div class="col-xl-4 col-md-6">
                 <label class="aiz-megabox d-block mb-3">
                     <input value="{{ $payment_method->name }}" class="online_payment" type="radio"
-                        name="payment_option" checked>
+                        name="payment_option" {{ $key == 0 ? 'checked' : '' }}>
                     <span class="d-flex align-items-center justify-content-between aiz-megabox-elem rounded-0 p-3">
                         <span class="d-block fw-400 fs-14">{{ ucfirst(translate($payment_method->name)) }}</span>
                         <span class="rounded-1 h-40px overflow-hidden">
@@ -26,50 +32,52 @@
             </div>
         @endforeach
 
-        <!-- Cash Payment -->
-        @if (get_setting('cash_payment') == 1)
-            @php
-                $digital = 0;
-                $cod_on = 1;
-                foreach ($carts as $cartItem) {
-                    $product = get_single_product($cartItem['product_id']);
-                    if ($product) {
-                        if ($product->digital == 1) {
-                            $digital = 1;
-                        }
-                        if ($product->cash_on_delivery == 0) {
-                            $cod_on = 0;
-                        }
+        @php
+            $digital = 0;
+            $cod_on = 1;
+            $blocking_products = [];
+            foreach ($carts as $cartItem) {
+                $product = get_single_product($cartItem['product_id']);
+                if ($product) {
+                    if ($product->digital == 1 || $product->cash_on_delivery == 0) {
+                        $blocking_products[] = $product->getTranslation('name');
+                        if ($product->digital == 1) $digital = 1;
+                        if ($product->cash_on_delivery == 0) $cod_on = 0;
                     }
                 }
-            @endphp
-            @if ($digital != 1 && $cod_on == 1)
-                <div class="col-xl-4 col-md-6">
-                    <label class="aiz-megabox d-block mb-3">
-                        <input value="cash_on_delivery" class="online_payment" type="radio"
-                            name="payment_option" checked>
-                        <span class="d-flex align-items-center justify-content-between aiz-megabox-elem rounded-0 p-3">
-                            <span class="d-block fw-400 fs-14">{{ translate('Cash on Delivery') }}</span>
-                            <span class="rounded-1 h-40px w-70px overflow-hidden">
-                                <img src="{{ static_asset('assets/img/cards/cod.png') }}"
-                                class="img-fit h-100">
-                            </span>
+            }
+            $show_cod = (get_setting('cash_payment') == 1 && $digital != 1 && $cod_on == 1);
+        @endphp
+
+        @if ($show_cod)
+            @php $has_any_payment_method = true; @endphp
+            <div class="col-xl-4 col-md-6">
+                <label class="aiz-megabox d-block mb-3">
+                    <input value="cash_on_delivery" class="online_payment" type="radio"
+                        name="payment_option" {{ !$has_any_payment_method ? 'checked' : '' }}>
+                    <span class="d-flex align-items-center justify-content-between aiz-megabox-elem rounded-0 p-3">
+                        <span class="d-block fw-400 fs-14">{{ translate('Cash on Delivery') }}</span>
+                        <span class="rounded-1 h-40px w-70px overflow-hidden">
+                            <img src="{{ static_asset('assets/img/cards/cod.png') }}"
+                            class="img-fit h-100">
                         </span>
-                    </label>
-                </div>
-            @endif
+                    </span>
+                </label>
+            </div>
         @endif
 
         @if (Auth::check())
             <!-- Offline Payment -->
             @if (addon_is_activated('offline_payment'))
-                @foreach (get_all_manual_payment_methods() as $method)
+                @php $manual_methods = get_all_manual_payment_methods(); @endphp
+                @foreach ($manual_methods as $method)
+                    @php $has_any_payment_method = true; @endphp
                     <div class="col-xl-4 col-md-6">
                         <label class="aiz-megabox d-block mb-3">
                             <input value="{{ $method->heading }}" type="radio"
                                 name="payment_option" class="offline_payment_option"
                                 onchange="toggleManualPaymentData({{ $method->id }})"
-                                data-id="{{ $method->id }}" checked>
+                                data-id="{{ $method->id }}">
                             <span class="d-flex align-items-center justify-content-between aiz-megabox-elem rounded-0 p-3">
                                 <span class="d-block fw-400 fs-14">{{ $method->heading }}</span>
                                 <span class="rounded-1 h-40px w-70px overflow-hidden">
@@ -81,7 +89,7 @@
                     </div>
                 @endforeach
 
-                @foreach (get_all_manual_payment_methods() as $method)
+                @foreach ($manual_methods as $method)
                     <div id="manual_payment_info_{{ $method->id }}" class="d-none">
                         @php echo $method->description @endphp
                         @if ($method->bank_info != null)
@@ -101,6 +109,20 @@
                     </div>
                 @endforeach
             @endif
+        @endif
+        
+        @if(!$has_any_payment_method)
+            <div class="col-12">
+                <div class="alert alert-warning">
+                    {{ translate('No payment methods are available for your current order or location.') }}
+                    @if(get_setting('cash_payment') == 1 && !empty($blocking_products))
+                        <br><small>{{ translate('Note: Cash on Delivery is disabled because of these products:') }} 
+                        <strong>{{ implode(', ', array_unique($blocking_products)) }}</strong>.
+                        {{ translate('Please ensure "Cash on Delivery" is enabled in each product\'s shipping settings.') }}
+                        </small>
+                    @endif
+                </div>
+            </div>
         @endif
     </div>
 

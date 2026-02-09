@@ -113,6 +113,13 @@
                     </li>
                     
                     <li class="aiz-side-nav-item">
+                        <a href="{{ route('franchise.orders.index') }}" class="aiz-side-nav-link">
+                            <i class="las la-money-bill aiz-side-nav-icon"></i>
+                            <span class="aiz-side-nav-text">{{ translate('Orders') }}</span>
+                        </a>
+                    </li>
+                    
+                    <li class="aiz-side-nav-item">
                         <a href="{{ route('franchise.profile.index') }}" class="aiz-side-nav-link">
                             <i class="las la-user aiz-side-nav-icon"></i>
                             <span class="aiz-side-nav-text">{{ translate('Manage Profile') }}</span>

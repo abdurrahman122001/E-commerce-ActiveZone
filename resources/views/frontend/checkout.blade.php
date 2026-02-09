@@ -181,20 +181,38 @@
                         AIZ.plugins.notify('danger', '{{ translate('You need to put Transaction id') }}');
                         $(el).prop('disabled', false);
                     } else {
-                        var allIsOk = false;
                         var isOkShipping = stepCompletionShippingInfo();
                         var isOkDelivery = stepCompletionDeliveryInfo();
                         var isOkPayment = stepCompletionPaymentInfo();
+                        
+                        console.log('Validation Status:', {
+                            shipping: isOkShipping,
+                            delivery: isOkDelivery,
+                            payment: isOkPayment
+                        });
+
                         if(isOkShipping && isOkDelivery && isOkPayment) {
                             allIsOk = true;
                         }else{
-                            AIZ.plugins.notify('danger', '{{ translate("Please fill in all mandatory fields!") }}');
+                            var msg = '{{ translate("Please fill in all mandatory fields!") }}';
+                            if(!isOkShipping) msg = '{{ translate("Please select or add a shipping address.") }}';
+                            else if(!isOkDelivery) msg = '{{ translate("Please select a delivery method.") }}';
+                            else if(!isOkPayment) msg = '{{ translate("Please select a payment option and agree to policies.") }}';
+                            
+                            AIZ.plugins.notify('danger', msg);
+                            $(el).prop('disabled', false);
+
                             $('#checkout-form [required]').each(function (i, el) {
-                                if ($(el).val() == '' || $(el).val() == undefined) {
+                                var $el = $(el);
+                                var val = $el.val();
+                                var isRadio = $el.is(':radio');
+                                var isRadioChecked = isRadio ? $('input[name="'+$el.attr('name')+'"]:checked').length > 0 : false;
+
+                                if ((!isRadio && (!val || val == undefined)) || (isRadio && !isRadioChecked)) {
                                     var is_trx_id = $('.d-none #trx_id').length;
-                                    if(($(el).attr('name') != 'trx_id') || is_trx_id == 0){
-                                        $(el).focus();
-                                        $(el).scrollIntoView({behavior: "smooth", block: "center"});
+                                    if(($el.attr('name') != 'trx_id') || is_trx_id == 0){
+                                        $el.closest('.collapse').collapse('show');
+                                        $el.focus();
                                         return false;
                                     }
                                 }

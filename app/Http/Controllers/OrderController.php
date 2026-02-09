@@ -213,6 +213,9 @@ class OrderController extends Controller
             $order->payment_status_viewed = '0';
             $order->code = date('Ymd-His') . rand(10, 99);
             $order->date = strtotime('now');
+            if ($seller_product[0]->product->user->vendor) {
+                $order->vendor_id = $seller_product[0]->product->user->vendor->id;
+            }
             $order->save();
 
             $subtotal = 0;

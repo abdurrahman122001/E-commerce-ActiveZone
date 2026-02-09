@@ -163,24 +163,65 @@ class CommissionController extends Controller
         }
 
         // Calculate Vendor Commission
-        if ($order->vendor_id) {
-            $vendor = \App\Models\Vendor::find($order->vendor_id);
-            if ($vendor && $vendor->commission_percentage > 0) {
-                 foreach ($order->orderDetails as $orderDetail) {
-                     $commission_amount = ($orderDetail->price * $vendor->commission_percentage) / 100;
-                     
-                     $vendor->balance += $commission_amount;
-                     $vendor->save();
+        $vendor_id = $order->vendor_id;
+        if (!$vendor_id) {
+            $seller_user = \App\Models\User::find($order->seller_id);
+            if ($seller_user && $seller_user->vendor) {
+                $vendor_id = $seller_user->vendor->id;
+                $order->vendor_id = $vendor_id;
+                $order->save();
+            }
+        }
 
-                     $vendor_commission_history = new \App\Models\VendorCommissionHistory();
-                     $vendor_commission_history->order_id = $order->id;
-                     $vendor_commission_history->order_detail_id = $orderDetail->id;
-                     $vendor_commission_history->vendor_id = $vendor->id;
-                     $vendor_commission_history->franchise_id = $vendor->franchise_id;
-                     $vendor_commission_history->sub_franchise_id = $vendor->sub_franchise_id;
-                     $vendor_commission_history->commission_amount = $commission_amount;
-                     $vendor_commission_history->save();
-                 }
+        if ($vendor_id) {
+            $vendor = \App\Models\Vendor::find($vendor_id);
+            if ($vendor) {
+                foreach ($order->orderDetails as $orderDetail) {
+                    $commission_percentage = $orderDetail->product->commission_percentage > 0 ? $orderDetail->product->commission_percentage : $vendor->commission_percentage;
+                    
+                    if ($commission_percentage > 0) {
+                        $commission_amount = ($orderDetail->price * $commission_percentage) / 100;
+                        
+                        $vendor->balance += $commission_amount;
+                        $vendor->save();
+
+                        // Update Franchise Balance
+                        if ($vendor->franchise_id) {
+                            $franchise = \App\Models\Franchise::find($vendor->franchise_id);
+                            if ($franchise) {
+                                $franchise->balance += $commission_amount;
+                                $franchise->save();
+                            }
+                        }
+
+                        // Update Sub Franchise Balance
+                        if ($vendor->sub_franchise_id) {
+                            $sub_franchise = \App\Models\SubFranchise::find($vendor->sub_franchise_id);
+                            if ($sub_franchise) {
+                                $sub_franchise->balance += $commission_amount;
+                                $sub_franchise->save();
+
+                                // Also update parent franchise if sub-franchise belongs to one
+                                if ($sub_franchise->franchise_id) {
+                                    $parent_franchise = \App\Models\Franchise::find($sub_franchise->franchise_id);
+                                    if ($parent_franchise) {
+                                        $parent_franchise->balance += $commission_amount;
+                                        $parent_franchise->save();
+                                    }
+                                }
+                            }
+                        }
+
+                        $vendor_commission_history = new \App\Models\VendorCommissionHistory();
+                        $vendor_commission_history->order_id = $order->id;
+                        $vendor_commission_history->order_detail_id = $orderDetail->id;
+                        $vendor_commission_history->vendor_id = $vendor->id;
+                        $vendor_commission_history->franchise_id = $vendor->franchise_id;
+                        $vendor_commission_history->sub_franchise_id = $vendor->sub_franchise_id;
+                        $vendor_commission_history->commission_amount = $commission_amount;
+                        $vendor_commission_history->save();
+                    }
+                }
             }
         }
     }
