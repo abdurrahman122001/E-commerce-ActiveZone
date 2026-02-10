@@ -5,6 +5,7 @@
     $seller_product_variation = array();
     foreach ($carts as $key => $cartItem){
         $product = get_single_product($cartItem['product_id']);
+        if (!$product) continue;
 
         if($product->added_by == 'admin'){
             array_push($admin_products, $cartItem['product_id']);
@@ -44,7 +45,10 @@
     @foreach ($seller_products as $key => $seller_product)
         <div class="card @if($loop->last) mb-0 @else mb-3 @endif border-left-0 border-top-0 border-right-0 @if($loop->last) border-bottom-0 @else border-bottom @endif rounded-0 shadow-none">
             <div class="card-header py-3 px-0 border-left-0 border-top-0 border-right-0 border-bottom border-dashed">
-                <h5 class="fs-16 fw-700 text-dark mb-0">{{ get_shop_by_user_id($key)->name }} {{ translate('Products') }} ({{ sprintf("%02d", count($seller_product)) }})</h5>
+                @php
+                    $shop = get_shop_by_user_id($key);
+                @endphp
+                <h5 class="fs-16 fw-700 text-dark mb-0">{{ $shop ? $shop->name : translate('Seller') }} {{ translate('Products') }} ({{ sprintf("%02d", count($seller_product)) }})</h5>
             </div>
             <div class="card-body p-0">
                 @include('frontend.partials.cart.delivery_info_details', ['products' => $seller_product, 'product_variation' => $seller_product_variation, 'owner_id' => $key ])

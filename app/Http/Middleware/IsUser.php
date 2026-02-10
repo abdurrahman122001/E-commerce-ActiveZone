@@ -19,6 +19,9 @@ class IsUser
         if (Auth::check() && 
                 (Auth::user()->user_type == 'customer' || 
                 Auth::user()->user_type == 'seller' || 
+                Auth::user()->user_type == 'vendor' || 
+                Auth::user()->user_type == 'franchise' || 
+                Auth::user()->user_type == 'sub_franchise' || 
                 Auth::user()->user_type == 'delivery_boy') ) {
             
             return $next($request);

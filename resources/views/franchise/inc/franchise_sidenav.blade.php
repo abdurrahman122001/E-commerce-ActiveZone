@@ -15,98 +15,117 @@
                         <span class="aiz-side-nav-text">{{ translate('Dashboard') }}</span>
                     </a>
                 </li>
-                <li class="aiz-side-nav-item">
-                    <a href="#" class="aiz-side-nav-link">
-                        <i class="las la-shopping-cart aiz-side-nav-icon"></i>
-                        <span class="aiz-side-nav-text">{{ translate('Products') }}</span>
-                        <span class="aiz-side-nav-arrow"></span>
-                    </a>
-                    <ul class="aiz-side-nav-list level-2">
-                        <li class="aiz-side-nav-item">
-                            <a href="{{ route('franchise.products') }}" class="aiz-side-nav-link">
-                                <span class="aiz-side-nav-text">{{ translate('Products') }}</span>
-                            </a>
-                        </li>
-                        <li class="aiz-side-nav-item">
-                            <a href="{{ route('franchise.products.create') }}" class="aiz-side-nav-link">
-                                <span class="aiz-side-nav-text">{{ translate('Add New Product') }}</span>
-                            </a>
-                        </li>
-                    </ul>
-                </li>
-                <li class="aiz-side-nav-item">
-                    <a href="#" class="aiz-side-nav-link">
-                        <i class="las la-list aiz-side-nav-icon"></i>
-                        <span class="aiz-side-nav-text">{{ translate('Categories') }}</span>
-                        <span class="aiz-side-nav-arrow"></span>
-                    </a>
-                    <ul class="aiz-side-nav-list level-2">
-                        <li class="aiz-side-nav-item">
-                            <a href="{{ route('franchise.categories.index') }}" class="aiz-side-nav-link">
-                                <span class="aiz-side-nav-text">{{ translate('All Categories') }}</span>
-                            </a>
-                        </li>
-                        <li class="aiz-side-nav-item">
-                            <a href="{{ route('franchise.categories.create') }}" class="aiz-side-nav-link">
-                                <span class="aiz-side-nav-text">{{ translate('Add New Category') }}</span>
-                            </a>
-                        </li>
-                    </ul>
-                </li>
-                
-                @if(Auth::user()->user_type == 'franchise')
-                <li class="aiz-side-nav-item">
-                    <a href="#" class="aiz-side-nav-link">
-                        <i class="las la-users aiz-side-nav-icon"></i>
-                        <span class="aiz-side-nav-text">{{ translate('Sub-Franchises') }}</span>
-                        <span class="aiz-side-nav-arrow"></span>
-                    </a>
-                    <ul class="aiz-side-nav-list level-2">
-                        <li class="aiz-side-nav-item">
-                            <a href="{{ route('franchise.sub_franchises.index') }}" class="aiz-side-nav-link">
-                                <span class="aiz-side-nav-text">{{ translate('All Sub-Franchises') }}</span>
-                            </a>
-                        </li>
-                        <li class="aiz-side-nav-item">
-                            <a href="{{ route('franchise.sub_franchises.create') }}" class="aiz-side-nav-link">
-                                <span class="aiz-side-nav-text">{{ translate('Add New Sub-Franchise') }}</span>
-                            </a>
-                        </li>
-                    </ul>
-                </li>
-                @endif
 
-                <li class="aiz-side-nav-item">
-                    <a href="#" class="aiz-side-nav-link">
-                        <i class="las la-user-friends aiz-side-nav-icon"></i>
-                        <span class="aiz-side-nav-text">{{ translate('Vendors') }}</span>
-                        <span class="aiz-side-nav-arrow"></span>
-                    </a>
-                    <ul class="aiz-side-nav-list level-2">
-                        <li class="aiz-side-nav-item">
-                            <a href="{{ route('vendors.index') }}" class="aiz-side-nav-link">
-                                <span class="aiz-side-nav-text">{{ translate('All Vendors') }}</span>
-                            </a>
-                        </li>
-                        <li class="aiz-side-nav-item">
-                            <a href="{{ route('vendors.create') }}" class="aiz-side-nav-link">
-                                <span class="aiz-side-nav-text">{{ translate('Add New Vendor') }}</span>
-                            </a>
-                        </li>
-                        <li class="aiz-side-nav-item">
-                            <a href="{{ route('vendors.commission_history') }}" class="aiz-side-nav-link">
-                                <span class="aiz-side-nav-text">{{ translate('Commission History') }}</span>
-                            </a>
-                        </li>
-                    </ul>
-                </li>
-                
-                <li class="aiz-side-nav-item">
-                    <a href="{{ route('franchise.profile.index') }}" class="aiz-side-nav-link">
-                        <i class="las la-user aiz-side-nav-icon"></i>
-                        <span class="aiz-side-nav-text">{{ translate('Manage Profile') }}</span>
-                    </a>
-                </li>
+                @php
+                    $status = 'pending';
+                    if (Auth::user()->user_type == 'franchise') {
+                        $status = Auth::user()->franchise ? Auth::user()->franchise->status : 'pending';
+                    } elseif (Auth::user()->user_type == 'sub_franchise') {
+                        $status = Auth::user()->sub_franchise ? Auth::user()->sub_franchise->status : 'pending';
+                    }
+                @endphp
+
+                @if($status == 'approved')
+                    <li class="aiz-side-nav-item">
+                        <a href="#" class="aiz-side-nav-link">
+                            <i class="las la-shopping-cart aiz-side-nav-icon"></i>
+                            <span class="aiz-side-nav-text">{{ translate('Products') }}</span>
+                            <span class="aiz-side-nav-arrow"></span>
+                        </a>
+                        <ul class="aiz-side-nav-list level-2">
+                            <li class="aiz-side-nav-item">
+                                <a href="{{ route('franchise.products') }}" class="aiz-side-nav-link">
+                                    <span class="aiz-side-nav-text">{{ translate('Products') }}</span>
+                                </a>
+                            </li>
+                            <li class="aiz-side-nav-item">
+                                <a href="{{ route('franchise.products.create') }}" class="aiz-side-nav-link">
+                                    <span class="aiz-side-nav-text">{{ translate('Add New Product') }}</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="aiz-side-nav-item">
+                        <a href="#" class="aiz-side-nav-link">
+                            <i class="las la-list aiz-side-nav-icon"></i>
+                            <span class="aiz-side-nav-text">{{ translate('Categories') }}</span>
+                            <span class="aiz-side-nav-arrow"></span>
+                        </a>
+                        <ul class="aiz-side-nav-list level-2">
+                            <li class="aiz-side-nav-item">
+                                <a href="{{ route('franchise.categories.index') }}" class="aiz-side-nav-link">
+                                    <span class="aiz-side-nav-text">{{ translate('All Categories') }}</span>
+                                </a>
+                            </li>
+                            <li class="aiz-side-nav-item">
+                                <a href="{{ route('franchise.categories.create') }}" class="aiz-side-nav-link">
+                                    <span class="aiz-side-nav-text">{{ translate('Add New Category') }}</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    
+                    @if(Auth::user()->user_type == 'franchise')
+                    <li class="aiz-side-nav-item">
+                        <a href="#" class="aiz-side-nav-link">
+                            <i class="las la-users aiz-side-nav-icon"></i>
+                            <span class="aiz-side-nav-text">{{ translate('Sub-Franchises') }}</span>
+                            <span class="aiz-side-nav-arrow"></span>
+                        </a>
+                        <ul class="aiz-side-nav-list level-2">
+                            <li class="aiz-side-nav-item">
+                                <a href="{{ route('franchise.sub_franchises.index') }}" class="aiz-side-nav-link">
+                                    <span class="aiz-side-nav-text">{{ translate('All Sub-Franchises') }}</span>
+                                </a>
+                            </li>
+                            <li class="aiz-side-nav-item">
+                                <a href="{{ route('franchise.sub_franchises.create') }}" class="aiz-side-nav-link">
+                                    <span class="aiz-side-nav-text">{{ translate('Add New Sub-Franchise') }}</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    @endif
+
+                    <li class="aiz-side-nav-item">
+                        <a href="#" class="aiz-side-nav-link">
+                            <i class="las la-user-friends aiz-side-nav-icon"></i>
+                            <span class="aiz-side-nav-text">{{ translate('Vendors') }}</span>
+                            <span class="aiz-side-nav-arrow"></span>
+                        </a>
+                        <ul class="aiz-side-nav-list level-2">
+                            <li class="aiz-side-nav-item">
+                                <a href="{{ route('vendors.index') }}" class="aiz-side-nav-link">
+                                    <span class="aiz-side-nav-text">{{ translate('All Vendors') }}</span>
+                                </a>
+                            </li>
+                            <li class="aiz-side-nav-item">
+                                <a href="{{ route('vendors.create') }}" class="aiz-side-nav-link">
+                                    <span class="aiz-side-nav-text">{{ translate('Add New Vendor') }}</span>
+                                </a>
+                            </li>
+                            <li class="aiz-side-nav-item">
+                                <a href="{{ route('vendors.commission_history') }}" class="aiz-side-nav-link">
+                                    <span class="aiz-side-nav-text">{{ translate('Commission History') }}</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    
+                    <li class="aiz-side-nav-item">
+                        <a href="{{ route('franchise.orders.index') }}" class="aiz-side-nav-link">
+                            <i class="las la-money-bill aiz-side-nav-icon"></i>
+                            <span class="aiz-side-nav-text">{{ translate('Orders') }}</span>
+                        </a>
+                    </li>
+                    
+                    <li class="aiz-side-nav-item">
+                        <a href="{{ route('franchise.profile.index') }}" class="aiz-side-nav-link">
+                            <i class="las la-user aiz-side-nav-icon"></i>
+                            <span class="aiz-side-nav-text">{{ translate('Manage Profile') }}</span>
+                        </a>
+                    </li>
+                @endif
             </ul>
         </div>
     </div>

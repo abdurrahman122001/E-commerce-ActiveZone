@@ -31,7 +31,7 @@ class ProductService
         }   
 
         $approved = 1;
-        if (in_array(auth()->user()->user_type, ['seller', 'franchise', 'sub_franchise'])) {
+        if (in_array(auth()->user()->user_type, ['seller', 'vendor', 'franchise', 'sub_franchise'])) {
             $user_id = auth()->user()->id;
             if (get_setting('product_approve_by_admin') == 1) {
                 $approved = 0;
@@ -342,11 +342,11 @@ class ProductService
         if(addon_is_activated('club_point')){
             $product_new->earn_point = 0.0;
         }
-        $product_new->added_by = in_array(auth()->user()->user_type, ['seller', 'franchise', 'sub_franchise']) ? 'seller' : 'admin';
+        $product_new->added_by = in_array(auth()->user()->user_type, ['seller', 'vendor', 'franchise', 'sub_franchise']) ? 'seller' : 'admin';
         if($product_new->added_by != 'seller' && auth()->user()->user_type != 'franchise' && auth()->user()->user_type != 'sub_franchise'){
             $product_new->draft = 1; 
         }
-        $product_new->user_id = in_array(auth()->user()->user_type, ['seller', 'franchise', 'sub_franchise']) ? auth()->user()->id : User::where('user_type', 'admin')->first()->id;
+        $product_new->user_id = in_array(auth()->user()->user_type, ['seller', 'vendor', 'franchise', 'sub_franchise']) ? auth()->user()->id : User::where('user_type', 'admin')->first()->id;
 
         $product_new->approved = (get_setting('product_approve_by_admin') == 1 && !in_array($product_new->added_by, ['admin', 'franchise', 'sub_franchise'])) ? 0 : 1;
         $product_new->save();
@@ -654,7 +654,7 @@ class ProductService
             $products = $category->products();
         }
         
-        $products = in_array($auth_user->user_type, ['seller', 'franchise', 'sub_franchise']) ? $products->where('products.user_id', $auth_user->id) : $products;
+        $products = in_array($auth_user->user_type, ['seller', 'vendor', 'franchise', 'sub_franchise']) ? $products->where('products.user_id', $auth_user->id) : $products;
         $products->where('published', '1')->where('auction_product', 0)->where('approved', '1');
 
         if($productType == 'physical'){

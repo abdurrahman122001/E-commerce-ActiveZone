@@ -27,6 +27,17 @@ class VendorController extends Controller
             ->withSum('orders', 'grand_total')
             ->get();
         
+        // Ensure every vendor has a shop record
+        foreach($vendors as $v) {
+            if ($v->user && !$v->user->shop) {
+                $shop = new \App\Models\Shop();
+                $shop->user_id = $v->user->id;
+                $shop->name = $v->user->name;
+                $shop->slug = \Str::slug($v->user->name) . '-' . $v->user->id;
+                $shop->save();
+            }
+        }
+        
         $layout = 'vendors.layouts.app';
         if($user->user_type == 'franchise' || $user->user_type == 'sub_franchise'){
             $layout = 'franchise.layouts.app';
@@ -82,6 +93,13 @@ class VendorController extends Controller
             $vendor->status = 'approved'; 
             $vendor->save();
 
+            // Create shop for vendor
+            $shop = new \App\Models\Shop();
+            $shop->user_id = $user->id;
+            $shop->name = $user->name;
+            $shop->slug = \Str::slug($user->name) . '-' . $user->id;
+            $shop->save();
+
             \DB::commit();
             flash(translate('Vendor created successfully.'))->success();
             return redirect()->route('vendors.index');
@@ -97,16 +115,64 @@ class VendorController extends Controller
     }
     
     public function dashboard() {
-        $vendor = Vendor::where('user_id', Auth::id())->first();
-        $total_orders = 0;
-        $total_sales = 0;
+        $authUserId = Auth::user()->id;
         
-        if ($vendor) {
-            $total_orders = $vendor->orders()->count();
-            $total_sales = $vendor->orders()->sum('grand_total'); // Assuming grand_total exists in orders
-        }
+        $data['total_products'] = \App\Models\Product::where('user_id', $authUserId)->count();
+        $data['total_sales'] = \App\Models\OrderDetail::where('seller_id', $authUserId)->where('delivery_status', 'delivered')->sum('price');
+        $data['pending_orders'] = \App\Models\OrderDetail::where('seller_id', $authUserId)->where('delivery_status', 'pending')->count();
+        $data['delivered_orders'] = \App\Models\OrderDetail::where('seller_id', $authUserId)->where('delivery_status', 'delivered')->count();
         
-        return view('vendors.dashboard', compact('total_orders', 'total_sales'));
+        $data['this_month_pending_orders'] = \App\Models\OrderDetail::where('seller_id', $authUserId)
+                                    ->whereDeliveryStatus('pending')
+                                    ->whereYear('created_at', \Carbon\Carbon::now()->year)
+                                    ->whereMonth('created_at', \Carbon\Carbon::now()->month)
+                                    ->count();
+        $data['this_month_cancelled_orders'] = \App\Models\OrderDetail::where('seller_id', $authUserId)
+                                    ->whereDeliveryStatus('cancelled')
+                                    ->whereYear('created_at', \Carbon\Carbon::now()->year)
+                                    ->whereMonth('created_at', \Carbon\Carbon::now()->month)
+                                    ->count();
+        $data['this_month_on_the_way_orders'] = \App\Models\OrderDetail::where('seller_id', $authUserId)
+                                    ->whereDeliveryStatus('on_the_way')
+                                    ->whereYear('created_at', \Carbon\Carbon::now()->year)
+                                    ->whereMonth('created_at', \Carbon\Carbon::now()->month)
+                                    ->count();
+        $data['this_month_delivered_orders'] = \App\Models\OrderDetail::where('seller_id', $authUserId)
+                                    ->whereDeliveryStatus('delivered')
+                                    ->whereYear('created_at', \Carbon\Carbon::now()->year)
+                                    ->whereMonth('created_at', \Carbon\Carbon::now()->month)
+                                    ->count();
+                                    
+        $data['this_month_sold_amount'] = \App\Models\Order::where('seller_id', $authUserId)
+                                    ->wherePaymentStatus('paid')
+                                    ->whereYear('created_at', \Carbon\Carbon::now()->year)
+                                    ->whereMonth('created_at', \Carbon\Carbon::now()->month)
+                                    ->sum('grand_total');
+        $data['previous_month_sold_amount'] = \App\Models\Order::where('seller_id', $authUserId)
+                                    ->wherePaymentStatus('paid')
+                                    ->whereYear('created_at', \Carbon\Carbon::now()->year)
+                                    ->whereMonth('created_at', (\Carbon\Carbon::now()->month-1))
+                                    ->sum('grand_total');
+        
+        $data['products'] = \App\Models\Product::where('user_id', $authUserId)->orderBy('num_of_sale', 'desc')->limit(12)->get();
+        $data['last_7_days_sales'] = \App\Models\Order::where('created_at', '>=', \Carbon\Carbon::now()->subDays(7))
+                                ->where('seller_id', '=', $authUserId)
+                                ->where('delivery_status', '=', 'delivered')
+                                ->select(\DB::raw("sum(grand_total) as total, DATE_FORMAT(created_at, '%d %b') as date"))
+                                ->groupBy(\DB::raw("DATE_FORMAT(created_at, '%Y-%m-%d')"))
+                                ->get()->pluck('total', 'date');
+
+        // Additional stats
+        $data['total_categories'] = \App\Models\Category::count();
+        $data['total_brands'] = \App\Models\Brand::count();
+        
+        $data['sale_this_month'] = \App\Models\OrderDetail::where('seller_id', $authUserId)
+                                        ->where('delivery_status', 'delivered')
+                                        ->whereYear('created_at', \Carbon\Carbon::now()->year)
+                                        ->whereMonth('created_at', \Carbon\Carbon::now()->month)
+                                        ->sum('price');
+
+        return view('vendors.dashboard', $data);
     }
 
     public function commissionHistory()

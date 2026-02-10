@@ -3,11 +3,11 @@
     $physical = false;
     $col_val = 'col-12';
     foreach ($products as $key => $cartItem){
-    $product = get_single_product($cartItem);
-    if ($product->digital == 0) {
-    $physical = true;
-    $col_val = 'col-md-6';
-    }
+        $product = get_single_product($cartItem);
+        if ($product && $product->digital == 0) {
+            $physical = true;
+            $col_val = 'col-md-6';
+        }
     }
     @endphp
     <!-- Product List -->
@@ -15,8 +15,9 @@
         <ul class="list-group list-group-flush mb-3">
             @foreach ($products as $key => $cartItem)
             @php
-            $product = get_single_product($cartItem);
+                $product = get_single_product($cartItem);
             @endphp
+            @if ($product)
             <li class="list-group-item pl-0 py-3 border-0">
                 <div class="d-flex align-items-center">
                     <span class="mr-2 mr-md-3">
@@ -33,6 +34,7 @@
                     </span>
                 </div>
             </li>
+            @endif
             @endforeach
         </ul>
     </div>
@@ -50,6 +52,7 @@
                         type="radio"
                         name="shipping_type_{{ $owner_id }}"
                         value="home_delivery"
+                        data-owner="{{ $owner_id }}"
                         onchange="show_pickup_point(this, {{ $owner_id }})"
                         data-target=".pickup_point_id_{{ $owner_id }}"
                         checked required>

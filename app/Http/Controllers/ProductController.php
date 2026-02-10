@@ -22,6 +22,7 @@ use Carbon\Carbon;
 use CoreComponentRepository;
 use Artisan;
 use Cache;
+use Auth;
 use App\Services\ProductService;
 use App\Services\ProductTaxService;
 use App\Services\ProductFlashDealService;
