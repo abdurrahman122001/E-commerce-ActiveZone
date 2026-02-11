@@ -48,7 +48,7 @@
                         <td>{{ $sub->city->name ?? '' }}</td>
                         <td>{{ $sub->area->name ?? '' }}</td>
                         <td>{{ $sub->franchise->franchise_name ?? translate('No Parent') }}</td>
-                        <td>{{ $sub->franchise_package->getTranslation('name') ?? '' }}</td>
+                        <td>{{ $sub->franchise_package ? $sub->franchise_package->getTranslation('name') : '' }}</td>
                         <td>
                             @if ($sub->status == 'pending')
                                 <span class="badge badge-inline badge-warning">{{translate('Pending')}}</span>

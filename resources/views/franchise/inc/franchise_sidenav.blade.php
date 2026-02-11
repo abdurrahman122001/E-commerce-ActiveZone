@@ -113,6 +113,26 @@
                     </li>
                     
                     <li class="aiz-side-nav-item">
+                        <a href="#" class="aiz-side-nav-link">
+                            <i class="las la-user-friends aiz-side-nav-icon"></i>
+                            <span class="aiz-side-nav-text">{{ translate('Employees') }}</span>
+                            <span class="aiz-side-nav-arrow"></span>
+                        </a>
+                        <ul class="aiz-side-nav-list level-2">
+                            <li class="aiz-side-nav-item">
+                                <a href="{{ route('franchise.employees.index') }}" class="aiz-side-nav-link">
+                                    <span class="aiz-side-nav-text">{{ translate('All Employees') }}</span>
+                                </a>
+                            </li>
+                            <li class="aiz-side-nav-item">
+                                <a href="{{ route('franchise.employees.create') }}" class="aiz-side-nav-link">
+                                    <span class="aiz-side-nav-text">{{ translate('Add New Employee') }}</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+
+                    <li class="aiz-side-nav-item">
                         <a href="{{ route('franchise.orders.index') }}" class="aiz-side-nav-link">
                             <i class="las la-money-bill aiz-side-nav-icon"></i>
                             <span class="aiz-side-nav-text">{{ translate('Orders') }}</span>

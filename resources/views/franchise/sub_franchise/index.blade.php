@@ -44,7 +44,7 @@
                             <td>{{ $sub->state->name ?? '' }}</td>
                             <td>{{ $sub->city->name ?? '' }}</td>
                             <td>{{ $sub->area->name ?? '' }}</td>
-                            <td>{{ $sub->franchise_package->getTranslation('name') ?? '' }}</td>
+                            <td>{{ $sub->franchise_package ? $sub->franchise_package->getTranslation('name') : '' }}</td>
                             <td>{{ $sub->referral_code }}</td>
                             <td>
                                 @if($sub->status == 'approved')

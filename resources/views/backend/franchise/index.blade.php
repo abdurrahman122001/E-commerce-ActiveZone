@@ -46,7 +46,7 @@
                         <td>{{ $franchise->user->phone ?? '' }}</td>
                         <td>{{ $franchise->state->name ?? '' }}</td>
                         <td>{{ $franchise->city->name ?? '' }}</td>
-                        <td>{{ $franchise->franchise_package->getTranslation('name') ?? '' }}</td>
+                        <td>{{ $franchise->franchise_package ? $franchise->franchise_package->getTranslation('name') : '' }}</td>
                         <td>
                             @if ($franchise->status == 'pending')
                                 <span class="badge badge-inline badge-warning">{{translate('Pending')}}</span>

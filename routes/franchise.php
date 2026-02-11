@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Franchise\DashboardController;
+use App\Http\Controllers\Franchise\FranchiseEmployeeController;
 use App\Http\Controllers\Franchise\ProductController;
 use App\Http\Controllers\Franchise\OrderController;
 use App\Http\Controllers\Franchise\ProfileController;
@@ -48,6 +49,16 @@ Route::group(['prefix' => 'franchise', 'middleware' => ['auth', 'franchise', 'pr
         Route::get('/sub-franchises', 'index')->name('sub_franchises.index');
         Route::get('/sub-franchises/create', 'create')->name('sub_franchises.create');
         Route::post('/sub-franchises/store', 'store')->name('sub_franchises.store');
+    });
+
+    // Franchise Employees
+    Route::controller(FranchiseEmployeeController::class)->group(function () {
+        Route::get('/employees', 'index')->name('employees.index');
+        Route::get('/employees/create', 'create')->name('employees.create');
+        Route::post('/employees/store', 'store')->name('employees.store');
+        Route::get('/employees/{id}/edit', 'edit')->name('employees.edit');
+        Route::post('/employees/update/{id}', 'update')->name('employees.update');
+        Route::get('/employees/destroy/{id}', 'destroy')->name('employees.destroy');
     });
 
 });

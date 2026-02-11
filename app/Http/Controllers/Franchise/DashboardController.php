@@ -3,9 +3,11 @@
 namespace App\Http\Controllers\Franchise;
 
 use App\Http\Controllers\Controller;
+use App\Models\FranchiseEmployee;
 use App\Models\Order;
 use App\Models\OrderDetail;
 use App\Models\Product;
+use App\Models\SubFranchise;
 use Auth;
 use Carbon\Carbon;
 use DB;
@@ -80,6 +82,20 @@ class DashboardController extends Controller
         // Additional stats
         $data['total_categories'] = \App\Models\Category::count();
         $data['total_brands'] = \App\Models\Brand::count();
+        
+        // Employee count
+        $employeeQuery = FranchiseEmployee::query();
+        if ($user->user_type == 'franchise' && $user->franchise) {
+            $franchiseId = $user->franchise->id;
+            $subFranchiseIds = SubFranchise::where('franchise_id', $franchiseId)->pluck('id')->toArray();
+            $employeeQuery->where(function ($q) use ($user, $subFranchiseIds) {
+                $q->where('created_by', $user->id)
+                  ->orWhereIn('sub_franchise_id', $subFranchiseIds);
+            });
+        } elseif ($user->user_type == 'sub_franchise' && $user->sub_franchise) {
+            $employeeQuery->where('sub_franchise_id', $user->sub_franchise->id);
+        }
+        $data['total_employees'] = $employeeQuery->count();
         
         $data['sale_this_month'] = OrderDetail::whereIn('seller_id', $all_seller_ids)
                                         ->where('delivery_status', 'delivered')

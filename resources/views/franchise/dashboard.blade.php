@@ -198,6 +198,38 @@
                 </div>
             </div>
         </div>
+
+        <!-- Employees Card -->
+        <div class="col-sm-6 col-md-6 col-xxl-3">
+            <div class="card shadow-none mb-4 bg-success">
+                <div class="card-body">
+                    <div class="row align-items-center">
+                        <div class="col">
+                            <p class="small text-muted mb-0">
+                                <span class="fe fe-arrow-down fe-12"></span>
+                                <span class="fs-14 text-light">{{ translate('Total Employees') }}</span>
+                            </p>
+                            <h3 class="mb-0 text-white fs-30">
+                                {{ $total_employees }}
+                            </h3>
+                        </div>
+                        <div class="col-auto text-right">
+                            <i class="las la-user-friends la-3x text-white"></i>
+                        </div>
+                    </div>
+                    @if($status == 'approved')
+                     <div class="d-flex justify-content-between mt-3">
+                        <a href="{{ route('franchise.employees.index') }}">
+                        <div class="d-flex align-items-center">
+                            <i class="las la-eye la-1x text-white"></i>
+                            <p class="fs-12 text-light my-2 ml-1">{{ translate('Manage Employees') }}</p>
+                        </div>
+                        </a>
+                     </div>
+                    @endif
+                </div>
+            </div>
+        </div>
     </div>
 
     <div class="row">
