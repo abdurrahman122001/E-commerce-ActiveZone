@@ -95,8 +95,8 @@
     @yield('modal')
 
 
-	<script src="{{ static_asset('assets/js/vendors.js') }}" ></script>
-	<script src="{{ static_asset('assets/js/aiz-core.js') }}" ></script>
+	<script src="{{ static_asset('assets/js/vendors.js?v=') }}{{ get_setting('current_version') }}" ></script>
+	<script src="{{ static_asset('assets/js/aiz-core.js?v=') }}{{ rand(1000, 9999) }}" ></script>
 
     @yield('script')
 

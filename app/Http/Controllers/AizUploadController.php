@@ -350,6 +350,14 @@ class AizUploadController extends Controller
         return $uploads->paginate(60)->appends(request()->query());
     }
 
+    public function get_preview_files(Request $request)
+    {
+        $ids = explode(',', $request->ids);
+        return Upload::whereIn('id', $ids)->get();
+    }
+
+
+
     public function destroy($id)
     {
         $upload = Upload::findOrFail($id);

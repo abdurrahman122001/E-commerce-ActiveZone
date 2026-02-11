@@ -59,6 +59,10 @@
 					</div>
 
 					<div class="tab-pane h-100" id="aiz-upload-new">
+						<div class="text-center py-4 border-bottom mb-4">
+							<button type="button" class="btn btn-primary btn-sm aiz-uploader-browse-btn">{{ translate('Browse Files') }}</button>
+							<input type="file" class="aiz-uploader-file-input d-none" multiple>
+						</div>
 						<div id="aiz-upload-files" class="h-100">
 						</div>
 					</div>
