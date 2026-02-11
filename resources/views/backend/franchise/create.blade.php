@@ -36,20 +36,33 @@
                     </div>
                 </div>
                 <div class="form-group row">
-                    <label class="col-sm-3 col-from-label" for="city_id">{{translate('City')}}</label>
+                    <label class="col-sm-3 col-from-label" for="state_id">{{translate('State')}}</label>
                     <div class="col-sm-9">
-                        <select class="form-control aiz-selectpicker" name="city_id" id="city_id" data-live-search="true" required>
-                            <option value="">{{ translate('Select City') }}</option>
-                            @foreach($cities as $city)
-                                <option value="{{ $city->id }}">{{ $city->getTranslation('name') }}</option>
+                        <select class="form-control aiz-selectpicker" name="state_id" id="state_id" data-live-search="true" required>
+                            <option value="">{{ translate('Select State') }}</option>
+                            @foreach($states as $state)
+                                <option value="{{ $state->id }}">{{ $state->name }}</option>
                             @endforeach
                         </select>
                     </div>
                 </div>
                 <div class="form-group row">
-                    <label class="col-sm-3 col-from-label" for="investment_capacity">{{translate('Investment Capacity')}}</label>
+                    <label class="col-sm-3 col-from-label" for="city_id">{{translate('City')}}</label>
                     <div class="col-sm-9">
-                         <input type="number" step="0.01" placeholder="{{translate('Investment Capacity')}}" id="investment_capacity" name="investment_capacity" class="form-control" required>
+                        <select class="form-control aiz-selectpicker" name="city_id" id="city_id" data-live-search="true" required>
+                            <option value="">{{ translate('Select City') }}</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-3 col-from-label" for="franchise_package_id">{{translate('Package')}}</label>
+                    <div class="col-sm-9">
+                        <select class="form-control aiz-selectpicker" name="franchise_package_id" id="franchise_package_id" data-live-search="true" required>
+                            <option value="">{{ translate('Select Package') }}</option>
+                            @foreach($packages as $package)
+                                <option value="{{ $package->id }}">{{ $package->getTranslation('name') }}</option>
+                            @endforeach
+                        </select>
                     </div>
                 </div>
                  <div class="form-group row">
@@ -78,4 +91,28 @@
     </div>
 </div>
 
+@endsection
+
+@section('script')
+<script type="text/javascript">
+    $(document).ready(function(){
+        $('#state_id').change(function(){
+            var state_id = $(this).val();
+            get_cities(state_id);
+        });
+
+        function get_cities(state_id){
+            $.post('{{ route('get-city') }}', { _token: '{{ csrf_token() }}', state_id: state_id }, function(data){
+                $('#city_id').html(null);
+                $('#city_id').append($('<option>', {
+                    value: '',
+                    text: '{{ translate("Select City") }}'
+                }));
+                var obj = JSON.parse(data);
+                $('#city_id').append(obj);
+                $('.aiz-selectpicker').selectpicker('refresh');
+            });
+        }
+    });
+</script>
 @endsection

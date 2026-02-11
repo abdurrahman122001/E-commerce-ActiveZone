@@ -28,9 +28,11 @@
                     <th>#</th>
                     <th>{{translate('Name')}}</th>
                     <th>{{translate('Email')}}</th>
+                    <th>{{translate('State')}}</th>
                     <th>{{translate('City')}}</th>
                     <th>{{translate('Area')}}</th>
                     <th>{{translate('Parent Franchise')}}</th>
+                    <th>{{translate('Package')}}</th>
                     <th>{{translate('Status')}}</th>
                     <th>{{translate('ID Proof')}}</th>
                     <th class="text-right">{{translate('Options')}}</th>
@@ -42,9 +44,11 @@
                         <td>{{ ($subFranchises->currentPage()-1) * $subFranchises->perPage() + $key + 1 }}</td>
                         <td>{{ $sub->user->name ?? '' }}</td>
                         <td>{{ $sub->user->email ?? '' }}</td>
+                        <td>{{ $sub->state->name ?? '' }}</td>
                         <td>{{ $sub->city->name ?? '' }}</td>
                         <td>{{ $sub->area->name ?? '' }}</td>
                         <td>{{ $sub->franchise->franchise_name ?? translate('No Parent') }}</td>
+                        <td>{{ $sub->franchise_package->getTranslation('name') ?? '' }}</td>
                         <td>
                             @if ($sub->status == 'pending')
                                 <span class="badge badge-inline badge-warning">{{translate('Pending')}}</span>

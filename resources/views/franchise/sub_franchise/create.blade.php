@@ -52,9 +52,14 @@
                         </div>
                     </div>
                     <div class="form-group row">
-                        <label class="col-md-3 col-from-label">{{translate('Investment Capacity')}} <span class="text-danger">*</span></label>
+                        <label class="col-md-3 col-from-label">{{translate('Package')}} <span class="text-danger">*</span></label>
                         <div class="col-md-9">
-                            <input type="number" class="form-control" name="investment_capacity" placeholder="{{translate('Investment Capacity')}}" required>
+                            <select class="form-control aiz-selectpicker" name="franchise_package_id" data-live-search="true" required>
+                                <option value="">{{ translate('Select Package') }}</option>
+                                @foreach ($packages as $package)
+                                    <option value="{{ $package->id }}">{{ $package->getTranslation('name') }}</option>
+                                @endforeach
+                            </select>
                         </div>
                     </div>
                     <div class="form-group row">

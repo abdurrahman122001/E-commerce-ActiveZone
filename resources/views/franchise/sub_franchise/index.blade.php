@@ -26,7 +26,10 @@
                         <th>{{ translate('Name') }}</th>
                         <th>{{ translate('Email') }}</th>
                         <th>{{ translate('Phone') }}</th>
+                        <th>{{ translate('State') }}</th>
+                        <th>{{ translate('City') }}</th>
                         <th data-breakpoints="lg">{{ translate('Area') }}</th>
+                        <th data-breakpoints="lg">{{ translate('Package') }}</th>
                         <th data-breakpoints="lg">{{ translate('Referral Code') }}</th>
                         <th data-breakpoints="lg">{{ translate('Status') }}</th>
                     </tr>
@@ -38,7 +41,10 @@
                             <td>{{ $sub->user->name ?? '' }}</td>
                             <td>{{ $sub->user->email ?? '' }}</td>
                             <td>{{ $sub->user->phone ?? '' }}</td>
+                            <td>{{ $sub->state->name ?? '' }}</td>
+                            <td>{{ $sub->city->name ?? '' }}</td>
                             <td>{{ $sub->area->name ?? '' }}</td>
+                            <td>{{ $sub->franchise_package->getTranslation('name') ?? '' }}</td>
                             <td>{{ $sub->referral_code }}</td>
                             <td>
                                 @if($sub->status == 'approved')

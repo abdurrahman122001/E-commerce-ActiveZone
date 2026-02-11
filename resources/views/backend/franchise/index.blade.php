@@ -29,9 +29,10 @@
                     <th>{{translate('Name')}}</th>
                     <th>{{translate('Email')}}</th>
                     <th>{{translate('Phone')}}</th>
+                    <th>{{translate('State')}}</th>
                     <th>{{translate('City')}}</th>
+                    <th>{{translate('Package')}}</th>
                     <th>{{translate('Status')}}</th>
-                    <th>{{translate('Investment')}}</th>
                     <th>{{translate('ID Proof')}}</th>
                     <th class="text-right">{{translate('Options')}}</th>
                 </tr>
@@ -43,7 +44,9 @@
                         <td>{{ $franchise->user->name ?? '' }}</td>
                         <td>{{ $franchise->user->email ?? '' }}</td>
                         <td>{{ $franchise->user->phone ?? '' }}</td>
+                        <td>{{ $franchise->state->name ?? '' }}</td>
                         <td>{{ $franchise->city->name ?? '' }}</td>
+                        <td>{{ $franchise->franchise_package->getTranslation('name') ?? '' }}</td>
                         <td>
                             @if ($franchise->status == 'pending')
                                 <span class="badge badge-inline badge-warning">{{translate('Pending')}}</span>
@@ -53,7 +56,6 @@
                                 <span class="badge badge-inline badge-danger">{{translate('Rejected')}}</span>
                             @endif
                         </td>
-                        <td>{{ single_price($franchise->investment_capacity) }}</td>
                         <td>
                             @if($franchise->id_proof)
                                 <a href="{{ asset('storage/'.$franchise->id_proof) }}" target="_blank" class="btn btn-sm btn-info">{{ translate('View') }}</a>

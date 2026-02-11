@@ -11,19 +11,25 @@ class Franchise extends Model
 
     protected $fillable = [
         'user_id',
+        'state_id',
         'city_id',
         'franchise_name',
         'referral_code',
-        'investment_capacity',
         'business_experience',
         'id_proof',
         'status',
-        'balance'
+        'balance',
+        'franchise_package_id'
     ];
 
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function state()
+    {
+        return $this->belongsTo(State::class);
     }
 
     public function city()
@@ -39,5 +45,10 @@ class Franchise extends Model
     public function vendors()
     {
         return $this->hasMany(Vendor::class);
+    }
+
+    public function franchise_package()
+    {
+        return $this->belongsTo(FranchisePackage::class);
     }
 }

@@ -11,6 +11,8 @@ use App\Models\Area;
 use App\Models\Role;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
+use App\Models\FranchisePackage;
+use App\Models\State;
 use Auth;
 
 class FranchiseController extends Controller
@@ -18,8 +20,9 @@ class FranchiseController extends Controller
     // Show Registration Form
     public function showRegistrationForm()
     {
-        $cities = City::where('status', 1)->get();
-        return view('frontend.franchise.registration', compact('cities'));
+        $states = State::where('country_id', 101)->where('status', 1)->get();
+        $packages = FranchisePackage::all();
+        return view('frontend.franchise.registration', compact('states', 'packages'));
     }
 
     // Process Registration
@@ -31,9 +34,10 @@ class FranchiseController extends Controller
             'phone' => 'required|string|unique:users,phone',
             'password' => 'required|string|min:6|confirmed',
             'franchise_type' => 'required|in:city_franchise,sub_franchise',
+            'state_id' => 'required|exists:states,id',
             'city_id' => 'required|exists:cities,id',
             'area_id' => 'required_if:franchise_type,sub_franchise',
-            'investment_capacity' => 'required|numeric',
+            'franchise_package_id' => 'required|exists:franchise_packages,id',
             'id_proof' => 'required|file|mimes:jpg,jpeg,png,pdf|max:2048',
         ]);
 
@@ -58,22 +62,24 @@ class FranchiseController extends Controller
             if ($request->franchise_type == 'city_franchise') {
                 $franchise = new Franchise();
                 $franchise->user_id = $user->id;
+                $franchise->state_id = $request->state_id;
                 $franchise->city_id = $request->city_id;
                 $franchise->franchise_name = $request->name . ' Franchise';
                 $franchise->referral_code = 'CF' . strtoupper(Str::random(8));
-                $franchise->investment_capacity = $request->investment_capacity;
                 $franchise->business_experience = $request->business_experience;
                 $franchise->id_proof = $id_proof_path;
+                $franchise->franchise_package_id = $request->franchise_package_id;
                 $franchise->save();
             } else {
                 $subFranchise = new SubFranchise();
                 $subFranchise->user_id = $user->id;
+                $subFranchise->state_id = $request->state_id;
                 $subFranchise->city_id = $request->city_id;
                 $subFranchise->area_id = $request->area_id;
                 $subFranchise->referral_code = 'SF' . strtoupper(Str::random(8));
-                $subFranchise->investment_capacity = $request->investment_capacity;
                 $subFranchise->business_experience = $request->business_experience;
                 $subFranchise->id_proof = $id_proof_path;
+                $subFranchise->franchise_package_id = $request->franchise_package_id;
                 
                 // Link to Parent Franchise if exists for the city
                 $parentFranchise = Franchise::where('city_id', $request->city_id)->where('status', 'approved')->first();
@@ -98,22 +104,23 @@ class FranchiseController extends Controller
     // Admin: List Franchises
     public function index()
     {
-        $franchises = Franchise::with('user', 'city')->paginate(15);
+        $franchises = Franchise::with('user', 'city', 'franchise_package')->paginate(15);
         return view('backend.franchise.index', compact('franchises'));
     }
     
     // Admin: List Sub Franchises
     public function indexSub()
     {
-        $subFranchises = SubFranchise::with('user', 'city', 'area', 'franchise')->paginate(15);
+        $subFranchises = SubFranchise::with('user', 'city', 'area', 'franchise', 'franchise_package')->paginate(15);
         return view('backend.franchise.sub_index', compact('subFranchises'));
     }
     
     // Admin: Create Franchise Form
     public function createFranchise()
     {
-        $cities = City::where('status', 1)->get();
-        return view('backend.franchise.create', compact('cities'));
+        $states = State::where('country_id', 101)->where('status', 1)->get();
+        $packages = FranchisePackage::all();
+        return view('backend.franchise.create', compact('states', 'packages'));
     }
 
     // Admin: Store Franchise
@@ -123,8 +130,9 @@ class FranchiseController extends Controller
             'email' => 'required|email|unique:users,email',
             'phone' => 'required|string|unique:users,phone',
             'password' => 'required|string|min:6',
+            'state_id' => 'required|exists:states,id',
             'city_id' => 'required|exists:cities,id',
-            'investment_capacity' => 'required|numeric',
+            'franchise_package_id' => 'required|exists:franchise_packages,id',
         ]);
 
         // Create User
@@ -145,12 +153,13 @@ class FranchiseController extends Controller
 
         $franchise = new Franchise();
         $franchise->user_id = $user->id;
+        $franchise->state_id = $request->state_id;
         $franchise->city_id = $request->city_id;
         $franchise->franchise_name = $request->name . ' Franchise';
         $franchise->referral_code = Str::random(10);
-        $franchise->investment_capacity = $request->investment_capacity;
         $franchise->business_experience = $request->business_experience;
         $franchise->id_proof = $id_proof_path;
+        $franchise->franchise_package_id = $request->franchise_package_id;
         $franchise->status = 'approved';
         $franchise->save();
 
@@ -161,8 +170,9 @@ class FranchiseController extends Controller
     // Admin: Create Sub-Franchise Form
     public function createSubFranchise()
     {
-        $cities = City::where('status', 1)->get();
-        return view('backend.franchise.create_sub', compact('cities'));
+        $states = State::where('country_id', 101)->where('status', 1)->get();
+        $packages = FranchisePackage::all();
+        return view('backend.franchise.create_sub', compact('states', 'packages'));
     }
 
     // Admin: Store Sub-Franchise
@@ -172,9 +182,10 @@ class FranchiseController extends Controller
             'email' => 'required|email|unique:users,email',
             'phone' => 'required|string|unique:users,phone',
             'password' => 'required|string|min:6',
+            'state_id' => 'required|exists:states,id',
             'city_id' => 'required|exists:cities,id',
             'area_id' => 'required|exists:areas,id',
-            'investment_capacity' => 'required|numeric',
+            'franchise_package_id' => 'required|exists:franchise_packages,id',
         ]);
 
          // Create User
@@ -195,12 +206,13 @@ class FranchiseController extends Controller
 
         $subFranchise = new SubFranchise();
         $subFranchise->user_id = $user->id;
+        $subFranchise->state_id = $request->state_id;
         $subFranchise->city_id = $request->city_id;
         $subFranchise->area_id = $request->area_id;
         $subFranchise->referral_code = Str::random(10);
-        $subFranchise->investment_capacity = $request->investment_capacity;
         $subFranchise->business_experience = $request->business_experience;
         $subFranchise->id_proof = $id_proof_path;
+        $subFranchise->franchise_package_id = $request->franchise_package_id;
         $subFranchise->status = 'approved';
 
         // Link to Parent Franchise if exists for the city

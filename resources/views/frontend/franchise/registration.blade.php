@@ -86,13 +86,25 @@
                                 </div>
 
                                 <div class="form-group row">
+                                    <label class="col-md-3 col-form-label">{{ translate('State') }} <span class="text-danger">*</span></label>
+                                    <div class="col-md-9">
+                                        <select class="form-control aiz-selectpicker @error('state_id') is-invalid @enderror" name="state_id" id="state_id" data-live-search="true" required>
+                                            <option value="">{{ translate('Select State') }}</option>
+                                            @foreach($states as $state)
+                                                <option value="{{ $state->id }}" {{ old('state_id') == $state->id ? 'selected' : '' }}>{{ $state->name }}</option>
+                                            @endforeach
+                                        </select>
+                                        @error('state_id')
+                                            <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
                                     <label class="col-md-3 col-form-label">{{ translate('City') }} <span class="text-danger">*</span></label>
                                     <div class="col-md-9">
                                         <select class="form-control aiz-selectpicker @error('city_id') is-invalid @enderror" name="city_id" id="city_id" data-live-search="true" required>
                                             <option value="">{{ translate('Select City') }}</option>
-                                            @foreach($cities as $city)
-                                                <option value="{{ $city->id }}" {{ old('city_id') == $city->id ? 'selected' : '' }}>{{ $city->getTranslation('name') }}</option>
-                                            @endforeach
                                         </select>
                                         @error('city_id')
                                             <div class="invalid-feedback">{{ $message }}</div>
@@ -113,14 +125,20 @@
                                 </div>
 
                                 <div class="form-group row">
-                                    <label class="col-md-3 col-form-label">{{ translate('Investment Capacity (₹)') }} <span class="text-danger">*</span></label>
+                                    <label class="col-md-3 col-form-label">{{ translate('Package') }} <span class="text-danger">*</span></label>
                                     <div class="col-md-9">
-                                        <input type="number" class="form-control rounded-0 @error('investment_capacity') is-invalid @enderror" name="investment_capacity" value="{{ old('investment_capacity') }}" step="0.01" placeholder="{{ translate('Investment Capacity') }}" required>
-                                        @error('investment_capacity')
+                                        <select class="form-control aiz-selectpicker @error('franchise_package_id') is-invalid @enderror" name="franchise_package_id" id="franchise_package_id" data-live-search="true" required>
+                                            <option value="">{{ translate('Select Package') }}</option>
+                                            @foreach($packages as $package)
+                                                <option value="{{ $package->id }}" {{ old('franchise_package_id') == $package->id ? 'selected' : '' }}>{{ $package->getTranslation('name') }}</option>
+                                            @endforeach
+                                        </select>
+                                        @error('franchise_package_id')
                                             <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror
                                     </div>
                                 </div>
+
 
                                 <div class="form-group row">
                                     <label class="col-md-3 col-form-label">{{ translate('Business Experience') }}</label>
@@ -169,10 +187,28 @@
             }
         });
 
+        $('#state_id').change(function(){
+            var state_id = $(this).val();
+            get_cities(state_id);
+        });
+
         $('#city_id').change(function(){
             var city_id = $(this).val();
             get_areas(city_id);
         });
+
+        function get_cities(state_id){
+            $.post('{{ route('get-city') }}', { _token: '{{ csrf_token() }}', state_id: state_id }, function(data){
+                $('#city_id').html(null);
+                $('#city_id').append($('<option>', {
+                    value: '',
+                    text: '{{ translate("Select City") }}'
+                }));
+                var obj = JSON.parse(data);
+                $('#city_id').append(obj);
+                $('.aiz-selectpicker').selectpicker('refresh');
+            });
+        }
 
         function get_areas(city_id) {
             $.post('{{ route('get-area') }}', { _token: '{{ csrf_token() }}', city_id: city_id }, function(data){

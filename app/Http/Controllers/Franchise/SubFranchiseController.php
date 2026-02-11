@@ -10,6 +10,7 @@ use App\Models\City;
 use App\Models\Area;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
+use App\Models\FranchisePackage;
 use Auth;
 
 class SubFranchiseController extends Controller
@@ -21,7 +22,7 @@ class SubFranchiseController extends Controller
             flash(translate('Franchise record not found.'))->error();
             return back();
         }
-        $subFranchises = SubFranchise::where('franchise_id', $franchise->id)->with('user', 'city', 'area')->paginate(15);
+        $subFranchises = SubFranchise::where('franchise_id', $franchise->id)->with('user', 'city', 'area', 'franchise_package')->paginate(15);
         return view('franchise.sub_franchise.index', compact('subFranchises'));
     }
 
@@ -35,7 +36,8 @@ class SubFranchiseController extends Controller
         // Sub-franchises should be in the same city as the parent franchise
         $city = City::find($franchise->city_id);
         $areas = Area::where('city_id', $franchise->city_id)->get();
-        return view('franchise.sub_franchise.create', compact('franchise', 'city', 'areas'));
+        $packages = FranchisePackage::all();
+        return view('franchise.sub_franchise.create', compact('franchise', 'city', 'areas', 'packages'));
     }
 
     public function store(Request $request)
@@ -46,7 +48,7 @@ class SubFranchiseController extends Controller
             'phone' => 'required|string|unique:users,phone',
             'password' => 'required|string|min:6',
             'area_id' => 'required|exists:areas,id',
-            'investment_capacity' => 'required|numeric',
+            'franchise_package_id' => 'required|exists:franchise_packages,id',
         ]);
 
         $franchise = Auth::user()->franchise;
@@ -71,12 +73,13 @@ class SubFranchiseController extends Controller
 
             $subFranchise = new SubFranchise();
             $subFranchise->user_id = $user->id;
+            $subFranchise->state_id = $franchise->state_id;
             $subFranchise->city_id = $franchise->city_id;
             $subFranchise->area_id = $request->area_id;
             $subFranchise->referral_code = 'SF' . strtoupper(Str::random(8));
-            $subFranchise->investment_capacity = $request->investment_capacity;
             $subFranchise->business_experience = $request->business_experience;
             $subFranchise->id_proof = $id_proof_path;
+            $subFranchise->franchise_package_id = $request->franchise_package_id;
             $subFranchise->status = 'approved'; // Automatically approved if added by parent franchise? Or pending?
             $subFranchise->franchise_id = $franchise->id;
             $subFranchise->save();

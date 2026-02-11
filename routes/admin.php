@@ -25,6 +25,7 @@ use App\Http\Controllers\CustomAlertController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\CustomerPackageController;
 use App\Http\Controllers\CustomerProductController;
+use App\Http\Controllers\FranchisePackageController;
 use App\Http\Controllers\CustomLabelController;
 use App\Http\Controllers\CustomSaleAlertController;
 use App\Http\Controllers\DigitalProductController;
@@ -659,7 +660,13 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin', 'prevent-ba
     Route::controller(CustomerPackageController::class)->group(function () {
         Route::get('/customer_packages/edit/{id}', 'edit')->name('customer_packages.edit');
         Route::get('/customer_packages/destroy/{id}', 'destroy')->name('customer_packages.destroy');
+    });    // Franchise Package
+    Route::resource('franchise_packages', FranchisePackageController::class);
+    Route::controller(FranchisePackageController::class)->group(function () {
+        Route::get('/franchise_packages/edit/{id}', 'edit')->name('franchise_packages.edit');
+        Route::get('/franchise_packages/destroy/{id}', 'destroy')->name('franchise_packages.destroy');
     });
+
 
     //Classified Products
     Route::controller(CustomerProductController::class)->group(function () {

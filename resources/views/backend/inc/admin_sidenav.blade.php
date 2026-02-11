@@ -1568,6 +1568,11 @@
                                 <span class="aiz-side-nav-text">{{translate('Sub Franchises')}}</span>
                             </a>
                         </li>
+                        <li class="aiz-side-nav-item">
+                            <a href="{{ route('franchise_packages.index') }}" class="aiz-side-nav-link">
+                                <span class="aiz-side-nav-text">{{translate('Franchise Packages')}}</span>
+                            </a>
+                        </li>
                     </ul>
                 </li>
 
