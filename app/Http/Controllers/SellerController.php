@@ -30,15 +30,15 @@ class SellerController extends Controller
         // Staff Permission Check
         $this->middleware(['permission:view_all_seller|view_all_seller_rating_and_followers'])->only('index');
         $this->middleware(['permission:add_seller'])->only('create');
-        $this->middleware(['permission:view_seller_profile'])->only('sellerProfile');
-        $this->middleware(['permission:login_as_seller'])->only('login');
-        $this->middleware(['permission:pay_to_seller'])->only('payment_modal');
-        $this->middleware(['permission:edit_seller'])->only('edit');
-        $this->middleware(['permission:delete_seller'])->only('destroy');
-        $this->middleware(['permission:ban_seller'])->only('ban');
-        $this->middleware(['permission:edit_seller_custom_followers'])->only('editSellerCustomFollowers');
+        // $this->middleware(['permission:view_seller_profile'])->only('sellerProfile');
+        // $this->middleware(['permission:login_as_seller'])->only('login');
+        // $this->middleware(['permission:pay_to_seller'])->only('payment_modal');
+        // $this->middleware(['permission:edit_seller'])->only('edit');
+        // $this->middleware(['permission:delete_seller'])->only('destroy');
+        // $this->middleware(['permission:ban_seller'])->only('ban');
+        // $this->middleware(['permission:edit_seller_custom_followers'])->only('editSellerCustomFollowers');
         $this->middleware(['permission:view_pending_seller'])->only('pendingSellers');
-        $this->middleware(['permission:mark_seller_suspected'])->only('suspicious');
+        // $this->middleware(['permission:mark_seller_suspected'])->only('suspicious');
     }
 
     /**
@@ -190,6 +190,9 @@ class SellerController extends Controller
      */
     public function edit($id)
     {
+        if (auth()->user()->user_type != 'franchise' && auth()->user()->user_type != 'sub_franchise' && !auth()->user()->can('edit_seller')) {
+            abort(403);
+        }
         $shop = Shop::findOrFail(decrypt($id));
         return view('backend.sellers.edit', compact('shop'));
     }
@@ -229,6 +232,9 @@ class SellerController extends Controller
      */
     public function destroy($id)
     {
+        if (auth()->user()->user_type != 'franchise' && auth()->user()->user_type != 'sub_franchise' && !auth()->user()->can('delete_seller')) {
+            abort(403);
+        }
         $shop = Shop::findOrFail($id);
 
         // Seller Product and product related data delete
@@ -332,6 +338,9 @@ class SellerController extends Controller
 
     public function payment_modal(Request $request)
     {
+        if (auth()->user()->user_type != 'franchise' && auth()->user()->user_type != 'sub_franchise' && !auth()->user()->can('pay_to_seller')) {
+            abort(403);
+        }
         $shop = shop::findOrFail($request->id);
         return view('backend.sellers.payment_modal', compact('shop'));
     }
@@ -364,6 +373,9 @@ class SellerController extends Controller
 
     public function login($id)
     {
+        if (auth()->user()->user_type != 'franchise' && auth()->user()->user_type != 'sub_franchise' && !auth()->user()->can('login_as_seller')) {
+            abort(403);
+        }
         $shop = Shop::findOrFail(decrypt($id));
         $user  = $shop->user;
         auth()->login($user, true);
@@ -373,6 +385,9 @@ class SellerController extends Controller
 
     public function ban($id)
     {
+        if (auth()->user()->user_type != 'franchise' && auth()->user()->user_type != 'sub_franchise' && !auth()->user()->can('ban_seller')) {
+            abort(403);
+        }
         $shop = Shop::findOrFail($id);
 
         if ($shop->user->banned == 1) {
@@ -461,6 +476,9 @@ class SellerController extends Controller
     // Edit Seller Custom Followers
     public function editSellerCustomFollowers(Request $request)
     {
+        if (auth()->user()->user_type != 'franchise' && auth()->user()->user_type != 'sub_franchise' && !auth()->user()->can('edit_seller_custom_followers')) {
+            abort(403);
+        }
         $shop = Shop::where('id', $request->shop_id)->first();
         $shop->custom_followers = $request->custom_followers;
         $shop->save();
@@ -516,6 +534,9 @@ class SellerController extends Controller
 
     public function sellerProfile(Request $request)
     {
+        if (auth()->user()->user_type != 'franchise' && auth()->user()->user_type != 'sub_franchise' && !auth()->user()->can('view_seller_profile')) {
+            abort(403);
+        }
         $shop_id = decrypt($request->id);
         $shop = Shop::findOrFail($shop_id);
         $shop->last_login = $this->getsellerLastLogin($shop->user_id);
@@ -577,6 +598,9 @@ class SellerController extends Controller
 
     public function suspicious($id)
     {
+        if (auth()->user()->user_type != 'franchise' && auth()->user()->user_type != 'sub_franchise' && !auth()->user()->can('mark_seller_suspected')) {
+            abort(403);
+        }
         $user = User::findOrFail(decrypt($id));
 
         if ($user->is_suspicious == 1) {

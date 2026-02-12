@@ -95,17 +95,17 @@
                         </a>
                         <ul class="aiz-side-nav-list level-2">
                             <li class="aiz-side-nav-item">
-                                <a href="{{ route('vendors.index') }}" class="aiz-side-nav-link">
+                                <a href="{{ route('franchise.vendors.index') }}" class="aiz-side-nav-link">
                                     <span class="aiz-side-nav-text">{{ translate('All Vendors') }}</span>
                                 </a>
                             </li>
                             <li class="aiz-side-nav-item">
-                                <a href="{{ route('vendors.create') }}" class="aiz-side-nav-link">
+                                <a href="{{ route('franchise.vendors.create') }}" class="aiz-side-nav-link">
                                     <span class="aiz-side-nav-text">{{ translate('Add New Vendor') }}</span>
                                 </a>
                             </li>
                             <li class="aiz-side-nav-item">
-                                <a href="{{ route('vendors.commission_history') }}" class="aiz-side-nav-link">
+                                <a href="{{ route('franchise.vendors.commission_history') }}" class="aiz-side-nav-link">
                                     <span class="aiz-side-nav-text">{{ translate('Commission History') }}</span>
                                 </a>
                             </li>

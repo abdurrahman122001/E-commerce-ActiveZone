@@ -1,6 +1,6 @@
-@extends('backend.layouts.app')
+@extends('franchise.layouts.app')
 
-@section('content')
+@section('panel_content')
 
 <div class="aiz-titlebar text-left mt-2 mb-3">
     <h1 class="h3">{{translate('Add New Employee')}}</h1>

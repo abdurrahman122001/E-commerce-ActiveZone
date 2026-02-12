@@ -5,6 +5,7 @@ use App\Http\Controllers\Franchise\FranchiseEmployeeController;
 use App\Http\Controllers\Franchise\ProductController;
 use App\Http\Controllers\Franchise\OrderController;
 use App\Http\Controllers\Franchise\ProfileController;
+use App\Http\Controllers\VendorController;
 
 Route::group(['prefix' => 'franchise', 'middleware' => ['auth', 'franchise', 'prevent-back-history'], 'as' => 'franchise.'], function () {
     
@@ -59,6 +60,14 @@ Route::group(['prefix' => 'franchise', 'middleware' => ['auth', 'franchise', 'pr
         Route::get('/employees/{id}/edit', 'edit')->name('employees.edit');
         Route::post('/employees/update/{id}', 'update')->name('employees.update');
         Route::get('/employees/destroy/{id}', 'destroy')->name('employees.destroy');
+    });
+
+    // Franchise Vendors
+    Route::controller(VendorController::class)->group(function () {
+        Route::get('/vendors', 'index')->name('vendors.index');
+        Route::get('/vendors/create', 'create')->name('vendors.create');
+        Route::post('/vendors/store', 'store')->name('vendors.store');
+        Route::get('/vendors/commission-history', 'commissionHistory')->name('vendors.commission_history');
     });
 
 });

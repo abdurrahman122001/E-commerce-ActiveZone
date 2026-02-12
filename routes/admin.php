@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AddonController;
 use App\Http\Controllers\AddressController;
+use App\Http\Controllers\Admin\LocationController;
 use App\Http\Controllers\Admin\Report\EarningReportController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AizUploadController;
@@ -715,6 +716,30 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin', 'prevent-ba
      Route::controller(AddressController::class)->group(function () {
         Route::post('/get-states', 'getStates')->name('admin.get-state');
      });
+
+    // Unified Location Management
+    Route::controller(LocationController::class)->group(function () {
+        Route::get('/locations', 'index')->name('admin.locations.index');
+        
+        // State management
+        Route::post('/locations/states/store', 'storeState')->name('admin.locations.states.store');
+        Route::post('/locations/states/update/{id}', 'updateState')->name('admin.locations.states.update');
+        Route::get('/locations/states/destroy/{id}', 'destroyState')->name('admin.locations.states.destroy');
+        
+        // City management
+        Route::post('/locations/cities/store', 'storeCity')->name('admin.locations.cities.store');
+        Route::post('/locations/cities/update/{id}', 'updateCity')->name('admin.locations.cities.update');
+        Route::get('/locations/cities/destroy/{id}', 'destroyCity')->name('admin.locations.cities.destroy');
+        
+        // Area management
+        Route::post('/locations/areas/store', 'storeArea')->name('admin.locations.areas.store');
+        Route::post('/locations/areas/update/{id}', 'updateArea')->name('admin.locations.areas.update');
+        Route::get('/locations/areas/destroy/{id}', 'destroyArea')->name('admin.locations.areas.destroy');
+        
+        // AJAX helpers
+        Route::get('/locations/get-states-by-country', 'getStatesByCountry')->name('admin.locations.get-states');
+        Route::get('/locations/get-cities-by-state', 'getCitiesByState')->name('admin.locations.get-cities');
+    });
 
     Route::view('/system/update', 'backend.system.update')->name('system_update');
     Route::view('/system/server-status', 'backend.system.server_status')->name('system_server');

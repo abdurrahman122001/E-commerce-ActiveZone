@@ -2336,6 +2336,14 @@
                                         </a>
                                     </li>
                                 @endcan
+                                @can('manage_locations')
+                                <li class="aiz-side-nav-item">
+                                    <a href="{{ route('admin.locations.index') }}"
+                                        class="aiz-side-nav-link {{ areActiveRoutes(['admin.locations.index'])}}">
+                                        <span class="aiz-side-nav-text">{{translate('Location Manager (States/Cities/Areas)')}}</span>
+                                    </a>
+                                </li>
+                                @endcan
                                 @can('shipping_configuration')
                                 <li class="aiz-side-nav-item">
                                     <a href="{{route('shipping_configuration.index')}}"

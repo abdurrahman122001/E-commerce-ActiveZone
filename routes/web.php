@@ -76,10 +76,27 @@ Route::controller(App\Http\Controllers\FranchiseController::class)->group(functi
         Route::get('/admin/franchises/create', 'createFranchise')->name('admin.franchises.create');
         Route::post('/admin/franchises/store', 'storeFranchise')->name('admin.franchises.store');
         
+        Route::get('/admin/franchise/edit/{id}', 'editFranchise')->name('admin.franchises.edit');
+        Route::post('/admin/franchise/update/{id}', 'updateFranchise')->name('admin.franchises.update');
+        Route::get('/admin/franchise/destroy/{id}', 'destroyFranchise')->name('admin.franchises.destroy');
+
         Route::get('/admin/sub-franchises', 'indexSub')->name('admin.sub_franchises.index');
         Route::get('/admin/sub-franchises/create', 'createSubFranchise')->name('admin.sub_franchises.create');
         Route::post('/admin/sub-franchises/store', 'storeSubFranchise')->name('admin.sub_franchises.store');
         
+        Route::get('/admin/sub-franchise/edit/{id}', 'editSubFranchise')->name('admin.sub_franchises.edit');
+        Route::post('/admin/sub-franchise/update/{id}', 'updateSubFranchise')->name('admin.sub_franchises.update');
+        Route::get('/admin/sub-franchise/destroy/{id}', 'destroySubFranchise')->name('admin.sub_franchises.destroy');
+
+        Route::get('/admin/franchise/login/{id}', 'login')->name('admin.franchises.login');
+        Route::get('/admin/franchise/ban/{id}', 'ban')->name('admin.franchises.ban');
+        Route::get('/admin/franchise/suspicious/{id}', 'suspicious')->name('admin.franchises.suspicious');
+        Route::get('/admin/franchise/profile/{id}', 'profile')->name('admin.franchises.profile');
+        
+        Route::post('/admin/franchise/payment_modal', 'payment_modal')->name('admin.franchises.payment_modal');
+        Route::post('/admin/franchise/payment_store', 'payment_store')->name('admin.franchises.payment_store');
+        Route::get('/admin/franchise/payment_history/{id}', 'payment_history')->name('admin.franchises.payment_history');
+
         Route::get('/admin/franchise/approve/{id}/{type}', 'approve')->name('admin.franchise.approve');
         Route::get('/admin/franchise/reject/{id}/{type}', 'reject')->name('admin.franchise.reject');
     });

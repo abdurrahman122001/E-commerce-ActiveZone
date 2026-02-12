@@ -1,13 +1,6 @@
 @extends('franchise.layouts.app')
 
 @section('panel_content')
-    <div class="aiz-titlebar mt-2 mb-4">
-        <div class="row align-items-center">
-            <div class="col-md-6">
-                <h1 class="h3 text-primary">{{ translate('Dashboard') }}</h1>
-            </div>
-        </div>
-    </div>
     @php 
         $authUser = auth()->user(); 
         $status = 'pending';
@@ -17,6 +10,27 @@
             $status = $authUser->sub_franchise ? $authUser->sub_franchise->status : 'pending';
         }
     @endphp
+
+    {{-- Pending Approval Alert --}}
+    @if($status != 'approved')
+        <div class="alert alert-warning alert-dismissible fade show mb-4" role="alert">
+            <div class="d-flex align-items-center">
+                <i class="las la-exclamation-triangle la-2x mr-3"></i>
+                <div>
+                    <strong>{{ translate('Account Pending Approval') }}</strong>
+                    <p class="mb-0">{{ translate('Your account is currently unverified. Please wait for admin approval to access all features. Some functionality may be limited until your account is approved.') }}</p>
+                </div>
+            </div>
+        </div>
+    @endif
+
+    <div class="aiz-titlebar mt-2 mb-4">
+        <div class="row align-items-center">
+            <div class="col-md-6">
+                <h1 class="h3 text-primary">{{ translate('Dashboard') }}</h1>
+            </div>
+        </div>
+    </div>
     <div class="row">
         <div class="col-sm-6 col-md-6 col-xxl-3">
             <div class="card shadow-none mb-4 bg-primary ">

@@ -203,32 +203,32 @@
                                         <i class="las la-ellipsis-v seller-list-icon"></i>
                                     </button>
                                     <div class="dropdown-menu dropdown-menu-right dropdown-menu-xs">
-                                        @can('view_seller_profile')
+                                        @if(auth()->user()->can('view_seller_profile') || auth()->user()->user_type == 'franchise' || auth()->user()->user_type == 'sub_franchise')
                                             <a href="{{route('sellers.profile', encrypt($shop->id))}}" class="dropdown-item">
                                                 {{translate('Profile')}}
                                             </a>
-                                        @endcan
-                                        @can('login_as_seller')
+                                        @endif
+                                        @if(auth()->user()->can('login_as_seller') || auth()->user()->user_type == 'franchise' || auth()->user()->user_type == 'sub_franchise')
                                             <a href="{{route('sellers.login', encrypt($shop->id))}}" class="dropdown-item">
                                                 {{translate('Log in as this Seller')}}
                                             </a>
-                                        @endcan
-                                        @can('pay_to_seller')
+                                        @endif
+                                        @if(auth()->user()->can('pay_to_seller') || auth()->user()->user_type == 'franchise' || auth()->user()->user_type == 'sub_franchise')
                                             <a href="javascript:void();" onclick="show_seller_payment_modal('{{$shop->id}}');" class="dropdown-item">
                                                 {{translate('Go to Payment')}}
                                             </a>
-                                        @endcan
-                                        @can('seller_payment_history')
+                                        @endif
+                                        @if(auth()->user()->can('seller_payment_history') || auth()->user()->user_type == 'franchise' || auth()->user()->user_type == 'sub_franchise')
                                             <a href="{{route('sellers.payment_history', encrypt($shop->user_id))}}" class="dropdown-item">
                                                 {{translate('Payment History')}}
                                             </a>
-                                        @endcan
-                                        @can('edit_seller')
+                                        @endif
+                                        @if(auth()->user()->can('edit_seller') || auth()->user()->user_type == 'franchise' || auth()->user()->user_type == 'sub_franchise')
                                             <a href="{{route('sellers.edit', encrypt($shop->id))}}" class="dropdown-item">
                                                 {{translate('Edit')}}
                                             </a>
-                                        @endcan
-                                        @can('ban_seller')
+                                        @endif
+                                        @if(auth()->user()->can('ban_seller') || auth()->user()->user_type == 'franchise' || auth()->user()->user_type == 'sub_franchise')
                                             @if($shop->user->banned != 1)
                                                 <a href="javascript:void();" onclick="confirm_ban('{{route('sellers.ban', $shop->id)}}');" class="dropdown-item">
                                                     {{translate('Ban this seller')}}
@@ -240,8 +240,8 @@
                                                     <i class="fa fa-check text-success" aria-hidden="true"></i>
                                                 </a>
                                             @endif
-                                        @endcan
-                                        @can('mark_seller_suspected')
+                                        @endif
+                                        @if(auth()->user()->can('mark_seller_suspected') || auth()->user()->user_type == 'franchise' || auth()->user()->user_type == 'sub_franchise')
                                             @if($shop->user->is_suspicious == 1)
                                                 <a href="javascript:void();" onclick="confirm_suspicious('{{route('seller.suspicious', encrypt($shop->user->id))}}', true);" class="dropdown-item">
                                                         {{ translate(" Mark as " . ($shop->user->is_suspicious == 1 ? 'unsuspect' : 'suspicious') . " ") }}
@@ -251,14 +251,14 @@
                                                         {{ translate(" Mark as " . ($shop->user->is_suspicious == 1 ? 'unsuspect' : 'suspicious') . " ") }}
                                                 </a>
                                             @endif
-                                        @endcan
+                                        @endif
 
 
-                                        @can('delete_seller')
+                                        @if(auth()->user()->can('delete_seller') || auth()->user()->user_type == 'franchise' || auth()->user()->user_type == 'sub_franchise')
                                             <a href="javascript:void();" class="dropdown-item confirm-delete" data-href="{{route('sellers.destroy', $shop->id)}}" >
                                                 {{translate('Delete')}}
                                             </a>
-                                        @endcan
+                                        @endif
                                     </div>
                                 </div>
                             </td>

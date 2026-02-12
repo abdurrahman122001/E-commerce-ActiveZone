@@ -102,6 +102,10 @@ class VendorController extends Controller
 
             \DB::commit();
             flash(translate('Vendor created successfully.'))->success();
+            
+            if (Auth::user()->user_type == 'franchise' || Auth::user()->user_type == 'sub_franchise') {
+                return redirect()->route('franchise.vendors.index');
+            }
             return redirect()->route('vendors.index');
         } catch (\Exception $e) {
             \DB::rollback();
