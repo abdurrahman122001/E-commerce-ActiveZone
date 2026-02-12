@@ -33,11 +33,11 @@ class SubFranchiseController extends Controller
             flash(translate('Franchise record not found.'))->error();
             return back();
         }
-        // Sub-franchises should be in the same city as the parent franchise
-        $city = City::find($franchise->city_id);
-        $areas = Area::where('city_id', $franchise->city_id)->get();
+        $states = \App\Models\State::where('country_id', 101)->where('status', 1)->get();
+        // $city = City::find($franchise->city_id); // Removed fixed city
+        // $areas = Area::where('city_id', $franchise->city_id)->get(); // Removed fixed areas
         $packages = FranchisePackage::all();
-        return view('franchise.sub_franchise.create', compact('franchise', 'city', 'areas', 'packages'));
+        return view('franchise.sub_franchise.create', compact('franchise', 'states', 'packages'));
     }
 
     public function store(Request $request)
@@ -47,6 +47,8 @@ class SubFranchiseController extends Controller
             'email' => 'required|email|unique:users,email',
             'phone' => 'required|string|unique:users,phone',
             'password' => 'required|string|min:6',
+            'state_id' => 'required|exists:states,id',
+            'city_id' => 'required|exists:cities,id',
             'area_id' => 'required|exists:areas,id',
             'franchise_package_id' => 'required|exists:franchise_packages,id',
         ]);
@@ -73,8 +75,8 @@ class SubFranchiseController extends Controller
 
             $subFranchise = new SubFranchise();
             $subFranchise->user_id = $user->id;
-            $subFranchise->state_id = $franchise->state_id;
-            $subFranchise->city_id = $franchise->city_id;
+            $subFranchise->state_id = $request->state_id;
+            $subFranchise->city_id = $request->city_id;
             $subFranchise->area_id = $request->area_id;
             $subFranchise->referral_code = 'SF' . strtoupper(Str::random(8));
             $subFranchise->business_experience = $request->business_experience;

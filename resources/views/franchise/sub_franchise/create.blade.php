@@ -34,23 +34,37 @@
                             <input type="password" class="form-control" name="password" placeholder="{{translate('Password')}}" required>
                         </div>
                     </div>
+
                     <div class="form-group row">
-                        <label class="col-md-3 col-from-label">{{translate('City')}}</label>
+                        <label class="col-md-3 col-from-label">{{translate('State')}} <span class="text-danger">*</span></label>
                         <div class="col-md-9">
-                            <input type="text" class="form-control" value="{{ $city->name }}" disabled>
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <label class="col-md-3 col-from-label">{{translate('Area')}} <span class="text-danger">*</span></label>
-                        <div class="col-md-9">
-                            <select class="form-control aiz-selectpicker" name="area_id" data-live-search="true" required>
-                                <option value="">{{ translate('Select Area') }}</option>
-                                @foreach ($areas as $area)
-                                    <option value="{{ $area->id }}">{{ $area->name }}</option>
+                            <select class="form-control aiz-selectpicker" name="state_id" id="state_id" data-live-search="true" required>
+                                <option value="">{{ translate('Select State') }}</option>
+                                @foreach($states as $state)
+                                    <option value="{{ $state->id }}">{{ $state->name }}</option>
                                 @endforeach
                             </select>
                         </div>
                     </div>
+
+                    <div class="form-group row">
+                        <label class="col-md-3 col-from-label">{{translate('City')}} <span class="text-danger">*</span></label>
+                        <div class="col-md-9">
+                            <select class="form-control aiz-selectpicker" name="city_id" id="city_id" data-live-search="true" required>
+                                <option value="">{{ translate('Select City') }}</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label class="col-md-3 col-from-label">{{translate('Area')}} <span class="text-danger">*</span></label>
+                        <div class="col-md-9">
+                            <select class="form-control aiz-selectpicker" name="area_id" id="area_id" data-live-search="true" required>
+                                <option value="">{{ translate('Select Area') }}</option>
+                            </select>
+                        </div>
+                    </div>
+
                     <div class="form-group row">
                         <label class="col-md-3 col-from-label">{{translate('Package')}} <span class="text-danger">*</span></label>
                         <div class="col-md-9">
@@ -90,4 +104,47 @@
         </div>
     </div>
 </div>
+@endsection
+
+@section('script')
+<script type="text/javascript">
+    $(document).ready(function(){
+        $('#state_id').change(function(){
+            var state_id = $(this).val();
+            get_cities(state_id);
+        });
+
+        $('#city_id').change(function(){
+            var city_id = $(this).val();
+            get_areas(city_id);
+        });
+
+        function get_cities(state_id){
+            $.post('{{ route('get-city') }}', { _token: '{{ csrf_token() }}', state_id: state_id }, function(data){
+                $('#city_id').html(null);
+                $('#city_id').append($('<option>', {
+                    value: '',
+                    text: '{{ translate("Select City") }}'
+                }));
+                var obj = JSON.parse(data);
+                $('#city_id').append(obj);
+                $('.aiz-selectpicker').selectpicker('refresh');
+            });
+        }
+
+        function get_areas(city_id) {
+            $.post('{{ route('get-area') }}', { _token: '{{ csrf_token() }}', city_id: city_id }, function(data){
+                var obj = JSON.parse(data);
+                $('#area_id').html(obj);
+                $('.aiz-selectpicker').selectpicker('refresh');
+            });
+        }
+    });
+
+    // Custom file input
+    $(".custom-file-input").on("change", function() {
+        var fileName = $(this).val().split("\\").pop();
+        $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
+    });
+</script>
 @endsection
