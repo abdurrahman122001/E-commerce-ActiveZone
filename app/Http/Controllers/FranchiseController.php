@@ -13,6 +13,8 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use App\Models\FranchisePackage;
 use App\Models\State;
+use App\Models\Vendor;
+use App\Models\FranchiseEmployee;
 use Auth;
 
 class FranchiseController extends Controller
@@ -407,15 +409,28 @@ class FranchiseController extends Controller
 
     public function profile($id)
     {
-        $user = User::findOrFail(decrypt($id));
-        // You might want to create a specific view for admin to see franchise profile
-        // For now, reusing the edit view or a simple show view could work, 
-        // but typically 'profile' implies a read-only or dashboard-like view.
-        // Let's assume we use the edit view or a new 'show' view.
-        // Using `edit` for now as a placeholder or create a simple view.
-        // Actually, let's redirect to edit for now or create a simple view
-        // standardized with other profiles.
-        return view('backend.franchise.profile', compact('user'));
+        $user_id = decrypt($id);
+        $user = User::findOrFail($user_id);
+        $franchise = $user->franchise;
+        
+        $subFranchises = collect();
+        $vendors = collect();
+        $employees = collect();
+
+        if($franchise) {
+            $subFranchises = SubFranchise::where('franchise_id', $franchise->id)->get();
+            $vendors = Vendor::where('franchise_id', $franchise->id)->get();
+            // Assuming employees are created by the franchise user
+            $employees = FranchiseEmployee::where('created_by', $user->id)->get();
+        } elseif ($user->sub_franchise) {
+             // For sub-franchise, maybe show vendors linked to it?
+             $subFranchise = $user->sub_franchise;
+             $vendors = Vendor::where('sub_franchise_id', $subFranchise->id)->get();
+             // Employees created by sub-franchise
+             $employees = FranchiseEmployee::where('created_by', $user->id)->get();
+        }
+
+        return view('backend.franchise.profile', compact('user', 'subFranchises', 'vendors', 'employees'));
     }
 
     public function payment_modal(Request $request)
