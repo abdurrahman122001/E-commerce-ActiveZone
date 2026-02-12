@@ -108,6 +108,13 @@
                     </li>
                 @endforeach
             @endif
+            <li class="mr-0">
+                <a href="{{ route('franchise.landing') }}"
+                    class="fs-13 px-3 py-3 w-100 d-inline-block fw-700 text-dark header_menu_links
+                            @if (url()->current() == route('franchise.landing')) active @endif">
+                    {{ translate('Franchise') }}
+                </a>
+            </li>
             @auth
                 @if (isAdmin())
                     <hr>

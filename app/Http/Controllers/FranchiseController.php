@@ -17,6 +17,20 @@ use Auth;
 
 class FranchiseController extends Controller
 {
+    // Show Franchise Landing Page
+    public function showLandingPage()
+    {
+        $packages = FranchisePackage::where('status', 1)->get();
+        return view('frontend.franchise.landing', compact('packages'));
+    }
+
+    // Show Sub-Franchise Landing Page
+    public function showSubFranchiseLandingPage()
+    {
+        $packages = FranchisePackage::where('status', 1)->get();
+        return view('frontend.franchise.sub_landing', compact('packages'));
+    }
+
     // Show Registration Form
     public function showRegistrationForm()
     {

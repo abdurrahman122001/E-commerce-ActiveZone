@@ -9,6 +9,8 @@ use App;
 class Area extends Model
 {
     use PreventDemoModeChanges;
+    
+    protected $fillable = ['name', 'city_id', 'state_id', 'country_id', 'status', 'cost'];
 
     public function getTranslation($field = '', $lang = false){
         $lang = $lang == false ? App::getLocale() : $lang;

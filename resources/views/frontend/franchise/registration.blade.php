@@ -217,6 +217,25 @@
                 $('.aiz-selectpicker').selectpicker('refresh');
             });
         }
+
+        // Auto-select package from query parameter (coming from landing page)
+        var urlParams = new URLSearchParams(window.location.search);
+        var selectedPackage = urlParams.get('package');
+        if (selectedPackage) {
+            $('#franchise_package_id').val(selectedPackage);
+            $('.aiz-selectpicker').selectpicker('refresh');
+        }
+
+        // Auto-select franchise type from query parameter (coming from sub-franchise page)
+        var selectedType = urlParams.get('type');
+        if (selectedType) {
+            $('#franchise_type').val(selectedType);
+            $('.aiz-selectpicker').selectpicker('refresh');
+            if (selectedType == 'sub_franchise') {
+                $('#area_section').removeClass('d-none');
+                $('#area_id').prop('required', true);
+            }
+        }
     });
 
     // Custom file input

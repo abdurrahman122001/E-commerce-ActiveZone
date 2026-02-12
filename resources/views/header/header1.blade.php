@@ -93,7 +93,7 @@
                     <!-- Franchise Dropdown -->
                     <li class="list-inline-item d-flex ml-3">
                         <div class="dropdown">
-                            <a href="{{ route('franchise.registration') }}"
+                            <a href="{{ route('franchise.landing') }}"
                                 class="fs-12 dropdown-toggle top-text-color-visibility"
                                 style="color: {{ $topHeaderTextColor }}" data-toggle="dropdown"
                                 aria-haspopup="true" aria-expanded="false">
@@ -101,12 +101,12 @@
                             </a>
                             <div class="dropdown-menu fs-12 p-0 mt-1">
                                 <a class="dropdown-item py-2 px-2 text-dark"
-                                    href="{{ route('franchise.registration') }}">
+                                    href="{{ route('franchise.landing') }}">
                                     {{ translate('City Franchise') }}
                                 </a>
                                 <a class="dropdown-item py-2 px-2 text-dark"
-                                    href="{{ route('franchise.registration') }}">
-                                    {{ translate('Sub-Franchise') }}
+                                    href="{{ route('franchise.sub_landing') }}">
+                                    {{ translate('Sub-Franchise (Area/Zone/Tehsil)') }}
                                 </a>
                             </div>
                         </div>
