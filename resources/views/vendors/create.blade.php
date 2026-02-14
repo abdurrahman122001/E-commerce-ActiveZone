@@ -14,7 +14,7 @@
                     </div>
                 @endif
 
-                <form action="{{ route('vendors.store') }}" method="POST">
+                <form action="{{ $action }}" method="POST">
                     @csrf
                     <div class="form-group row">
                         <label class="col-md-3 col-from-label">{{translate('Name')}} <span class="text-danger">*</span></label>

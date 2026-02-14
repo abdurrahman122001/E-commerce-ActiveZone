@@ -12,7 +12,23 @@ class VendorController extends Controller
 {
     public function index()
     {
+        $employee = Auth::guard('franchise_employee')->user();
         $user = Auth::user();
+
+        if ($employee) {
+            $vendors = Vendor::where('added_by_employee_id', $employee->id)
+                ->withCount('orders')
+                ->withSum('orders', 'grand_total')
+                ->get();
+            $layout = 'backend.franchise.employees.layout';
+            $create_route = route('franchise.employee.vendors.create');
+            return view('vendors.index', compact('vendors', 'layout', 'create_route'));
+        }
+
+        if (!$user) {
+            return redirect()->route('login');
+        }
+
         \Log::info('Vendor Index Query', [
             'user_id' => $user->id,
             'user_type' => $user->user_type,
@@ -20,10 +36,18 @@ class VendorController extends Controller
             'sub_franchise_id' => $user->sub_franchise->id ?? 'null'
         ]);
 
-        $vendors = Vendor::where('user_id', $user->id)
-            ->orWhere('franchise_id', $user->franchise->id ?? null)
-            ->orWhere('sub_franchise_id', $user->sub_franchise->id ?? null)
-            ->withCount('orders')
+        $vendors = Vendor::query();
+        $vendors->where(function($q) use ($user) {
+            $q->where('user_id', $user->id);
+            if ($user->franchise) {
+                $q->orWhere('franchise_id', $user->franchise->id);
+            }
+            if ($user->sub_franchise) {
+                $q->orWhere('sub_franchise_id', $user->sub_franchise->id);
+            }
+        });
+
+        $vendors = $vendors->withCount('orders')
             ->withSum('orders', 'grand_total')
             ->get();
         
@@ -39,33 +63,40 @@ class VendorController extends Controller
         }
         
         $layout = 'vendors.layouts.app';
+        $create_route = route('vendors.create');
         if($user->user_type == 'franchise' || $user->user_type == 'sub_franchise'){
             $layout = 'franchise.layouts.app';
+            $create_route = route('franchise.vendors.create');
         } elseif($user->user_type == 'admin' || $user->user_type == 'staff'){
             $layout = 'backend.layouts.app';
+            $create_route = route('vendors.create');
         }
 
-        if (Auth::guard('franchise_employee')->check()) {
-            $layout = 'backend.franchise.employees.layout'; // I'll need to create this layout or use an existing one
-        }
-
-        return view('vendors.index', compact('vendors', 'layout'));
+        return view('vendors.index', compact('vendors', 'layout', 'create_route'));
     }
 
     public function create()
     {
-        $layout = 'vendors.layouts.app';
-        if(Auth::user() && (Auth::user()->user_type == 'franchise' || Auth::user()->user_type == 'sub_franchise')){
-            $layout = 'franchise.layouts.app';
-        } elseif(Auth::user() && (Auth::user()->user_type == 'admin' || Auth::user()->user_type == 'staff')){
-            $layout = 'backend.layouts.app';
-        }
-        
-        if (Auth::guard('franchise_employee')->check()) {
+        $employee = Auth::guard('franchise_employee')->user();
+        if ($employee) {
             $layout = 'backend.franchise.employees.layout';
+            $action = route('franchise.employee.vendors.store');
+            return view('vendors.create', compact('layout', 'action'));
         }
 
-        return view('vendors.create', compact('layout'));
+        $user = Auth::user();
+        $layout = 'vendors.layouts.app';
+        $action = route('vendors.store');
+
+        if($user && ($user->user_type == 'franchise' || $user->user_type == 'sub_franchise')){
+            $layout = 'franchise.layouts.app';
+            $action = route('franchise.vendors.store');
+        } elseif($user && ($user->user_type == 'admin' || $user->user_type == 'staff')){
+            $layout = 'backend.layouts.app';
+            $action = route('vendors.store');
+        }
+        
+        return view('vendors.create', compact('layout', 'action'));
     }
 
     public function store(Request $request)
@@ -98,23 +129,24 @@ class VendorController extends Controller
                 
                 if ($employee->franchise_level == 'SUB') {
                     $vendor->sub_franchise_id = $employee->sub_franchise_id;
-                    // Also set franchise_id if sub-franchise is linked
                     $sf = \App\Models\SubFranchise::find($employee->sub_franchise_id);
                     if ($sf) {
                         $vendor->franchise_id = $sf->franchise_id;
                     }
                 } else {
-                    // CITY level employee - linked to franchise
+                    // CITY level employee - linked to franchise of the person who created this employee
                     $franchise = \App\Models\Franchise::where('user_id', $employee->created_by)->first();
                     if ($franchise) {
                         $vendor->franchise_id = $franchise->id;
                     }
                 }
             } elseif (Auth::check()) {
-                if (Auth::user()->franchise) {
-                    $vendor->franchise_id = Auth::user()->franchise->id;
-                } elseif (Auth::user()->sub_franchise) {
-                    $vendor->sub_franchise_id = Auth::user()->sub_franchise->id;
+                $user = Auth::user();
+                if ($user->franchise) {
+                    $vendor->franchise_id = $user->franchise->id;
+                } elseif ($user->sub_franchise) {
+                    $vendor->sub_franchise_id = $user->sub_franchise->id;
+                    $vendor->franchise_id = $user->sub_franchise->franchise_id;
                 }
             }
             

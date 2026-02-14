@@ -19,6 +19,6 @@ class IsFranchiseEmployee
             return $next($request);
         }
 
-        return redirect()->route('franchise.employee.login')->with('error', 'Please login to access this area or your account is inactive');
+        return redirect()->route('login')->with('error', 'Please login to access this area or your account is inactive');
     }
 }

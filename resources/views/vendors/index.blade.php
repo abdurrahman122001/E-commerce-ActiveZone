@@ -7,7 +7,7 @@
             <h1 class="h3">{{ translate('Vendors') }}</h1>
         </div>
         <div class="col-md-6 text-right">
-            <a href="{{ route('vendors.create') }}" class="btn btn-primary">
+            <a href="{{ $create_route }}" class="btn btn-primary">
                 <span>{{ translate('Add New Vendor') }}</span>
             </a>
         </div>
