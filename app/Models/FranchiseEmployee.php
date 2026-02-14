@@ -19,6 +19,7 @@ class FranchiseEmployee extends Authenticatable
         'franchise_level',
         'city_id',
         'sub_franchise_id',
+        'franchise_id',
         'is_active',
         'created_by'
     ];
@@ -47,5 +48,10 @@ class FranchiseEmployee extends Authenticatable
     public function subFranchise()
     {
         return $this->belongsTo(SubFranchise::class, 'sub_franchise_id');
+    }
+
+    public function franchise()
+    {
+        return $this->belongsTo(Franchise::class, 'franchise_id');
     }
 }

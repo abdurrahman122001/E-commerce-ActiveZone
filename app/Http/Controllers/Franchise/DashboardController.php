@@ -115,4 +115,33 @@ class DashboardController extends Controller
 
         return view('franchise.dashboard', $data);
     }
+
+    public function sales_report(Request $request)
+    {
+        $user = auth()->user();
+        $date_range = $request->date_range;
+
+        $histories = \App\Models\VendorCommissionHistory::query();
+
+        if ($user->user_type == 'franchise' && $user->franchise) {
+            $histories = $histories->where('franchise_id', $user->franchise->id);
+        } elseif ($user->user_type == 'sub_franchise' && $user->sub_franchise) {
+            $histories = $histories->where('sub_franchise_id', $user->sub_franchise->id);
+        }
+
+        if ($date_range) {
+            $dates = explode(' to ', $date_range);
+            $start_date = date('Y-m-d 00:00:00', strtotime($dates[0]));
+            if (isset($dates[1])) {
+                $end_date = date('Y-m-d 23:59:59', strtotime($dates[1]));
+            } else {
+                $end_date = date('Y-m-d 23:59:59', strtotime($dates[0]));
+            }
+            $histories = $histories->whereBetween('created_at', [$start_date, $end_date]);
+        }
+
+        $histories = $histories->latest()->paginate(15);
+
+        return view('franchise.sales_report', compact('histories', 'date_range'));
+    }
 }

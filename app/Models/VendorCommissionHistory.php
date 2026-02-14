@@ -27,4 +27,19 @@ class VendorCommissionHistory extends Model
     {
         return $this->belongsTo(Vendor::class);
     }
+
+    public function order_detail()
+    {
+        return $this->belongsTo(OrderDetail::class);
+    }
+
+    public function franchise()
+    {
+        return $this->belongsTo(Franchise::class);
+    }
+
+    public function sub_franchise()
+    {
+        return $this->belongsTo(SubFranchise::class);
+    }
 }

@@ -13,14 +13,21 @@
 <div class="card">
     <div class="card-header">
         <h5 class="mb-0 h6">{{translate('Employee List')}}</h5>
-        <div class="pull-right clearfix">
-            <form class="" id="sort_franchises" action="" method="GET">
+        <div class="pull-right clearfix d-flex">
+            <form class="mr-2" id="sort_franchises" action="" method="GET">
                 <div class="box-inline pad-rgt pull-left">
-                    <div class="" style="min-width: 200px;">
+                    <div class="input-group">
+                        <select class="form-control aiz-selectpicker" name="franchise_id" id="franchise_id" onchange="this.form.submit()">
+                            <option value="">{{ translate('Filter by Franchise') }}</option>
+                            @foreach($franchises as $franchise)
+                                <option value="{{ $franchise->id }}" @if($franchise_id == $franchise->id) selected @endif>{{ $franchise->franchise_name }}</option>
+                            @endforeach
+                        </select>
                         <input type="text" class="form-control" id="search" name="search" @isset($sort_search) value="{{ $sort_search }}" @endisset placeholder="{{ translate('Type name or email & Enter') }}">
                     </div>
                 </div>
             </form>
+            <a href="{{ route('admin.franchise_employees.vendor_registrations') }}" class="btn btn-info">{{ translate('Vendor Registration Report') }}</a>
         </div>
     </div>
     <div class="card-body">
@@ -44,12 +51,8 @@
                         <td>{{ $employee->email }}</td>
                         <td>{{ $employee->phone }}</td>
                         <td>
-                            @php
-                                $creator = \App\Models\User::find($employee->created_by);
-                            @endphp
-                            @if($creator)
-                                {{ $creator->name }} 
-                                <small>({{ translate(ucfirst(str_replace('_', ' ', $creator->user_type))) }})</small>
+                            @if($employee->franchise)
+                                {{ $employee->franchise->franchise_name }}
                             @else
                                 <span class="text-muted">{{ translate('N/A') }}</span>
                             @endif
@@ -59,7 +62,7 @@
                             <a href="javascript:void(0);" onclick="show_payout_modal('{{$employee->id}}');" class="btn btn-soft-success btn-icon btn-circle btn-sm" title="{{ translate('Pay Salary/Bonus') }}">
                                 <i class="las la-money-bill-wave"></i>
                             </a>
-                            <a href="{{route('admin.franchise_employees.payout_history', decrypt($employee->id))}}" class="btn btn-soft-primary btn-icon btn-circle btn-sm" title="{{ translate('Payout History') }}">
+                            <a href="{{route('admin.franchise_employees.payout_history', encrypt($employee->id))}}" class="btn btn-soft-primary btn-icon btn-circle btn-sm" title="{{ translate('Payout History') }}">
                                 <i class="las la-history"></i>
                             </a>
                         </td>

@@ -940,6 +940,37 @@
                 </li>
                 @endcanany
 
+                <!-- Franchise System -->
+                <li class="aiz-side-nav-item">
+                    <a href="#" class="aiz-side-nav-link">
+                        <i class="las la-store aiz-side-nav-icon"></i>
+                        <span class="aiz-side-nav-text">{{ translate('Franchise System') }}</span>
+                        <span class="aiz-side-nav-arrow"></span>
+                    </a>
+                    <ul class="aiz-side-nav-list level-2">
+                        <li class="aiz-side-nav-item">
+                            <a href="{{ route('franchise_packages.index') }}" class="aiz-side-nav-link">
+                                <span class="aiz-side-nav-text">{{ translate('Franchise Packages') }}</span>
+                            </a>
+                        </li>
+                        <li class="aiz-side-nav-item">
+                            <a href="{{ route('admin.franchise_employees.index') }}" class="aiz-side-nav-link">
+                                <span class="aiz-side-nav-text">{{ translate('Franchise Employees') }}</span>
+                            </a>
+                        </li>
+                        <li class="aiz-side-nav-item">
+                            <a href="{{ route('admin.franchise_employees.vendor_registrations') }}" class="aiz-side-nav-link">
+                                <span class="aiz-side-nav-text">{{ translate('Vendor Registrations') }}</span>
+                            </a>
+                        </li>
+                        <li class="aiz-side-nav-item">
+                            <a href="{{ route('admin.franchise_employees.sales_report') }}" class="aiz-side-nav-link">
+                                <span class="aiz-side-nav-text">{{ translate('Sales Report') }}</span>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+
                 <!-- Sellers -->
                 @if (get_setting('vendor_system_activation') == 1)
                 @canany(['view_all_seller','seller_payment_history','view_seller_payout_requests','seller_commission_configuration','view_all_seller_packages','seller_verification_form_configuration','set_category_wise_commission','set_seller_based_commission'])
@@ -1571,6 +1602,16 @@
                         <li class="aiz-side-nav-item">
                             <a href="{{ route('franchise_packages.index') }}" class="aiz-side-nav-link">
                                 <span class="aiz-side-nav-text">{{translate('Franchise Packages')}}</span>
+                            </a>
+                        </li>
+                        <li class="aiz-side-nav-item">
+                            <a href="{{ route('admin.franchise_employees.index') }}" class="aiz-side-nav-link">
+                                <span class="aiz-side-nav-text">{{translate('Franchise Employees')}}</span>
+                            </a>
+                        </li>
+                        <li class="aiz-side-nav-item">
+                            <a href="{{ route('admin.franchise_employees.vendor_registrations') }}" class="aiz-side-nav-link">
+                                <span class="aiz-side-nav-text">{{translate('Vendor Registrations')}}</span>
                             </a>
                         </li>
                     </ul>

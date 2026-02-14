@@ -84,8 +84,10 @@ class FranchiseEmployeeController extends Controller
             $validated['franchise_level'] = 'SUB';
             if ($user->sub_franchise) {
                 $validated['sub_franchise_id'] = $user->sub_franchise->id;
+                $validated['franchise_id'] = $user->sub_franchise->franchise_id;
             }
         } elseif ($user->user_type == 'franchise') {
+            $validated['franchise_id'] = $user->franchise->id;
             // Franchise can assign to sub-franchise if provided
             if (!empty($validated['sub_franchise_id'])) {
                 $validated['franchise_level'] = 'SUB';
@@ -166,7 +168,9 @@ class FranchiseEmployeeController extends Controller
         if ($user->user_type == 'sub_franchise') {
             $validated['franchise_level'] = 'SUB';
             $validated['sub_franchise_id'] = $user->sub_franchise->id;
+            $validated['franchise_id'] = $user->sub_franchise->franchise_id;
         } elseif ($user->user_type == 'franchise') {
+            $validated['franchise_id'] = $user->franchise->id;
             if (!empty($validated['sub_franchise_id'])) {
                 $validated['franchise_level'] = 'SUB';
                 $subFranchise = SubFranchise::where('id', $validated['sub_franchise_id'])

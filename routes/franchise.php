@@ -9,7 +9,10 @@ use App\Http\Controllers\VendorController;
 
 Route::group(['prefix' => 'franchise', 'middleware' => ['auth', 'franchise', 'prevent-back-history'], 'as' => 'franchise.'], function () {
     
-    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::controller(DashboardController::class)->group(function () {
+        Route::get('/dashboard', 'index')->name('dashboard');
+        Route::get('/sales-report', 'sales_report')->name('sales_report');
+    });
 
     // Products
     Route::controller(ProductController::class)->group(function () {

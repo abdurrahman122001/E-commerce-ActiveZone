@@ -671,6 +671,8 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin', 'prevent-ba
     // Franchise Employees (Admin Side)
     Route::controller(App\Http\Controllers\Admin\FranchiseEmployeeController::class)->group(function () {
         Route::get('/franchise-employees', 'index')->name('admin.franchise_employees.index');
+        Route::get('/franchise-employees/vendor-registrations', 'vendor_registrations')->name('admin.franchise_employees.vendor_registrations');
+        Route::get('/franchise-employees/sales-report', 'sales_report')->name('admin.franchise_employees.sales_report');
         Route::post('/franchise-employees/payout_modal', 'payout_modal')->name('admin.franchise_employees.payout_modal');
         Route::post('/franchise-employees/payout_store', 'payout_store')->name('admin.franchise_employees.payout_store');
         Route::get('/franchise-employees/payout-history/{id}', 'payout_history')->name('admin.franchise_employees.payout_history');

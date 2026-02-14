@@ -126,19 +126,10 @@ class VendorController extends Controller
             if (Auth::guard('franchise_employee')->check()) {
                 $employee = Auth::guard('franchise_employee')->user();
                 $vendor->added_by_employee_id = $employee->id;
+                $vendor->franchise_id = $employee->franchise_id;
                 
                 if ($employee->franchise_level == 'SUB') {
                     $vendor->sub_franchise_id = $employee->sub_franchise_id;
-                    $sf = \App\Models\SubFranchise::find($employee->sub_franchise_id);
-                    if ($sf) {
-                        $vendor->franchise_id = $sf->franchise_id;
-                    }
-                } else {
-                    // CITY level employee - linked to franchise of the person who created this employee
-                    $franchise = \App\Models\Franchise::where('user_id', $employee->created_by)->first();
-                    if ($franchise) {
-                        $vendor->franchise_id = $franchise->id;
-                    }
                 }
             } elseif (Auth::check()) {
                 $user = Auth::user();

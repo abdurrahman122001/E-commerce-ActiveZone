@@ -55,16 +55,6 @@
                         </div>
                     </div>
 
-                    @if($status == 'approved')
-                     <div class="d-flex justify-content-between mt-3">
-                        <a href="{{ route('franchise.products.create') }}">
-                        <div class="d-flex align-items-center">
-                            <i class="las la-plus la-1x text-white"></i>
-                            <p class="fs-12 text-light my-2 ml-1">{{ translate('Add New Product') }}</p>
-                        </div>
-                        </a>
-                     </div>
-                    @endif
                 </div>
             </div>
         </div>

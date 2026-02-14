@@ -38,11 +38,6 @@
                                     <span class="aiz-side-nav-text">{{ translate('Products') }}</span>
                                 </a>
                             </li>
-                            <li class="aiz-side-nav-item">
-                                <a href="{{ route('franchise.products.create') }}" class="aiz-side-nav-link">
-                                    <span class="aiz-side-nav-text">{{ translate('Add New Product') }}</span>
-                                </a>
-                            </li>
                         </ul>
                     </li>
                     <li class="aiz-side-nav-item">
@@ -136,6 +131,13 @@
                         <a href="{{ route('franchise.orders.index') }}" class="aiz-side-nav-link">
                             <i class="las la-money-bill aiz-side-nav-icon"></i>
                             <span class="aiz-side-nav-text">{{ translate('Orders') }}</span>
+                        </a>
+                    </li>
+
+                    <li class="aiz-side-nav-item">
+                        <a href="{{ route('franchise.sales_report') }}" class="aiz-side-nav-link">
+                            <i class="las la-chart-bar aiz-side-nav-icon"></i>
+                            <span class="aiz-side-nav-text">{{ translate('Sales Report') }}</span>
                         </a>
                     </li>
                     
