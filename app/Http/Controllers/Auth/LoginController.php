@@ -273,24 +273,52 @@ class LoginController extends Controller
     }
 
     /**
+     * Attempt to log the user into the application.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return bool
+     */
+    protected function attemptLogin(Request $request)
+    {
+        // Try web guard first
+        if ($this->guard()->attempt($this->credentials($request), $request->filled('remember'))) {
+            return true;
+        }
+
+        // Try franchise_employee guard
+        if (auth()->guard('franchise_employee')->attempt($this->credentials($request), $request->filled('remember'))) {
+            // Check if active
+            if (!auth()->guard('franchise_employee')->user()->is_active) {
+                auth()->guard('franchise_employee')->logout();
+                return false;
+            }
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
      * Check user's role and redirect user based on their role
      * @return
      */
     public function authenticated()
     {
+        $user = auth()->user();
+        $employee = auth()->guard('franchise_employee')->user();
+
         // Debug logging
         \Log::info('Authenticated method called', [
-            'user_id' => auth()->user()->id,
-            'user_type' => auth()->user()->user_type,
-            'email' => auth()->user()->email,
+            'user_id' => $user ? $user->id : ($employee ? $employee->id : 'null'),
+            'user_type' => $user ? $user->user_type : ($employee ? 'franchise_employee' : 'null'),
         ]);
 
-        if (session('temp_user_id') != null) {
-            if(auth()->user()->user_type == 'customer'){
+        if (session('temp_user_id') != null && $user) {
+            if($user->user_type == 'customer'){
                 Cart::where('temp_user_id', session('temp_user_id'))
                 ->update(
                     [
-                        'user_id' => auth()->user()->id,
+                        'user_id' => $user->id,
                         'temp_user_id' => null
                     ]
                 );
@@ -301,29 +329,39 @@ class LoginController extends Controller
             Session::forget('temp_user_id');
         }
 
+        // Check franchise employee first as it uses a different guard
+        if (auth()->guard('franchise_employee')->check()) {
+            \Log::info('Redirecting franchise employee from main login');
+            return redirect()->route('franchise.employee.dashboard');
+        }
+
+        if (!$user) {
+            return redirect()->route('home');
+        }
+
         // Check vendor first to avoid conflicts
-        if (auth()->user()->user_type == 'vendor') {
+        if ($user->user_type == 'vendor') {
             \Log::info('Redirecting vendor to dashboard');
             return redirect()->route('vendor.dashboard');
-        } elseif (auth()->user()->user_type == 'admin' || auth()->user()->user_type == 'staff') {
+        } elseif ($user->user_type == 'admin' || $user->user_type == 'staff') {
             \Log::info('Redirecting admin/staff');
             CoreComponentRepository::instantiateShopRepository();
             return redirect()->route('admin.dashboard');
-        } elseif (auth()->user()->user_type == 'seller') {
+        } elseif ($user->user_type == 'seller') {
             
-            if (auth()->user()->shop->registration_approval  == 0) {
+            if ($user->shop->registration_approval  == 0) {
                 auth()->logout();
                 flash(translate("Your seller account is under review. We will notify you once approved."));
                 return redirect()->route('home');
             }
             //save the seller login log
             \Log::channel('seller_login')->info('Seller Logged In', [
-                'user_id' => auth()->user()->id,
-                'email' => auth()->user()->email,
+                'user_id' => $user->id,
+                'email' => $user->email,
                 'time' => now()->toDateTimeString(),
             ]);
             return redirect()->route('seller.dashboard');
-        } elseif (in_array(auth()->user()->user_type, ['franchise', 'sub_franchise'])) {
+        } elseif (in_array($user->user_type, ['franchise', 'sub_franchise'])) {
             \Log::info('Redirecting franchise/sub_franchise');
             return redirect()->route('franchise.dashboard');
         } else {

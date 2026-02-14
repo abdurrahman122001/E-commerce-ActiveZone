@@ -97,6 +97,7 @@ class Kernel extends HttpKernel
         'handle-demo-login' => \App\Http\Middleware\HandleDemoLogin::class,
         'portfolio-view' => \App\Http\Middleware\PortfolioView::class,
         'franchise' => \App\Http\Middleware\IsFranchise::class,
+        'franchise_employee' => \App\Http\Middleware\IsFranchiseEmployee::class,
     ];
 
     /**

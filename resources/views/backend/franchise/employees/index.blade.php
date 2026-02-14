@@ -63,9 +63,6 @@
                             <a class="btn btn-soft-primary btn-icon btn-circle btn-sm" href="{{ route('franchise.employees.edit', $employee->id) }}" title="{{ translate('Edit') }}">
                                 <i class="las la-edit"></i>
                             </a>
-                            <a href="#" class="btn btn-soft-danger btn-icon btn-circle btn-sm confirm-delete" data-href="{{ route('franchise.employees.destroy', $employee->id) }}" title="{{ translate('Delete') }}">
-                                <i class="las la-trash"></i>
-                            </a>
                         </td>
                     </tr>
                 @endforeach

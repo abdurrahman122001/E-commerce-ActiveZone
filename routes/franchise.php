@@ -71,3 +71,17 @@ Route::group(['prefix' => 'franchise', 'middleware' => ['auth', 'franchise', 'pr
     });
 
 });
+// Franchise Employee Routes (Unified Login)
+Route::group(['prefix' => 'franchise-employee', 'as' => 'franchise.employee.'], function () {
+    Route::post('/logout', [App\Http\Controllers\Franchise\Employee\LoginController::class, 'logout'])->name('logout');
+
+    Route::group(['middleware' => ['franchise_employee', 'prevent-back-history']], function () {
+        Route::get('/dashboard', [App\Http\Controllers\Franchise\Employee\DashboardController::class, 'index'])->name('dashboard');
+        Route::get('/payouts', [App\Http\Controllers\Franchise\Employee\DashboardController::class, 'payouts'])->name('payouts');
+        
+        // Vendor registration for employees
+        Route::get('/vendors', [App\Http\Controllers\VendorController::class, 'index'])->name('vendors.index');
+        Route::get('/vendors/create', [App\Http\Controllers\VendorController::class, 'create'])->name('vendors.create');
+        Route::post('/vendors/store', [App\Http\Controllers\VendorController::class, 'store'])->name('vendors.store');
+    });
+});

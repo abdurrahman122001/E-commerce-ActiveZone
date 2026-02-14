@@ -15,7 +15,13 @@ class Vendor extends Model
         'sub_franchise_id',
         'status',
         'commission_percentage',
+        'added_by_employee_id',
     ];
+
+    public function addedByEmployee()
+    {
+        return $this->belongsTo(FranchiseEmployee::class, 'added_by_employee_id');
+    }
 
     public function user()
     {

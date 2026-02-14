@@ -189,18 +189,8 @@ class FranchiseEmployeeController extends Controller
 
     public function destroy($id)
     {
-        $user = auth()->user();
-        $employee = $this->getAuthorizedEmployee($id, $user);
-
-        if (!$employee) {
-            return redirect()->route('franchise.employees.index')
-                ->with('error', 'Unauthorized or employee not found');
-        }
-
-        $employee->delete();
-
         return redirect()->route('franchise.employees.index')
-            ->with('success', 'Employee deleted successfully');
+            ->with('error', 'Employee deletion is not allowed.');
     }
 
     private function getAuthorizedEmployee($id, $user)

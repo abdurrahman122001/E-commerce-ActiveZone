@@ -45,17 +45,26 @@ class VendorController extends Controller
             $layout = 'backend.layouts.app';
         }
 
+        if (Auth::guard('franchise_employee')->check()) {
+            $layout = 'backend.franchise.employees.layout'; // I'll need to create this layout or use an existing one
+        }
+
         return view('vendors.index', compact('vendors', 'layout'));
     }
 
     public function create()
     {
         $layout = 'vendors.layouts.app';
-        if(Auth::user()->user_type == 'franchise' || Auth::user()->user_type == 'sub_franchise'){
+        if(Auth::user() && (Auth::user()->user_type == 'franchise' || Auth::user()->user_type == 'sub_franchise')){
             $layout = 'franchise.layouts.app';
-        } elseif(Auth::user()->user_type == 'admin' || Auth::user()->user_type == 'staff'){
+        } elseif(Auth::user() && (Auth::user()->user_type == 'admin' || Auth::user()->user_type == 'staff')){
             $layout = 'backend.layouts.app';
         }
+        
+        if (Auth::guard('franchise_employee')->check()) {
+            $layout = 'backend.franchise.employees.layout';
+        }
+
         return view('vendors.create', compact('layout'));
     }
 
@@ -83,10 +92,30 @@ class VendorController extends Controller
             $vendor = new Vendor();
             $vendor->user_id = $user->id;
             
-            if (Auth::user()->franchise) {
-                $vendor->franchise_id = Auth::user()->franchise->id;
-            } elseif (Auth::user()->sub_franchise) {
-                $vendor->sub_franchise_id = Auth::user()->sub_franchise->id;
+            if (Auth::guard('franchise_employee')->check()) {
+                $employee = Auth::guard('franchise_employee')->user();
+                $vendor->added_by_employee_id = $employee->id;
+                
+                if ($employee->franchise_level == 'SUB') {
+                    $vendor->sub_franchise_id = $employee->sub_franchise_id;
+                    // Also set franchise_id if sub-franchise is linked
+                    $sf = \App\Models\SubFranchise::find($employee->sub_franchise_id);
+                    if ($sf) {
+                        $vendor->franchise_id = $sf->franchise_id;
+                    }
+                } else {
+                    // CITY level employee - linked to franchise
+                    $franchise = \App\Models\Franchise::where('user_id', $employee->created_by)->first();
+                    if ($franchise) {
+                        $vendor->franchise_id = $franchise->id;
+                    }
+                }
+            } elseif (Auth::check()) {
+                if (Auth::user()->franchise) {
+                    $vendor->franchise_id = Auth::user()->franchise->id;
+                } elseif (Auth::user()->sub_franchise) {
+                    $vendor->sub_franchise_id = Auth::user()->sub_franchise->id;
+                }
             }
             
             $vendor->commission_percentage = $validated['commission_percentage'];
@@ -103,6 +132,10 @@ class VendorController extends Controller
             \DB::commit();
             flash(translate('Vendor created successfully.'))->success();
             
+            if (Auth::guard('franchise_employee')->check()) {
+                return redirect()->route('franchise.employee.vendors.index');
+            }
+
             if (Auth::user()->user_type == 'franchise' || Auth::user()->user_type == 'sub_franchise') {
                 return redirect()->route('franchise.vendors.index');
             }

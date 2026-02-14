@@ -668,6 +668,14 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin', 'prevent-ba
         Route::get('/franchise_packages/destroy/{id}', 'destroy')->name('franchise_packages.destroy');
     });
 
+    // Franchise Employees (Admin Side)
+    Route::controller(App\Http\Controllers\Admin\FranchiseEmployeeController::class)->group(function () {
+        Route::get('/franchise-employees', 'index')->name('admin.franchise_employees.index');
+        Route::post('/franchise-employees/payout_modal', 'payout_modal')->name('admin.franchise_employees.payout_modal');
+        Route::post('/franchise-employees/payout_store', 'payout_store')->name('admin.franchise_employees.payout_store');
+        Route::get('/franchise-employees/payout-history/{id}', 'payout_history')->name('admin.franchise_employees.payout_history');
+    });
+
 
     //Classified Products
     Route::controller(CustomerProductController::class)->group(function () {

@@ -29,6 +29,7 @@
                         <th data-breakpoints="lg">{{ translate('Total Sales') }}</th>
                         <th>{{ translate('Commission (%)') }}</th>
                         <th>{{ translate('Status') }}</th>
+                        <th>{{ translate('Registered By') }}</th>
                         <th width="10%">{{translate('Options')}}</th>
                     </tr>
                 </thead>
@@ -51,6 +52,13 @@
                                     <span class="badge badge-inline badge-warning">{{ translate('Pending') }}</span>
                                 @else
                                     <span class="badge badge-inline badge-danger">{{ translate('Rejected') }}</span>
+                                @endif
+                            </td>
+                            <td>
+                                @if ($vendor->addedByEmployee)
+                                    {{ $vendor->addedByEmployee->name }}
+                                @else
+                                    <span class="badge badge-inline badge-secondary">{{ translate('Direct') }}</span>
                                 @endif
                             </td>
                             <td>

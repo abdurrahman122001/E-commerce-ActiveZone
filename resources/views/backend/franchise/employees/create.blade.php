@@ -128,7 +128,7 @@
                         <label class="col-sm-3 col-from-label">{{translate('Active')}}</label>
                         <div class="col-sm-9">
                             <label class="aiz-switch aiz-switch-success mb-0">
-                                <input type="checkbox" name="is_active" value="1" {{ old('is_active') ? 'checked' : '' }}>
+                                <input type="checkbox" name="is_active" value="1" {{ old('is_active', 1) ? 'checked' : '' }}>
                                 <span></span>
                             </label>
                         </div>
