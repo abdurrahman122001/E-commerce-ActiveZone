@@ -71,17 +71,7 @@
                          <textarea class="form-control" name="business_experience" rows="3" placeholder="{{ translate('Briefly describe business experience') }}"></textarea>
                     </div>
                 </div>
-                <div class="form-group row">
-                    <label class="col-sm-3 col-from-label" for="id_proof">{{translate('ID Proof')}}</label>
-                    <div class="col-sm-9">
-                        <div class="custom-file">
-                            <label class="custom-file-label">
-                                <input type="file" name="id_proof" class="custom-file-input">
-                                <span class="custom-file-name">{{ translate('Choose File') }}</span>
-                            </label>
-                        </div>
-                    </div>
-                </div>
+
                 
                 <div class="form-group mb-0 text-right">
                     <button type="submit" class="btn btn-primary">{{translate('Save')}}</button>

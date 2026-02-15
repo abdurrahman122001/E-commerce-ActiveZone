@@ -35,6 +35,7 @@
                     <th>{{translate('Package')}}</th>
                     <th>{{translate('Status')}}</th>
                     <th>{{translate('ID Proof')}}</th>
+                    <th>{{translate('PAN Number')}}</th>
                     <th class="text-right">{{translate('Options')}}</th>
                 </tr>
             </thead>
@@ -63,6 +64,7 @@
                                 <a href="{{ asset('storage/'.$sub->id_proof) }}" target="_blank" class="btn btn-sm btn-info">{{ translate('View') }}</a>
                             @endif
                         </td>
+                        <td>{{ $sub->pan_number }}</td>
                         <td class="text-right">
                             <div class="dropdown">
                                 <button type="button" class="btn btn-sm btn-circle btn-soft-primary btn-icon dropdown-toggle no-arrow" data-toggle="dropdown" href="javascript:void(0);" role="button" aria-haspopup="false" aria-expanded="false">

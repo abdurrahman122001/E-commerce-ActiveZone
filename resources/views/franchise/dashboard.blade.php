@@ -18,11 +18,64 @@
                 <i class="las la-exclamation-triangle la-2x mr-3"></i>
                 <div>
                     <strong>{{ translate('Account Pending Approval') }}</strong>
-                    <p class="mb-0">{{ translate('Your account is currently unverified. Please wait for admin approval to access all features. Some functionality may be limited until your account is approved.') }}</p>
+                    <p class="mb-0">{{ translate('Your account is currently unverified. Please upload your verification documents (Aadhar Card and PAN Number) to proceed.') }}</p>
                 </div>
             </div>
         </div>
+
+        @php
+            $id_proof = null;
+            $pan_number = null;
+            if ($authUser->user_type == 'franchise' && $authUser->franchise) {
+                $id_proof = $authUser->franchise->id_proof;
+                $pan_number = $authUser->franchise->pan_number;
+            } elseif ($authUser->user_type == 'sub_franchise' && $authUser->sub_franchise) {
+                $id_proof = $authUser->sub_franchise->id_proof;
+                $pan_number = $authUser->sub_franchise->pan_number;
+            }
+        @endphp
+
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0 h6">{{ translate('Verification Details') }}</h5>
+            </div>
+            <div class="card-body">
+                <form action="{{ route('franchise.verification_info_update') }}" method="POST" enctype="multipart/form-data">
+                    @csrf
+                    <div class="form-group row">
+                        <label class="col-md-3 col-form-label">{{ translate('Aadhar Card (Image/PDF)') }} <span class="text-danger">*</span></label>
+                        <div class="col-md-9">
+                            <div class="custom-file">
+                                <input type="file" class="custom-file-input @error('id_proof') is-invalid @enderror" name="id_proof" id="id_proof" {{ $id_proof ? '' : 'required' }}>
+                                <label class="custom-file-label" for="id_proof">{{ translate('Choose file') }}</label>
+                            </div>
+                            @error('id_proof')
+                                <div class="text-danger mt-1 fs-12">{{ $message }}</div>
+                            @enderror
+                            @if($id_proof)
+                                <div class="mt-2">
+                                    <a href="{{ asset('storage/' . $id_proof) }}" target="_blank" class="btn btn-sm btn-soft-info">{{ translate('View Current Document') }}</a>
+                                </div>
+                            @endif
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-md-3 col-form-label">{{ translate('PAN Number') }} <span class="text-danger">*</span></label>
+                        <div class="col-md-9">
+                            <input type="text" class="form-control @error('pan_number') is-invalid @enderror" name="pan_number" value="{{ old('pan_number', $pan_number) }}" placeholder="{{ translate('Enter PAN Number') }}" required>
+                            @error('pan_number')
+                                <div class="text-danger mt-1 fs-12">{{ $message }}</div>
+                            @enderror
+                        </div>
+                    </div>
+                    <div class="form-group mb-0 text-right">
+                        <button type="submit" class="btn btn-primary">{{ translate('Upload & Submit') }}</button>
+                    </div>
+                </form>
+            </div>
+        </div>
     @endif
+
 
     <div class="aiz-titlebar mt-2 mb-4">
         <div class="row align-items-center">
@@ -357,10 +410,10 @@
             <div class="card h-100 mb-0 d-flex align-items-center justify-content-center p-4">
                 <div class="text-center">
                     @if($status == 'approved')
-                        <img src="{{ static_asset('assets/img/verified.png') }}" alt="" class="img-fluid mb-3" style="max-width: 100px;">
+                        <img src="{{ static_asset('assets/img/verified.png') }}" alt="" class="img-fluid mb-3" style="max-width: 140px;">
                         <h5 class="fw-600">{{ translate('Verified Account') }}</h5>
                     @else
-                        <img src="{{ static_asset('assets/img/non_verified.png') }}" alt="" class="img-fluid mb-3" style="max-width: 100px;">
+                        <img src="{{ static_asset('assets/img/non_verified.png') }}" alt="" class="img-fluid mb-3" style="max-width: 140px;">
                         <h5 class="fw-600 text-danger">{{ translate('Unverified Account') }}</h5>
                         <p class="text-muted mb-0">{{ translate('Wait for Admin Approval') }}</p>
                     @endif
@@ -405,7 +458,13 @@
 
 @section('script')
     <script type="text/javascript">
-        AIZ.plugins.chart('#graph-1', {
+        $(document).on("change", ".custom-file-input", function() {
+            var fileName = $(this).val().split("\\").pop();
+            $(this).next(".custom-file-label").addClass("selected").html(fileName);
+        });
+        
+        $(document).ready(function() {
+            AIZ.plugins.chart('#graph-1', {
             type: 'bar',
             data: {
                 labels: [

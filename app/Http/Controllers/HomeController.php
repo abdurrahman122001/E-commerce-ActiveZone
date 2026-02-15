@@ -332,11 +332,16 @@ class HomeController extends Controller
             $user->password = Hash::make($request->new_password);
         }
 
-        $user->avatar_original = $request->photo;
-        $user->save();
+        if ($request->has('photo')) {
+            $user->avatar_original = $request->photo;
+        }
 
-        flash(translate('Your Profile has been updated successfully!'))->success();
-        return back();
+        if ($user->save()) {
+            Artisan::call('view:clear');
+            Artisan::call('cache:clear');
+            flash(translate('Your Profile has been updated successfully!'))->success();
+            return back();
+        }
     }
 
     public function userVerifyInfoUpdate(Request $request)

@@ -83,6 +83,26 @@
                         <p>{{ $user->sub_franchise->franchise_package->name ?? '' }}</p>
                     </div>
                 @endif
+                <hr>
+                <h5 class="mb-3 h6">{{translate('Verification Documents')}}</h5>
+                @php
+                    $id_proof = $user->franchise ? $user->franchise->id_proof : ($user->sub_franchise ? $user->sub_franchise->id_proof : null);
+                    $pan_number = $user->franchise ? $user->franchise->pan_number : ($user->sub_franchise ? $user->sub_franchise->pan_number : null);
+                @endphp
+                <div class="form-group">
+                    <label>{{translate('PAN Number')}}</label>
+                    <p>{{ $pan_number ?? translate('Not Provided') }}</p>
+                </div>
+                <div class="form-group">
+                    <label>{{translate('Aadhar Card')}}</label>
+                    @if($id_proof)
+                        <div>
+                            <a href="{{ asset('storage/'.$id_proof) }}" target="_blank" class="btn btn-sm btn-soft-info">{{ translate('View Document') }}</a>
+                        </div>
+                    @else
+                        <p>{{ translate('Not Provided') }}</p>
+                    @endif
+                </div>
             </div>
         </div>
     </div>

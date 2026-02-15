@@ -25,7 +25,7 @@ class IsFranchise
             }
 
             if (in_array($status, ['approved', 'pending'])) {
-                if ($status == 'pending' && !$request->is('franchise/dashboard')) {
+                if ($status == 'pending' && !$request->is('franchise/dashboard') && !$request->is('franchise/verification-info-update')) {
                     return redirect()->route('franchise.dashboard')->with('warning', translate('Your account is pending approval. Please wait for admin verification to access all features.'));
                 }
                 return $next($request);

@@ -54,7 +54,7 @@ class FranchiseController extends Controller
             'city_id' => 'required|exists:cities,id',
             'area_id' => 'required_if:franchise_type,sub_franchise',
             'franchise_package_id' => 'required|exists:franchise_packages,id',
-            'id_proof' => 'required|file|mimes:jpg,jpeg,png,pdf|max:2048',
+            'id_proof' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
         ]);
 
         \DB::beginTransaction();
@@ -66,7 +66,7 @@ class FranchiseController extends Controller
             $user->phone = $request->phone;
             $user->password = Hash::make($request->password);
             $user->user_type = $request->franchise_type == 'city_franchise' ? 'franchise' : 'sub_franchise';
-            $user->verification_status = 1;
+            $user->verification_status = 0; // Default to unverified
             $user->save();
             
             // Handle ID Proof Upload
@@ -253,10 +253,20 @@ class FranchiseController extends Controller
              $franchise = Franchise::findOrFail($id);
              $franchise->status = 'approved';
              $franchise->save();
+             
+             if($franchise->user){
+                 $franchise->user->verification_status = 1;
+                 $franchise->user->save();
+             }
          } else {
              $sub = SubFranchise::findOrFail($id);
              $sub->status = 'approved';
              $sub->save();
+
+             if($sub->user){
+                 $sub->user->verification_status = 1;
+                 $sub->user->save();
+             }
          }
          flash(translate('Approved Successfully'))->success();
          return back();
@@ -477,4 +487,48 @@ class FranchiseController extends Controller
          return back();
     }
 
+    public function updateVerificationInfo(Request $request)
+    {
+        $request->validate([
+            'id_proof' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
+            'pan_number' => 'required|string|max:20',
+        ]);
+
+        $user = Auth::user();
+        $id_proof_path = null;
+        if ($request->hasFile('id_proof')) {
+            $id_proof_path = $request->file('id_proof')->store('uploads/franchise/id_proofs', 'public');
+        }
+
+        $saved = false;
+        if ($user->user_type == 'franchise') {
+            $franchise = Franchise::where('user_id', $user->id)->first();
+            if ($franchise) {
+                if ($id_proof_path) {
+                    $franchise->id_proof = $id_proof_path;
+                }
+                $franchise->pan_number = $request->pan_number;
+                $franchise->save();
+                $saved = true;
+            }
+        } elseif ($user->user_type == 'sub_franchise') {
+            $sub = SubFranchise::where('user_id', $user->id)->first();
+            if ($sub) {
+                if ($id_proof_path) {
+                    $sub->id_proof = $id_proof_path;
+                }
+                $sub->pan_number = $request->pan_number;
+                $sub->save();
+                $saved = true;
+            }
+        }
+
+        if ($saved) {
+            flash(translate('Verification details uploaded successfully. Please wait for admin approval.'))->success();
+        } else {
+            flash(translate('User record not found.'))->error();
+        }
+        
+        return back();
+    }
 }

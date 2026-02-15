@@ -1340,7 +1340,7 @@ if (!function_exists('my_asset')) {
             return Storage::disk(config('filesystems.default'))->url($path);
         }
 
-        return '/public/' . $path;
+        return url($path);
     }
 }
 
@@ -1354,17 +1354,14 @@ if (!function_exists('static_asset')) {
      */
     function static_asset($path, $secure = null)
     {
-        return '/public/' . $path;
+        return url($path);
     }
 }
 
 if (!function_exists('getBaseURL')) {
     function getBaseURL()
     {
-        $root = '//' . $_SERVER['HTTP_HOST'];
-        $root .= str_replace(basename($_SERVER['SCRIPT_NAME']), '', $_SERVER['SCRIPT_NAME']);
-
-        return $root;
+        return url('/');
     }
 }
 
@@ -1372,11 +1369,11 @@ if (!function_exists('getBaseURL')) {
 if (!function_exists('getFileBaseURL')) {
     function getFileBaseURL()
     {
-        if (env('FILESYSTEM_DRIVER') != 'local') {
+        if (env('FILESYSTEM_DRIVER', 'local') != 'local') {
             return env(Str::upper(env('FILESYSTEM_DRIVER')) . '_URL') . '/';
         }
 
-        return getBaseURL() . 'public/';
+        return url('/') . '/';
     }
 }
 

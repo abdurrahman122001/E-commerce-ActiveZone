@@ -41,6 +41,9 @@ Route::group(['prefix' => 'franchise', 'middleware' => ['auth', 'franchise', 'pr
         Route::post('/profile/update/{id}', 'update')->name('profile.update');
     });
 
+    // Verification
+    Route::post('/verification-info-update', [App\Http\Controllers\FranchiseController::class, 'updateVerificationInfo'])->name('verification_info_update');
+
     // Orders
     Route::controller(App\Http\Controllers\Franchise\OrderController::class)->group(function () {
         Route::get('/orders', 'index')->name('orders.index');

@@ -147,18 +147,7 @@
                                     </div>
                                 </div>
 
-                                <div class="form-group row">
-                                    <label class="col-md-3 col-form-label">{{ translate('ID Proof (Aadhar/PAN)') }} <span class="text-danger">*</span></label>
-                                    <div class="col-md-9">
-                                        <div class="custom-file">
-                                            <input type="file" class="custom-file-input @error('id_proof') is-invalid @enderror" name="id_proof" id="id_proof" required>
-                                            <label class="custom-file-label" for="id_proof">{{ translate('Choose file') }}</label>
-                                        </div>
-                                        @error('id_proof')
-                                            <div class="text-danger mt-1 fs-12">{{ $message }}</div>
-                                        @enderror
-                                    </div>
-                                </div>
+
 
                                 <div class="form-group mb-0 text-right">
                                     <button type="submit" class="btn btn-primary rounded-0 w-100">{{ translate('Submit Application') }}</button>

@@ -20,7 +20,8 @@ class SubFranchise extends Model
         'id_proof',
         'status',
         'balance',
-        'franchise_package_id'
+        'franchise_package_id',
+        'pan_number'
     ];
 
     public function user()

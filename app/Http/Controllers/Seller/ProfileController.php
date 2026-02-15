@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers\Seller;
 
+use App\Http\Controllers\Controller;
 use App\Http\Requests\SellerProfileRequest;
 use App\Models\User;
 use Auth;
 use Hash;
+use Artisan;
 
 class ProfileController extends Controller
 {
@@ -43,7 +45,9 @@ class ProfileController extends Controller
             $user->password = Hash::make($request->new_password);
         }
         
-        $user->avatar_original = $request->photo;
+        if($request->has('photo')){
+            $user->avatar_original = $request->photo;
+        }
 
         $shop = $user->shop;
 
@@ -58,7 +62,10 @@ class ProfileController extends Controller
             $shop->save();
         }
 
-        $user->save();
+        if ($user->save()) {
+            Artisan::call('view:clear');
+            Artisan::call('cache:clear');
+        }
 
         flash(translate('Your Profile has been updated successfully!'))->success();
         return back();

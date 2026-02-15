@@ -82,20 +82,7 @@
                             <textarea class="form-control" name="business_experience" placeholder="{{translate('Business Experience')}}"></textarea>
                         </div>
                     </div>
-                    <div class="form-group row">
-                        <label class="col-md-3 col-from-label">{{translate('ID Proof')}}</label>
-                        <div class="col-md-9">
-                            <div class="input-group" data-toggle="aizuploader" data-type="image">
-                                <div class="input-group-prepend">
-                                    <div class="input-group-text bg-soft-secondary font-weight-medium">{{ translate('Browse')}}</div>
-                                </div>
-                                <div class="form-control file-amount">{{ translate('Choose File') }}</div>
-                                <input type="hidden" name="id_proof" class="selected-files">
-                            </div>
-                            <div class="file-preview box sm">
-                            </div>
-                        </div>
-                    </div>
+
                     <div class="form-group mb-0 text-right">
                         <button type="submit" class="btn btn-primary">{{translate('Save')}}</button>
                     </div>

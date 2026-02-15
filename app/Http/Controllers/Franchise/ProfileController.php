@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Auth;
 use Hash;
 use App\Models\User;
+use Artisan;
 
 class ProfileController extends Controller
 {
@@ -25,10 +26,14 @@ class ProfileController extends Controller
         if ($request->new_password != null && ($request->new_password == $request->confirm_password)) {
             $user->password = Hash::make($request->new_password);
         }
-        
-        $user->avatar_original = $request->avatar;
+
+        if ($request->has('avatar')) {
+            $user->avatar_original = $request->avatar;
+        }
 
         if ($user->save()) {
+            Artisan::call('view:clear');
+            Artisan::call('cache:clear');
             flash(translate('Your Profile has been updated successfully!'))->success();
             return back();
         }
