@@ -1,6 +1,11 @@
 @extends('franchise.layouts.app')
 
 @section('panel_content')
+    @if(!Auth::guard('franchise_employee')->check())
+        <div class="alert alert-danger">
+            {{ translate('You are not authorized to access this page. Only employees can manage products.') }}
+        </div>
+    @else
     <div class="aiz-titlebar mt-2 mb-4">
         <div class="row align-items-center">
             <div class="col-md-6">
@@ -9,7 +14,7 @@
         </div>
     </div>
 
-    <form class="" action="{{ route('franchise.products.store') }}" method="POST" enctype="multipart/form-data" id="choice_form">
+    <form class="" action="{{ route(($route_prefix ?? 'franchise') . '.products.store') }}" method="POST" enctype="multipart/form-data" id="choice_form">
         <div class="row gutters-5">
             <div class="col-lg-8">
                 @csrf
@@ -154,6 +159,7 @@
             </div>
         </div>
     </form>
+    @endif
 @endsection
 
 @section('script')

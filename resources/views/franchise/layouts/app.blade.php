@@ -65,7 +65,11 @@
 <body class="">
 
 	<div class="aiz-main-wrapper">
-        @include('franchise.inc.franchise_sidenav')
+        @if(Auth::guard('franchise_employee')->check())
+            @include('backend.franchise.employees.inc.employee_sidenav')
+        @else
+            @include('franchise.inc.franchise_sidenav')
+        @endif
 		<div class="aiz-content-wrapper">
             @include('franchise.inc.franchise_nav')
 			<div class="aiz-main-content">

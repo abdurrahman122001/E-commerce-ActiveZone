@@ -31,7 +31,18 @@ class ProductService
         }   
 
         $approved = 1;
-        if (in_array(auth()->user()->user_type, ['seller', 'vendor', 'franchise', 'sub_franchise'])) {
+        
+        // Determine User ID
+        if (isset($collection['user_id'])) {
+            $user_id = $collection['user_id'];
+        } elseif (auth()->guard('franchise_employee')->check()) {
+            $employee = auth()->guard('franchise_employee')->user();
+            if ($employee->franchise_level == 'SUB') {
+                $user_id = $employee->subFranchise->user_id;
+            } else {
+                $user_id = $employee->franchise->user_id;
+            }
+        } elseif (auth()->check() && in_array(auth()->user()->user_type, ['seller', 'vendor', 'franchise', 'sub_franchise'])) {
             $user_id = auth()->user()->id;
             if (get_setting('product_approve_by_admin') == 1) {
                 $approved = 0;

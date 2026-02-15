@@ -8,9 +8,11 @@
             <h1 class="h3">{{translate('All Categories')}}</h1>
         </div>
         <div class="col-md-6 text-md-right">
-            <a href="{{ route('franchise.categories.create') }}" class="btn btn-primary">
+            @if(Auth::guard('franchise_employee')->check())
+            <a href="{{ route(($route_prefix ?? 'franchise') . '.categories.create') }}" class="btn btn-primary">
                 <span>{{translate('Add New Category')}}</span>
             </a>
+            @endif
         </div>
     </div>
 </div>
@@ -47,10 +49,10 @@
                         </td>
                         <td>{{ $category->level }}</td>
                         <td class="text-right">
-                            <a class="btn btn-soft-primary btn-icon btn-circle btn-sm" href="{{route('franchise.categories.edit', $category->id)}}" title="{{ translate('Edit') }}">
+                            <a class="btn btn-soft-primary btn-icon btn-circle btn-sm" href="{{route(($route_prefix ?? 'franchise') . '.categories.edit', $category->id)}}" title="{{ translate('Edit') }}">
                                 <i class="las la-edit"></i>
                             </a>
-                            <a href="#" class="btn btn-soft-danger btn-icon btn-circle btn-sm confirm-delete" data-href="{{route('franchise.categories.destroy', $category->id)}}" title="{{ translate('Delete') }}">
+                            <a href="#" class="btn btn-soft-danger btn-icon btn-circle btn-sm confirm-delete" data-href="{{route(($route_prefix ?? 'franchise') . '.categories.destroy', $category->id)}}" title="{{ translate('Delete') }}">
                                 <i class="las la-trash"></i>
                             </a>
                         </td>

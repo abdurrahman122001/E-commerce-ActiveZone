@@ -87,10 +87,39 @@
                 </td>
 
                 <td class="hide-sm align-middle" data-label="Owner">
-                    @php $shop = optional($order->shop); @endphp
-                    {{-- max 20 charsthen ..., add title --}}
-                    <a href="{{ $shop->id ? route('sellers.profile', encrypt($shop->id)) : '#' }}" title="{{ $shop->name ?? 'Inhouse Product' }}" class="fs-12 fs-md-14 fw-700 d-block">
-                        {{ Str::limit($shop->name, 20)?? translate('Inhouse') }}
+                    @php
+                        $shop = optional($order->shop);
+                        $seller = $order->seller;
+                        $displayName = $shop->name ?? translate('Inhouse');
+                        $url = $shop->id ? route('sellers.profile', encrypt($shop->id)) : '#';
+
+                        if ($seller) {
+                            if ($seller->user_type == 'franchise' && $seller->franchise) {
+                                $displayName = $seller->franchise->franchise_name . ' (Franchise)';
+                                $url = '#'; // Or route to franchise details
+                            } elseif ($seller->user_type == 'sub_franchise' && $seller->sub_franchise) {
+                                $sub = $seller->sub_franchise;
+                                $franchiseName = $sub->franchise ? $sub->franchise->franchise_name : 'Unknown';
+                                $displayName = $franchiseName . ' > ' . ($sub->franchise_name ?? $seller->name) . ' (Sub)';
+                                $url = '#';
+                            } elseif ($seller->user_type == 'vendor') {
+                                if ($seller->vendor && $seller->vendor->franchise_id) {
+                                    $franchise = \App\Models\Franchise::find($seller->vendor->franchise_id);
+                                    $displayName = ($franchise->franchise_name ?? 'Unknown') . ' > ' . $seller->name . ' (Vendor)';
+                                    $url = '#';
+                                } elseif ($seller->vendor && $seller->vendor->sub_franchise_id) {
+                                    $sub = \App\Models\SubFranchise::with('franchise')->find($seller->vendor->sub_franchise_id);
+                                    if ($sub) {
+                                        $franchiseName = $sub->franchise ? $sub->franchise->franchise_name : 'Unknown';
+                                        $displayName = $franchiseName . ' > ' . ($sub->franchise_name ?? 'Unknown') . ' > ' . $seller->name . ' (Vendor)';
+                                    }
+                                    $url = '#';
+                                }
+                            }
+                        }
+                    @endphp
+                    <a href="{{ $url }}" title="{{ $displayName }}" class="fs-12 fs-md-14 fw-700 d-block">
+                        {{ Str::limit($displayName, 30) }}
                     </a>
                 </td>
 

@@ -22,6 +22,7 @@ Route::group(['prefix' => 'franchise', 'middleware' => ['auth', 'franchise', 'pr
         Route::get('/product/{id}/edit', 'edit')->name('products.edit');
         Route::post('/products/update/{product}', 'update')->name('products.update');
         Route::get('/products/destroy/{id}', 'destroy')->name('products.destroy');
+        Route::post('/products/published', 'updatePublished')->name('products.published');
     });
 
     // Categories
@@ -81,10 +82,32 @@ Route::group(['prefix' => 'franchise-employee', 'as' => 'franchise.employee.'], 
     Route::group(['middleware' => ['franchise_employee', 'prevent-back-history']], function () {
         Route::get('/dashboard', [App\Http\Controllers\Franchise\Employee\DashboardController::class, 'index'])->name('dashboard');
         Route::get('/payouts', [App\Http\Controllers\Franchise\Employee\DashboardController::class, 'payouts'])->name('payouts');
+        Route::get('/sales-report', [App\Http\Controllers\Franchise\Employee\DashboardController::class, 'sales_report'])->name('sales_report');
         
         // Vendor registration for employees
         Route::get('/vendors', [App\Http\Controllers\VendorController::class, 'index'])->name('vendors.index');
         Route::get('/vendors/create', [App\Http\Controllers\VendorController::class, 'create'])->name('vendors.create');
         Route::post('/vendors/store', [App\Http\Controllers\VendorController::class, 'store'])->name('vendors.store');
+
+        // Product Management for employees
+        Route::controller(App\Http\Controllers\Franchise\ProductController::class)->group(function () {
+            Route::get('/products', 'index')->name('products');
+            Route::get('/product/create', 'create')->name('products.create');
+            Route::post('/products/store', 'store')->name('products.store');
+            Route::get('/product/{id}/edit', 'edit')->name('products.edit');
+            Route::post('/products/update/{product}', 'update')->name('products.update');
+            Route::get('/products/destroy/{id}', 'destroy')->name('products.destroy');
+            Route::post('/products/published', 'updatePublished')->name('products.published');
+        });
+
+        // Category Management for employees
+        Route::controller(App\Http\Controllers\Franchise\CategoryController::class)->group(function () {
+            Route::get('/categories', 'index')->name('categories.index');
+            Route::get('/categories/create', 'create')->name('categories.create');
+            Route::post('/categories/store', 'store')->name('categories.store');
+            Route::get('/categories/{id}/edit', 'edit')->name('categories.edit');
+            Route::post('/categories/update/{id}', 'update')->name('categories.update');
+            Route::get('/categories/destroy/{id}', 'destroy')->name('categories.destroy');
+        });
     });
 });

@@ -42,13 +42,16 @@ class ProductController extends Controller
     public function index(Request $request)
     {
         $search = null;
-        $products = Product::where('user_id', Auth::user()->id)->orderBy('created_at', 'desc');
+        $user_id = $this->getUserId();
+        
+        $products = Product::where('user_id', $user_id)->orderBy('created_at', 'desc');
         if ($request->has('search')) {
             $search = $request->search;
             $products = $products->where('name', 'like', '%' . $search . '%');
         }
         $products = $products->paginate(15);
-        return view('franchise.product.index', compact('products', 'search'));
+        $route_prefix = $this->getRoutePrefix();
+        return view('franchise.product.index', compact('products', 'search', 'route_prefix'));
     }
 
     public function create()
@@ -57,11 +60,16 @@ class ProductController extends Controller
             ->where('digital', 0)
             ->with('childrenCategories')
             ->get();
-        return view('franchise.product.create', compact('categories'));
+        $route_prefix = $this->getRoutePrefix();
+        return view('franchise.product.create', compact('categories', 'route_prefix'));
     }
 
     public function store(ProductRequest $request)
     {
+        if ($this->getGuard() == 'franchise_employee') {
+            $request->merge(['user_id' => $this->getUserId()]);
+        }
+
         $product = $this->productService->store($request->except([
             '_token', 'sku', 'choice', 'tax_id', 'tax', 'tax_type'
         ]));
@@ -87,23 +95,24 @@ class ProductController extends Controller
         Artisan::call('view:clear');
         Artisan::call('cache:clear');
 
-        return redirect()->route('franchise.products');
+        return redirect()->route($this->getRoutePrefix() . '.products');
     }
 
     public function edit($id)
     {
         $product = Product::findOrFail($id);
-        if (Auth::user()->id != $product->user_id) {
+        if ($this->getUserId() != $product->user_id) {
             abort(403);
         }
         $categories = Category::where('parent_id', 0)->with('childrenCategories')->get();
         $tags = json_decode($product->tags);
-        return view('franchise.product.edit', compact('product', 'categories', 'tags'));
+        $route_prefix = $this->getRoutePrefix();
+        return view('franchise.product.edit', compact('product', 'categories', 'tags', 'route_prefix'));
     }
 
     public function update(ProductRequest $request, Product $product)
     {
-        if (Auth::user()->id != $product->user_id) {
+        if ($this->getUserId() != $product->user_id) {
             abort(403);
         }
 
@@ -129,7 +138,7 @@ class ProductController extends Controller
     public function destroy($id)
     {
         $product = Product::findOrFail($id);
-        if (Auth::user()->id != $product->user_id) {
+        if ($this->getUserId() != $product->user_id) {
             abort(403);
         }
 
@@ -139,5 +148,42 @@ class ProductController extends Controller
 
         flash(translate('Product has been deleted successfully'))->success();
         return back();
+    }
+
+    public function updatePublished(Request $request)
+    {
+        $product = Product::findOrFail($request->id);
+        if ($this->getUserId() != $product->user_id) {
+            return 0;
+        }
+        $product->published = $request->status;
+        $product->save();
+
+        Artisan::call('view:clear');
+        Artisan::call('cache:clear');
+        return 1;
+    }
+
+    // Helper methods
+    private function getGuard()
+    {
+        if (Auth::guard('franchise_employee')->check()) {
+            return 'franchise_employee';
+        }
+        return 'web'; 
+    }
+
+    private function getRoutePrefix()
+    {
+        return $this->getGuard() == 'franchise_employee' ? 'franchise.employee' : 'franchise';
+    }
+
+    private function getUserId()
+    {
+        if ($this->getGuard() == 'franchise_employee') {
+            $employee = Auth::guard('franchise_employee')->user();
+            return $employee->franchise_level == 'SUB' ? $employee->subFranchise->user_id : $employee->franchise->user_id;
+        }
+        return Auth::user()->id;
     }
 }

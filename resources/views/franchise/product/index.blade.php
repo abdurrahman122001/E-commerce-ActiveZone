@@ -6,11 +6,16 @@
         <div class="col-md-6">
             <h1 class="h3">{{ translate('Products') }}</h1>
         </div>
+        <div class="col-md-6">
+            <h1 class="h3">{{ translate('Products') }}</h1>
+        </div>
+        @if(Auth::guard('franchise_employee')->check())
         <div class="col-md-6 text-right">
-            <a href="{{ route('franchise.products.create') }}" class="btn btn-primary">
+            <a href="{{ route(($route_prefix ?? 'franchise') . '.products.create') }}" class="btn btn-primary">
                 <span>{{ translate('Add New Product') }}</span>
             </a>
         </div>
+        @endif
       </div>
     </div>
 
@@ -65,10 +70,10 @@
                                 </label>
                             </td>
                             <td class="text-right">
-                                <a class="btn btn-soft-primary btn-icon btn-circle btn-sm" href="{{ route('franchise.products.edit', $product->id) }}" title="{{ translate('Edit') }}">
+                                <a class="btn btn-soft-primary btn-icon btn-circle btn-sm" href="{{ route(($route_prefix ?? 'franchise') . '.products.edit', $product->id) }}" title="{{ translate('Edit') }}">
                                     <i class="las la-edit"></i>
                                 </a>
-                                <a href="javascript:void(0)" class="btn btn-soft-danger btn-icon btn-circle btn-sm confirm-delete" data-href="{{ route('franchise.products.destroy', $product->id) }}" title="{{ translate('Delete') }}">
+                                <a href="javascript:void(0)" class="btn btn-soft-danger btn-icon btn-circle btn-sm confirm-delete" data-href="{{ route(($route_prefix ?? 'franchise') . '.products.destroy', $product->id) }}" title="{{ translate('Delete') }}">
                                     <i class="las la-trash"></i>
                                 </a>
                             </td>

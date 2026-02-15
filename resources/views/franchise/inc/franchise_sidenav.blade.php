@@ -26,6 +26,7 @@
                 @endphp
 
                 @if($status == 'approved')
+                @if(Auth::guard('franchise_employee')->check())
                     <li class="aiz-side-nav-item">
                         <a href="#" class="aiz-side-nav-link">
                             <i class="las la-shopping-cart aiz-side-nav-icon"></i>
@@ -59,6 +60,7 @@
                             </li>
                         </ul>
                     </li>
+                @endif
                     
                     @if(Auth::user()->user_type == 'franchise')
                     <li class="aiz-side-nav-item">

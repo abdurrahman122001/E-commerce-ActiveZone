@@ -14,8 +14,9 @@ class CategoryController extends Controller
 {
     public function index()
     {
-        $categories = Category::where('user_id', Auth::user()->id)->paginate(15);
-        return view('franchise.category.index', compact('categories'));
+        $categories = Category::where('user_id', $this->getUserId())->paginate(15);
+        $route_prefix = $this->getRoutePrefix();
+        return view('franchise.category.index', compact('categories', 'route_prefix'));
     }
 
     public function create()
@@ -24,14 +25,15 @@ class CategoryController extends Controller
             ->where('digital', 0)
             ->with('childrenCategories')
             ->get();
-        return view('franchise.category.create', compact('categories'));
+        $route_prefix = $this->getRoutePrefix();
+        return view('franchise.category.create', compact('categories', 'route_prefix'));
     }
 
     public function store(Request $request)
     {
         $category = new Category;
         $category->name = $request->name;
-        $category->user_id = Auth::user()->id; // Track who created the category
+        $category->user_id = $this->getUserId(); // Track who created the category (Owner)
         $category->order_level = 0;
         $category->digital = $request->digital ?? 0;
         $category->banner = $request->banner;
@@ -59,26 +61,27 @@ class CategoryController extends Controller
         $category_translation->save();
 
         flash(translate('Category has been inserted successfully'))->success();
-        return redirect()->route('franchise.categories.index');
+        return redirect()->route($this->getRoutePrefix() . '.categories.index');
     }
 
     public function edit($id)
     {
         $category = Category::findOrFail($id);
-        if ($category->user_id != Auth::user()->id) {
+        if ($category->user_id != $this->getUserId()) {
             abort(403);
         }
         $categories = Category::where('parent_id', 0)
             ->where('digital', $category->digital)
             ->with('childrenCategories')
             ->get();
-        return view('franchise.category.edit', compact('category', 'categories'));
+        $route_prefix = $this->getRoutePrefix();
+        return view('franchise.category.edit', compact('category', 'categories', 'route_prefix'));
     }
 
     public function update(Request $request, $id)
     {
         $category = Category::findOrFail($id);
-        if ($category->user_id != Auth::user()->id) {
+        if ($category->user_id != $this->getUserId()) {
             abort(403);
         }
 
@@ -86,7 +89,7 @@ class CategoryController extends Controller
         $category->digital = $request->digital ?? 0;
         $category->banner = $request->banner;
         $category->icon = $request->icon;
-        $category->cover_image = $request->cover_image;
+        $category->coverImage = $request->cover_image;
         $category->meta_title = $request->meta_title;
         $category->meta_description = $request->meta_description;
 
@@ -112,13 +115,13 @@ class CategoryController extends Controller
         $category_translation->save();
 
         flash(translate('Category has been updated successfully'))->success();
-        return redirect()->route('franchise.categories.index');
+        return redirect()->route($this->getRoutePrefix() . '.categories.index');
     }
 
     public function destroy($id)
     {
         $category = Category::findOrFail($id);
-        if ($category->user_id != Auth::user()->id) {
+        if ($category->user_id != $this->getUserId()) {
             abort(403);
         }
         
@@ -130,6 +133,29 @@ class CategoryController extends Controller
 
         $category->delete();
         flash(translate('Category has been deleted successfully'))->success();
-        return redirect()->route('franchise.categories.index');
+        return redirect()->route($this->getRoutePrefix() . '.categories.index');
+    }
+
+    // Helper methods
+    private function getGuard()
+    {
+        if (Auth::guard('franchise_employee')->check()) {
+            return 'franchise_employee';
+        }
+        return 'web'; 
+    }
+
+    private function getRoutePrefix()
+    {
+        return $this->getGuard() == 'franchise_employee' ? 'franchise.employee' : 'franchise';
+    }
+
+    private function getUserId()
+    {
+        if ($this->getGuard() == 'franchise_employee') {
+            $employee = Auth::guard('franchise_employee')->user();
+            return $employee->franchise_level == 'SUB' ? $employee->subFranchise->user_id : $employee->franchise->user_id;
+        }
+        return Auth::user()->id;
     }
 }

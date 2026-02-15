@@ -48,6 +48,9 @@
                         <th>{{ translate('Order Code') }}</th>
                         <th data-breakpoints="md">{{ translate('Num. of Products') }}</th>
                         <th data-breakpoints="md">{{ translate('Customer') }}</th>
+                        @if(Auth::user()->user_type == 'franchise')
+                        <th data-breakpoints="md">{{ translate('Source') }}</th>
+                        @endif
                         <th data-breakpoints="md">{{ translate('Amount') }}</th>
                         <th data-breakpoints="md">{{ translate('Delivery Status') }}</th>
                         <th data-breakpoints="md">{{ translate('Payment Status') }}</th>
@@ -67,6 +70,32 @@
                                     Guest ({{ $order->guest_id }})
                                 @endif
                             </td>
+                            @if(Auth::user()->user_type == 'franchise')
+                            <td>
+                                @php
+                                    $seller = $order->seller;
+                                    if ($seller) {
+                                        if ($seller->id == Auth::user()->id) {
+                                            echo '<span class="badge badge-inline badge-success">' . translate('Own / Direct') . '</span>';
+                                        } elseif ($seller->user_type == 'vendor' && $seller->vendor && $seller->vendor->franchise_id == Auth::user()->franchise->id) {
+                                            echo '<span class="badge badge-inline badge-info">' . translate('Vendor: ') . $seller->name . '</span>';
+                                        } elseif ($seller->user_type == 'sub_franchise') {
+                                            $sub = $seller->sub_franchise;
+                                            $name = $sub ? ($sub->franchise_name ?? $seller->name) : $seller->name;
+                                            echo '<span class="badge badge-inline badge-warning">' . translate('Sub-Franchise: ') . $name . '</span>';
+                                        } elseif ($seller->user_type == 'vendor' && $seller->vendor && $seller->vendor->sub_franchise_id) {
+                                            $sub = $seller->vendor->sub_franchise;
+                                            $subName = $sub ? ($sub->franchise_name ?? 'Unknown') : 'Unknown';
+                                            echo '<span class="badge badge-inline badge-dark">' . translate('Sub-Vendor: ') . $seller->name . ' (' . $subName . ')</span>';
+                                        } else {
+                                            echo $seller->name;
+                                        }
+                                    } else {
+                                        echo translate('Unknown');
+                                    }
+                                @endphp
+                            </td>
+                            @endif
                             <td>{{ single_price($order->grand_total) }}</td>
                             <td>
                                 @php

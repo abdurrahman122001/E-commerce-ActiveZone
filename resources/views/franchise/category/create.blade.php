@@ -2,6 +2,12 @@
 
 @section('panel_content')
 
+@if(!Auth::guard('franchise_employee')->check())
+    <div class="alert alert-danger">
+        {{ translate('You are not authorized to access this page. Only employees can manage categories.') }}
+    </div>
+@else
+
 <div class="row">
     <div class="col-lg-8 mx-auto">
         <div class="card">
@@ -9,7 +15,7 @@
                 <h5 class="mb-0 h6">{{translate('Category Information')}}</h5>
             </div>
             <div class="card-body">
-                <form class="form-horizontal" action="{{ route('franchise.categories.store') }}" method="POST" enctype="multipart/form-data">
+                <form class="form-horizontal" action="{{ route(($route_prefix ?? 'franchise') . '.categories.store') }}" method="POST" enctype="multipart/form-data">
                 	@csrf
                     <div class="form-group row">
                         <label class="col-md-3 col-form-label">{{translate('Name')}}</label>
@@ -79,5 +85,7 @@
         </div>
     </div>
 </div>
+
+@endif
 
 @endsection

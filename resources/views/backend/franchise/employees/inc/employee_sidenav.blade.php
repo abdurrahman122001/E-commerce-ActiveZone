@@ -17,6 +17,20 @@
                 </li>
 
                 <li class="aiz-side-nav-item">
+                    <a href="{{ route('franchise.employee.products') }}" class="aiz-side-nav-link">
+                        <i class="las la-shopping-basket aiz-side-nav-icon"></i>
+                        <span class="aiz-side-nav-text">{{ translate('Products') }}</span>
+                    </a>
+                </li>
+
+                <li class="aiz-side-nav-item">
+                    <a href="{{ route('franchise.employee.categories.index') }}" class="aiz-side-nav-link">
+                        <i class="las la-list aiz-side-nav-icon"></i>
+                        <span class="aiz-side-nav-text">{{ translate('Categories') }}</span>
+                    </a>
+                </li>
+
+                <li class="aiz-side-nav-item">
                     <a href="#" class="aiz-side-nav-link">
                         <i class="las la-user-friends aiz-side-nav-icon"></i>
                         <span class="aiz-side-nav-text">{{ translate('Vendors') }}</span>
@@ -34,6 +48,13 @@
                             </a>
                         </li>
                     </ul>
+                </li>
+
+                <li class="aiz-side-nav-item">
+                    <a href="{{ route('franchise.employee.sales_report') }}" class="aiz-side-nav-link">
+                        <i class="las la-file-alt aiz-side-nav-icon"></i>
+                        <span class="aiz-side-nav-text">{{ translate('Sales Report') }}</span>
+                    </a>
                 </li>
 
                 <li class="aiz-side-nav-item">

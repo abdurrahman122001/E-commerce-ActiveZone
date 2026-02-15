@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Franchise;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
 use App\Models\FranchiseEmployee;
 use App\Models\Order;
 use App\Models\OrderDetail;
