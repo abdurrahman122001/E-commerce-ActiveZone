@@ -410,10 +410,10 @@
             <div class="card h-100 mb-0 d-flex align-items-center justify-content-center p-4">
                 <div class="text-center">
                     @if($status == 'approved')
-                        <img src="{{ static_asset('assets/img/verified.png') }}" alt="" class="img-fluid mb-3" style="max-width: 140px;">
+                        <img src="{{ static_asset('assets/img/verified.png') }}" alt="" class="img-fluid mb-3" style="max-width: 180px;">
                         <h5 class="fw-600">{{ translate('Verified Account') }}</h5>
                     @else
-                        <img src="{{ static_asset('assets/img/non_verified.png') }}" alt="" class="img-fluid mb-3" style="max-width: 140px;">
+                        <img src="{{ static_asset('assets/img/non_verified.png') }}" alt="" class="img-fluid mb-3" style="max-width: 180px;">
                         <h5 class="fw-600 text-danger">{{ translate('Unverified Account') }}</h5>
                         <p class="text-muted mb-0">{{ translate('Wait for Admin Approval') }}</p>
                     @endif
