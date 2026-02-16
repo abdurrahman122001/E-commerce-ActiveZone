@@ -101,12 +101,21 @@ class VendorController extends Controller
 
     public function store(Request $request)
     {
-        $validated = $request->validate([
+        $isAdmin = (Auth::check() && (Auth::user()->user_type == 'admin' || Auth::user()->user_type == 'staff'));
+        
+        $rules = [
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:8|confirmed',
-            'commission_percentage' => 'required|numeric|min:0|max:100',
-        ]);
+        ];
+
+        if ($isAdmin) {
+            $rules['commission_percentage'] = 'required|numeric|min:0|max:100';
+        } else {
+            $rules['commission_percentage'] = 'nullable|numeric|min:0|max:100';
+        }
+
+        $validated = $request->validate($rules);
 
         \DB::beginTransaction();
         try {
@@ -141,8 +150,8 @@ class VendorController extends Controller
                 }
             }
             
-            $vendor->commission_percentage = $validated['commission_percentage'];
-            $vendor->status = 'approved'; 
+            $vendor->commission_percentage = $isAdmin ? ($request->commission_percentage ?? 0) : 0;
+            $vendor->status = $isAdmin ? 'approved' : 'pending'; 
             $vendor->save();
 
             // Create shop for vendor
@@ -150,6 +159,7 @@ class VendorController extends Controller
             $shop->user_id = $user->id;
             $shop->name = $user->name;
             $shop->slug = \Str::slug($user->name) . '-' . $user->id;
+            $shop->registration_approval = $isAdmin ? 1 : 0;
             $shop->save();
 
             \DB::commit();
