@@ -21,6 +21,7 @@ class FranchiseEmployee extends Authenticatable
         'sub_franchise_id',
         'franchise_id',
         'is_active',
+        'status',
         'created_by'
     ];
 

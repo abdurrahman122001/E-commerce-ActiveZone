@@ -78,6 +78,7 @@ class FranchiseEmployeeController extends Controller
         $validated['created_by'] = $user->id;
         $validated['password'] = Hash::make($validated['password']);
         $validated['is_active'] = $request->has('is_active') ? true : false;
+        $validated['status'] = 'pending';
 
         // Validate permissions
         if ($user->user_type == 'sub_franchise') {

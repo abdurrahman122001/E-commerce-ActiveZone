@@ -140,5 +140,25 @@ class FranchiseEmployeeController extends Controller
         $sub_franchises = \App\Models\SubFranchise::all();
 
         return view('backend.franchise.sales_report', compact('histories', 'franchises', 'sub_franchises', 'franchise_id', 'sub_franchise_id', 'date_range'));
+    public function approve($id)
+    {
+        $employee = FranchiseEmployee::findOrFail($id);
+        $employee->status = 'approved';
+        $employee->is_active = 1;
+        $employee->save();
+
+        flash(translate('Employee approved successfully'))->success();
+        return back();
+    }
+
+    public function reject($id)
+    {
+        $employee = FranchiseEmployee::findOrFail($id);
+        $employee->status = 'rejected';
+        $employee->is_active = 0;
+        $employee->save();
+
+        flash(translate('Employee rejected successfully'))->success();
+        return back();
     }
 }
