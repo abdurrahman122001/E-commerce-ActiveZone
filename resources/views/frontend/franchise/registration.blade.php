@@ -174,6 +174,11 @@
                 $('#area_section').addClass('d-none');
                 $('#area_id').prop('required', false);
             }
+            
+            var state_id = $('#state_id').val();
+            if(state_id){
+                get_cities(state_id);
+            }
         });
 
         $('#state_id').change(function(){
@@ -187,22 +192,26 @@
         });
 
         function get_cities(state_id){
-            $.post('{{ route('get-city') }}', { _token: '{{ csrf_token() }}', state_id: state_id }, function(data){
-                $('#city_id').html(null);
-                $('#city_id').append($('<option>', {
-                    value: '',
-                    text: '{{ translate("Select City") }}'
-                }));
+            var franchise_type = $('#franchise_type').val();
+            $.post('{{ route('get-city') }}', { _token: '{{ csrf_token() }}', state_id: state_id, franchise_type: franchise_type }, function(data){
                 var obj = JSON.parse(data);
-                $('#city_id').append(obj);
+                var html = '<option value="">{{ translate("Select City") }}</option>';
+                $('#city_id').html(html + obj);
                 $('.aiz-selectpicker').selectpicker('refresh');
+                $('#area_id').html('<option value="">{{ translate("Select Area") }}</option>').selectpicker('refresh');
             });
         }
 
         function get_areas(city_id) {
-            $.post('{{ route('get-area') }}', { _token: '{{ csrf_token() }}', city_id: city_id }, function(data){
+            var franchise_type = $('#franchise_type').val();
+            $.post('{{ route('get-area') }}', { _token: '{{ csrf_token() }}', city_id: city_id, franchise_type: franchise_type }, function(data){
                 var obj = JSON.parse(data);
-                $('#area_id').html(obj);
+                if(obj.indexOf('disabled') == -1){
+                    var html = '<option value="">{{ translate("Select Area") }}</option>';
+                    $('#area_id').html(html + obj);
+                } else {
+                    $('#area_id').html(obj);
+                }
                 $('.aiz-selectpicker').selectpicker('refresh');
             });
         }

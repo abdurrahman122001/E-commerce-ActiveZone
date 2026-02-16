@@ -57,6 +57,20 @@ class FranchiseController extends Controller
             'id_proof' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
         ]);
 
+        if ($request->franchise_type == 'city_franchise') {
+            $existingFranchise = Franchise::where('city_id', $request->city_id)->where('status', '!=', 'rejected')->first();
+            if ($existingFranchise) {
+                flash(translate('A franchise already exists for the selected city.'))->error();
+                return back()->withInput();
+            }
+        } elseif ($request->franchise_type == 'sub_franchise') {
+            $existingSubFranchise = SubFranchise::where('area_id', $request->area_id)->where('status', '!=', 'rejected')->first();
+            if ($existingSubFranchise) {
+                flash(translate('A sub-franchise already exists for the selected area.'))->error();
+                return back()->withInput();
+            }
+        }
+
         \DB::beginTransaction();
         try {
             // Create User
@@ -156,6 +170,12 @@ class FranchiseController extends Controller
             'franchise_package_id' => 'required|exists:franchise_packages,id',
         ]);
 
+        $existingFranchise = Franchise::where('city_id', $request->city_id)->where('status', '!=', 'rejected')->first();
+        if ($existingFranchise) {
+            flash(translate('A franchise already exists for the selected city.'))->error();
+            return back()->withInput();
+        }
+
         // Create User
         $user = new User();
         $user->name = $request->name;
@@ -208,6 +228,12 @@ class FranchiseController extends Controller
             'area_id' => 'required|exists:areas,id',
             'franchise_package_id' => 'required|exists:franchise_packages,id',
         ]);
+
+        $existingSubFranchise = SubFranchise::where('area_id', $request->area_id)->where('status', '!=', 'rejected')->first();
+        if ($existingSubFranchise) {
+            flash(translate('A sub-franchise already exists for the selected area.'))->error();
+            return back()->withInput();
+        }
 
          // Create User
         $user = new User();
@@ -297,6 +323,15 @@ class FranchiseController extends Controller
     public function updateFranchise(Request $request, $id)
     {
         $franchise = Franchise::findOrFail($id);
+
+        if ($franchise->city_id != $request->city_id) {
+            $existingFranchise = Franchise::where('city_id', $request->city_id)->where('status', '!=', 'rejected')->first();
+            if ($existingFranchise) {
+                flash(translate('A franchise already exists for the selected city.'))->error();
+                return back()->withInput();
+            }
+        }
+
         $franchise->franchise_name = $request->name . ' Franchise';
         $franchise->business_experience = $request->business_experience;
         $franchise->state_id = $request->state_id;
@@ -345,6 +380,15 @@ class FranchiseController extends Controller
     public function updateSubFranchise(Request $request, $id)
     {
         $subFranchise = SubFranchise::findOrFail($id);
+
+        if ($subFranchise->area_id != $request->area_id) {
+            $existingSubFranchise = SubFranchise::where('area_id', $request->area_id)->where('status', '!=', 'rejected')->first();
+            if ($existingSubFranchise) {
+                flash(translate('A sub-franchise already exists for the selected area.'))->error();
+                return back()->withInput();
+            }
+        }
+
         $subFranchise->business_experience = $request->business_experience;
         $subFranchise->state_id = $request->state_id;
         $subFranchise->city_id = $request->city_id;

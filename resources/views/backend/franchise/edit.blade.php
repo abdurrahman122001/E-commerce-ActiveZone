@@ -110,14 +110,19 @@
         });
 
         function get_cities(state_id){
-            $.post('{{ route('get-city') }}', { _token: '{{ csrf_token() }}', state_id: state_id }, function(data){
-                $('#city_id').html(null);
-                $('#city_id').append($('<option>', {
-                    value: '',
-                    text: '{{ translate("Select City") }}'
-                }));
+            $.post('{{ route('get-city') }}', { 
+                _token: '{{ csrf_token() }}', 
+                state_id: state_id, 
+                franchise_type: 'city_franchise',
+                exclude_franchise_id: '{{ $franchise->id }}'
+            }, function(data){
                 var obj = JSON.parse(data);
-                $('#city_id').append(obj);
+                if(obj.indexOf('disabled') == -1){
+                    var html = '<option value="">{{ translate("Select City") }}</option>';
+                    $('#city_id').html(html + obj);
+                } else {
+                    $('#city_id').html(obj);
+                }
                 $('#city_id').val('{{ $franchise->city_id }}');
                 $('.aiz-selectpicker').selectpicker('refresh');
             });

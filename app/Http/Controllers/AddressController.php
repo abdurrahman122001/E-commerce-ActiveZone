@@ -7,6 +7,8 @@ use App\Models\Address;
 use App\Models\Area;
 use App\Models\City;
 use App\Models\State;
+use App\Models\Franchise;
+use App\Models\SubFranchise;
 use Auth;
 use Log;
 
@@ -213,10 +215,25 @@ class AddressController extends Controller
     public function getCities(Request $request)
     {
         $cities = City::where('status', 1)->where('state_id', $request->state_id)->get();
-        $html = '<option value="">' . translate("Select City") . '</option>';
 
-        foreach ($cities as $row) {
-            $html .= '<option value="' . $row->id . '">' . $row->getTranslation('name') . '</option>';
+        if ($request->has('franchise_type') && $request->franchise_type == 'city_franchise') {
+            $query = Franchise::where('status', '!=', 'rejected');
+            if ($request->has('exclude_franchise_id')) {
+                $query->where('id', '!=', $request->exclude_franchise_id);
+            }
+            $occupiedCityIds = $query->pluck('city_id')->toArray();
+            $cities = $cities->filter(function ($city) use ($occupiedCityIds) {
+                return !in_array($city->id, $occupiedCityIds);
+            });
+        }
+
+        $html = '';
+        if ($cities->isEmpty() && $request->has('franchise_type') && $request->franchise_type == 'city_franchise') {
+            $html .= '<option value="" disabled>' . translate("No available cities for city franchise in this state") . '</option>';
+        } else {
+            foreach ($cities as $row) {
+                $html .= '<option value="' . $row->id . '">' . $row->getTranslation('name') . '</option>';
+            }
         }
 
         echo json_encode($html);
@@ -225,10 +242,25 @@ class AddressController extends Controller
     public function getAreas(Request $request)
     {
         $areas = Area::where('status', 1)->where('city_id', $request->city_id)->get();
+
+        if ($request->has('franchise_type') && $request->franchise_type == 'sub_franchise') {
+            $query = SubFranchise::where('status', '!=', 'rejected');
+            if ($request->has('exclude_sub_franchise_id')) {
+                $query->where('id', '!=', $request->exclude_sub_franchise_id);
+            }
+            $occupiedAreaIds = $query->pluck('area_id')->toArray();
+            $areas = $areas->filter(function ($area) use ($occupiedAreaIds) {
+                return !in_array($area->id, $occupiedAreaIds);
+            });
+        }
+
+        $html = '';
         if ($areas->isEmpty()) {
-            $html = '<option value="" disabled selected>' . translate("Area not available") . '</option>';
+            $msg = ($request->has('franchise_type') && $request->franchise_type == 'sub_franchise') 
+                    ? translate("No available areas for sub-franchise in this city") 
+                    : translate("Area not available");
+            $html = '<option value="" disabled selected>' . $msg . '</option>';
         } else {
-            $html = '<option value="">' . translate("Select Area") . '</option>';
             foreach ($areas as $row) {
                 $html .= '<option value="' . $row->id . '">' . $row->getTranslation('name') . '</option>';
             }

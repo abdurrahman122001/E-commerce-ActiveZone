@@ -53,6 +53,12 @@ class SubFranchiseController extends Controller
             'franchise_package_id' => 'required|exists:franchise_packages,id',
         ]);
 
+        $existingSubFranchise = SubFranchise::where('area_id', $request->area_id)->where('status', '!=', 'rejected')->first();
+        if ($existingSubFranchise) {
+            flash(translate('A sub-franchise already exists for the selected area.'))->error();
+            return back()->withInput();
+        }
+
         $franchise = Auth::user()->franchise;
 
         \DB::beginTransaction();

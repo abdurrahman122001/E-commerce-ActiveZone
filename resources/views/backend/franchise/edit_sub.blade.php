@@ -142,9 +142,19 @@
         }
 
         function get_areas(city_id) {
-            $.post('{{ route('get-area') }}', { _token: '{{ csrf_token() }}', city_id: city_id }, function(data){
+            $.post('{{ route('get-area') }}', { 
+                _token: '{{ csrf_token() }}', 
+                city_id: city_id, 
+                franchise_type: 'sub_franchise',
+                exclude_sub_franchise_id: '{{ $subFranchise->id }}'
+            }, function(data){
                 var obj = JSON.parse(data);
-                $('#area_id').html(obj);
+                if(obj.indexOf('disabled') == -1){
+                    var html = '<option value="">{{ translate("Select Area") }}</option>';
+                    $('#area_id').html(html + obj);
+                } else {
+                    $('#area_id').html(obj);
+                }
                 $('#area_id').val('{{ $subFranchise->area_id }}');
                 $('.aiz-selectpicker').selectpicker('refresh');
             });

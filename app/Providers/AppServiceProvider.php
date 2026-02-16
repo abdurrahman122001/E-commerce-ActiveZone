@@ -13,11 +13,15 @@ class AppServiceProvider extends ServiceProvider
    *
    * @return void
    */
-  public function boot()
-  {
-      Schema::defaultStringLength(191);
-      Paginator::useBootstrap();
-  }
+    public function boot()
+    {
+        Schema::defaultStringLength(191);
+        Paginator::useBootstrap();
+
+        if (env('FORCE_HTTPS') == 'On') {
+            \URL::forceScheme('https');
+        }
+    }
 
   /**
    * Register any application services.
