@@ -11,67 +11,87 @@
                 @csrf
                 <button type="submit" class="btn btn-soft-danger">{{ translate('Logout') }}</button>
             </form>
-            <a href="{{ route('franchise.employee.vendors.create') }}" class="btn btn-primary">
-                {{ translate('Add New Vendor') }}
-            </a>
+            @if(Auth::guard('franchise_employee')->user()->status == 'approved')
+                <a href="{{ route('franchise.employee.vendors.create') }}" class="btn btn-primary">
+                    {{ translate('Add New Vendor') }}
+                </a>
+            @endif
         </div>
     </div>
 </div>
 
-<div class="row gutters-10">
-    <div class="col-md-4">
-        <div class="bg-grad-1 text-white rounded-lg mb-4 overflow-hidden">
-            <div class="px-3 pt-3">
-                <div class="opacity-50">
-                    <i class="las la-users la-3x"></i>
-                </div>
-                <div class="mb-2 text-center">
-                    <span class="fs-26 fw-600 d-block">{{ $vendors_count }}</span>
-                    <span class="opacity-50">{{ translate('Total Vendors Registered') }}</span>
+@if(Auth::guard('franchise_employee')->user()->status == 'approved')
+    <div class="row gutters-10">
+        <div class="col-md-4">
+            <div class="bg-grad-1 text-white rounded-lg mb-4 overflow-hidden">
+                <div class="px-3 pt-3">
+                    <div class="opacity-50">
+                        <i class="las la-users la-3x"></i>
+                    </div>
+                    <div class="mb-2 text-center">
+                        <span class="fs-26 fw-600 d-block">{{ $vendors_count }}</span>
+                        <span class="opacity-50">{{ translate('Total Vendors Registered') }}</span>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
 
-<div class="card">
-    <div class="card-header">
-        <h5 class="mb-0 h6">{{ translate('Recently Registered Vendors') }}</h5>
-    </div>
-    <div class="card-body">
-        <table class="table aiz-table mb-0">
-            <thead>
-                <tr>
-                    <th>#</th>
-                    <th>{{ translate('Name') }}</th>
-                    <th>{{ translate('Email') }}</th>
-                    <th>{{ translate('Status') }}</th>
-                    <th>{{ translate('Registered At') }}</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach ($vendors as $key => $vendor)
+    <div class="card">
+        <div class="card-header">
+            <h5 class="mb-0 h6">{{ translate('Recently Registered Vendors') }}</h5>
+        </div>
+        <div class="card-body">
+            <table class="table aiz-table mb-0">
+                <thead>
                     <tr>
-                        <td>{{ ($key+1) + ($vendors->currentPage() - 1)*$vendors->perPage() }}</td>
-                        <td>{{ $vendor->user->name ?? translate('N/A') }}</td>
-                        <td>{{ $vendor->user->email ?? translate('N/A') }}</td>
-                        <td>
-                            @if ($vendor->status == 'approved')
-                                <span class="badge badge-inline badge-success">{{ translate('Approved') }}</span>
-                            @elseif ($vendor->status == 'pending')
-                                <span class="badge badge-inline badge-info">{{ translate('Pending') }}</span>
-                            @else
-                                <span class="badge badge-inline badge-danger">{{ translate('Rejected') }}</span>
-                            @endif
-                        </td>
-                        <td>{{ $vendor->created_at->format('d-m-Y') }}</td>
+                        <th>#</th>
+                        <th>{{ translate('Name') }}</th>
+                        <th>{{ translate('Email') }}</th>
+                        <th>{{ translate('Status') }}</th>
+                        <th>{{ translate('Registered At') }}</th>
                     </tr>
-                @endforeach
-            </tbody>
-        </table>
-        <div class="aiz-pagination">
-            {{ $vendors->links() }}
+                </thead>
+                <tbody>
+                    @foreach ($vendors as $key => $vendor)
+                        <tr>
+                            <td>{{ ($key+1) + ($vendors->currentPage() - 1)*$vendors->perPage() }}</td>
+                            <td>{{ $vendor->user->name ?? translate('N/A') }}</td>
+                            <td>{{ $vendor->user->email ?? translate('N/A') }}</td>
+                            <td>
+                                @if ($vendor->status == 'approved')
+                                    <span class="badge badge-inline badge-success">{{ translate('Approved') }}</span>
+                                @elseif ($vendor->status == 'pending')
+                                    <span class="badge badge-inline badge-info">{{ translate('Pending') }}</span>
+                                @else
+                                    <span class="badge badge-inline badge-danger">{{ translate('Rejected') }}</span>
+                                @endif
+                            </td>
+                            <td>{{ $vendor->created_at->format('d-m-Y') }}</td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+            <div class="aiz-pagination">
+                {{ $vendors->links() }}
+            </div>
         </div>
     </div>
-</div>
+@else
+    <div class="card">
+        <div class="card-body text-center p-5">
+            <div class="mb-4">
+                <i class="las la-clock text-warning" style="font-size: 80px;"></i>
+            </div>
+            <h2 class="h4 fw-700">{{ translate('Account Pending Approval') }}</h2>
+            <p class="fs-16 text-muted mb-0">
+                {{ translate('Your account is currently under review by the administrator.') }}<br>
+                {{ translate('You will be able to access all features like vendor registration and reports once your account is approved.') }}
+            </p>
+            <div class="mt-4">
+                <span class="badge badge-inline badge-warning p-3 fs-14">{{ translate('Current Status: Pending') }}</span>
+            </div>
+        </div>
+    </div>
+@endif
 @endsection

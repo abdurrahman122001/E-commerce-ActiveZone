@@ -53,10 +53,12 @@
                         </td>
                         <td>{{ $employee->city->name ?? '' }}</td>
                         <td>
-                            @if($employee->is_active)
-                                <span class="badge badge-inline badge-success">{{translate('Active')}}</span>
-                            @else
-                                <span class="badge badge-inline badge-danger">{{translate('Inactive')}}</span>
+                            @if($employee->status == 'pending')
+                                <span class="badge badge-inline badge-warning">{{translate('Pending')}}</span>
+                            @elseif($employee->status == 'approved')
+                                <span class="badge badge-inline badge-success">{{translate('Approved')}}</span>
+                            @elseif($employee->status == 'rejected')
+                                <span class="badge badge-inline badge-danger">{{translate('Rejected')}}</span>
                             @endif
                         </td>
                         <td class="text-right">

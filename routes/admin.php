@@ -676,6 +676,8 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin', 'prevent-ba
         Route::post('/franchise-employees/payout_modal', 'payout_modal')->name('admin.franchise_employees.payout_modal');
         Route::post('/franchise-employees/payout_store', 'payout_store')->name('admin.franchise_employees.payout_store');
         Route::get('/franchise-employees/payout-history/{id}', 'payout_history')->name('admin.franchise_employees.payout_history');
+        Route::get('/franchise-employees/approve/{id}', 'approve')->name('admin.franchise_employees.approve');
+        Route::get('/franchise-employees/reject/{id}', 'reject')->name('admin.franchise_employees.reject');
     });
 
 

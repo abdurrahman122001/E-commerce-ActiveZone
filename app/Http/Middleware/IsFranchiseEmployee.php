@@ -15,10 +15,23 @@ class IsFranchiseEmployee
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (auth()->guard('franchise_employee')->check() && auth()->guard('franchise_employee')->user()->is_active) {
+        $employee = auth()->guard('franchise_employee')->user();
+        
+        if ($employee && $employee->status != 'rejected' && $employee->is_active) {
+            
+            // If pending, only allow dashboard
+            if ($employee->status == 'pending') {
+                $allowed_routes = ['franchise.employee.dashboard', 'franchise.employee.logout'];
+                if (!in_array($request->route()->getName(), $allowed_routes)) {
+                    flash(translate('Your account is pending approval. Please wait for admin to approve your account.'))->warning();
+                    return redirect()->route('franchise.employee.dashboard');
+                }
+            }
+            
             return $next($request);
         }
 
-        return redirect()->route('login')->with('error', 'Please login to access this area or your account is inactive');
+        auth()->guard('franchise_employee')->logout();
+        return redirect()->route('login')->with('error', 'Your account is inactive or rejected. Please contact administrator.');
     }
 }

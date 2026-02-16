@@ -40,6 +40,7 @@
                     <th data-breakpoints="lg">{{translate('Phone')}}</th>
                     <th data-breakpoints="lg">{{translate('Franchise/Sub')}}</th>
                     <th data-breakpoints="lg">{{translate('Role')}}</th>
+                    <th>{{translate('Status')}}</th>
                     <th width="15%" class="text-right">{{translate('Options')}}</th>
                 </tr>
             </thead>
@@ -57,8 +58,24 @@
                                 <span class="text-muted">{{ translate('N/A') }}</span>
                             @endif
                         </td>
-                        <td>{{ $employee->role }}</td>
+                        <td>
+                            @if($employee->status == 'pending')
+                                <span class="badge badge-inline badge-warning">{{translate('Pending')}}</span>
+                            @elseif($employee->status == 'approved')
+                                <span class="badge badge-inline badge-success">{{translate('Approved')}}</span>
+                            @elseif($employee->status == 'rejected')
+                                <span class="badge badge-inline badge-danger">{{translate('Rejected')}}</span>
+                            @endif
+                        </td>
                         <td class="text-right">
+                            @if($employee->status == 'pending')
+                                <a href="{{route('admin.franchise_employees.approve', $employee->id)}}" class="btn btn-soft-success btn-icon btn-circle btn-sm" title="{{ translate('Approve') }}">
+                                    <i class="las la-check"></i>
+                                </a>
+                                <a href="{{route('admin.franchise_employees.reject', $employee->id)}}" class="btn btn-soft-danger btn-icon btn-circle btn-sm" title="{{ translate('Reject') }}">
+                                    <i class="las la-times"></i>
+                                </a>
+                            @endif
                             <a href="javascript:void(0);" onclick="show_payout_modal('{{$employee->id}}');" class="btn btn-soft-success btn-icon btn-circle btn-sm" title="{{ translate('Pay Salary/Bonus') }}">
                                 <i class="las la-money-bill-wave"></i>
                             </a>
