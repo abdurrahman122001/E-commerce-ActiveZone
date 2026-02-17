@@ -49,15 +49,17 @@
                             <input type="password" class="form-control" name="password_confirmation" placeholder="{{translate('Confirm Password')}}" required>
                         </div>
                     </div>
+                    @if(Auth::check() && (Auth::user()->user_type == 'admin' || Auth::user()->user_type == 'staff'))
                     <div class="form-group row">
                         <label class="col-md-3 col-from-label">{{translate('Commission Percentage')}} <span class="text-danger">*</span></label>
                         <div class="col-md-9">
-                            <input type="number" min="0" max="100" step="0.01" class="form-control @error('commission_percentage') is-invalid @enderror" name="commission_percentage" placeholder="{{translate('Commission Percentage')}}" value="{{ old('commission_percentage') }}" required>
+                            <input type="number" min="0" max="100" step="0.01" class="form-control @error('commission_percentage') is-invalid @enderror" name="commission_percentage" placeholder="{{translate('Commission Percentage')}}" value="{{ old('commission_percentage', 0) }}" required>
                             @error('commission_percentage')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
                     </div>
+                    @endif
                     <div class="form-group mb-0 text-right">
                         <button type="submit" class="btn btn-primary">{{translate('Save')}}</button>
                     </div>
