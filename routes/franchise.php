@@ -77,6 +77,15 @@ Route::group(['prefix' => 'franchise', 'middleware' => ['auth', 'franchise', 'pr
         Route::get('/vendors/commission-history', 'commissionHistory')->name('vendors.commission_history');
     });
 
+    // Delivery Boys
+    Route::controller(App\Http\Controllers\Franchise\DeliveryBoyController::class)->group(function () {
+        Route::get('/delivery-boys', 'index')->name('delivery_boys.index');
+        Route::get('/delivery-boys/create', 'create')->name('delivery_boys.create');
+        Route::post('/delivery-boys/store', 'store')->name('delivery_boys.store');
+        Route::get('/delivery-boys/{id}/edit', 'edit')->name('delivery_boys.edit');
+        Route::post('/delivery-boys/update/{id}', 'update')->name('delivery_boys.update');
+    });
+
 });
 // Franchise Employee Routes (Unified Login)
 Route::group(['prefix' => 'franchise-employee', 'as' => 'franchise.employee.'], function () {
@@ -111,6 +120,15 @@ Route::group(['prefix' => 'franchise-employee', 'as' => 'franchise.employee.'], 
             Route::get('/categories/{id}/edit', 'edit')->name('categories.edit');
             Route::post('/categories/update/{id}', 'update')->name('categories.update');
             Route::get('/categories/destroy/{id}', 'destroy')->name('categories.destroy');
+        });
+
+        // Delivery Boys for employees
+        Route::controller(App\Http\Controllers\Franchise\DeliveryBoyController::class)->group(function () {
+            Route::get('/delivery-boys', 'index')->name('delivery_boys.index');
+            Route::get('/delivery-boys/create', 'create')->name('delivery_boys.create');
+            Route::post('/delivery-boys/store', 'store')->name('delivery_boys.store');
+            Route::get('/delivery-boys/{id}/edit', 'edit')->name('delivery_boys.edit');
+            Route::post('/delivery-boys/update/{id}', 'update')->name('delivery_boys.update');
         });
     });
 });

@@ -130,6 +130,26 @@
                     </li>
 
                     <li class="aiz-side-nav-item">
+                        <a href="#" class="aiz-side-nav-link">
+                            <i class="las la-shipping-fast aiz-side-nav-icon"></i>
+                            <span class="aiz-side-nav-text">{{ translate('Delivery Boys') }}</span>
+                            <span class="aiz-side-nav-arrow"></span>
+                        </a>
+                        <ul class="aiz-side-nav-list level-2">
+                            <li class="aiz-side-nav-item">
+                                <a href="{{ route('franchise.delivery_boys.index') }}" class="aiz-side-nav-link">
+                                    <span class="aiz-side-nav-text">{{ translate('All Delivery Boys') }}</span>
+                                </a>
+                            </li>
+                            <li class="aiz-side-nav-item">
+                                <a href="{{ route('franchise.delivery_boys.create') }}" class="aiz-side-nav-link">
+                                    <span class="aiz-side-nav-text">{{ translate('Add New Delivery Boy') }}</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+
+                    <li class="aiz-side-nav-item">
                         <a href="{{ route('franchise.orders.index') }}" class="aiz-side-nav-link">
                             <i class="las la-money-bill aiz-side-nav-icon"></i>
                             <span class="aiz-side-nav-text">{{ translate('Orders') }}</span>

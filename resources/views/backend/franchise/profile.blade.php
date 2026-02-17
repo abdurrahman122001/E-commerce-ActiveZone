@@ -3,7 +3,7 @@
 @section('content')
 
 <div class="aiz-titlebar text-left mt-2 mb-3">
-    <h5 class="mb-0 h6">{{translate('Franchise Profile')}}</h5>
+    <h1 class="h3">{{ $user->name }} - {{translate('Franchise Profile')}}</h1>
 </div>
 
 <div class="row">
@@ -225,7 +225,71 @@
             </div>
         </div>
 
+        <div class="card">
+            <h5 class="card-header h6">{{ translate('Delivery Boys') }} ({{ $delivery_boys->count() }})</h5>
+            <div class="card-body">
+                <table class="table aiz-table mb-0">
+                    <thead>
+                        <tr>
+                            <th>{{ translate('Name') }}</th>
+                            <th>{{ translate('Email') }}</th>
+                            <th>{{ translate('Phone') }}</th>
+                            <th>{{ translate('Status') }}</th>
+                            <th class="text-right">{{ translate('Options') }}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @forelse($delivery_boys as $delivery_boy)
+                            <tr>
+                                <td>{{ $delivery_boy->user->name ?? 'N/A' }}</td>
+                                <td>{{ $delivery_boy->user->email ?? 'N/A' }}</td>
+                                <td>{{ $delivery_boy->user->phone ?? 'N/A' }}</td>
+                                <td>
+                                    @if($delivery_boy->status == 1)
+                                        <span class="badge badge-inline badge-success">{{ translate('Approved') }}</span>
+                                    @else
+                                        <span class="badge badge-inline badge-warning">{{ translate('Pending') }}</span>
+                                    @endif
+                                </td>
+                                <td class="text-right">
+                                    <label class="aiz-switch aiz-switch-success mb-0">
+                                        <input onchange="update_status(this)" value="{{ $delivery_boy->id }}" type="checkbox" <?php if($delivery_boy->status == 1) echo "checked";?> >
+                                        <span class="slider round"></span>
+                                    </label>
+                                </td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="5" class="text-center">{{ translate('No delivery boys found.') }}</td>
+                            </tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
     </div>
 </div>
 
+@endsection
+
+@section('script')
+<script type="text/javascript">
+    function update_status(el){
+        if(el.checked){
+            var status = 1;
+        }
+        else{
+            var status = 0;
+        }
+        $.post('{{ route('delivery-boy.update_status') }}', {_token:'{{ csrf_token() }}', id:el.value, status:status}, function(data){
+            if(data == 1){
+                AIZ.plugins.notify('success', '{{ translate('Status updated successfully') }}');
+            }
+            else{
+                AIZ.plugins.notify('danger', '{{ translate('Something went wrong') }}');
+            }
+        });
+    }
+</script>
 @endsection

@@ -31,12 +31,14 @@ Route::group(['prefix' =>'admin', 'middleware' => ['auth', 'admin', 'prevent-bac
         Route::get('/delivery-boys-payment-histories', 'delivery_boys_payment_histories')->name('delivery-boys-payment-histories');
         Route::get('/delivery-boys-collection-histories', 'delivery_boys_collection_histories')->name('delivery-boys-collection-histories');
         Route::get('/delivery-boy/cancel-request', 'cancel_request_list')->name('delivery-boy.cancel-request');
+        Route::post('/delivery-boy/update_status', 'update_status')->name('delivery-boy.update_status');
         
     });
 });
 
 Route::group(['middleware' => ['user', 'verified', 'unbanned', 'prevent-back-history']], function() {
-    Route::controller(DeliveryBoyController::class)->group(function () {
+    Route::get('/delivery-boy/dashboard', [\App\Http\Controllers\DeliveryBoy\DeliveryBoyController::class, 'index'])->name('delivery_boy.dashboard');
+    Route::controller(\App\Http\Controllers\DeliveryBoy\DeliveryBoyController::class)->group(function () {
         Route::get('/assigned-deliveries', 'assigned_delivery')->name('assigned-deliveries');
         Route::get('/pickup-deliveries', 'pickup_delivery')->name('pickup-deliveries');
         Route::get('/on-the-way-deliveries', 'on_the_way_deliveries')->name('on-the-way-deliveries');
@@ -53,8 +55,11 @@ Route::group(['middleware' => ['user', 'verified', 'unbanned', 'prevent-back-his
         Route::post('/orders/update_delivery_status', 'update_delivery_status')->name('delivery-boy.orders.update_delivery_status');
     });
 
-    Route::controller(DeliveryBoyController::class)->group(function () {
+    Route::controller(\App\Http\Controllers\DeliveryBoy\DeliveryBoyController::class)->group(function () {
         Route::get('/delivery-boy/order-detail/{id}', 'order_detail')->name('delivery-boy.order-detail');
+        Route::get('/delivery-boy/pending', function () {
+            return view('delivery_boy.pending');
+        })->name('delivery_boy.pending');
     });
     
 });

@@ -963,13 +963,18 @@
                                 <span class="aiz-side-nav-text">{{ translate('Vendor Registrations') }}</span>
                             </a>
                         </li>
-                        <li class="aiz-side-nav-item">
-                            <a href="{{ route('admin.franchise_employees.sales_report') }}" class="aiz-side-nav-link">
-                                <span class="aiz-side-nav-text">{{ translate('Sales Report') }}</span>
-                            </a>
-                        </li>
-                    </ul>
-                </li>
+                    <li class="aiz-side-nav-item">
+                        <a href="{{ route('admin.franchise_employees.sales_report') }}" class="aiz-side-nav-link">
+                            <span class="aiz-side-nav-text">{{ translate('Sales Report') }}</span>
+                        </a>
+                    </li>
+                    <li class="aiz-side-nav-item">
+                        <a href="{{ route('delivery-boys.index') }}" class="aiz-side-nav-link">
+                            <span class="aiz-side-nav-text">{{translate('Delivery Partners')}}</span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
 
                 <!-- Sellers -->
                 @if (get_setting('vendor_system_activation') == 1)
@@ -1597,6 +1602,11 @@
                         <li class="aiz-side-nav-item">
                             <a href="{{ route('admin.sub_franchises.index') }}" class="aiz-side-nav-link">
                                 <span class="aiz-side-nav-text">{{translate('Sub Franchises')}}</span>
+                            </a>
+                        </li>
+                        <li class="aiz-side-nav-item">
+                            <a href="{{ route('delivery-boys.index') }}" class="aiz-side-nav-link">
+                                <span class="aiz-side-nav-text">{{translate('Delivery Partners')}}</span>
                             </a>
                         </li>
                         <li class="aiz-side-nav-item">

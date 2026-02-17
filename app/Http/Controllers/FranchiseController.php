@@ -470,21 +470,24 @@ class FranchiseController extends Controller
         $subFranchises = collect();
         $vendors = collect();
         $employees = collect();
+        $delivery_boys = collect();
 
         if($franchise) {
             $subFranchises = SubFranchise::where('franchise_id', $franchise->id)->get();
             $vendors = Vendor::where('franchise_id', $franchise->id)->get();
             // Assuming employees are created by the franchise user
             $employees = FranchiseEmployee::where('created_by', $user->id)->get();
+            $delivery_boys = \App\Models\DeliveryBoy::where('franchise_id', $user->id)->get();
         } elseif ($user->sub_franchise) {
              // For sub-franchise, maybe show vendors linked to it?
              $subFranchise = $user->sub_franchise;
              $vendors = Vendor::where('sub_franchise_id', $subFranchise->id)->get();
              // Employees created by sub-franchise
              $employees = FranchiseEmployee::where('created_by', $user->id)->get();
+             $delivery_boys = \App\Models\DeliveryBoy::where('sub_franchise_id', $user->id)->get();
         }
 
-        return view('backend.franchise.profile', compact('user', 'subFranchises', 'vendors', 'employees'));
+        return view('backend.franchise.profile', compact('user', 'subFranchises', 'vendors', 'employees', 'delivery_boys'));
     }
 
     public function payment_modal(Request $request)

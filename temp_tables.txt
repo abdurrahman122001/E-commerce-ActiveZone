@@ -1,0 +1,638 @@
+Array
+(
+    [0] => stdClass Object
+        (
+            [Tables_in_db_ecommerce] => addons
+        )
+
+    [1] => stdClass Object
+        (
+            [Tables_in_db_ecommerce] => addresses
+        )
+
+    [2] => stdClass Object
+        (
+            [Tables_in_db_ecommerce] => app_translations
+        )
+
+    [3] => stdClass Object
+        (
+            [Tables_in_db_ecommerce] => area_translations
+        )
+
+    [4] => stdClass Object
+        (
+            [Tables_in_db_ecommerce] => areas
+        )
+
+    [5] => stdClass Object
+        (
+            [Tables_in_db_ecommerce] => attribute_category
+        )
+
+    [6] => stdClass Object
+        (
+            [Tables_in_db_ecommerce] => attribute_translations
+        )
+
+    [7] => stdClass Object
+        (
+            [Tables_in_db_ecommerce] => attribute_values
+        )
+
+    [8] => stdClass Object
+        (
+            [Tables_in_db_ecommerce] => attributes
+        )
+
+    [9] => stdClass Object
+        (
+            [Tables_in_db_ecommerce] => blog_categories
+        )
+
+    [10] => stdClass Object
+        (
+            [Tables_in_db_ecommerce] => blogs
+        )
+
+    [11] => stdClass Object
+        (
+            [Tables_in_db_ecommerce] => brand_translations
+        )
+
+    [12] => stdClass Object
+        (
+            [Tables_in_db_ecommerce] => brands
+        )
+
+    [13] => stdClass Object
+        (
+            [Tables_in_db_ecommerce] => business_settings
+        )
+
+    [14] => stdClass Object
+        (
+            [Tables_in_db_ecommerce] => carrier_range_prices
+        )
+
+    [15] => stdClass Object
+        (
+            [Tables_in_db_ecommerce] => carrier_ranges
+        )
+
+    [16] => stdClass Object
+        (
+            [Tables_in_db_ecommerce] => carriers
+        )
+
+    [17] => stdClass Object
+        (
+            [Tables_in_db_ecommerce] => carts
+        )
+
+    [18] => stdClass Object
+        (
+            [Tables_in_db_ecommerce] => categories
+        )
+
+    [19] => stdClass Object
+        (
+            [Tables_in_db_ecommerce] => category_translations
+        )
+
+    [20] => stdClass Object
+        (
+            [Tables_in_db_ecommerce] => cities
+        )
+
+    [21] => stdClass Object
+        (
+            [Tables_in_db_ecommerce] => city_translations
+        )
+
+    [22] => stdClass Object
+        (
+            [Tables_in_db_ecommerce] => colors
+        )
+
+    [23] => stdClass Object
+        (
+            [Tables_in_db_ecommerce] => combined_orders
+        )
+
+    [24] => stdClass Object
+        (
+            [Tables_in_db_ecommerce] => commission_histories
+        )
+
+    [25] => stdClass Object
+        (
+            [Tables_in_db_ecommerce] => contacts
+        )
+
+    [26] => stdClass Object
+        (
+            [Tables_in_db_ecommerce] => conversations
+        )
+
+    [27] => stdClass Object
+        (
+            [Tables_in_db_ecommerce] => countries
+        )
+
+    [28] => stdClass Object
+        (
+            [Tables_in_db_ecommerce] => coupon_usages
+        )
+
+    [29] => stdClass Object
+        (
+            [Tables_in_db_ecommerce] => coupons
+        )
+
+    [30] => stdClass Object
+        (
+            [Tables_in_db_ecommerce] => currencies
+        )
+
+    [31] => stdClass Object
+        (
+            [Tables_in_db_ecommerce] => custom_alerts
+        )
+
+    [32] => stdClass Object
+        (
+            [Tables_in_db_ecommerce] => custom_label_translations
+        )
+
+    [33] => stdClass Object
+        (
+            [Tables_in_db_ecommerce] => custom_labels
+        )
+
+    [34] => stdClass Object
+        (
+            [Tables_in_db_ecommerce] => custom_sale_alerts
+        )
+
+    [35] => stdClass Object
+        (
+            [Tables_in_db_ecommerce] => customer_package_payments
+        )
+
+    [36] => stdClass Object
+        (
+            [Tables_in_db_ecommerce] => customer_package_translations
+        )
+
+    [37] => stdClass Object
+        (
+            [Tables_in_db_ecommerce] => customer_packages
+        )
+
+    [38] => stdClass Object
+        (
+            [Tables_in_db_ecommerce] => customer_product_translations
+        )
+
+    [39] => stdClass Object
+        (
+            [Tables_in_db_ecommerce] => customer_products
+        )
+
+    [40] => stdClass Object
+        (
+            [Tables_in_db_ecommerce] => dynamic_popups
+        )
+
+    [41] => stdClass Object
+        (
+            [Tables_in_db_ecommerce] => element_styles
+        )
+
+    [42] => stdClass Object
+        (
+            [Tables_in_db_ecommerce] => element_translations
+        )
+
+    [43] => stdClass Object
+        (
+            [Tables_in_db_ecommerce] => element_types
+        )
+
+    [44] => stdClass Object
+        (
+            [Tables_in_db_ecommerce] => elements
+        )
+
+    [45] => stdClass Object
+        (
+            [Tables_in_db_ecommerce] => email_templates
+        )
+
+    [46] => stdClass Object
+        (
+            [Tables_in_db_ecommerce] => employee_payouts
+        )
+
+    [47] => stdClass Object
+        (
+            [Tables_in_db_ecommerce] => firebase_notifications
+        )
+
+    [48] => stdClass Object
+        (
+            [Tables_in_db_ecommerce] => flash_deal_products
+        )
+
+    [49] => stdClass Object
+        (
+            [Tables_in_db_ecommerce] => flash_deal_translations
+        )
+
+    [50] => stdClass Object
+        (
+            [Tables_in_db_ecommerce] => flash_deals
+        )
+
+    [51] => stdClass Object
+        (
+            [Tables_in_db_ecommerce] => follow_sellers
+        )
+
+    [52] => stdClass Object
+        (
+            [Tables_in_db_ecommerce] => franchise_employees
+        )
+
+    [53] => stdClass Object
+        (
+            [Tables_in_db_ecommerce] => franchise_package_translations
+        )
+
+    [54] => stdClass Object
+        (
+            [Tables_in_db_ecommerce] => franchise_packages
+        )
+
+    [55] => stdClass Object
+        (
+            [Tables_in_db_ecommerce] => franchises
+        )
+
+    [56] => stdClass Object
+        (
+            [Tables_in_db_ecommerce] => frequently_bought_products
+        )
+
+    [57] => stdClass Object
+        (
+            [Tables_in_db_ecommerce] => home_categories
+        )
+
+    [58] => stdClass Object
+        (
+            [Tables_in_db_ecommerce] => languages
+        )
+
+    [59] => stdClass Object
+        (
+            [Tables_in_db_ecommerce] => last_viewed_products
+        )
+
+    [60] => stdClass Object
+        (
+            [Tables_in_db_ecommerce] => measurement_points
+        )
+
+    [61] => stdClass Object
+        (
+            [Tables_in_db_ecommerce] => messages
+        )
+
+    [62] => stdClass Object
+        (
+            [Tables_in_db_ecommerce] => migrations
+        )
+
+    [63] => stdClass Object
+        (
+            [Tables_in_db_ecommerce] => model_has_permissions
+        )
+
+    [64] => stdClass Object
+        (
+            [Tables_in_db_ecommerce] => model_has_roles
+        )
+
+    [65] => stdClass Object
+        (
+            [Tables_in_db_ecommerce] => note_translations
+        )
+
+    [66] => stdClass Object
+        (
+            [Tables_in_db_ecommerce] => notes
+        )
+
+    [67] => stdClass Object
+        (
+            [Tables_in_db_ecommerce] => notification_type_translations
+        )
+
+    [68] => stdClass Object
+        (
+            [Tables_in_db_ecommerce] => notification_types
+        )
+
+    [69] => stdClass Object
+        (
+            [Tables_in_db_ecommerce] => notifications
+        )
+
+    [70] => stdClass Object
+        (
+            [Tables_in_db_ecommerce] => order_details
+        )
+
+    [71] => stdClass Object
+        (
+            [Tables_in_db_ecommerce] => orders
+        )
+
+    [72] => stdClass Object
+        (
+            [Tables_in_db_ecommerce] => page_translations
+        )
+
+    [73] => stdClass Object
+        (
+            [Tables_in_db_ecommerce] => pages
+        )
+
+    [74] => stdClass Object
+        (
+            [Tables_in_db_ecommerce] => password_resets
+        )
+
+    [75] => stdClass Object
+        (
+            [Tables_in_db_ecommerce] => payku_payments
+        )
+
+    [76] => stdClass Object
+        (
+            [Tables_in_db_ecommerce] => payku_transactions
+        )
+
+    [77] => stdClass Object
+        (
+            [Tables_in_db_ecommerce] => payment_methods
+        )
+
+    [78] => stdClass Object
+        (
+            [Tables_in_db_ecommerce] => payments
+        )
+
+    [79] => stdClass Object
+        (
+            [Tables_in_db_ecommerce] => permissions
+        )
+
+    [80] => stdClass Object
+        (
+            [Tables_in_db_ecommerce] => personal_access_tokens
+        )
+
+    [81] => stdClass Object
+        (
+            [Tables_in_db_ecommerce] => pickup_addresses
+        )
+
+    [82] => stdClass Object
+        (
+            [Tables_in_db_ecommerce] => pickup_point_translations
+        )
+
+    [83] => stdClass Object
+        (
+            [Tables_in_db_ecommerce] => pickup_points
+        )
+
+    [84] => stdClass Object
+        (
+            [Tables_in_db_ecommerce] => product_categories
+        )
+
+    [85] => stdClass Object
+        (
+            [Tables_in_db_ecommerce] => product_queries
+        )
+
+    [86] => stdClass Object
+        (
+            [Tables_in_db_ecommerce] => product_stocks
+        )
+
+    [87] => stdClass Object
+        (
+            [Tables_in_db_ecommerce] => product_taxes
+        )
+
+    [88] => stdClass Object
+        (
+            [Tables_in_db_ecommerce] => product_translations
+        )
+
+    [89] => stdClass Object
+        (
+            [Tables_in_db_ecommerce] => products
+        )
+
+    [90] => stdClass Object
+        (
+            [Tables_in_db_ecommerce] => proxypay_payments
+        )
+
+    [91] => stdClass Object
+        (
+            [Tables_in_db_ecommerce] => registration_verification_codes
+        )
+
+    [92] => stdClass Object
+        (
+            [Tables_in_db_ecommerce] => reviews
+        )
+
+    [93] => stdClass Object
+        (
+            [Tables_in_db_ecommerce] => role_has_permissions
+        )
+
+    [94] => stdClass Object
+        (
+            [Tables_in_db_ecommerce] => role_translations
+        )
+
+    [95] => stdClass Object
+        (
+            [Tables_in_db_ecommerce] => roles
+        )
+
+    [96] => stdClass Object
+        (
+            [Tables_in_db_ecommerce] => searches
+        )
+
+    [97] => stdClass Object
+        (
+            [Tables_in_db_ecommerce] => seller_categories
+        )
+
+    [98] => stdClass Object
+        (
+            [Tables_in_db_ecommerce] => seller_withdraw_requests
+        )
+
+    [99] => stdClass Object
+        (
+            [Tables_in_db_ecommerce] => sellers
+        )
+
+    [100] => stdClass Object
+        (
+            [Tables_in_db_ecommerce] => shipping_box_sizes
+        )
+
+    [101] => stdClass Object
+        (
+            [Tables_in_db_ecommerce] => shipping_systems
+        )
+
+    [102] => stdClass Object
+        (
+            [Tables_in_db_ecommerce] => shops
+        )
+
+    [103] => stdClass Object
+        (
+            [Tables_in_db_ecommerce] => size_chart_details
+        )
+
+    [104] => stdClass Object
+        (
+            [Tables_in_db_ecommerce] => size_charts
+        )
+
+    [105] => stdClass Object
+        (
+            [Tables_in_db_ecommerce] => social_credentials
+        )
+
+    [106] => stdClass Object
+        (
+            [Tables_in_db_ecommerce] => staff
+        )
+
+    [107] => stdClass Object
+        (
+            [Tables_in_db_ecommerce] => states
+        )
+
+    [108] => stdClass Object
+        (
+            [Tables_in_db_ecommerce] => sub_franchises
+        )
+
+    [109] => stdClass Object
+        (
+            [Tables_in_db_ecommerce] => subscribers
+        )
+
+    [110] => stdClass Object
+        (
+            [Tables_in_db_ecommerce] => taxes
+        )
+
+    [111] => stdClass Object
+        (
+            [Tables_in_db_ecommerce] => ticket_replies
+        )
+
+    [112] => stdClass Object
+        (
+            [Tables_in_db_ecommerce] => tickets
+        )
+
+    [113] => stdClass Object
+        (
+            [Tables_in_db_ecommerce] => top_banner_translations
+        )
+
+    [114] => stdClass Object
+        (
+            [Tables_in_db_ecommerce] => top_banners
+        )
+
+    [115] => stdClass Object
+        (
+            [Tables_in_db_ecommerce] => transactions
+        )
+
+    [116] => stdClass Object
+        (
+            [Tables_in_db_ecommerce] => translations
+        )
+
+    [117] => stdClass Object
+        (
+            [Tables_in_db_ecommerce] => uploads
+        )
+
+    [118] => stdClass Object
+        (
+            [Tables_in_db_ecommerce] => user_coupons
+        )
+
+    [119] => stdClass Object
+        (
+            [Tables_in_db_ecommerce] => users
+        )
+
+    [120] => stdClass Object
+        (
+            [Tables_in_db_ecommerce] => vendor_commission_histories
+        )
+
+    [121] => stdClass Object
+        (
+            [Tables_in_db_ecommerce] => vendors
+        )
+
+    [122] => stdClass Object
+        (
+            [Tables_in_db_ecommerce] => wallets
+        )
+
+    [123] => stdClass Object
+        (
+            [Tables_in_db_ecommerce] => warranties
+        )
+
+    [124] => stdClass Object
+        (
+            [Tables_in_db_ecommerce] => warranty_translations
+        )
+
+    [125] => stdClass Object
+        (
+            [Tables_in_db_ecommerce] => wishlists
+        )
+
+    [126] => stdClass Object
+        (
+            [Tables_in_db_ecommerce] => zones
+        )
+
+)

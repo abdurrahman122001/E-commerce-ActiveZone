@@ -24,6 +24,14 @@ class IsUser
                 Auth::user()->user_type == 'sub_franchise' || 
                 Auth::user()->user_type == 'delivery_boy') ) {
             
+            if (Auth::user()->user_type == 'delivery_boy') {
+                if (Auth::user()->delivery_boy && Auth::user()->delivery_boy->status == 1) {
+                    return $next($request);
+                } else {
+                    return redirect()->route('delivery_boy.pending');
+                }
+            }
+            
             return $next($request);
         }
         else{
