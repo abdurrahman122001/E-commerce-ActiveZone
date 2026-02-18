@@ -52,6 +52,16 @@ class ResetPasswordController extends Controller
             return redirect()->route('admin.dashboard')
                             ->with('status', trans($response));
         }
+        elseif(auth()->user()->user_type == 'delivery_boy')
+        {
+            return redirect()->route('delivery_boy.dashboard')
+                            ->with('status', trans($response));
+        }
+        elseif(in_array(auth()->user()->user_type, ['franchise', 'sub_franchise']))
+        {
+             return redirect()->route('franchise.dashboard')
+                            ->with('status', trans($response));
+        }
 
         return redirect()->route('home')
                             ->with('status', trans($response));

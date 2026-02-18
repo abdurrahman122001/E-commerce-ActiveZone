@@ -2,8 +2,8 @@
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
 	<meta name="csrf-token" content="{{ csrf_token() }}">
-	<meta name="app-url" content="{{ get_base_url() }}">
-	<meta name="file-base-url" content="{{ get_base_url() }}/public/">
+	<meta name="app-url" content="{{ url('/') }}">
+	<meta name="file-base-url" content="{{ url('/') }}/public/">
 
 	<!-- Required meta tags -->
 	<meta charset="utf-8">

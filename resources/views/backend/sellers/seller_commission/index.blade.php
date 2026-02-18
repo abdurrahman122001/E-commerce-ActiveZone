@@ -103,6 +103,58 @@
             </div>
         @endif
 
+        <div class="col-lg-8 mx-auto">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0 h6">{{translate('Franchise Commission Settings')}}</h5>
+                </div>
+                <div class="card-body">
+                    <form class="form-horizontal" action="{{ route('business_settings.update') }}" method="POST" enctype="multipart/form-data">
+                        @csrf
+                        <div class="form-group row">
+                            <label class="col-md-8 col-from-label">{{translate('Franchise Commission on Subfranchise Package Purchase')}}</label>
+                            <div class="col-md-4">
+                                <input type="hidden" name="types[]" value="franchise_commission_on_package">
+                                <div class="input-group">
+                                    <input type="number" lang="en" min="0" step="0.01" value="{{ get_setting('franchise_commission_on_package') }}" placeholder="0" name="franchise_commission_on_package" class="form-control">
+                                    <div class="input-group-append">
+                                        <span class="input-group-text">%</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                         <div class="form-group row">
+                            <label class="col-md-8 col-from-label">{{translate('Franchise Commission on Vendor Sales')}}</label>
+                            <div class="col-md-4">
+                                <input type="hidden" name="types[]" value="franchise_commission_on_vendor_sales">
+                                <div class="input-group">
+                                    <input type="number" lang="en" min="0" step="0.01" value="{{ get_setting('franchise_commission_on_vendor_sales') }}" placeholder="0" name="franchise_commission_on_vendor_sales" class="form-control">
+                                    <div class="input-group-append">
+                                        <span class="input-group-text">%</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-md-8 col-from-label">{{translate('Subfranchise Commission on Vendor Sales')}}</label>
+                            <div class="col-md-4">
+                                <input type="hidden" name="types[]" value="subfranchise_commission_on_vendor_sales">
+                                <div class="input-group">
+                                    <input type="number" lang="en" min="0" step="0.01" value="{{ get_setting('subfranchise_commission_on_vendor_sales') }}" placeholder="0" name="subfranchise_commission_on_vendor_sales" class="form-control">
+                                    <div class="input-group-append">
+                                        <span class="input-group-text">%</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group mb-0 text-right">
+                            <button type="submit" class="btn btn-sm btn-primary">{{translate('Save')}}</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
       
         <div class="col-lg-8 mx-auto">
             <div class="card">

@@ -36,6 +36,19 @@ Route::group(['prefix' =>'admin', 'middleware' => ['auth', 'admin', 'prevent-bac
     });
 });
 
+Route::group(['middleware' => ['auth', 'prevent-back-history']], function() {
+    Route::get('/delivery-boy/pending', function () {
+        if (auth()->user() && auth()->user()->user_type == 'delivery_boy') {
+            // If approved, redirect to dashboard
+            if (auth()->user()->delivery_boy && auth()->user()->delivery_boy->status == 1) {
+                return redirect()->route('delivery_boy.dashboard');
+            }
+            return view('delivery_boy.pending');
+        }
+        return redirect()->route('home');
+    })->name('delivery_boy.pending');
+});
+
 Route::group(['middleware' => ['user', 'verified', 'unbanned', 'prevent-back-history']], function() {
     Route::get('/delivery-boy/dashboard', [\App\Http\Controllers\DeliveryBoy\DeliveryBoyController::class, 'index'])->name('delivery_boy.dashboard');
     Route::controller(\App\Http\Controllers\DeliveryBoy\DeliveryBoyController::class)->group(function () {
@@ -57,9 +70,9 @@ Route::group(['middleware' => ['user', 'verified', 'unbanned', 'prevent-back-his
 
     Route::controller(\App\Http\Controllers\DeliveryBoy\DeliveryBoyController::class)->group(function () {
         Route::get('/delivery-boy/order-detail/{id}', 'order_detail')->name('delivery-boy.order-detail');
-        Route::get('/delivery-boy/pending', function () {
-            return view('delivery_boy.pending');
-        })->name('delivery_boy.pending');
+        Route::get('/delivery-boy/wallet', 'wallet')->name('delivery-boy.wallet');
+        Route::get('/delivery-boy/profile', 'profile')->name('delivery-boy.profile');
+        Route::post('/delivery-boy/profile/update', 'profile_update')->name('delivery-boy.profile.update');
     });
     
 });

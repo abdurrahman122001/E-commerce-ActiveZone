@@ -92,10 +92,10 @@
                         <div class="col">
                             <p class="small text-muted mb-0">
                                 <span class="fe fe-arrow-down fe-12"></span>
-                                <span class="fs-14 text-light">{{ translate('Products') }}</span>
+                                <span class="fs-14 text-light">{{ translate('Total Subfranchise') }}</span>
                             </p>
                             <h3 class="mb-0 text-white fs-30">
-                                {{ $total_products }}
+                                {{ $total_subfranchises }}
                             </h3>
 
                         </div>
@@ -118,33 +118,14 @@
                         <div class="col">
                             <p class="small text-muted mb-0">
                                 <span class="fe fe-arrow-down fe-12"></span>
-                                <span class="fs-14 text-light">{{ translate('Rating') }}</span>
+                                <span class="fs-14 text-light">{{ translate('Total Employees') }}</span>
                             </p>
                             <h3 class="mb-0 text-white fs-30">
-                                {{ $authUser->shop?->rating ?? 0 }}
+                                {{ $total_employees }}
                             </h3>
                         </div>
                         <div class="col-auto text-right">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="64" height="61.143" viewBox="0 0 64 61.143">
-                                <path id="Path_57" data-name="Path 57"
-                                    d="M63.286,22.145a2.821,2.821,0,0,0-1.816-.926L43.958,19.455a2.816,2.816,0,0,1-2.294-1.666L34.574,1.68a2.813,2.813,0,0,0-5.148,0l-7.09,16.11a2.813,2.813,0,0,1-2.292,1.666L2.53,21.219a2.813,2.813,0,0,0-1.59,4.9l13.13,11.72a2.818,2.818,0,0,1,.876,2.7l-3.734,17.2a2.812,2.812,0,0,0,4.166,3.026L30.584,51.9a2.8,2.8,0,0,1,2.832,0l15.206,8.864a2.813,2.813,0,0,0,4.166-3.026l-3.734-17.2a2.818,2.818,0,0,1,.876-2.7l13.13-11.72a2.813,2.813,0,0,0,.226-3.972m-1.5,2.546L48.658,36.413a4.717,4.717,0,0,0-1.47,4.524l3.732,17.2a.9.9,0,0,1-1.336.97l-15.2-8.866a4.729,4.729,0,0,0-4.758,0L14.416,59.109a.9.9,0,0,1-1.336-.97l3.732-17.2a4.717,4.717,0,0,0-1.47-4.524L2.212,24.691a.9.9,0,0,1,.51-1.57l17.512-1.766a4.721,4.721,0,0,0,3.85-2.8l7.09-16.11a.9.9,0,0,1,1.652,0l7.09,16.11a4.721,4.721,0,0,0,3.85,2.8l17.512,1.766a.9.9,0,0,1,.51,1.57"
-                                    transform="translate(0 0)" fill="#FFFFFF" />
-                            </svg>
-                        </div> 
-                    </div>
-                    <div class="d-flex justify-content-between mt-3">
-                        <div class="d-flex align-items-center pt-1">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16">
-                                <g id="Group_38928" data-name="Group 38928" transform="translate(-9435 -1195)">
-                                    <g id="Layer_2" data-name="Layer 2" transform="translate(9435 1195)">
-                                        <g id="people">
-                                            <rect id="Rectangle_23088" data-name="Rectangle 23088" width="16" height="16" fill="#fff" opacity="0"/>
-                                            <path id="Path_45108" data-name="Path 45108" d="M6.667,8.333A2.667,2.667,0,1,0,4,5.667,2.667,2.667,0,0,0,6.667,8.333Zm0-4A1.333,1.333,0,1,1,5.333,5.667,1.333,1.333,0,0,1,6.667,4.333ZM12,9.667a2,2,0,1,0-2-2A2,2,0,0,0,12,9.667ZM12,7a.667.667,0,1,1-.667.667A.667.667,0,0,1,12,7Zm0,3.333a3.333,3.333,0,0,0-2.04.7A4.667,4.667,0,0,0,2,14.333a.667.667,0,1,0,1.333,0,3.333,3.333,0,0,1,6.667,0,.667.667,0,0,0,1.333,0A4.6,4.6,0,0,0,10.76,12.1,2,2,0,0,1,14,13.667a.667.667,0,1,0,1.333,0A3.333,3.333,0,0,0,12,10.333Z" transform="translate(-0.667 -1)" fill="#fff"/>
-                                        </g>
-                                    </g>
-                                </g>
-                            </svg>
-                            <p class="fs-12 text-light my-2 ml-1">{{ translate('Followers').' '.($authUser->shop?->followers()->count() ?? 0) }}</p>
+                             <i class="las la-user-friends la-3x text-white"></i>
                         </div>
                     </div>
                 </div>
@@ -157,10 +138,10 @@
                         <div class="col">
                             <p class="small text-muted mb-0">
                                 <span class="fe fe-arrow-down fe-12"></span>
-                                <span class="fs-14 text-light">{{ translate('Total Order') }}</span>
+                                <span class="fs-14 text-light">{{ translate('Approved Subfranchise') }}</span>
                             </p>
                             <h3 class="mb-0 text-white fs-30">
-                                {{ $delivered_orders }}
+                                {{ $approved_subfranchises }}
                             </h3>
                         </div>
                         <div class="col-auto text-right">
@@ -215,75 +196,140 @@
             </div>
         </div>
         <div class="col-sm-6 col-md-6 col-xxl-3">
-            <div class="card shadow-none mb-4 bg-primary ">
+            <div class="card shadow-none mb-4 bg-primary">
                 <div class="card-body">
                     <div class="row align-items-center">
                         <div class="col">
                             <p class="small text-muted mb-0">
                                 <span class="fe fe-arrow-down fe-12"></span>
-                                <span class="fs-14 text-light">{{ translate('Total Sales') }}</span>
+                                <span class="fs-14 text-light">{{ translate('Unapproved Subfranchise') }}</span>
                             </p>
                             <h3 class="mb-0 text-white fs-30">
-                                {{ single_price($total_sales) }}
+                                {{ $unapproved_subfranchises }}
                             </h3>
-
                         </div>
                         <div class="col-auto text-right">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64.001" viewBox="0 0 64 64.001">
-                                <g id="Group_26" data-name="Group 26" transform="translate(-1571.385 1123.29)">
-                                    <line id="Line_5" data-name="Line 5" transform="translate(1572.385 -1123.29)"
-                                        fill="none" stroke="red" stroke-linecap="round" stroke-linejoin="round"
-                                        stroke-width="0.142" />
-                                    <path id="Path_67" data-name="Path 67"
-                                        d="M214.771,65.71a2,2,0,0,1-2-2v-59a1,1,0,0,0-2,0v59a4,4,0,0,0,4,4h59a1,1,0,0,0,0-2Z"
-                                        transform="translate(1360.615 -1127)" fill="#FFFFFF" />
-                                    <line id="Line_6" data-name="Line 6" y1="0.136" x2="0.136"
-                                        transform="translate(1586.533 -1087.117)" fill="none" stroke="red"
-                                        stroke-linecap="round" stroke-linejoin="round" stroke-width="0.142" />
-                                    <path id="Path_68" data-name="Path 68"
-                                        d="M264.6,10.027a3,3,0,0,0-4,4L247.536,27.1a2.994,2.994,0,0,0-2.594,0l-6.584-6.584a3,3,0,1,0-5.414,0L221.528,31.927a3,3,0,1,0,1.412,1.418l11.418-11.418a3,3,0,0,0,2.586,0l6.586,6.586a3,3,0,1,0,5.418,0l13.072-13.07a3,3,0,0,0,2.584-5.416M220.23,35.633a1,1,0,1,1,1-1,1,1,0,0,1-1,1m15.42-15.414a1,1,0,1,1,1-1,1,1,0,0,1-1,1M246.238,30.8a1,1,0,1,1,1-1,1,1,0,0,1-1,1m17.074-17.066a1,1,0,1,1,1-1,1,1,0,0,1-1,1"
-                                        transform="translate(1367.074 -1120.976)" fill="#FFFFFF" />
-                                </g>
-                            </svg>
+                            <i class="las la-user-times la-3x text-white"></i>
                         </div>
                     </div>
-                    <div class="d-flex justify-content-between mt-3">
-                        <div class="d-flex align-items-center">
-                            <p class="fs-12 text-light my-2 ml-1"> {{ translate('Last Month') }}: {{ single_price($previous_month_sold_amount) }}</p>
-                        </div>
-                     </div>
                 </div>
             </div>
         </div>
 
         <!-- Employees Card -->
         <div class="col-sm-6 col-md-6 col-xxl-3">
-            <div class="card shadow-none mb-4 bg-success">
+            <div class="card shadow-none mb-4 bg-primary">
                 <div class="card-body">
                     <div class="row align-items-center">
                         <div class="col">
                             <p class="small text-muted mb-0">
                                 <span class="fe fe-arrow-down fe-12"></span>
-                                <span class="fs-14 text-light">{{ translate('Total Employees') }}</span>
+                                <span class="fs-14 text-light">{{ translate('Total Vendors') }}</span>
                             </p>
                             <h3 class="mb-0 text-white fs-30">
-                                {{ $total_employees }}
+                                {{ $total_vendors }}
                             </h3>
                         </div>
                         <div class="col-auto text-right">
-                            <i class="las la-user-friends la-3x text-white"></i>
+                            <i class="las la-store la-3x text-white"></i>
                         </div>
                     </div>
-                    @if($status == 'approved')
-                     <div class="d-flex justify-content-between mt-3">
-                        <a href="{{ route('franchise.employees.index') }}">
-                        <div class="d-flex align-items-center">
-                            <i class="las la-eye la-1x text-white"></i>
-                            <p class="fs-12 text-light my-2 ml-1">{{ translate('Manage Employees') }}</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-sm-6 col-md-6 col-xxl-3">
+            <div class="card shadow-none mb-4 bg-primary">
+                <div class="card-body">
+                    <div class="row align-items-center">
+                        <div class="col">
+                            <p class="small text-muted mb-0">
+                                <span class="fe fe-arrow-down fe-12"></span>
+                                <span class="fs-14 text-light">{{ translate('Total Delivery Boy') }}</span>
+                            </p>
+                            <h3 class="mb-0 text-white fs-30">
+                                {{ $total_delivery_boys }}
+                            </h3>
                         </div>
-                        </a>
-                     </div>
-                    @endif
+                        <div class="col-auto text-right">
+                            <i class="las la-biking la-3x text-white"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+        <div class="col-12 d-flex justify-content-between align-items-center mb-3">
+            <h5 class="text-primary mb-0">{{ translate('Earnings from Subfranchise') }}</h5>
+            <a href="{{ route('franchise.vendors.commission_history') }}" class="btn btn-sm btn-soft-primary">{{ translate('View History') }}</a>
+        </div>
+
+        <div class="col-sm-6 col-md-6 col-xxl-3">
+            <div class="card shadow-none mb-4 bg-soft-primary">
+                <div class="card-body">
+                    <div class="row align-items-center">
+                        <div class="col">
+                            <p class="small text-muted mb-0">
+                                <span class="fs-14 text-primary">{{ translate('Daily Earning') }}</span>
+                            </p>
+                            <h3 class="mb-0 text-primary fs-30">
+                                {{ single_price($subfranchise_earnings_daily) }}
+                            </h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-sm-6 col-md-6 col-xxl-3">
+            <div class="card shadow-none mb-4 bg-soft-primary">
+                <div class="card-body">
+                    <div class="row align-items-center">
+                        <div class="col">
+                            <p class="small text-muted mb-0">
+                                <span class="fs-14 text-primary">{{ translate('Weekly Earning') }}</span>
+                            </p>
+                            <h3 class="mb-0 text-primary fs-30">
+                                {{ single_price($subfranchise_earnings_weekly) }}
+                            </h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-sm-6 col-md-6 col-xxl-3">
+            <div class="card shadow-none mb-4 bg-soft-primary">
+                <div class="card-body">
+                    <div class="row align-items-center">
+                        <div class="col">
+                            <p class="small text-muted mb-0">
+                                <span class="fs-14 text-primary">{{ translate('Monthly Earning') }}</span>
+                            </p>
+                            <h3 class="mb-0 text-primary fs-30">
+                                {{ single_price($subfranchise_earnings_monthly) }}
+                            </h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-sm-6 col-md-6 col-xxl-3">
+            <div class="card shadow-none mb-4 bg-soft-primary">
+                <div class="card-body">
+                    <div class="row align-items-center">
+                        <div class="col">
+                            <p class="small text-muted mb-0">
+                                <span class="fs-14 text-primary">{{ translate('Yearly Earning') }}</span>
+                            </p>
+                            <h3 class="mb-0 text-primary fs-30">
+                                {{ single_price($subfranchise_earnings_yearly) }}
+                            </h3>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

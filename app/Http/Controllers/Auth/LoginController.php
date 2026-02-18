@@ -361,17 +361,23 @@ class LoginController extends Controller
                 'time' => now()->toDateTimeString(),
             ]);
             return redirect()->route('seller.dashboard');
-        } elseif (in_array($user->user_type, ['franchise', 'sub_franchise'])) {
-            \Log::info('Redirecting franchise/sub_franchise');
-            return redirect()->route('franchise.dashboard');
-        } else {
-            \Log::info('Redirecting to default dashboard');
-            if (session('link') != null) {
-                return redirect(session('link'));
+            } elseif (in_array($user->user_type, ['franchise', 'sub_franchise'])) {
+                \Log::info('Redirecting franchise/sub_franchise');
+                return redirect()->route('franchise.dashboard');
+            } elseif ($user->user_type == 'delivery_boy') {
+                if ($user->delivery_boy && $user->delivery_boy->status == 1) {
+                    return redirect()->route('delivery_boy.dashboard');
+                } else {
+                    return redirect()->route('delivery_boy.pending');
+                }
             } else {
-                return redirect()->route('dashboard');
+                \Log::info('Redirecting to default dashboard');
+                if (session('link') != null) {
+                    return redirect(session('link'));
+                } else {
+                    return redirect()->route('dashboard');
+                }
             }
-        }
     }
 
     /**

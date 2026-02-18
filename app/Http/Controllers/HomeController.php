@@ -290,7 +290,11 @@ class HomeController extends Controller
             }
             return view('frontend.user.customer.dashboard');
         } elseif (Auth::user()->user_type == 'delivery_boy') {
-            return view('delivery_boys.dashboard');
+            if (Auth::user()->delivery_boy && Auth::user()->delivery_boy->status == 1) {
+                return redirect()->route('delivery_boy.dashboard');
+            } else {
+                return redirect()->route('delivery_boy.pending');
+            }
         } elseif (in_array(Auth::user()->user_type, ['franchise', 'sub_franchise'])) {
             return redirect()->route('franchise.dashboard');
         } else {

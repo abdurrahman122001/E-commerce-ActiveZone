@@ -12,6 +12,9 @@ use App\Models\SubFranchise;
 use Auth;
 use Carbon\Carbon;
 use DB;
+use App\Models\Vendor;
+use App\Models\DeliveryBoy;
+use App\Models\VendorCommissionHistory;
 
 class DashboardController extends Controller
 {
@@ -113,6 +116,45 @@ class DashboardController extends Controller
             ->orderBy('total', 'desc')
             ->limit(3)
             ->get();
+
+        // New Metrics for Franchise Dashboard Request
+        $data['total_subfranchises'] = 0;
+        $data['approved_subfranchises'] = 0;
+        $data['unapproved_subfranchises'] = 0;
+        $data['total_vendors'] = 0;
+        $data['total_delivery_boys'] = 0;
+        $data['subfranchise_earnings_daily'] = 0;
+        $data['subfranchise_earnings_weekly'] = 0;
+        $data['subfranchise_earnings_monthly'] = 0;
+        $data['subfranchise_earnings_yearly'] = 0;
+
+        if ($user->user_type == 'franchise' && $user->franchise) {
+            $franchise_id = $user->franchise->id;
+
+            // Subfranchise Counts
+            $data['total_subfranchises'] = SubFranchise::where('franchise_id', $franchise_id)->count();
+            $data['approved_subfranchises'] = SubFranchise::where('franchise_id', $franchise_id)->where('status', 'approved')->count();
+            $data['unapproved_subfranchises'] = SubFranchise::where('franchise_id', $franchise_id)->where('status', '!=', 'approved')->count();
+
+            // Total Vendors (Direct + Subfranchise)
+            $direct_vendors = Vendor::where('franchise_id', $franchise_id)->count();
+            $sub_vendors = Vendor::whereIn('sub_franchise_id', function($q) use ($franchise_id){
+                $q->select('id')->from('sub_franchises')->where('franchise_id', $franchise_id);
+            })->count();
+            $data['total_vendors'] = $direct_vendors + $sub_vendors;
+
+            // Total Delivery Boys
+            $data['total_delivery_boys'] = DeliveryBoy::where('franchise_id', $franchise_id)->count();
+
+            // Earnings from Subfranchise
+            $earnings_query = VendorCommissionHistory::where('franchise_id', $franchise_id)
+                                ->whereNotNull('sub_franchise_id');
+
+            $data['subfranchise_earnings_daily'] = (clone $earnings_query)->whereDate('created_at', Carbon::today())->sum('commission_amount');
+            $data['subfranchise_earnings_weekly'] = (clone $earnings_query)->whereBetween('created_at', [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()])->sum('commission_amount');
+            $data['subfranchise_earnings_monthly'] = (clone $earnings_query)->whereMonth('created_at', Carbon::now()->month)->whereYear('created_at', Carbon::now()->year)->sum('commission_amount');
+            $data['subfranchise_earnings_yearly'] = (clone $earnings_query)->whereYear('created_at', Carbon::now()->year)->sum('commission_amount');
+        }
 
         return view('franchise.dashboard', $data);
     }

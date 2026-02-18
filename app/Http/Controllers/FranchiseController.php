@@ -285,7 +285,33 @@ class FranchiseController extends Controller
                  $franchise->user->save();
              }
          } else {
+
              $sub = SubFranchise::findOrFail($id);
+
+             if ($sub->status != 'approved') {
+                 if ($sub->franchise_id) {
+                     $commission_percentage = get_setting('franchise_commission_on_package');
+                     if ($commission_percentage > 0 && $sub->franchise_package) {
+                         $package_price = $sub->franchise_package->price;
+                         $commission_amount = ($package_price * $commission_percentage) / 100;
+
+                         $franchise = Franchise::find($sub->franchise_id);
+                         if ($franchise) {
+                             $franchise->balance += $commission_amount;
+                             $franchise->save();
+
+                             $history = new \App\Models\PackageCommissionHistory();
+                             $history->franchise_id = $franchise->id;
+                             $history->sub_franchise_id = $sub->id;
+                             $history->franchise_package_id = $sub->franchise_package_id;
+                             $history->amount = $commission_amount;
+                             $history->percentage = $commission_percentage;
+                             $history->save();
+                         }
+                     }
+                 }
+             }
+
              $sub->status = 'approved';
              $sub->save();
 

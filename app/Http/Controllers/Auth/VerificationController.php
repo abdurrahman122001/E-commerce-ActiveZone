@@ -52,9 +52,21 @@ class VerificationController extends Controller
     public function show(Request $request)
     {
         if ($request->user()->email != null) {
-            return $request->user()->hasVerifiedEmail()
-                            ? redirect($this->redirectPath())
-                            : view('auth.'.get_setting('authentication_layout_select').'.verify_email');
+            if ($request->user()->hasVerifiedEmail()) {
+                 if($request->user()->user_type == 'seller') {
+                    return redirect()->route('seller.dashboard');
+                } elseif ($request->user()->user_type == 'delivery_boy') {
+                    if ($request->user()->delivery_boy && $request->user()->delivery_boy->status == 1) {
+                        return redirect()->route('delivery_boy.dashboard');
+                    } else {
+                        return redirect()->route('delivery_boy.pending');
+                    }
+                } elseif (in_array($request->user()->user_type, ['franchise', 'sub_franchise'])) {
+                     return redirect()->route('franchise.dashboard');
+                }
+                return redirect($this->redirectPath());
+            }
+            return view('auth.'.get_setting('authentication_layout_select').'.verify_email');
         }
         else {
             $otpController = new OTPVerificationController;
@@ -96,6 +108,14 @@ class VerificationController extends Controller
 
         if($user->user_type == 'seller') {
             return redirect()->route('seller.dashboard');
+        } elseif ($user->user_type == 'delivery_boy') {
+            if ($user->delivery_boy && $user->delivery_boy->status == 1) {
+                return redirect()->route('delivery_boy.dashboard');
+            } else {
+                return redirect()->route('delivery_boy.pending');
+            }
+        } elseif (in_array($user->user_type, ['franchise', 'sub_franchise'])) {
+             return redirect()->route('franchise.dashboard');
         }
 
         return redirect()->route('dashboard');

@@ -14,7 +14,7 @@ class DeliveryBoyController extends Controller
 {
     public function __construct()
     {
-        $this->middleware(['auth', 'delivery_boy']);
+        $this->middleware(['auth']);
     }
 
     public function index()
@@ -143,5 +143,29 @@ class DeliveryBoyController extends Controller
     public function wallet()
     {
         return view('delivery_boy.wallet');
+    }
+
+    public function profile_update(Request $request)
+    {
+        $user = Auth::user();
+        $user->name = $request->name;
+        $user->phone = $request->phone;
+        $user->address = $request->address;
+        $user->save();
+
+        $delivery_boy = $user->delivery_boy;
+        if ($delivery_boy) {
+            $delivery_boy->vehicle_details = $request->vehicle_details;
+            $delivery_boy->id_proof = $request->id_proof;
+            $delivery_boy->driving_license = $request->driving_license;
+            $delivery_boy->bank_name = $request->bank_name;
+            $delivery_boy->holder_name = $request->holder_name;
+            $delivery_boy->bank_account_no = $request->bank_account_no;
+            $delivery_boy->bank_routing_no = $request->bank_routing_no;
+            $delivery_boy->save();
+        }
+
+        flash(translate('Profile updated successfully'))->success();
+        return back();
     }
 }
