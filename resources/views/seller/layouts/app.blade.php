@@ -77,9 +77,17 @@
 <body class="">
 
 	<div class="aiz-main-wrapper">
-        @include('seller.inc.seller_sidenav')
+        @if (Auth::user()->user_type == 'vendor')
+            @include('vendors.inc.vendor_sidenav')
+        @else
+            @include('seller.inc.seller_sidenav')
+        @endif
 		<div class="aiz-content-wrapper">
-            @include('seller.inc.seller_nav')
+            @if (Auth::user()->user_type == 'vendor')
+                @include('vendors.inc.vendor_nav')
+            @else
+                @include('seller.inc.seller_nav')
+            @endif
 			<div class="aiz-main-content">
 				<div class="px-15px px-lg-25px">
                     @yield('panel_content')

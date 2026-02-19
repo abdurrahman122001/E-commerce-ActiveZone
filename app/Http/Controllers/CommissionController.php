@@ -187,33 +187,29 @@ class CommissionController extends Controller
 
                         // Franchise Share
                         if ($vendor->franchise_id) {
-                            $franchise_percent = get_setting('franchise_commission_on_vendor_sales');
-                            if ($franchise_percent > 0) {
-                                 $franchise_amount = ($orderDetail->price * $franchise_percent) / 100;
-                                 $franchise = \App\Models\Franchise::find($vendor->franchise_id);
-                                 if ($franchise) {
+                            $franchise = \App\Models\Franchise::find($vendor->franchise_id);
+                            if ($franchise) {
+                                $franchise_percent = $franchise->commission_percentage > 0 ? $franchise->commission_percentage : get_setting('franchise_commission_on_vendor_sales');
+                                if ($franchise_percent > 0) {
+                                     $franchise_amount = ($orderDetail->price * $franchise_percent) / 100;
                                      $franchise->balance += $franchise_amount;
                                      $franchise->save();
-                                 }
+                                }
                             }
                         }
 
                         // Subfranchise Share
                         if ($vendor->sub_franchise_id) {
-                            $sub_percent = get_setting('subfranchise_commission_on_vendor_sales');
-                            if ($sub_percent > 0) {
-                                 $sub_amount = ($orderDetail->price * $sub_percent) / 100;
-                                 $sub_franchise = \App\Models\SubFranchise::find($vendor->sub_franchise_id);
-                                 if ($sub_franchise) {
+                            $sub_franchise = \App\Models\SubFranchise::find($vendor->sub_franchise_id);
+                            if ($sub_franchise) {
+                                $sub_percent = $sub_franchise->commission_percentage > 0 ? $sub_franchise->commission_percentage : get_setting('subfranchise_commission_on_vendor_sales');
+                                if ($sub_percent > 0) {
+                                     $sub_amount = ($orderDetail->price * $sub_percent) / 100;
                                      $sub_franchise->balance += $sub_amount;
                                      $sub_franchise->save();
                                      
                                      // If Subfranchise belongs to Franchise, we already handled Franchise Share above
                                      // because $vendor->franchise_id is set if $vendor->sub_franchise_id is set (usually).
-                                     // Check VendorController logic:
-                                     // $vendor->franchise_id = $employee->franchise_id;
-                                     // So $vendor->franchise_id IS the Parent Franchise of the Subfranchise.
-                                     // So no need to double pay.
                                 }
                             }
                         }

@@ -35,6 +35,7 @@
                     <th>{{translate('Status')}}</th>
                     <th>{{translate('ID Proof')}}</th>
                     <th>{{translate('PAN Number')}}</th>
+                    <th>{{translate('Commission (%)')}}</th>
                     <th class="text-right">{{translate('Options')}}</th>
                 </tr>
             </thead>
@@ -63,6 +64,7 @@
                             @endif
                         </td>
                         <td>{{ $franchise->pan_number }}</td>
+                        <td>{{ $franchise->commission_percentage }}</td>
                         <td class="text-right">
                              <div class="dropdown">
                                 <button type="button" class="btn btn-sm btn-circle btn-soft-primary btn-icon dropdown-toggle no-arrow" data-toggle="dropdown" href="javascript:void(0);" role="button" aria-haspopup="false" aria-expanded="false">
@@ -93,6 +95,10 @@
 
                                     <a href="{{route('admin.franchises.payment_history', encrypt($franchise->user_id))}}" class="dropdown-item">
                                         {{translate('Payment History')}}
+                                    </a>
+
+                                    <a href="javascript:void(0);" onclick="show_commission_modal('{{$franchise->id}}', '{{$franchise->commission_percentage}}');" class="dropdown-item">
+                                        {{translate('Set Commission')}}
                                     </a>
 
                                     <a href="{{route('admin.franchises.edit', $franchise->id)}}" class="dropdown-item">
@@ -167,6 +173,35 @@
             </div>
         </div>
     </div>
+    <div class="modal fade" id="commission_modal">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <form action="{{ route('admin.franchises.set_commission') }}" method="POST">
+                    @csrf
+                    <input type="hidden" name="id" id="franchise_id">
+                    <div class="modal-header">
+                        <h5 class="modal-title h6">{{ translate('Set Franchise Commission') }}</h5>
+                        <button type="button" class="close" data-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="commission_percentage">{{ translate('Commission Percentage') }}</label>
+                            <div class="input-group">
+                                <input type="number" step="0.01" min="0" max="100" name="commission_percentage" id="commission_percentage_input" class="form-control" placeholder="0" required>
+                                <div class="input-group-append">
+                                    <span class="input-group-text">%</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-light" data-dismiss="modal">{{ translate('Cancel') }}</button>
+                        <button type="submit" class="btn btn-primary">{{ translate('Save') }}</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
     @include('modals.delete_modal')
 @endsection
 
@@ -178,6 +213,12 @@
                 $('#payment_modal').modal('show', {backdrop: 'static'});
                 $('.demo-select2-placeholder').select2();
             });
+        }
+
+        function show_commission_modal(id, commission){
+            $('#franchise_id').val(id);
+            $('#commission_percentage_input').val(commission);
+            $('#commission_modal').modal('show');
         }
 
         // Ban

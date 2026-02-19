@@ -20,7 +20,8 @@ class Franchise extends Model
         'status',
         'balance',
         'franchise_package_id',
-        'pan_number'
+        'pan_number',
+        'commission_percentage'
     ];
 
     public function user()

@@ -604,4 +604,24 @@ class FranchiseController extends Controller
         
         return back();
     }
+
+    public function setSubFranchiseCommission(Request $request)
+    {
+        $sub = SubFranchise::findOrFail($request->id);
+        $sub->commission_percentage = $request->commission_percentage;
+        $sub->save();
+
+        flash(translate('Commission updated successfully'))->success();
+        return back();
+    }
+
+    public function setFranchiseCommission(Request $request)
+    {
+        $franchise = Franchise::findOrFail($request->id);
+        $franchise->commission_percentage = $request->commission_percentage;
+        $franchise->save();
+
+        flash(translate('Commission updated successfully'))->success();
+        return back();
+    }
 }
