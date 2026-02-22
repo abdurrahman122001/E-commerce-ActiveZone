@@ -115,7 +115,12 @@ class SubFranchiseController extends Controller
 
     public function login($id)
     {
-        $subFranchise = SubFranchise::findOrFail(decrypt($id));
+        try {
+            $sub_id = decrypt($id);
+        } catch (\Exception $e) {
+            $sub_id = $id;
+        }
+        $subFranchise = SubFranchise::findOrFail($sub_id);
         if ($subFranchise->franchise_id != Auth::user()->franchise->id) {
             flash(translate('Access denied.'))->error();
             return back();

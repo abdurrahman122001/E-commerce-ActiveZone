@@ -158,8 +158,29 @@ class FranchiseEmployeeController extends Controller
         $employee->status = 'rejected';
         $employee->is_active = 0;
         $employee->save();
-
+        
         flash(translate('Employee rejected successfully'))->success();
+        return back();
+    }
+
+    public function login($id)
+    {
+        try {
+            $employee_id = decrypt($id);
+        } catch (\Exception $e) {
+            $employee_id = $id;
+        }
+        $employee = FranchiseEmployee::findOrFail($employee_id);
+        
+        // Security check: Only Admin or the parent Franchise Owner can login
+        if (Auth::user()->user_type == 'admin' || 
+            (Auth::user()->user_type == 'franchise' && $employee->franchise_id == Auth::user()->franchise->id)) {
+            
+            Auth::guard('franchise_employee')->login($employee, true);
+            return redirect()->route('franchise.employee.dashboard');
+        }
+        
+        flash(translate('Access denied.'))->error();
         return back();
     }
 }

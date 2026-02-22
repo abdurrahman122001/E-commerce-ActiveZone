@@ -377,7 +377,12 @@ class SellerController extends Controller
         if (auth()->user()->user_type != 'franchise' && auth()->user()->user_type != 'sub_franchise' && !auth()->user()->can('login_as_seller')) {
             abort(403);
         }
-        $shop = Shop::findOrFail(decrypt($id));
+        try {
+            $id = decrypt($id);
+        } catch (\Exception $e) {
+            $id = $id;
+        }
+        $shop = Shop::where('id', $id)->orWhere('user_id', $id)->firstOrFail();
         $user  = $shop->user;
         auth()->login($user, true);
 
@@ -538,8 +543,19 @@ class SellerController extends Controller
         if (auth()->user()->user_type != 'franchise' && auth()->user()->user_type != 'sub_franchise' && !auth()->user()->can('view_seller_profile')) {
             abort(403);
         }
-        $shop_id = decrypt($request->id);
-        $shop = Shop::findOrFail($shop_id);
+
+        try {
+            $id = decrypt($request->id);
+        } catch (\Exception $e) {
+            $id = $request->id;
+        }
+
+        $shop = Shop::where('id', $id)->orWhere('user_id', $id)->first();
+        
+        if (!$shop) {
+            abort(404);
+        }
+
         $shop->last_login = $this->getsellerLastLogin($shop->user_id);
         $addresses = $shop->user->addresses->where('set_default', 0);
         $default_shipping_address = $shop->user->addresses()->where('set_default', 1)->first();

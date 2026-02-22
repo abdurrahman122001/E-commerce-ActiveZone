@@ -9,13 +9,43 @@ use App\Models\Vendor;
 
 class DashboardController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         $employee = Auth::guard('franchise_employee')->user();
-        $vendors_count = Vendor::where('added_by_employee_id', $employee->id)->count();
-        $vendors = Vendor::where('added_by_employee_id', $employee->id)->latest()->paginate(10);
         
-        return view('backend.franchise.employees.dashboard', compact('employee', 'vendors_count', 'vendors'));
+        // Registration Stats
+        $today = \Carbon\Carbon::today();
+        $this_week = [\Carbon\Carbon::now()->startOfWeek(), \Carbon\Carbon::now()->endOfWeek()];
+        $this_month = [\Carbon\Carbon::now()->startOfMonth(), \Carbon\Carbon::now()->endOfMonth()];
+        $this_year = [\Carbon\Carbon::now()->startOfYear(), \Carbon\Carbon::now()->endOfYear()];
+
+        $vendors_today = Vendor::where('added_by_employee_id', $employee->id)->whereDate('created_at', $today)->count();
+        $vendors_week = Vendor::where('added_by_employee_id', $employee->id)->whereBetween('created_at', $this_week)->count();
+        $vendors_month = Vendor::where('added_by_employee_id', $employee->id)->whereBetween('created_at', $this_month)->count();
+        $vendors_year = Vendor::where('added_by_employee_id', $employee->id)->whereBetween('created_at', $this_year)->count();
+
+        // Main List with Filters
+        $vendors_query = Vendor::where('added_by_employee_id', $employee->id);
+        
+        $date_range = $request->date_range;
+        if ($date_range) {
+            $dates = explode(' to ', $date_range);
+            $start_date = date('Y-m-d 00:00:00', strtotime($dates[0]));
+            if (isset($dates[1])) {
+                $end_date = date('Y-m-d 23:59:59', strtotime($dates[1]));
+            } else {
+                $end_date = date('Y-m-d 23:59:59', strtotime($dates[0]));
+            }
+            $vendors_query->whereBetween('created_at', [$start_date, $end_date]);
+        }
+
+        $vendors_count = Vendor::where('added_by_employee_id', $employee->id)->count(); // Keep total count separate
+        $vendors = $vendors_query->latest()->paginate(10);
+        
+        return view('backend.franchise.employees.dashboard', compact(
+            'employee', 'vendors_today', 'vendors_week', 'vendors_month', 'vendors_year', 
+            'vendors_count', 'vendors', 'date_range'
+        ));
     }
 
     public function payouts()

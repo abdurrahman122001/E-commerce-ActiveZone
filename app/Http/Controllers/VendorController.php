@@ -254,7 +254,12 @@ class VendorController extends Controller
 
     public function edit($id)
     {
-        $vendor = Vendor::findOrFail(decrypt($id));
+        try {
+            $vendor_id = decrypt($id);
+        } catch (\Exception $e) {
+            $vendor_id = $id;
+        }
+        $vendor = Vendor::findOrFail($vendor_id);
         $user = Auth::user();
         
         $layout = 'vendors.layouts.app';

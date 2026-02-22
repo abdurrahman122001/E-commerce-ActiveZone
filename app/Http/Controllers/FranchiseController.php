@@ -456,7 +456,12 @@ class FranchiseController extends Controller
 
     public function login($id)
     {
-        $user = User::findOrFail(decrypt($id));
+        try {
+            $user_id = decrypt($id);
+        } catch (\Exception $e) {
+            $user_id = $id;
+        }
+        $user = User::findOrFail($user_id);
         Auth::login($user, true);
         return redirect()->route('franchise.dashboard');
     }

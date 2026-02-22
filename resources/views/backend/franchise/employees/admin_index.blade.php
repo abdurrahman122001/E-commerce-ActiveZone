@@ -79,6 +79,9 @@
                             <a href="javascript:void(0);" onclick="show_payout_modal('{{$employee->id}}');" class="btn btn-soft-success btn-icon btn-circle btn-sm" title="{{ translate('Pay Salary/Bonus') }}">
                                 <i class="las la-money-bill-wave"></i>
                             </a>
+                            <a href="{{route('admin.franchise_employees.login', encrypt($employee->id))}}" class="btn btn-soft-info btn-icon btn-circle btn-sm" title="{{ translate('Login as this Employee') }}">
+                                <i class="las la-sign-in-alt"></i>
+                            </a>
                             <a href="{{route('admin.franchise_employees.payout_history', encrypt($employee->id))}}" class="btn btn-soft-primary btn-icon btn-circle btn-sm" title="{{ translate('Payout History') }}">
                                 <i class="las la-history"></i>
                             </a>
