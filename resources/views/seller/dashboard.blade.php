@@ -12,6 +12,12 @@
             <div class="col-md-6">
                 <h1 class="h3 text-primary">{{ translate('Dashboard') }}</h1>
             </div>
+            <div class="col-md-6 text-md-right">
+                <div class="d-inline-block p-3 rounded bg-soft-primary border border-primary">
+                    <span class="text-primary fs-12 d-block fw-600 uppercase">{{ translate('Wallet Balance') }}</span>
+                    <h3 class="text-primary mb-0 fw-700">{{ single_price($vendor_balance ?? 0) }}</h3>
+                </div>
+            </div>
             @endif
         </div>
     </div>
@@ -667,11 +673,57 @@
                             </div>
                         </div>
                     </div>
-                @endforeach
-            </div>
+    <div class="card mt-4">
+        <div class="card-header border-bottom-0">
+            <h6 class="mb-0 fw-600">{{ translate('Recent Product Sales') }}</h6>
+        </div>
+        <div class="card-body">
+            <table class="table aiz-table mb-0">
+                <thead>
+                    <tr>
+                        <th data-breakpoints="lg">#</th>
+                        <th>{{ translate('Product') }}</th>
+                        <th data-breakpoints="lg">{{ translate('Category') }}</th>
+                        <th>{{ translate('Quantity') }}</th>
+                        <th>{{ translate('Total Price') }}</th>
+                        <th data-breakpoints="lg">{{ translate('Date') }}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @php
+                        $recent_sales = \App\Models\OrderDetail::where('seller_id', $authUser->id)
+                            ->where('delivery_status', 'delivered')
+                            ->latest()
+                            ->limit(10)
+                            ->get();
+                    @endphp
+                    @forelse ($recent_sales as $key => $sale)
+                        <tr>
+                            <td>{{ $key + 1 }}</td>
+                            <td>
+                                @if($sale->product)
+                                    <div class="d-flex align-items-center text-reset">
+                                        <img src="{{ uploaded_asset($sale->product->thumbnail_img) }}" alt="" class="size-40px mr-2">
+                                        <span class="text-truncate-2">{{ $sale->product->getTranslation('name') }}</span>
+                                    </div>
+                                @else
+                                    {{ translate('Product Removed') }}
+                                @endif
+                            </td>
+                            <td>{{ $sale->product->category->name ?? translate('N/A') }}</td>
+                            <td>{{ $sale->quantity }}</td>
+                            <td>{{ single_price($sale->price) }}</td>
+                            <td>{{ $sale->created_at->format('d-m-Y') }}</td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="6" class="text-center">{{ translate('No recent sales found.') }}</td>
+                        </tr>
+                    @endforelse
+                </tbody>
+            </table>
         </div>
     </div>
-
 @endsection
 
 @section('modal')

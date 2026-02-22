@@ -22,6 +22,19 @@
 
 @if(Auth::guard('franchise_employee')->user()->status == 'approved')
     <div class="row gutters-10">
+        <div class="col-md-12 mb-4">
+            <div class="card bg-grad-3 text-white">
+                <div class="card-body">
+                    <div class="d-flex align-items-center justify-content-between">
+                        <div>
+                            <span class="fs-14 d-block opacity-60">{{ translate('My Total Earnings') }}</span>
+                            <h2 class="fw-700 mb-0">{{ single_price($employee->balance) }}</h2>
+                        </div>
+                        <i class="las la-money-bill-wave la-3x opacity-20"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
         <div class="col-md-3">
             <div class="bg-grad-1 text-white rounded-lg mb-4 overflow-hidden">
                 <div class="px-3 pt-3">
@@ -124,8 +137,55 @@
                     @endforeach
                 </tbody>
             </table>
-            <div class="aiz-pagination">
+            <div class="aiz-pagination mt-3">
                 {{ $vendors->links() }}
+            </div>
+        </div>
+    </div>
+
+    <div class="card mt-4">
+        <div class="card-header border-bottom-0">
+            <h5 class="mb-md-0 h6">{{ translate('Sales from My Vendors') }}</h5>
+        </div>
+        <div class="card-body">
+            <table class="table aiz-table mb-0">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>{{ translate('Vendor') }}</th>
+                        <th>{{ translate('Product') }}</th>
+                        <th>{{ translate('Sale Price') }}</th>
+                        <th>{{ translate('My Commission') }}</th>
+                        <th>{{ translate('Date') }}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @php
+                        $my_vendor_ids = \App\Models\Vendor::where('added_by_employee_id', $employee->id)->pluck('id');
+                        $sales = \App\Models\VendorCommissionHistory::whereIn('vendor_id', $my_vendor_ids)
+                            ->latest()
+                            ->paginate(10, ['*'], 'sales_page');
+                        
+                        $employee_percent = $employee->commission_percentage;
+                    @endphp
+                    @forelse ($sales as $key => $sale)
+                        <tr>
+                            <td>{{ ($key+1) + ($sales->currentPage() - 1)*$sales->perPage() }}</td>
+                            <td>{{ $sale->vendor->user->name ?? translate('N/A') }}</td>
+                            <td>{{ $sale->order_detail->product->getTranslation('name') ?? translate('N/A') }}</td>
+                            <td>{{ single_price($sale->order_detail->price) }}</td>
+                            <td>{{ single_price(($sale->order_detail->price * $employee_percent) / 100) }}</td>
+                            <td>{{ $sale->created_at->format('d-m-Y') }}</td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="6" class="text-center">{{ translate('No sales recorded from your vendors yet.') }}</td>
+                        </tr>
+                    @endforelse
+                </tbody>
+            </table>
+            <div class="aiz-pagination mt-3">
+                {{ $sales->appends(['sales_page' => $sales->currentPage()])->links() }}
             </div>
         </div>
     </div>

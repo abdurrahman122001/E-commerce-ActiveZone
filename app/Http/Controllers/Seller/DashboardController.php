@@ -54,6 +54,11 @@ class DashboardController extends Controller
                                 ->groupBy(DB::raw("DATE_FORMAT(created_at, '%Y-%m-%d')"))
                                 ->get()->pluck('total', 'date');  
 
+        $data['vendor_balance'] = 0;
+        if (Auth::user()->vendor) {
+            $data['vendor_balance'] = Auth::user()->vendor->balance;
+        }
+
         return view('seller.dashboard', $data);
     }
 }

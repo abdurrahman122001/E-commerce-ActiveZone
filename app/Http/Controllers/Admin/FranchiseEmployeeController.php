@@ -183,4 +183,13 @@ class FranchiseEmployeeController extends Controller
         flash(translate('Access denied.'))->error();
         return back();
     }
+    
+    public function set_commission(Request $request)
+    {
+        $employee = FranchiseEmployee::findOrFail($request->id);
+        $employee->commission_percentage = $request->commission_percentage;
+        $employee->save();
+
+        return 1;
+    }
 }

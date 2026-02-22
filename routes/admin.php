@@ -679,6 +679,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin', 'prevent-ba
         Route::get('/franchise-employees/approve/{id}', 'approve')->name('admin.franchise_employees.approve');
         Route::get('/franchise-employees/reject/{id}', 'reject')->name('admin.franchise_employees.reject');
         Route::get('/franchise-employees/login/{id}', 'login')->name('admin.franchise_employees.login');
+        Route::post('/franchise-employees/set-commission', 'set_commission')->name('admin.franchise_employees.set_commission');
     });
 
 

@@ -82,6 +82,12 @@
             <div class="col-md-6">
                 <h1 class="h3 text-primary">{{ translate('Dashboard') }}</h1>
             </div>
+            <div class="col-md-6 text-md-right">
+                <div class="d-inline-block p-3 rounded bg-soft-primary border border-primary">
+                    <span class="text-primary fs-12 d-block fw-600 uppercase">{{ translate('Wallet Balance') }}</span>
+                    <h3 class="text-primary mb-0 fw-700">{{ single_price($balance ?? 0) }}</h3>
+                </div>
+            </div>
         </div>
     </div>
     <div class="row">

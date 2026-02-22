@@ -118,8 +118,8 @@ Route::group(['middleware' => ['vendor', 'user', 'prevent-back-history']], funct
         
         // Profile
         Route::controller(App\Http\Controllers\Vendor\ProfileController::class)->group(function () {
-            Route::get('/vendor/profile', 'index')->name('profile.index');
-            Route::post('/vendor/profile/update', 'update')->name('profile.update');
+            Route::get('/vendor/profile', 'index')->name('vendor.profile.index');
+            Route::post('/vendor/profile/update', 'update')->name('vendor.profile.update');
         });
     });
 

@@ -129,6 +129,7 @@ class DashboardController extends Controller
         $data['subfranchise_earnings_yearly'] = 0;
 
         if ($user->user_type == 'franchise' && $user->franchise) {
+            $data['balance'] = $user->franchise->balance;
             $franchise_id = $user->franchise->id;
 
             // Subfranchise Counts
@@ -154,6 +155,8 @@ class DashboardController extends Controller
             $data['subfranchise_earnings_weekly'] = (clone $earnings_query)->whereBetween('created_at', [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()])->sum('commission_amount');
             $data['subfranchise_earnings_monthly'] = (clone $earnings_query)->whereMonth('created_at', Carbon::now()->month)->whereYear('created_at', Carbon::now()->year)->sum('commission_amount');
             $data['subfranchise_earnings_yearly'] = (clone $earnings_query)->whereYear('created_at', Carbon::now()->year)->sum('commission_amount');
+        } elseif ($user->user_type == 'sub_franchise' && $user->sub_franchise) {
+            $data['balance'] = $user->sub_franchise->balance;
         }
 
         return view('franchise.dashboard', $data);

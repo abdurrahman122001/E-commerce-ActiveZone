@@ -40,6 +40,7 @@
                     <th data-breakpoints="lg">{{translate('Phone')}}</th>
                     <th data-breakpoints="lg">{{translate('Franchise/Sub')}}</th>
                     <th data-breakpoints="lg">{{translate('Role')}}</th>
+                    <th>{{translate('Commission (%)')}}</th>
                     <th>{{translate('Status')}}</th>
                     <th width="15%" class="text-right">{{translate('Options')}}</th>
                 </tr>
@@ -57,6 +58,9 @@
                             @else
                                 <span class="text-muted">{{ translate('N/A') }}</span>
                             @endif
+                        </td>
+                        <td>
+                            <input type="number" step="0.01" class="form-control" name="commission_percentage" value="{{ $employee->commission_percentage }}" onchange="update_commission(this, {{ $employee->id }})">
                         </td>
                         <td>
                             @if($employee->status == 'pending')
@@ -114,6 +118,16 @@
             $.post('{{ route('admin.franchise_employees.payout_modal') }}',{_token:'{{ @csrf_token() }}', id:id}, function(data){
                 $('#payout-modal-content').html(data);
                 $('#payout_modal').modal('show', {backdrop: 'static'});
+            });
+        }
+        function update_commission(el, id){
+            $.post('{{ route('admin.franchise_employees.set_commission') }}',{_token:'{{ @csrf_token() }}', id:id, commission_percentage:el.value}, function(data){
+                if(data == 1){
+                    AIZ.plugins.notify('success', '{{ translate('Commission updated successfully') }}');
+                }
+                else{
+                    AIZ.plugins.notify('danger', '{{ translate('Something went wrong') }}');
+                }
             });
         }
     </script>
