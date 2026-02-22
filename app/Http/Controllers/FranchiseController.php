@@ -363,6 +363,7 @@ class FranchiseController extends Controller
         $franchise->state_id = $request->state_id;
         $franchise->city_id = $request->city_id;
         $franchise->franchise_package_id = $request->franchise_package_id;
+        $franchise->invalid_at = $request->invalid_at;
         $franchise->commission_percentage = $request->commission_percentage ?? 0;
         
         if ($request->hasFile('id_proof')) {
@@ -426,6 +427,7 @@ class FranchiseController extends Controller
         $subFranchise->city_id = $request->city_id;
         $subFranchise->area_id = $request->area_id;
         $subFranchise->franchise_package_id = $request->franchise_package_id;
+        $subFranchise->invalid_at = $request->invalid_at;
         $subFranchise->commission_percentage = $request->commission_percentage ?? 0;
 
         if ($request->hasFile('id_proof')) {

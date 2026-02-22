@@ -26,7 +26,8 @@ class SubFranchise extends Model
         'bank_name',
         'bank_acc_name',
         'bank_acc_no',
-        'bank_routing_no'
+        'bank_routing_no',
+        'invalid_at'
     ];
 
     public function user()

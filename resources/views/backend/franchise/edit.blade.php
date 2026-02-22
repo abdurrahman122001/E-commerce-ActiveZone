@@ -66,6 +66,12 @@
                         </select>
                     </div>
                 </div>
+                <div class="form-group row">
+                    <label class="col-sm-3 col-from-label" for="invalid_at">{{translate('Package Expiry Date')}}</label>
+                    <div class="col-sm-9">
+                        <input type="date" id="invalid_at" name="invalid_at" value="{{ $franchise->invalid_at }}" class="form-control">
+                    </div>
+                </div>
                  <div class="form-group row">
                     <label class="col-sm-3 col-from-label" for="business_experience">{{translate('Business Experience')}}</label>
                     <div class="col-sm-9">
