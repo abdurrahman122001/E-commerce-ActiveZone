@@ -67,6 +67,9 @@
                                         <a href="javascript:void(0);" onclick="show_commission_modal('{{$sub->id}}', '{{$sub->commission_percentage}}');" class="dropdown-item">
                                             {{translate('Set Commission')}}
                                         </a>
+                                        <a href="{{route('franchise.sub_franchises.login', encrypt($sub->id))}}" class="dropdown-item">
+                                            {{translate('Login')}}
+                                        </a>
                                     </div>
                                 </div>
                             </td>

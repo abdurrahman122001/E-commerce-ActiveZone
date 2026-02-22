@@ -70,7 +70,7 @@ class SubFranchiseController extends Controller
             $user->phone = $request->phone;
             $user->password = Hash::make($request->password);
             $user->user_type = 'sub_franchise';
-            $user->verification_status = 1;
+            $user->verification_status = 0;
             $user->save();
             
             // Handle ID Proof Upload
@@ -88,12 +88,12 @@ class SubFranchiseController extends Controller
             $subFranchise->business_experience = $request->business_experience;
             $subFranchise->id_proof = $id_proof_path;
             $subFranchise->franchise_package_id = $request->franchise_package_id;
-            $subFranchise->status = 'approved'; // Automatically approved if added by parent franchise? Or pending?
+            $subFranchise->status = 'pending';
             $subFranchise->franchise_id = $franchise->id;
             $subFranchise->save();
 
             \DB::commit();
-            flash(translate('Sub-Franchise created successfully'))->success();
+            flash(translate('Sub-Franchise created successfully. It is now pending for admin approval.'))->success();
             return redirect()->route('franchise.sub_franchises.index');
 
         } catch (\Exception $e) {
@@ -110,6 +110,24 @@ class SubFranchiseController extends Controller
         $sub->save();
 
         flash(translate('Commission updated successfully'))->success();
+        return back();
+    }
+
+    public function login($id)
+    {
+        $subFranchise = SubFranchise::findOrFail(decrypt($id));
+        if ($subFranchise->franchise_id != Auth::user()->franchise->id) {
+            flash(translate('Access denied.'))->error();
+            return back();
+        }
+        
+        $user = $subFranchise->user;
+        if ($user) {
+            Auth::login($user, true);
+            return redirect()->route('franchise.dashboard');
+        }
+        
+        flash(translate('User not found.'))->error();
         return back();
     }
 }

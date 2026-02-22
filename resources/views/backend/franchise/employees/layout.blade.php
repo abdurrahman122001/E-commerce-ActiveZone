@@ -56,9 +56,13 @@
 </head>
 <body class="">
 	<div class="aiz-main-wrapper">
-        @include('backend.franchise.employees.inc.employee_sidenav')
-		<div class="aiz-content-wrapper">
-            @include('backend.franchise.employees.inc.employee_nav')
+        @if (Auth::guard('franchise_employee')->check())
+            @include('backend.franchise.employees.inc.employee_sidenav')
+        @endif
+		<div class="aiz-content-wrapper {{ Auth::guard('franchise_employee')->check() ? '' : 'm-0' }}">
+            @if (Auth::guard('franchise_employee')->check())
+                @include('backend.franchise.employees.inc.employee_nav')
+            @endif
 			<div class="aiz-main-content">
 				<div class="px-15px px-lg-25px">
                     @yield('panel_content')

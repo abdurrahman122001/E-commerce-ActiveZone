@@ -58,6 +58,7 @@ Route::group(['prefix' => 'franchise', 'middleware' => ['auth', 'franchise', 'pr
         Route::get('/sub-franchises/create', 'create')->name('sub_franchises.create');
         Route::post('/sub-franchises/store', 'store')->name('sub_franchises.store');
         Route::post('/sub-franchises/set-commission', 'set_commission')->name('sub_franchises.set_commission');
+        Route::get('/sub-franchises/login/{id}', 'login')->name('sub_franchises.login');
     });
 
     // Franchise Employees
