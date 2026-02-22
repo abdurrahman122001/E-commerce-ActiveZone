@@ -22,7 +22,11 @@ class SubFranchise extends Model
         'balance',
         'franchise_package_id',
         'pan_number',
-        'commission_percentage'
+        'commission_percentage',
+        'bank_name',
+        'bank_acc_name',
+        'bank_acc_no',
+        'bank_routing_no'
     ];
 
     public function user()

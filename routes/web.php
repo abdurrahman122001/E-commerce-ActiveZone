@@ -111,8 +111,16 @@ Route::group(['middleware' => ['vendor', 'user', 'prevent-back-history']], funct
         Route::get('/vendors', 'index')->name('vendors.index');
         Route::get('/vendors/create', 'create')->name('vendors.create');
         Route::post('/vendors/store', 'store')->name('vendors.store');
+        Route::get('/vendors/edit/{id}', 'edit')->name('vendors.edit');
+        Route::post('/vendors/update/{id}', 'update')->name('vendors.update');
         Route::get('/vendor/dashboard', 'dashboard')->name('vendor.dashboard');
         Route::get('/vendors/commission-history', 'commissionHistory')->name('vendors.commission_history');
+        
+        // Profile
+        Route::controller(App\Http\Controllers\Vendor\ProfileController::class)->group(function () {
+            Route::get('/vendor/profile', 'index')->name('profile.index');
+            Route::post('/vendor/profile/update', 'update')->name('profile.update');
+        });
     });
 
     // Vendor Products

@@ -34,6 +34,12 @@
                         <input type="password" placeholder="{{translate('Password')}}" id="password" name="password" class="form-control">
                     </div>
                 </div>
+                <div class="form-group row">
+                    <label class="col-sm-3 col-from-label" for="commission_percentage">{{translate('Commission Percentage (%)')}}</label>
+                    <div class="col-sm-9">
+                        <input type="number" step="0.01" min="0" max="100" placeholder="{{translate('Commission Percentage')}}" id="commission_percentage" name="commission_percentage" class="form-control" value="{{ $shop->commission_percentage }}">
+                    </div>
+                </div>
                 <div class="form-group mb-0 text-right">
                     <button type="submit" class="btn btn-primary">{{translate('Save')}}</button>
                 </div>

@@ -22,7 +22,12 @@ class FranchiseEmployee extends Authenticatable
         'franchise_id',
         'is_active',
         'status',
-        'created_by'
+        'created_by',
+        'commission_percentage',
+        'bank_name',
+        'bank_acc_name',
+        'bank_acc_no',
+        'bank_routing_no'
     ];
 
     protected $hidden = [

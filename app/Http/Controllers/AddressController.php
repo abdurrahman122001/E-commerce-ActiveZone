@@ -229,7 +229,7 @@ class AddressController extends Controller
 
         $html = '';
         if ($cities->isEmpty() && $request->has('franchise_type') && $request->franchise_type == 'city_franchise') {
-            $html .= '<option value="" disabled>' . translate("No available cities for city franchise in this state") . '</option>';
+            $html .= '<option value="" disabled>' . translate("Franchise already available in this city") . '</option>';
         } else {
             foreach ($cities as $row) {
                 $html .= '<option value="' . $row->id . '">' . $row->getTranslation('name') . '</option>';

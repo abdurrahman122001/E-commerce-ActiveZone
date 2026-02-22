@@ -1,25 +1,27 @@
 <?php
 
-namespace App\Http\Controllers\Franchise;
+namespace App\Http\Controllers\Vendor;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Auth;
 use Hash;
-use App\Models\User;
 use Artisan;
+use App\Models\User;
+use App\Models\Vendor;
 
 class ProfileController extends Controller
 {
     public function index()
     {
         $user = Auth::user();
-        return view('franchise.profile.index', compact('user'));
+        $vendor = Vendor::where('user_id', $user->id)->first();
+        return view('vendors.profile.index', compact('user', 'vendor'));
     }
 
-    public function update(Request $request, $id)
+    public function update(Request $request)
     {
-        $user = User::findOrFail($id);
+        $user = Auth::user();
         $user->name = $request->name;
         $user->phone = $request->phone;
 
@@ -32,18 +34,13 @@ class ProfileController extends Controller
         }
 
         if ($user->save()) {
-            // Update Bank Details for Franchise or Sub-Franchise
-            $bank_details = [
-                'bank_name' => $request->bank_name,
-                'bank_acc_name' => $request->bank_acc_name,
-                'bank_acc_no' => $request->bank_acc_no,
-                'bank_routing_no' => $request->bank_routing_no,
-            ];
-
-            if ($user->user_type == 'franchise' && $user->franchise) {
-                $user->franchise->update($bank_details);
-            } elseif ($user->user_type == 'sub_franchise' && $user->sub_franchise) {
-                $user->sub_franchise->update($bank_details);
+            $vendor = Vendor::where('user_id', $user->id)->first();
+            if ($vendor) {
+                $vendor->bank_name = $request->bank_name;
+                $vendor->bank_acc_name = $request->bank_acc_name;
+                $vendor->bank_acc_no = $request->bank_acc_no;
+                $vendor->bank_routing_no = $request->bank_routing_no;
+                $vendor->save();
             }
 
             Artisan::call('view:clear');

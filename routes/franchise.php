@@ -57,6 +57,7 @@ Route::group(['prefix' => 'franchise', 'middleware' => ['auth', 'franchise', 'pr
         Route::get('/sub-franchises', 'index')->name('sub_franchises.index');
         Route::get('/sub-franchises/create', 'create')->name('sub_franchises.create');
         Route::post('/sub-franchises/store', 'store')->name('sub_franchises.store');
+        Route::post('/sub-franchises/set-commission', 'set_commission')->name('sub_franchises.set_commission');
     });
 
     // Franchise Employees
@@ -74,6 +75,8 @@ Route::group(['prefix' => 'franchise', 'middleware' => ['auth', 'franchise', 'pr
         Route::get('/vendors', 'index')->name('vendors.index');
         Route::get('/vendors/create', 'create')->name('vendors.create');
         Route::post('/vendors/store', 'store')->name('vendors.store');
+        Route::get('/vendors/edit/{id}', 'edit')->name('vendors.edit');
+        Route::post('/vendors/update/{id}', 'update')->name('vendors.update');
         Route::get('/vendors/commission-history', 'commissionHistory')->name('vendors.commission_history');
     });
 
@@ -89,17 +92,28 @@ Route::group(['prefix' => 'franchise', 'middleware' => ['auth', 'franchise', 'pr
 });
 // Franchise Employee Routes (Unified Login)
 Route::group(['prefix' => 'franchise-employee', 'as' => 'franchise.employee.'], function () {
+    Route::get('/login', [App\Http\Controllers\Franchise\Employee\LoginController::class, 'showLoginForm'])->name('login');
+    Route::post('/login', [App\Http\Controllers\Franchise\Employee\LoginController::class, 'login']);
     Route::post('/logout', [App\Http\Controllers\Franchise\Employee\LoginController::class, 'logout'])->name('logout');
+    Route::get('/logout', [App\Http\Controllers\Franchise\Employee\LoginController::class, 'logout'])->name('logout.get');
 
     Route::group(['middleware' => ['franchise_employee', 'prevent-back-history']], function () {
         Route::get('/dashboard', [App\Http\Controllers\Franchise\Employee\DashboardController::class, 'index'])->name('dashboard');
         Route::get('/payouts', [App\Http\Controllers\Franchise\Employee\DashboardController::class, 'payouts'])->name('payouts');
         Route::get('/sales-report', [App\Http\Controllers\Franchise\Employee\DashboardController::class, 'sales_report'])->name('sales_report');
         
+        // Profile
+        Route::controller(App\Http\Controllers\Franchise\Employee\ProfileController::class)->group(function () {
+            Route::get('/profile', 'index')->name('profile.index');
+            Route::post('/profile/update', 'update')->name('profile.update');
+        });
+        
         // Vendor registration for employees
         Route::get('/vendors', [App\Http\Controllers\VendorController::class, 'index'])->name('vendors.index');
         Route::get('/vendors/create', [App\Http\Controllers\VendorController::class, 'create'])->name('vendors.create');
         Route::post('/vendors/store', [App\Http\Controllers\VendorController::class, 'store'])->name('vendors.store');
+        Route::get('/vendors/edit/{id}', [App\Http\Controllers\VendorController::class, 'edit'])->name('vendors.edit');
+        Route::post('/vendors/update/{id}', [App\Http\Controllers\VendorController::class, 'update'])->name('vendors.update');
 
         // Product Management for employees
         Route::controller(App\Http\Controllers\Franchise\ProductController::class)->group(function () {

@@ -16,6 +16,10 @@ class Vendor extends Model
         'status',
         'commission_percentage',
         'added_by_employee_id',
+        'bank_name',
+        'bank_acc_name',
+        'bank_acc_no',
+        'bank_routing_no'
     ];
 
     public function addedByEmployee()

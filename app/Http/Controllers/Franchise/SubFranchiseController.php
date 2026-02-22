@@ -102,4 +102,14 @@ class SubFranchiseController extends Controller
             return back()->withInput();
         }
     }
+
+    public function set_commission(Request $request)
+    {
+        $sub = SubFranchise::findOrFail($request->id);
+        $sub->commission_percentage = $request->commission_percentage;
+        $sub->save();
+
+        flash(translate('Commission updated successfully'))->success();
+        return back();
+    }
 }

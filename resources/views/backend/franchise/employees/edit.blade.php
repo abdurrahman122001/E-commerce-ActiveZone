@@ -126,6 +126,16 @@
                     </div>
 
                     <div class="form-group row">
+                        <label class="col-sm-3 col-from-label">{{translate('Commission Percentage (%)')}}</label>
+                        <div class="col-sm-9">
+                            <input type="number" step="0.01" min="0" max="100" class="form-control @error('commission_percentage') is-invalid @enderror" name="commission_percentage" value="{{ old('commission_percentage', $employee->commission_percentage) }}">
+                            @error('commission_percentage')
+                                <span class="invalid-feedback" role="alert">{{ $message }}</span>
+                            @enderror
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
                         <label class="col-sm-3 col-from-label">{{translate('Active')}}</label>
                         <div class="col-sm-9">
                             <label class="aiz-switch aiz-switch-success mb-0">

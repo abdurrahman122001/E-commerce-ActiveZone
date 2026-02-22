@@ -949,6 +949,16 @@
                     </a>
                     <ul class="aiz-side-nav-list level-2">
                         <li class="aiz-side-nav-item">
+                            <a href="{{ route('admin.franchises.index') }}" class="aiz-side-nav-link">
+                                <span class="aiz-side-nav-text">{{ translate('City Franchises') }}</span>
+                            </a>
+                        </li>
+                        <li class="aiz-side-nav-item">
+                            <a href="{{ route('admin.sub_franchises.index') }}" class="aiz-side-nav-link">
+                                <span class="aiz-side-nav-text">{{ translate('Sub Franchises') }}</span>
+                            </a>
+                        </li>
+                        <li class="aiz-side-nav-item">
                             <a href="{{ route('franchise_packages.index') }}" class="aiz-side-nav-link">
                                 <span class="aiz-side-nav-text">{{ translate('Franchise Packages') }}</span>
                             </a>
@@ -963,18 +973,18 @@
                                 <span class="aiz-side-nav-text">{{ translate('Vendor Registrations') }}</span>
                             </a>
                         </li>
-                    <li class="aiz-side-nav-item">
-                        <a href="{{ route('admin.franchise_employees.sales_report') }}" class="aiz-side-nav-link">
-                            <span class="aiz-side-nav-text">{{ translate('Sales Report') }}</span>
-                        </a>
-                    </li>
-                    <li class="aiz-side-nav-item">
-                        <a href="{{ route('delivery-boys.index') }}" class="aiz-side-nav-link">
-                            <span class="aiz-side-nav-text">{{translate('Delivery Partners')}}</span>
-                        </a>
-                    </li>
-                </ul>
-            </li>
+                        <li class="aiz-side-nav-item">
+                            <a href="{{ route('admin.franchise_employees.sales_report') }}" class="aiz-side-nav-link">
+                                <span class="aiz-side-nav-text">{{ translate('Sales Report') }}</span>
+                            </a>
+                        </li>
+                        <li class="aiz-side-nav-item">
+                            <a href="{{ route('delivery-boys.index') }}" class="aiz-side-nav-link">
+                                <span class="aiz-side-nav-text">{{ translate('Delivery Partners') }}</span>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
 
                 <!-- Sellers -->
                 @if (get_setting('vendor_system_activation') == 1)
@@ -1584,48 +1594,6 @@
                 @endcanany
                 @endif
 
-                <!-- Franchise System -->
-                <li class="aiz-side-nav-item">
-                    <a href="#" class="aiz-side-nav-link">
-                        <div class="aiz-side-nav-icon">
-                            <i class="las la-handshake"></i>
-                        </div>
-                        <span class="aiz-side-nav-text">{{translate('Franchise System')}}</span>
-                        <span class="aiz-side-nav-arrow"></span>
-                    </a>
-                    <ul class="aiz-side-nav-list level-2">
-                        <li class="aiz-side-nav-item">
-                            <a href="{{ route('admin.franchises.index') }}" class="aiz-side-nav-link">
-                                <span class="aiz-side-nav-text">{{translate('City Franchises')}}</span>
-                            </a>
-                        </li>
-                        <li class="aiz-side-nav-item">
-                            <a href="{{ route('admin.sub_franchises.index') }}" class="aiz-side-nav-link">
-                                <span class="aiz-side-nav-text">{{translate('Sub Franchises')}}</span>
-                            </a>
-                        </li>
-                        <li class="aiz-side-nav-item">
-                            <a href="{{ route('delivery-boys.index') }}" class="aiz-side-nav-link">
-                                <span class="aiz-side-nav-text">{{translate('Delivery Partners')}}</span>
-                            </a>
-                        </li>
-                        <li class="aiz-side-nav-item">
-                            <a href="{{ route('franchise_packages.index') }}" class="aiz-side-nav-link">
-                                <span class="aiz-side-nav-text">{{translate('Franchise Packages')}}</span>
-                            </a>
-                        </li>
-                        <li class="aiz-side-nav-item">
-                            <a href="{{ route('admin.franchise_employees.index') }}" class="aiz-side-nav-link">
-                                <span class="aiz-side-nav-text">{{translate('Franchise Employees')}}</span>
-                            </a>
-                        </li>
-                        <li class="aiz-side-nav-item">
-                            <a href="{{ route('admin.franchise_employees.vendor_registrations') }}" class="aiz-side-nav-link">
-                                <span class="aiz-side-nav-text">{{translate('Vendor Registrations')}}</span>
-                            </a>
-                        </li>
-                    </ul>
-                </li>
 
                
 

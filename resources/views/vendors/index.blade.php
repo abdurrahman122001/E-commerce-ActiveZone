@@ -85,6 +85,10 @@
                                             {{translate('Payment History')}}
                                         </a>
 
+                                        <a href="{{route($edit_route_prefix . '.edit', encrypt($vendor->id))}}" class="dropdown-item">
+                                            {{translate('Edit Vendor')}}
+                                        </a>
+                                        
                                         <a href="{{route('sellers.edit', encrypt($shop->id))}}" class="dropdown-item">
                                             {{translate('Edit')}}
                                         </a>

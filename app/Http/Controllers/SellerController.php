@@ -214,6 +214,7 @@ class SellerController extends Controller
             $user->password = Hash::make($request->password);
         }
         if ($user->save()) {
+            $shop->commission_percentage = $request->commission_percentage ?? 0;
             if ($shop->save()) {
                 flash(translate('Seller has been updated successfully'))->success();
                 return redirect()->route('sellers.index');

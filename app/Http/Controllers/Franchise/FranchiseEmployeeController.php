@@ -71,7 +71,8 @@ class FranchiseEmployeeController extends Controller
             'franchise_level' => 'required|in:CITY,SUB',
             'city_id' => 'required|exists:cities,id',
             'sub_franchise_id' => 'nullable|exists:sub_franchises,id',
-            'is_active' => 'boolean'
+            'is_active' => 'boolean',
+            'commission_percentage' => 'nullable|numeric|min:0|max:100'
         ]);
 
         // Set created_by
@@ -153,7 +154,8 @@ class FranchiseEmployeeController extends Controller
             'city_id' => 'required|exists:cities,id',
             'sub_franchise_id' => 'nullable|exists:sub_franchises,id',
             'is_active' => 'boolean',
-            'password' => 'nullable|string|min:6|confirmed'
+            'password' => 'nullable|string|min:6|confirmed',
+            'commission_percentage' => 'nullable|numeric|min:0|max:100'
         ]);
 
         // Update password only if provided

@@ -64,15 +64,22 @@ class VendorController extends Controller
         
         $layout = 'vendors.layouts.app';
         $create_route = route('vendors.create');
+        $edit_route_prefix = 'vendors';
         if($user->user_type == 'franchise' || $user->user_type == 'sub_franchise'){
             $layout = 'franchise.layouts.app';
             $create_route = route('franchise.vendors.create');
+            $edit_route_prefix = 'franchise.vendors';
         } elseif($user->user_type == 'admin' || $user->user_type == 'staff'){
             $layout = 'backend.layouts.app';
             $create_route = route('vendors.create');
+            $edit_route_prefix = 'vendors';
+        }
+        
+        if (Auth::guard('franchise_employee')->check()) {
+            $edit_route_prefix = 'franchise.employee.vendors';
         }
 
-        return view('vendors.index', compact('vendors', 'layout', 'create_route'));
+        return view('vendors.index', compact('vendors', 'layout', 'create_route', 'edit_route_prefix'));
     }
 
     public function create()
@@ -243,6 +250,71 @@ class VendorController extends Controller
                                         ->sum('price');
 
         return view('vendors.dashboard', $data);
+    }
+
+    public function edit($id)
+    {
+        $vendor = Vendor::findOrFail(decrypt($id));
+        $user = Auth::user();
+        
+        $layout = 'vendors.layouts.app';
+        $update_route = route('vendors.update', $vendor->id);
+        if($user->user_type == 'franchise' || $user->user_type == 'sub_franchise'){
+            $layout = 'franchise.layouts.app';
+            $update_route = route('franchise.vendors.update', $vendor->id);
+        } elseif($user->user_type == 'admin' || $user->user_type == 'staff'){
+            $layout = 'backend.layouts.app';
+            $update_route = route('vendors.update', $vendor->id);
+        }
+
+        if (Auth::guard('franchise_employee')->check()) {
+            $update_route = route('franchise.employee.vendors.update', $vendor->id);
+        }
+
+        return view('vendors.edit', compact('vendor', 'layout', 'update_route'));
+    }
+
+    public function update(Request $request, $id)
+    {
+        $vendor = Vendor::findOrFail($id);
+        $user = $vendor->user;
+
+        $rules = [
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users,email,'.$user->id,
+        ];
+
+        if (Auth::user()->user_type == 'admin' || Auth::user()->user_type == 'staff' || Auth::user()->user_type == 'franchise' || Auth::user()->user_type == 'sub_franchise') {
+            $rules['commission_percentage'] = 'required|numeric|min:0|max:100';
+        }
+
+        if ($request->password) {
+            $rules['password'] = 'required|string|min:8|confirmed';
+        }
+
+        $validated = $request->validate($rules);
+
+        $user->name = $validated['name'];
+        $user->email = $validated['email'];
+        if ($request->password) {
+            $user->password = Hash::make($validated['password']);
+        }
+        $user->save();
+
+        if (isset($validated['commission_percentage'])) {
+            $vendor->commission_percentage = $validated['commission_percentage'];
+        }
+        $vendor->save();
+
+        flash(translate('Vendor updated successfully.'))->success();
+        
+        if (Auth::guard('franchise_employee')->check()) {
+            return redirect()->route('franchise.employee.vendors.index');
+        }
+        if (Auth::user()->user_type == 'franchise' || Auth::user()->user_type == 'sub_franchise') {
+            return redirect()->route('franchise.vendors.index');
+        }
+        return redirect()->route('vendors.index');
     }
 
     public function commissionHistory()

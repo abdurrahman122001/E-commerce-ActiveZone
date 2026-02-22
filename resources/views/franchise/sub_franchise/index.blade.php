@@ -32,6 +32,8 @@
                         <th data-breakpoints="lg">{{ translate('Package') }}</th>
                         <th data-breakpoints="lg">{{ translate('Referral Code') }}</th>
                         <th data-breakpoints="lg">{{ translate('Status') }}</th>
+                        <th>{{ translate('Commission (%)') }}</th>
+                        <th class="text-right">{{ translate('Options') }}</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -55,6 +57,19 @@
                                     <span class="badge badge-inline badge-danger">{{ translate('Rejected') }}</span>
                                 @endif
                             </td>
+                            <td>{{ $sub->commission_percentage }}%</td>
+                            <td class="text-right">
+                                <div class="dropdown">
+                                    <button type="button" class="btn btn-sm btn-circle btn-soft-primary btn-icon dropdown-toggle no-arrow" data-toggle="dropdown" href="javascript:void(0);" role="button" aria-haspopup="false" aria-expanded="false">
+                                        <i class="las la-ellipsis-v seller-list-icon"></i>
+                                    </button>
+                                    <div class="dropdown-menu dropdown-menu-right dropdown-menu-xs">
+                                        <a href="javascript:void(0);" onclick="show_commission_modal('{{$sub->id}}', '{{$sub->commission_percentage}}');" class="dropdown-item">
+                                            {{translate('Set Commission')}}
+                                        </a>
+                                    </div>
+                                </div>
+                            </td>
                         </tr>
                     @endforeach
                 </tbody>
@@ -64,4 +79,44 @@
             </div>
         </div>
     </div>
+@endsection
+
+@section('modal')
+    <!-- Commission Modal -->
+    <div class="modal fade" id="commission_modal">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <form action="{{ route('franchise.sub_franchises.set_commission') }}" method="POST">
+                    @csrf
+                    <input type="hidden" name="id" id="sub_franchise_id">
+                    <div class="modal-header">
+                        <h5 class="modal-title h6">{{translate('Set Sub-Franchise Commission')}}</h5>
+                        <button type="button" class="close" data-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group row">
+                            <label class="col-md-3 col-from-label">{{translate('Commission')}}</label>
+                            <div class="col-md-9">
+                                <input type="number" step="0.01" min="0" max="100" name="commission_percentage" id="commission_percentage_input" class="form-control" placeholder="0" required>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-light" data-dismiss="modal">{{translate('Cancel')}}</button>
+                        <button type="submit" class="btn btn-primary">{{translate('Save')}}</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+@endsection
+
+@section('script')
+<script type="text/javascript">
+    function show_commission_modal(id, commission){
+        $('#sub_franchise_id').val(id);
+        $('#commission_percentage_input').val(commission);
+        $('#commission_modal').modal('show');
+    }
+</script>
 @endsection
