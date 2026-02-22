@@ -169,6 +169,22 @@
                             <span class="aiz-side-nav-text">{{ translate('Manage Profile') }}</span>
                         </a>
                     </li>
+
+                    <li class="aiz-side-nav-item">
+                        @php
+                            $franchise_support_tickets = DB::table('tickets')
+                                ->where('client_viewed', 0)
+                                ->where('user_id', Auth::user()->id)
+                                ->count();
+                        @endphp
+                        <a href="{{ route('franchise.support_tickets.index') }}" class="aiz-side-nav-link">
+                            <i class="las la-headset aiz-side-nav-icon"></i>
+                            <span class="aiz-side-nav-text">{{ translate('Support Ticket') }}</span>
+                            @if($franchise_support_tickets > 0)
+                                <span class="badge badge-inline badge-info">{{ $franchise_support_tickets }}</span>
+                            @endif
+                        </a>
+                    </li>
                 @endif
             </ul>
         </div>

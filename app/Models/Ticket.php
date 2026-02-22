@@ -9,6 +9,10 @@ class Ticket extends Model
 {
     use PreventDemoModeChanges;
 
+    protected $fillable = [
+        'code', 'user_id', 'user_role', 'subject', 'details', 'files', 'status', 'client_viewed', 'viewed',
+    ];
+
     public function user(){
     	return $this->belongsTo(User::class);
     }

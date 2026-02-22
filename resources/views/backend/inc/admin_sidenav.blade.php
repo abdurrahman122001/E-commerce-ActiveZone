@@ -1428,7 +1428,6 @@
                 @endcanany
 
                 <!-- Support -->
-                @canany(['view_all_support_tickets','view_all_product_conversations','view_all_product_queries'])
                 <li class="aiz-side-nav-item">
                     <a href="#" class="aiz-side-nav-link">
                         <div class="aiz-side-nav-icon">
@@ -1449,8 +1448,7 @@
                         <span class="aiz-side-nav-arrow"></span>
                     </a>
                     <ul class="aiz-side-nav-list level-2">
-                        @can('view_all_support_tickets')
-                            @php
+                        @php
                                 $support_ticket = DB::table('tickets')
                                                     ->where('viewed', 0)
                                                     ->select('id')
@@ -1464,7 +1462,6 @@
                                         }}</span>@endif
                                 </a>
                             </li>
-                        @endcan
 
                         @can('view_all_product_conversations')
                             @php
@@ -1501,7 +1498,6 @@
                         @endcan
                     </ul>
                 </li>
-                @endcanany
 
                 <!-- Affiliate Addon -->
                 @if (addon_is_activated('affiliate_system'))

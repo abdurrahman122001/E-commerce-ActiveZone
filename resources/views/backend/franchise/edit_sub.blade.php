@@ -98,6 +98,31 @@
                 </div>
                 
                 <div class="form-group row">
+                    <label class="col-sm-3 col-from-label" for="bank_name">{{translate('Bank Name')}}</label>
+                    <div class="col-sm-9">
+                        <input type="text" placeholder="{{translate('Bank Name')}}" id="bank_name" name="bank_name" value="{{ $subFranchise->bank_name }}" class="form-control">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-3 col-from-label" for="bank_acc_name">{{translate('Bank Account Name')}}</label>
+                    <div class="col-sm-9">
+                        <input type="text" placeholder="{{translate('Bank Account Name')}}" id="bank_acc_name" name="bank_acc_name" value="{{ $subFranchise->bank_acc_name }}" class="form-control">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-3 col-from-label" for="bank_acc_no">{{translate('Bank Account No')}}</label>
+                    <div class="col-sm-9">
+                        <input type="text" placeholder="{{translate('Bank Account No')}}" id="bank_acc_no" name="bank_acc_no" value="{{ $subFranchise->bank_acc_no }}" class="form-control">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-3 col-from-label" for="bank_routing_no">{{translate('Bank Routing No')}}</label>
+                    <div class="col-sm-9">
+                        <input type="text" placeholder="{{translate('Bank Routing No')}}" id="bank_routing_no" name="bank_routing_no" value="{{ $subFranchise->bank_routing_no }}" class="form-control">
+                    </div>
+                </div>
+                
+                <div class="form-group row">
                     <label class="col-sm-3 col-from-label" for="commission_percentage">{{translate('Commission Percentage (%)')}}</label>
                     <div class="col-sm-9">
                         <input type="number" step="0.01" min="0" max="100" placeholder="{{translate('Commission Percentage')}}" id="commission_percentage" name="commission_percentage" value="{{ $subFranchise->commission_percentage }}" class="form-control">

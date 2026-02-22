@@ -24,6 +24,7 @@
                     <th data-breakpoints="lg">{{ translate('Sending Date') }}</th>
                     <th>{{ translate('Subject') }}</th>
                     <th data-breakpoints="lg">{{ translate('User') }}</th>
+                    <th data-breakpoints="lg">{{ translate('Role') }}</th>
                     <th data-breakpoints="lg">{{ translate('Status') }}</th>
                     <th data-breakpoints="lg">{{ translate('Last reply') }}</th>
                     <th class="text-right">{{ translate('Options') }}</th>
@@ -35,8 +36,26 @@
                         <tr>
                             <td>#{{ $ticket->code }}</td>
                             <td>{{ $ticket->created_at }} @if($ticket->viewed == 0) <span class="badge badge-inline badge-info">{{ translate('New') }}</span> @endif</td>
-                            <td>{{ $ticket->subject }}</td>
-                            <td>{{ $ticket->user->name }}</td>
+                             <td>
+                                 {{ $ticket->subject }}
+                                 @if($ticket->files)
+                                     <i class="las la-paperclip ml-2 text-muted" title="{{ translate('Has attachments') }}"></i>
+                                 @endif
+                             </td>
+                            <td>
+                                @if($ticket->user_role == 'franchise_employee')
+                                    {{ explode(']', str_replace('[', '', $ticket->subject))[0] ?? $ticket->user->name }}
+                                @else
+                                    {{ $ticket->user->name }}
+                                @endif
+                            </td>
+                            <td>
+                                @if($ticket->user_role)
+                                    <span class="badge badge-inline badge-secondary text-capitalize">{{ translate(ucwords(str_replace('_', ' ', $ticket->user_role))) }}</span>
+                                @else
+                                    <span class="text-muted">-</span>
+                                @endif
+                            </td>
                             <td>
                                 @if ($ticket->status == 'pending')
                                     <span class="badge badge-inline badge-danger">{{ translate('Pending') }}</span>

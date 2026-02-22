@@ -31,6 +31,18 @@
                             </div>
                         </div>
                         <div class="form-group row">
+                            <label class="col-sm-3 col-from-label">{{ translate('Shop Name') }}</label>
+                            <div class="col-sm-9">
+                                <input type="text" name="shop_name" value="{{ $vendor->shop_name }}" class="form-control" placeholder="{{ translate('Shop Name') }}" required>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-3 col-from-label">{{ translate('Address') }}</label>
+                            <div class="col-sm-9">
+                                <textarea name="address" class="form-control" rows="3" required>{{ $vendor->address }}</textarea>
+                            </div>
+                        </div>
+                        <div class="form-group row">
                             <label class="col-sm-3 col-from-label">{{ translate('Password') }}</label>
                             <div class="col-sm-9">
                                 <input type="password" name="password" class="form-control">

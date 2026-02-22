@@ -82,6 +82,14 @@
                         </div>
                     </li>
                 @endif
+
+                {{-- Support Ticket: always visible to all employees --}}
+                <li class="aiz-side-nav-item">
+                    <a href="{{ route('franchise.employee.support_tickets.index') }}" class="aiz-side-nav-link">
+                        <i class="las la-headset aiz-side-nav-icon"></i>
+                        <span class="aiz-side-nav-text">{{ translate('Support Ticket') }}</span>
+                    </a>
+                </li>
             </ul>
         </div>
     </div>

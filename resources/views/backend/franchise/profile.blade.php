@@ -105,31 +105,68 @@
                 </div>
             </div>
         </div>
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0 h6">{{translate('Bank Details')}}</h5>
+            </div>
+            <div class="card-body">
+                @php
+                    $bank_name = $user->franchise ? $user->franchise->bank_name : ($user->sub_franchise ? $user->sub_franchise->bank_name : null);
+                    $bank_acc_name = $user->franchise ? $user->franchise->bank_acc_name : ($user->sub_franchise ? $user->sub_franchise->bank_acc_name : null);
+                    $bank_acc_no = $user->franchise ? $user->franchise->bank_acc_no : ($user->sub_franchise ? $user->sub_franchise->bank_acc_no : null);
+                    $bank_routing_no = $user->franchise ? $user->franchise->bank_routing_no : ($user->sub_franchise ? $user->sub_franchise->bank_routing_no : null);
+                @endphp
+                <div class="form-group text-center">
+                    <label class="d-block">{{translate('Bank Name')}}</label>
+                    <p class="h6 text-muted">{{ $bank_name ?? translate('Not Provided') }}</p>
+                </div>
+                <div class="form-group text-center">
+                    <label class="d-block">{{translate('Bank Account Name')}}</label>
+                    <p class="h6 text-muted">{{ $bank_acc_name ?? translate('Not Provided') }}</p>
+                </div>
+                <div class="form-group text-center">
+                    <label class="d-block">{{translate('Bank Account No')}}</label>
+                    <p class="h6 text-muted">{{ $bank_acc_no ?? translate('Not Provided') }}</p>
+                </div>
+                <div class="form-group text-center">
+                    <label class="d-block">{{translate('Bank Routing No')}}</label>
+                    <p class="h6 text-muted">{{ $bank_routing_no ?? translate('Not Provided') }}</p>
+                </div>
+            </div>
+        </div>
     </div>
 
     <div class="col-lg-9">
         <div class="row">
-            <div class="col-md-4">
+            <div class="col-md-3">
                 <div class="card bg-primary text-white">
                      <div class="card-body text-center">
-                        <h1 class="display-4">{{ $subFranchises->count() }}</h1>
+                        <h1 class="h3">{{ $subFranchises->count() }}</h1>
                         <p>{{ translate('Sub-Franchises') }}</p>
                      </div>
                 </div>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-3">
                 <div class="card bg-info text-white">
                      <div class="card-body text-center">
-                        <h1 class="display-4">{{ $employees->count() }}</h1>
-                        <p>{{ translate('Employees') }}</p>
+                        <h1 class="h3">{{ $franchise_employees->count() + $sub_franchise_employees->count() }}</h1>
+                        <p>{{ translate('Total Employees') }}</p>
                      </div>
                 </div>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-3">
                  <div class="card bg-success text-white">
                      <div class="card-body text-center">
-                        <h1 class="display-4">{{ $vendors->count() }}</h1>
-                        <p>{{ translate('Vendors') }}</p>
+                        <h1 class="h3">{{ $franchise_vendors->count() + $sub_franchise_vendors->count() }}</h1>
+                        <p>{{ translate('Total Vendors') }}</p>
+                     </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                 <div class="card bg-secondary text-white">
+                     <div class="card-body text-center">
+                        <h1 class="h3">{{ $delivery_boys->count() }}</h1>
+                        <p>{{ translate('Delivery Boys') }}</p>
                      </div>
                 </div>
             </div>
@@ -177,32 +214,53 @@
 
         <div class="card">
             <div class="card-header">
-                 <h5 class="mb-0 h6">{{translate('Employees & Vendors Stats')}}</h5>
+                 <h5 class="mb-0 h6">{{translate('Employee Details')}}</h5>
             </div>
             <div class="card-body">
                 <div class="row">
                     <div class="col-md-6">
-                        <h6>{{ translate('Employees') }} ({{ $employees->count() }})</h6>
+                        <h6>{{ translate('Franchise Employees') }} ({{ $franchise_employees->count() }})</h6>
                          <ul class="list-group">
-                            @forelse($employees->take(5) as $employee)
+                            @forelse($franchise_employees as $employee)
                                 <li class="list-group-item d-flex justify-content-between align-items-center">
                                     {{ $employee->name }}
                                     <span class="badge badge-primary badge-pill">{{ $employee->role }}</span>
                                 </li>
                             @empty
-                                <li class="list-group-item">{{ translate('No employees found.') }}</li>
+                                <li class="list-group-item text-muted small">{{ translate('No direct franchise employees found.') }}</li>
                             @endforelse
-                             @if($employees->count() > 5)
-                                <li class="list-group-item text-center">
-                                    <a href="#">{{ translate('View All') }}</a>
-                                </li>
-                            @endif
                         </ul>
                     </div>
                     <div class="col-md-6">
-                        <h6>{{ translate('Vendors') }} ({{ $vendors->count() }})</h6>
+                        <h6>{{ translate('Sub-Franchise Employees') }} ({{ $sub_franchise_employees->count() }})</h6>
                         <ul class="list-group">
-                             @forelse($vendors->take(5) as $vendor)
+                             @forelse($sub_franchise_employees as $employee)
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    <div>
+                                        {{ $employee->name }}
+                                        <small class="text-muted d-block">{{ $employee->subFranchise->user->name ?? '' }} ({{ $employee->subFranchise->area->name ?? '' }})</small>
+                                    </div>
+                                    <span class="badge badge-info badge-pill">{{ $employee->role }}</span>
+                                </li>
+                            @empty
+                                <li class="list-group-item text-muted small">{{ translate('No sub-franchise employees found.') }}</li>
+                            @endforelse
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                 <h5 class="mb-0 h6">{{translate('Vendor Details')}}</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6>{{ translate('Franchise Vendors') }} ({{ $franchise_vendors->count() }})</h6>
+                         <ul class="list-group">
+                            @forelse($franchise_vendors as $vendor)
                                 <li class="list-group-item d-flex justify-content-between align-items-center">
                                     {{ $vendor->user->name ?? 'N/A' }}
                                     @if($vendor->status == 1)
@@ -212,13 +270,28 @@
                                     @endif
                                 </li>
                             @empty
-                                <li class="list-group-item">{{ translate('No vendors found.') }}</li>
+                                <li class="list-group-item text-muted small">{{ translate('No direct franchise vendors found.') }}</li>
                             @endforelse
-                             @if($vendors->count() > 5)
-                                <li class="list-group-item text-center">
-                                    <a href="#">{{ translate('View All') }}</a>
+                        </ul>
+                    </div>
+                    <div class="col-md-6">
+                        <h6>{{ translate('Sub-Franchise Vendors') }} ({{ $sub_franchise_vendors->count() }})</h6>
+                        <ul class="list-group">
+                             @forelse($sub_franchise_vendors as $vendor)
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    <div>
+                                        {{ $vendor->user->name ?? 'N/A' }}
+                                        <small class="text-muted d-block">{{ $vendor->sub_franchise->user->name ?? '' }} ({{ $vendor->sub_franchise->area->name ?? '' }})</small>
+                                    </div>
+                                    @if($vendor->status == 1)
+                                        <span class="badge badge-success badge-pill">{{ translate('Active') }}</span>
+                                    @else
+                                        <span class="badge badge-secondary badge-pill">{{ translate('Inactive') }}</span>
+                                    @endif
                                 </li>
-                            @endif
+                            @empty
+                                <li class="list-group-item text-muted small">{{ translate('No sub-franchise vendors found.') }}</li>
+                            @endforelse
                         </ul>
                     </div>
                 </div>

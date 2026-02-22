@@ -6,6 +6,8 @@ use App\Http\Controllers\Franchise\ProductController;
 use App\Http\Controllers\Franchise\OrderController;
 use App\Http\Controllers\Franchise\ProfileController;
 use App\Http\Controllers\VendorController;
+use App\Http\Controllers\SupportTicketController;
+use App\Http\Controllers\Franchise\Employee\SupportTicketController as EmployeeSupportTicketController;
 
 Route::group(['prefix' => 'franchise', 'middleware' => ['auth', 'franchise', 'prevent-back-history'], 'as' => 'franchise.'], function () {
     
@@ -90,6 +92,14 @@ Route::group(['prefix' => 'franchise', 'middleware' => ['auth', 'franchise', 'pr
         Route::post('/delivery-boys/update/{id}', 'update')->name('delivery_boys.update');
     });
 
+    // Support Tickets
+    Route::controller(SupportTicketController::class)->group(function () {
+        Route::get('/support-tickets', 'index')->name('support_tickets.index');
+        Route::post('/support-tickets/store', 'store')->name('support_tickets.store');
+        Route::get('/support-tickets/show/{id}', 'show')->name('support_tickets.show');
+        Route::post('/support-tickets/reply', 'seller_store')->name('support_tickets.reply');
+    });
+
 });
 // Franchise Employee Routes (Unified Login)
 Route::group(['prefix' => 'franchise-employee', 'as' => 'franchise.employee.'], function () {
@@ -144,6 +154,14 @@ Route::group(['prefix' => 'franchise-employee', 'as' => 'franchise.employee.'], 
             Route::post('/delivery-boys/store', 'store')->name('delivery_boys.store');
             Route::get('/delivery-boys/{id}/edit', 'edit')->name('delivery_boys.edit');
             Route::post('/delivery-boys/update/{id}', 'update')->name('delivery_boys.update');
+        });
+
+        // Support Tickets for employees (uses admin-side show route)
+        Route::controller(EmployeeSupportTicketController::class)->group(function () {
+            Route::get('/support-tickets', 'index')->name('support_tickets.index');
+            Route::post('/support-tickets/store', 'store')->name('support_tickets.store');
+            Route::get('/support-tickets/show/{id}', 'show')->name('support_tickets.show');
+            Route::post('/support-tickets/reply', 'reply')->name('support_tickets.reply');
         });
     });
 });

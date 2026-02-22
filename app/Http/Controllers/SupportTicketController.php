@@ -63,6 +63,7 @@ class SupportTicketController extends Controller
         $ticket = new Ticket;
         $ticket->code = strtotime(date('Y-m-d H:i:s')) . Auth::user()->id;
         $ticket->user_id = Auth::user()->id;
+        $ticket->user_role = Auth::user()->user_type;
         $ticket->subject = $request->subject;
         $ticket->details = $request->details;
         $ticket->files = $request->attachments;
@@ -96,7 +97,15 @@ class SupportTicketController extends Controller
         $array['subject'] = translate('Support ticket Code is') . ':- ' . $ticket->code;
         $array['from'] = env('MAIL_FROM_ADDRESS');
         $array['content'] = translate('Hi. You have a new response for this ticket. Please check the ticket.');
-        $array['link'] = $ticket->user->user_type == 'seller' ? route('seller.support_ticket.show', encrypt($ticket->id)) : route('support_ticket.show', encrypt($ticket->id));
+        if ($ticket->user_role == 'seller') {
+            $array['link'] = route('seller.support_ticket.show', encrypt($ticket->id));
+        } elseif ($ticket->user_role == 'franchise' || $ticket->user_role == 'sub_franchise') {
+            $array['link'] = route('franchise.support_tickets.show', encrypt($ticket->id));
+        } elseif ($ticket->user_role == 'franchise_employee') {
+            $array['link'] = route('franchise.employee.support_tickets.show', encrypt($ticket->id));
+        } else {
+            $array['link'] = route('support_ticket.show', encrypt($ticket->id));
+        }
         $array['sender'] = $tkt_reply->user->name;
         $array['details'] = $tkt_reply->reply;
 

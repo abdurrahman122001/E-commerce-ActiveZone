@@ -8,7 +8,16 @@
             <div class="text-center text-md-left">
                 <h5 class="mb-md-0 h5">{{ $ticket->subject }} #{{ $ticket->code }}</h5>
                <div class="mt-2">
-                   <span> {{ $ticket->user->name }} </span>
+                    <span> 
+                       @if($ticket->user_role == 'franchise_employee')
+                           {{ explode(']', str_replace('[', '', $ticket->subject))[0] ?? $ticket->user->name }}
+                       @else
+                           {{ $ticket->user->name }}
+                       @endif
+                    </span>
+                   @if($ticket->user_role)
+                       <span class="badge badge-inline badge-info ml-1 text-capitalize">{{ translate(ucwords(str_replace('_', ' ', $ticket->user_role))) }}</span>
+                   @endif
                    <span class="ml-2"> {{ $ticket->created_at }} </span>
                    <span class="badge badge-inline badge-secondary ml-2 text-capitalize"> 
                        {{ translate(ucfirst($ticket->status)) }} 

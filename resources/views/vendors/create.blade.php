@@ -35,6 +35,24 @@
                         </div>
                     </div>
                     <div class="form-group row">
+                        <label class="col-md-3 col-from-label">{{translate('Shop Name')}} <span class="text-danger">*</span></label>
+                        <div class="col-md-9">
+                            <input type="text" class="form-control @error('shop_name') is-invalid @enderror" name="shop_name" placeholder="{{translate('Shop Name')}}" value="{{ old('shop_name') }}" required>
+                            @error('shop_name')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-md-3 col-from-label">{{translate('Address')}} <span class="text-danger">*</span></label>
+                        <div class="col-md-9">
+                            <textarea class="form-control @error('address') is-invalid @enderror" name="address" placeholder="{{translate('Address')}}" rows="3" required>{{ old('address') }}</textarea>
+                            @error('address')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+                    </div>
+                    <div class="form-group row">
                         <label class="col-md-3 col-from-label">{{translate('Password')}} <span class="text-danger">*</span></label>
                         <div class="col-md-9">
                             <input type="password" class="form-control @error('password') is-invalid @enderror" name="password" placeholder="{{translate('Password')}}" required>

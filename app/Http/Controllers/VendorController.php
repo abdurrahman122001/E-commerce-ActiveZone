@@ -114,6 +114,8 @@ class VendorController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:8|confirmed',
+            'shop_name' => 'required|string|max:255',
+            'address' => 'required|string',
         ];
 
         if ($isAdmin) {
@@ -138,6 +140,8 @@ class VendorController extends Controller
 
             $vendor = new Vendor();
             $vendor->user_id = $user->id;
+            $vendor->shop_name = $request->shop_name;
+            $vendor->address = $request->address;
             
             if (Auth::guard('franchise_employee')->check()) {
                 $employee = Auth::guard('franchise_employee')->user();
@@ -146,14 +150,25 @@ class VendorController extends Controller
                 
                 if ($employee->franchise_level == 'SUB') {
                     $vendor->sub_franchise_id = $employee->sub_franchise_id;
+                    $sub = $employee->subFranchise;
+                    $vendor->city_id = $sub ? $sub->city_id : null;
+                    $vendor->state_id = $sub ? $sub->state_id : null;
+                } else {
+                    $franchise = $employee->franchise;
+                    $vendor->city_id = $franchise ? $franchise->city_id : null;
+                    $vendor->state_id = $franchise ? $franchise->state_id : null;
                 }
             } elseif (Auth::check()) {
-                $user = Auth::user();
-                if ($user->franchise) {
-                    $vendor->franchise_id = $user->franchise->id;
-                } elseif ($user->sub_franchise) {
-                    $vendor->sub_franchise_id = $user->sub_franchise->id;
-                    $vendor->franchise_id = $user->sub_franchise->franchise_id;
+                $authUser = Auth::user();
+                if ($authUser->user_type == 'franchise' && $authUser->franchise) {
+                    $vendor->franchise_id = $authUser->franchise->id;
+                    $vendor->city_id = $authUser->franchise->city_id;
+                    $vendor->state_id = $authUser->franchise->state_id;
+                } elseif ($authUser->user_type == 'sub_franchise' && $authUser->sub_franchise) {
+                    $vendor->sub_franchise_id = $authUser->sub_franchise->id;
+                    $vendor->franchise_id = $authUser->sub_franchise->franchise_id;
+                    $vendor->city_id = $authUser->sub_franchise->city_id;
+                    $vendor->state_id = $authUser->sub_franchise->state_id;
                 }
             }
             
@@ -164,8 +179,9 @@ class VendorController extends Controller
             // Create shop for vendor
             $shop = new \App\Models\Shop();
             $shop->user_id = $user->id;
-            $shop->name = $user->name;
-            $shop->slug = \Str::slug($user->name) . '-' . $user->id;
+            $shop->name = $request->shop_name;
+            $shop->address = $request->address;
+            $shop->slug = \Str::slug($request->shop_name) . '-' . $user->id;
             $shop->registration_approval = $isAdmin ? 1 : 0;
             $shop->save();
 
@@ -287,9 +303,11 @@ class VendorController extends Controller
         $rules = [
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users,email,'.$user->id,
+            'shop_name' => 'required|string|max:255',
+            'address' => 'required|string',
         ];
 
-        if (Auth::user()->user_type == 'admin' || Auth::user()->user_type == 'staff' || Auth::user()->user_type == 'franchise' || Auth::user()->user_type == 'sub_franchise') {
+        if (Auth::user()->user_type == 'admin' || Auth::user()->user_type == 'staff' || Auth::user()->user_type == 'franchise' || Auth::user()->user_type == 'sub_franchise' || Auth::guard('franchise_employee')->check()) {
             $rules['commission_percentage'] = 'required|numeric|min:0|max:100';
         }
 
@@ -309,7 +327,20 @@ class VendorController extends Controller
         if (isset($validated['commission_percentage'])) {
             $vendor->commission_percentage = $validated['commission_percentage'];
         }
+        $vendor->shop_name = $request->shop_name;
+        $vendor->address = $request->address;
         $vendor->save();
+
+        // Update shop
+        $shop = $user->shop;
+        if (!$shop) {
+            $shop = new \App\Models\Shop();
+            $shop->user_id = $user->id;
+        }
+        $shop->name = $request->shop_name;
+        $shop->address = $request->address;
+        $shop->slug = \Str::slug($request->shop_name) . '-' . $user->id;
+        $shop->save();
 
         flash(translate('Vendor updated successfully.'))->success();
         

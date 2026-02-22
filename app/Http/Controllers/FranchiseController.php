@@ -368,6 +368,11 @@ class FranchiseController extends Controller
         if ($request->hasFile('id_proof')) {
             $franchise->id_proof = $request->file('id_proof')->store('uploads/franchise/id_proofs', 'public');
         }
+
+        $franchise->bank_name = $request->bank_name;
+        $franchise->bank_acc_name = $request->bank_acc_name;
+        $franchise->bank_acc_no = $request->bank_acc_no;
+        $franchise->bank_routing_no = $request->bank_routing_no;
         
         $franchise->save();
 
@@ -426,6 +431,11 @@ class FranchiseController extends Controller
         if ($request->hasFile('id_proof')) {
             $subFranchise->id_proof = $request->file('id_proof')->store('uploads/franchise/id_proofs', 'public');
         }
+
+        $subFranchise->bank_name = $request->bank_name;
+        $subFranchise->bank_acc_name = $request->bank_acc_name;
+        $subFranchise->bank_acc_no = $request->bank_acc_no;
+        $subFranchise->bank_routing_no = $request->bank_routing_no;
 
         $subFranchise->save();
 
@@ -498,29 +508,42 @@ class FranchiseController extends Controller
     {
         $user_id = decrypt($id);
         $user = User::findOrFail($user_id);
-        $franchise = $user->franchise;
         
         $subFranchises = collect();
-        $vendors = collect();
-        $employees = collect();
+        $franchise_vendors = collect();
+        $sub_franchise_vendors = collect();
+        $franchise_employees = collect();
+        $sub_franchise_employees = collect();
         $delivery_boys = collect();
 
-        if($franchise) {
-            $subFranchises = SubFranchise::where('franchise_id', $franchise->id)->get();
-            $vendors = Vendor::where('franchise_id', $franchise->id)->get();
-            // Assuming employees are created by the franchise user
-            $employees = FranchiseEmployee::where('created_by', $user->id)->get();
-            $delivery_boys = \App\Models\DeliveryBoy::where('franchise_id', $user->id)->get();
-        } elseif ($user->sub_franchise) {
-             // For sub-franchise, maybe show vendors linked to it?
+        if($user->user_type == 'franchise') {
+            $franchise = $user->franchise;
+            if($franchise) {
+                $subFranchises = SubFranchise::where('franchise_id', $franchise->id)->get();
+                $franchise_vendors = Vendor::where('franchise_id', $franchise->id)->whereNull('sub_franchise_id')->get();
+                $sub_franchise_vendors = Vendor::where('franchise_id', $franchise->id)->whereNotNull('sub_franchise_id')->get();
+                $franchise_employees = FranchiseEmployee::where('franchise_id', $franchise->id)->whereNull('sub_franchise_id')->get();
+                $sub_franchise_employees = FranchiseEmployee::where('franchise_id', $franchise->id)->whereNotNull('sub_franchise_id')->get();
+                $delivery_boys = \App\Models\DeliveryBoy::where('franchise_id', $user->id)->get();
+            }
+        } elseif ($user->user_type == 'sub_franchise') {
              $subFranchise = $user->sub_franchise;
-             $vendors = Vendor::where('sub_franchise_id', $subFranchise->id)->get();
-             // Employees created by sub-franchise
-             $employees = FranchiseEmployee::where('created_by', $user->id)->get();
-             $delivery_boys = \App\Models\DeliveryBoy::where('sub_franchise_id', $user->id)->get();
+             if($subFranchise) {
+                 $sub_franchise_vendors = Vendor::where('sub_franchise_id', $subFranchise->id)->get();
+                 $sub_franchise_employees = FranchiseEmployee::where('sub_franchise_id', $subFranchise->id)->get();
+                 $delivery_boys = \App\Models\DeliveryBoy::where('sub_franchise_id', $user->id)->get();
+             }
         }
 
-        return view('backend.franchise.profile', compact('user', 'subFranchises', 'vendors', 'employees', 'delivery_boys'));
+        return view('backend.franchise.profile', compact(
+            'user', 
+            'subFranchises', 
+            'franchise_vendors', 
+            'sub_franchise_vendors', 
+            'franchise_employees', 
+            'sub_franchise_employees', 
+            'delivery_boys'
+        ));
     }
 
     public function payment_modal(Request $request)

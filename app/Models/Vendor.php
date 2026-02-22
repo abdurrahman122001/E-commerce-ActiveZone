@@ -19,7 +19,11 @@ class Vendor extends Model
         'bank_name',
         'bank_acc_name',
         'bank_acc_no',
-        'bank_routing_no'
+        'bank_routing_no',
+        'shop_name',
+        'address',
+        'city_id',
+        'state_id'
     ];
 
     public function addedByEmployee()
