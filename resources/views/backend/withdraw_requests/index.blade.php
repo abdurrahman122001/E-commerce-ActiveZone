@@ -128,10 +128,35 @@
             </div>
         </div>
     </div>
+
+    <!-- Universal Confirmation Modal -->
+    <div class="modal fade" id="universal-confirm-modal">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title h6" id="universal-modal-title">{{ translate('Confirmation') }}</h5>
+                    <button type="button" class="close" data-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <p id="universal-modal-message">{{ translate('Do you really want to approve this withdrawal request?') }}</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-light" data-dismiss="modal">{{ translate('Cancel') }}</button>
+                    <a class="btn btn-primary" id="universal-confirm-button" href="">{{ translate('Proceed!') }}</a>
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection
 
 @section('script')
     <script type="text/javascript">
+        function confirm_modal(url)
+        {
+            document.getElementById('universal-confirm-button').setAttribute('href', url);
+            $('#universal-confirm-modal').modal('show', {backdrop: 'static'});
+        }
+
         function reject_modal(id){
             $('#reject-form').attr('action', '{{ url('admin/withdraw-requests/reject') }}/'+id);
             $('#reject-modal').modal('show');

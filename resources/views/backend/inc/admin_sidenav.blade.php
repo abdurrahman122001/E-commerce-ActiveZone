@@ -979,7 +979,7 @@
                             </a>
                         </li>
                         <li class="aiz-side-nav-item">
-                            <a href="{{ route('commission_withdraw_requests.index') }}" class="aiz-side-nav-link {{ areActiveRoutes(['commission_withdraw_requests.index']) }}">
+                            <a href="{{ route('admin.withdraw_requests.index') }}" class="aiz-side-nav-link {{ areActiveRoutes(['admin.withdraw_requests.index']) }}">
                                 <span class="aiz-side-nav-text">{{ translate('Commission Withdraw Requests') }}</span>
                             </a>
                         </li>
