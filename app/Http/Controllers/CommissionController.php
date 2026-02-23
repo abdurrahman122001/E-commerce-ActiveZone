@@ -177,60 +177,92 @@ class CommissionController extends Controller
             $vendor = \App\Models\Vendor::find($vendor_id);
             if ($vendor) {
                 foreach ($order->orderDetails as $orderDetail) {
-                    $commission_percentage = $orderDetail->product->commission_percentage > 0 ? $orderDetail->product->commission_percentage : $vendor->commission_percentage;
-                    
+                    $commission_percentage = $orderDetail->product->commission_percentage > 0
+                        ? $orderDetail->product->commission_percentage
+                        : $vendor->commission_percentage;
+
+                    $commission_amount             = 0;
+                    $employee_commission_amount    = 0;
+                    $franchise_commission_amount   = 0;
+                    $sub_franchise_comm_amount     = 0;
+
+                    // ── 1. Vendor Share ──────────────────────────────────────────────────
                     if ($commission_percentage > 0) {
                         $commission_amount = ($orderDetail->price * $commission_percentage) / 100;
-                        
                         $vendor->balance += $commission_amount;
                         $vendor->save();
+                    }
 
-                        // Employee Share (if vendor was added by an employee)
-                        if ($vendor->added_by_employee_id) {
-                            $employee = \App\Models\FranchiseEmployee::find($vendor->added_by_employee_id);
-                            if ($employee) {
-                                $employee_percent = $employee->commission_percentage;
-                                if ($employee_percent > 0) {
-                                    $employee_amount = ($orderDetail->price * $employee_percent) / 100;
-                                    $employee->balance += $employee_amount;
-                                    $employee->save();
+                    // ── 2. Employee Share ──────────────────────────────────────────
+                    if ($vendor->added_by_employee_id) {
+                        $employee = \App\Models\FranchiseEmployee::find($vendor->added_by_employee_id);
+                        if ($employee && $employee->commission_percentage > 0) {
+                            $employee_commission_amount = ($orderDetail->price * $employee->commission_percentage) / 100;
+                            $employee->balance += $employee_commission_amount;
+                            $employee->save();
+                        }
+                    }
+
+                    // ── 3. Sub-Franchise & Franchise Share ────────────────────────────────
+                    if ($vendor->sub_franchise_id) {
+                        $sub_franchise = \App\Models\SubFranchise::find($vendor->sub_franchise_id);
+                        if ($sub_franchise) {
+                            $sub_percent = $sub_franchise->commission_percentage > 0
+                                ? $sub_franchise->commission_percentage
+                                : (float) get_setting('subfranchise_commission_on_vendor_sales', 0);
+
+                            if ($sub_percent > 0) {
+                                $sub_franchise_comm_amount = ($orderDetail->price * $sub_percent) / 100;
+                                $sub_franchise->balance += $sub_franchise_comm_amount;
+                                $sub_franchise->save();
+                            }
+
+                            // Parent Franchise Share (via sub-franchise)
+                            $parent_franchise_id = $sub_franchise->franchise_id;
+                            if ($parent_franchise_id) {
+                                $franchise = \App\Models\Franchise::find($parent_franchise_id);
+                                if ($franchise) {
+                                    $franchise_percent = $franchise->commission_percentage > 0
+                                        ? $franchise->commission_percentage
+                                        : (float) get_setting('franchise_commission_on_vendor_sales', 0);
+
+                                    if ($franchise_percent > 0) {
+                                        $franchise_commission_amount = ($orderDetail->price * $franchise_percent) / 100;
+                                        $franchise->balance += $franchise_commission_amount;
+                                        $franchise->save();
+                                    }
                                 }
                             }
                         }
+                    }
+                    elseif ($vendor->franchise_id) {
+                        $franchise = \App\Models\Franchise::find($vendor->franchise_id);
+                        if ($franchise) {
+                            $franchise_percent = $franchise->commission_percentage > 0
+                                ? $franchise->commission_percentage
+                                : (float) get_setting('franchise_commission_on_vendor_sales', 0);
 
-                        // Franchise Share
-                        if ($vendor->franchise_id) {
-                            $franchise = \App\Models\Franchise::find($vendor->franchise_id);
-                            if ($franchise) {
-                                $franchise_percent = $franchise->commission_percentage > 0 ? $franchise->commission_percentage : get_setting('franchise_commission_on_vendor_sales', 0);
-                                if ($franchise_percent > 0) {
-                                     $franchise_amount = ($orderDetail->price * $franchise_percent) / 100;
-                                     $franchise->balance += $franchise_amount;
-                                     $franchise->save();
-                                }
+                            if ($franchise_percent > 0) {
+                                $franchise_commission_amount = ($orderDetail->price * $franchise_percent) / 100;
+                                $franchise->balance += $franchise_commission_amount;
+                                $franchise->save();
                             }
                         }
+                    }
 
-                        // Subfranchise Share
-                        if ($vendor->sub_franchise_id) {
-                            $sub_franchise = \App\Models\SubFranchise::find($vendor->sub_franchise_id);
-                            if ($sub_franchise) {
-                                $sub_percent = $sub_franchise->commission_percentage > 0 ? $sub_franchise->commission_percentage : get_setting('subfranchise_commission_on_vendor_sales', 0);
-                                if ($sub_percent > 0) {
-                                     $sub_amount = ($orderDetail->price * $sub_percent) / 100;
-                                     $sub_franchise->balance += $sub_amount;
-                                     $sub_franchise->save();
-                                }
-                            }
-                        }
-
+                    // ── Save Commission History ────────────────────────────────────
+                    if ($commission_amount > 0 || $sub_franchise_comm_amount > 0 || $franchise_commission_amount > 0 || $employee_commission_amount > 0) {
                         $vendor_commission_history = new \App\Models\VendorCommissionHistory();
-                        $vendor_commission_history->order_id = $order->id;
-                        $vendor_commission_history->order_detail_id = $orderDetail->id;
-                        $vendor_commission_history->vendor_id = $vendor->id;
-                        $vendor_commission_history->franchise_id = $vendor->franchise_id;
-                        $vendor_commission_history->sub_franchise_id = $vendor->sub_franchise_id;
-                        $vendor_commission_history->commission_amount = $commission_amount;
+                        $vendor_commission_history->order_id                    = $order->id;
+                        $vendor_commission_history->order_detail_id             = $orderDetail->id;
+                        $vendor_commission_history->vendor_id                   = $vendor->id;
+                        $vendor_commission_history->franchise_id                = $vendor->franchise_id
+                            ?? ($vendor->sub_franchise ? $vendor->sub_franchise->franchise_id : null);
+                        $vendor_commission_history->sub_franchise_id            = $vendor->sub_franchise_id;
+                        $vendor_commission_history->commission_amount           = $commission_amount;
+                        $vendor_commission_history->franchise_commission_amount = $franchise_commission_amount;
+                        $vendor_commission_history->sub_franchise_commission_amount = $sub_franchise_comm_amount;
+                        $vendor_commission_history->employee_commission_amount  = $employee_commission_amount;
                         $vendor_commission_history->save();
                     }
                 }

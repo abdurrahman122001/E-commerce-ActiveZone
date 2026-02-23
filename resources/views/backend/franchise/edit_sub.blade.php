@@ -64,6 +64,19 @@
                     </div>
                 </div>
                 <div class="form-group row">
+                    <label class="col-sm-3 col-from-label" for="franchise_id">{{translate('Parent Franchise')}}</label>
+                    <div class="col-sm-9">
+                        <select class="form-control aiz-selectpicker" name="franchise_id" id="franchise_id" data-live-search="true">
+                            <option value="">{{ translate('No Parent Franchise') }}</option>
+                            @foreach($franchises as $franchise)
+                                <option value="{{ $franchise->id }}" @if($subFranchise->franchise_id == $franchise->id) selected @endif>
+                                    {{ $franchise->franchise_name }} ({{ $franchise->user->name }})
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group row">
                     <label class="col-sm-3 col-from-label" for="franchise_package_id">{{translate('Package')}}</label>
                     <div class="col-sm-9">
                         <select class="form-control aiz-selectpicker" name="franchise_package_id" id="franchise_package_id" data-live-search="true" required>

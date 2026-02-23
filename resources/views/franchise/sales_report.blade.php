@@ -40,7 +40,8 @@
                         <th>{{translate('Order Code')}}</th>
                         <th>{{translate('Product')}}</th>
                         <th data-breakpoints="lg">{{translate('Vendor')}}</th>
-                        <th>{{translate('Commission')}}</th>
+                        <th>{{translate('Total Price')}}</th>
+                        <th>{{translate('Your Earning')}}</th>
                         <th data-breakpoints="lg">{{translate('Date')}}</th>
                     </tr>
                 </thead>
@@ -57,7 +58,14 @@
                                 @endif
                             </td>
                             <td>{{ $history->vendor->user->name ?? translate('N/A') }}</td>
-                            <td>{{ single_price($history->commission_amount) }}</td>
+                            <td>{{ single_price($history->order_detail->price ?? 0) }}</td>
+                            <td class="text-success fw-700">
+                                @if(auth()->user()->user_type == 'franchise')
+                                    {{ single_price($history->franchise_commission_amount) }}
+                                @else
+                                    {{ single_price($history->sub_franchise_commission_amount) }}
+                                @endif
+                            </td>
                             <td>{{ $history->created_at->format('d-m-Y H:i A') }}</td>
                         </tr>
                     @endforeach

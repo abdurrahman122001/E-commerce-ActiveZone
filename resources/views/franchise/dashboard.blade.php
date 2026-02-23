@@ -506,6 +506,50 @@
             </div>
         </div>
     </div>
+
+    <div class="card mt-4">
+        <div class="card-header">
+            <h6 class="mb-0">{{ translate('Recent Earnings from Deliveries') }}</h6>
+        </div>
+        <div class="card-body">
+            <table class="table aiz-table mb-0">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>{{ translate('Order ID') }}</th>
+                        <th>{{ translate('Vendor') }}</th>
+                        <th>{{ translate('Total Price') }}</th>
+                        <th>{{ translate('Your Earning') }}</th>
+                        <th>{{ translate('Date') }}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach ($recent_earnings ?? [] as $key => $history)
+                        <tr>
+                            <td>{{ $key + 1 }}</td>
+                            <td>
+                                @if($history->order)
+                                    <a href="{{ route('franchise.orders.show', encrypt($history->order_id)) }}">{{ $history->order->code }}</a>
+                                @else
+                                    {{ translate('N/A') }}
+                                @endif
+                            </td>
+                            <td>{{ $history->vendor->user->name ?? translate('Deleted Vendor') }}</td>
+                            <td>{{ single_price($history->order_detail->price ?? 0) }}</td>
+                            <td class="fw-700 text-success">
+                                @if(auth()->user()->user_type == 'franchise')
+                                    {{ single_price($history->franchise_commission_amount) }}
+                                @else
+                                    {{ single_price($history->sub_franchise_commission_amount) }}
+                                @endif
+                            </td>
+                            <td>{{ $history->created_at->format('d-m-Y H:i A') }}</td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
+    </div>
 @endsection
 
 @section('script')

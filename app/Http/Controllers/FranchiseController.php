@@ -407,7 +407,8 @@ class FranchiseController extends Controller
         $subFranchise = SubFranchise::findOrFail($id);
         $states = State::where('country_id', 101)->where('status', 1)->get();
         $packages = FranchisePackage::all();
-        return view('backend.franchise.edit_sub', compact('subFranchise', 'states', 'packages'));
+        $franchises = Franchise::all();
+        return view('backend.franchise.edit_sub', compact('subFranchise', 'states', 'packages', 'franchises'));
     }
 
     public function updateSubFranchise(Request $request, $id)
@@ -427,6 +428,7 @@ class FranchiseController extends Controller
         $subFranchise->city_id = $request->city_id;
         $subFranchise->area_id = $request->area_id;
         $subFranchise->franchise_package_id = $request->franchise_package_id;
+        $subFranchise->franchise_id = $request->franchise_id;
         $subFranchise->invalid_at = $request->invalid_at;
         $subFranchise->commission_percentage = $request->commission_percentage ?? 0;
 

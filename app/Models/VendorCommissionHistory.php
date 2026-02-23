@@ -16,6 +16,9 @@ class VendorCommissionHistory extends Model
         'franchise_id',
         'sub_franchise_id',
         'commission_amount',
+        'franchise_commission_amount',
+        'sub_franchise_commission_amount',
+        'employee_commission_amount',
     ];
 
     public function order()
