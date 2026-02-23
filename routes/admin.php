@@ -680,6 +680,9 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin', 'prevent-ba
         Route::get('/franchise-employees/reject/{id}', 'reject')->name('admin.franchise_employees.reject');
         Route::get('/franchise-employees/login/{id}', 'login')->name('admin.franchise_employees.login');
         Route::post('/franchise-employees/set-commission', 'set_commission')->name('admin.franchise_employees.set_commission');
+        // Vendor approve/reject from vendor registrations page
+        Route::get('/vendors/approve/{id}', 'approveVendor')->name('admin.vendors.approve');
+        Route::get('/vendors/reject/{id}', 'rejectVendor')->name('admin.vendors.reject');
     });
 
 

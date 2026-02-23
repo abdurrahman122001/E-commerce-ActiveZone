@@ -39,17 +39,30 @@ class FranchiseEmployeeController extends Controller
     public function vendor_registrations(Request $request)
     {
         $franchise_id = $request->franchise_id;
+        $sub_franchise_id = $request->sub_franchise_id;
         $employee_id = $request->employee_id;
         $date_range = $request->date_range;
-        
+
         $vendors = \App\Models\Vendor::query();
 
         if (Auth::user()->user_type == 'admin') {
-            $vendors = $vendors->whereNotNull('franchise_id');
+            // Show vendors linked directly to a franchise OR via a sub-franchise
+            $vendors = $vendors->where(function($q) {
+                $q->whereNotNull('franchise_id')
+                  ->orWhereNotNull('sub_franchise_id');
+            });
         }
 
-        if ($franchise_id) {
-            $vendors = $vendors->where('franchise_id', $franchise_id);
+        if ($sub_franchise_id) {
+            // Filter by specific sub-franchise
+            $vendors = $vendors->where('sub_franchise_id', $sub_franchise_id);
+        } elseif ($franchise_id) {
+            // Filter by franchise: include direct franchise vendors AND sub-franchise vendors
+            $subFranchiseIds = \App\Models\SubFranchise::where('franchise_id', $franchise_id)->pluck('id');
+            $vendors = $vendors->where(function($q) use ($franchise_id, $subFranchiseIds) {
+                $q->where('franchise_id', $franchise_id)
+                  ->orWhereIn('sub_franchise_id', $subFranchiseIds);
+            });
         }
 
         if ($employee_id) {
@@ -69,9 +82,12 @@ class FranchiseEmployeeController extends Controller
 
         $vendors = $vendors->latest()->paginate(15);
         $franchises = \App\Models\Franchise::all();
+        $sub_franchises = \App\Models\SubFranchise::when($franchise_id, function($q) use ($franchise_id) {
+            return $q->where('franchise_id', $franchise_id);
+        })->get();
         $employees = FranchiseEmployee::all();
 
-        return view('backend.franchise.employees.vendor_registrations', compact('vendors', 'franchises', 'employees', 'franchise_id', 'employee_id', 'date_range'));
+        return view('backend.franchise.employees.vendor_registrations', compact('vendors', 'franchises', 'sub_franchises', 'employees', 'franchise_id', 'sub_franchise_id', 'employee_id', 'date_range'));
     }
 
     public function payout_modal(Request $request)
@@ -191,5 +207,37 @@ class FranchiseEmployeeController extends Controller
         $employee->save();
 
         return 1;
+    }
+
+    public function approveVendor($id)
+    {
+        $vendor = \App\Models\Vendor::findOrFail($id);
+        $vendor->status = 'approved';
+        $vendor->save();
+
+        // Also approve the shop
+        if ($vendor->user && $vendor->user->shop) {
+            $vendor->user->shop->registration_approval = 1;
+            $vendor->user->shop->save();
+        }
+
+        flash(translate('Vendor approved successfully.'))->success();
+        return back();
+    }
+
+    public function rejectVendor($id)
+    {
+        $vendor = \App\Models\Vendor::findOrFail($id);
+        $vendor->status = 'rejected';
+        $vendor->save();
+
+        // Also reject the shop
+        if ($vendor->user && $vendor->user->shop) {
+            $vendor->user->shop->registration_approval = 0;
+            $vendor->user->shop->save();
+        }
+
+        flash(translate('Vendor rejected.'))->success();
+        return back();
     }
 }

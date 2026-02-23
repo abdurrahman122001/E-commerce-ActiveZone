@@ -26,6 +26,16 @@
                     </select>
                 </div>
                 <div class="col-md-3">
+                    <select class="form-control aiz-selectpicker" name="sub_franchise_id" id="sub_franchise_id" data-live-search="true">
+                        <option value="">{{ translate('All Sub-Franchises') }}</option>
+                        @foreach($sub_franchises as $sf)
+                            <option value="{{ $sf->id }}" @if($sub_franchise_id == $sf->id) selected @endif>
+                                {{ $sf->user->name ?? 'Sub-Franchise #'.$sf->id }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="col-md-2">
                     <select class="form-control aiz-selectpicker" name="employee_id" id="employee_id" data-live-search="true">
                         <option value="">{{ translate('All Employees') }}</option>
                         @foreach($employees as $employee)
@@ -33,10 +43,10 @@
                         @endforeach
                     </select>
                 </div>
-                <div class="col-md-3">
+                <div class="col-md-2">
                     <input type="text" class="form-control aiz-date-range" name="date_range" @isset($date_range) value="{{ $date_range }}" @endisset placeholder="{{ translate('Select Date Range') }}" autocomplete="off">
                 </div>
-                <div class="col-md-3">
+                <div class="col-md-2">
                     <button type="submit" class="btn btn-primary">{{ translate('Filter') }}</button>
                     <a href="{{ route('admin.franchise_employees.vendor_registrations') }}" class="btn btn-outline-secondary">{{ translate('Reset') }}</a>
                 </div>
@@ -58,6 +68,7 @@
                     <th data-breakpoints="lg">{{translate('Email')}}</th>
                     <th data-breakpoints="lg">{{translate('Registered By')}}</th>
                     <th data-breakpoints="lg">{{translate('Franchise')}}</th>
+                    <th data-breakpoints="lg">{{translate('Status')}}</th>
                     <th data-breakpoints="lg">{{translate('Registration Date')}}</th>
                     <th class="text-right">{{translate('Options')}}</th>
                 </tr>
@@ -80,10 +91,23 @@
                             @endif
                         </td>
                         <td>
-                            @if($vendor->franchise)
+                            @if($vendor->sub_franchise)
+                                <span class="badge badge-inline badge-info">{{ translate('Sub') }}</span>
+                                {{ $vendor->sub_franchise->user->name ?? 'Sub-Franchise #'.$vendor->sub_franchise_id }}
+                                <br><small class="text-muted">({{ $vendor->sub_franchise->franchise->franchise_name ?? '' }})</small>
+                            @elseif($vendor->franchise)
                                 {{ $vendor->franchise->franchise_name }}
                             @else
                                 <span class="text-muted">{{ translate('N/A') }}</span>
+                            @endif
+                        </td>
+                        <td>
+                            @if($vendor->status == 'approved')
+                                <span class="badge badge-inline badge-success">{{ translate('Approved') }}</span>
+                            @elseif($vendor->status == 'rejected')
+                                <span class="badge badge-inline badge-danger">{{ translate('Rejected') }}</span>
+                            @else
+                                <span class="badge badge-inline badge-warning">{{ translate('Pending') }}</span>
                             @endif
                         </td>
                         <td>{{ $vendor->created_at->format('d-m-Y H:i A') }}</td>
@@ -91,6 +115,20 @@
                             <a href="{{ route('sellers.profile', $vendor->user_id) }}" class="btn btn-soft-primary btn-icon btn-circle btn-sm" title="{{ translate('View Profile') }}">
                                 <i class="las la-eye"></i>
                             </a>
+                            @if($vendor->status == 'pending' || $vendor->status == null)
+                                <a href="{{ route('admin.vendors.approve', $vendor->id) }}"
+                                   class="btn btn-soft-success btn-icon btn-circle btn-sm"
+                                   title="{{ translate('Approve Vendor') }}"
+                                   onclick="return confirm('{{ translate('Approve this vendor?') }}')">
+                                    <i class="las la-check"></i>
+                                </a>
+                                <a href="{{ route('admin.vendors.reject', $vendor->id) }}"
+                                   class="btn btn-soft-danger btn-icon btn-circle btn-sm"
+                                   title="{{ translate('Reject Vendor') }}"
+                                   onclick="return confirm('{{ translate('Reject this vendor?') }}')">
+                                    <i class="las la-times"></i>
+                                </a>
+                            @endif
                         </td>
                     </tr>
                 @endforeach
