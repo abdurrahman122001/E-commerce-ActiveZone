@@ -170,6 +170,15 @@
 
 												@endif
 											</span>
+											@if (get_setting('shipping_type') == 'dynamic_delivery' && $order->distance > 0)
+												<br>
+												<span class="gry-color small strong">
+													{{  translate('Distance') }}:
+												</span> 
+												<span class="">
+													{{ number_format($order->distance, 2) }} {{ translate('KM') }}
+												</span>
+											@endif
 										</td>
 									</tr>
 								</table>
@@ -380,7 +389,7 @@
 							<tr>
 								<td class="text-left">
 									@php
-										$removedXML = '<?xml version="1.0" encoding="UTF-8"?>';
+										$removedXML = '<' . '?xml version="1.0" encoding="UTF-8"?' . '>';
 									@endphp
 									{!! str_replace($removedXML,"", QrCode::size(100)->generate($order->code)) !!}
 								</td>

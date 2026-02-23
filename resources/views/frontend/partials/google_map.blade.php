@@ -114,5 +114,5 @@
 </script>
 
 <script
-    src="https://maps.googleapis.com/maps/api/js?key={{ env('MAP_API_KEY') }}&libraries=places&language=en&callback=initialize"
+    src="https://maps.googleapis.com/maps/api/js?key={{ get_setting('google_map_key') }}&libraries=places&language=en&callback=initialize"
     async defer></script>

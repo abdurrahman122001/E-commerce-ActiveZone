@@ -100,6 +100,38 @@
 	    @foreach (session('flash_notification', collect())->toArray() as $message)
 	        AIZ.plugins.notify('{{ $message['level'] }}', '{{ $message['message'] }}');
 	    @endforeach
+
+        function update_online_status(el){
+            if(el.checked){
+                var status = 1;
+            }
+            else{
+                var status = 0;
+            }
+            $.post('{{ route('delivery-boy.update-online-status') }}', {_token:'{{ csrf_token() }}', status:status}, function(data){
+                if(data == 1){
+                    AIZ.plugins.notify('success', '{{ translate('Online status updated successfully') }}');
+                }
+                else{
+                    AIZ.plugins.notify('danger', '{{ translate('Something went wrong') }}');
+                }
+            });
+        }
+
+        @if(Auth::user()->user_type == 'delivery_boy' && Auth::user()->delivery_boy->online_status == 1)
+            function update_location(){
+                if (navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition(function(position) {
+                        var lat = position.coords.latitude;
+                        var long = position.coords.longitude;
+                        $.post('{{ route('delivery-boy.update_location') }}', {_token:'{{ csrf_token() }}', lat:lat, long:long}, function(data){
+                            console.log('Location updated');
+                        });
+                    });
+                }
+            }
+            setInterval(update_location, 60000); // Update every 1 minute
+        @endif
     </script>
 
 </body>

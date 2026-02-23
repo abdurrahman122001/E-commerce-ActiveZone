@@ -5,6 +5,17 @@
                 <span></span>
             </button>
         </div>
+        @if(Auth::user()->user_type == 'delivery_boy')
+            <div class="aiz-topbar-item">
+                <div class="d-flex align-items-center">
+                    <span class="mr-2">{{translate('Online Status')}}</span>
+                    <label class="aiz-switch aiz-switch-success mb-0">
+                        <input type="checkbox" onchange="update_online_status(this)" @if(Auth::user()->delivery_boy->online_status == 1) checked @endif>
+                        <span class="slider round"></span>
+                    </label>
+                </div>
+            </div>
+        @endif
     </div>
     <div class="d-flex h-100 align-items-center">
         <div class="aiz-topbar-item ml-2">

@@ -58,6 +58,8 @@
             <form action="{{ route('delivery-boy.orders.update_delivery_status') }}" method="POST">
                 @csrf
                 <input type="hidden" name="order_id" value="{{ $order->id }}">
+                <input type="hidden" name="lat" id="lat">
+                <input type="hidden" name="long" id="long">
                 <div class="row">
                     <div class="col-md-9">
                         <select class="form-control aiz-selectpicker" name="status" data-minimum-results-for-search="Infinity">
@@ -77,5 +79,20 @@
         </div>
     </div>
 </div>
+
+@endsection
+
+@section('script')
+<script>
+    $(document).ready(function() {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(function(position) {
+                $('#lat').val(position.coords.latitude);
+                $('#long').val(position.coords.longitude);
+            });
+        }
+    });
+</script>
+@endsection
 
 @endsection

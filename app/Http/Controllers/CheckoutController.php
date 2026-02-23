@@ -73,6 +73,16 @@ class CheckoutController extends Controller
         $shipping_info['country_id'] = $country_id;
         $shipping_info['city_id'] = $city_id;
         $shipping_info['area_id'] = $area_id;
+        $shipping_info['lat'] = null;
+        $shipping_info['long'] = null;
+
+        if (auth()->check() && count($addresses)) {
+            $address = $addresses->toQuery()->where('id', $address_id)->first();
+            if ($address) {
+                $shipping_info['lat'] = $address->latitude;
+                $shipping_info['long'] = $address->longitude;
+            }
+        }
         $total = 0;
         $tax = 0;
         $shipping = 0;
@@ -718,20 +728,16 @@ class CheckoutController extends Controller
 
         $carts->toQuery()->update(['address_id' => $request->address_id]);
 
-        $country_id = $user != null ?
-                    Address::findOrFail($request->address_id)->country_id :
-                    $request->address_id;
-        $city_id = $user != null ?
-                    Address::findOrFail($request->address_id)->city_id :
-                    $request->city_id;
-        $area_id = $user != null ?
-                    Address::findOrFail($request->address_id)->area_id :
-                    $request->area_id;
+        $address = $user != null ? Address::findOrFail($request->address_id) : null;
+        $country_id = $address ? $address->country_id : $request->address_id;
+        $city_id = $address ? $address->city_id : $request->city_id;
+        $area_id = $address ? $address->area_id : $request->area_id;
 
-                    
         $shipping_info['country_id'] = $country_id;
         $shipping_info['city_id'] = $city_id;
         $shipping_info['area_id'] = $area_id;
+        $shipping_info['lat'] = $address ? $address->latitude : null;
+        $shipping_info['long'] = $address ? $address->longitude : null;
         $carrier_list = array();
         if (get_setting('shipping_type') == 'carrier_wise_shipping') {
             $default_shipping_type = 'carrier';

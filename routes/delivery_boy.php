@@ -62,6 +62,7 @@ Route::group(['middleware' => ['user', 'verified', 'unbanned', 'prevent-back-his
         Route::get('/total-earnings', 'total_earning')->name('total-earnings');
         Route::get('/cancel-request/{id}', 'cancel_request')->name('cancel-request');
         Route::get('/cancel-request-list', 'delivery_boys_cancel_request_list')->name('cancel-request-list');
+        Route::post('/delivery-boy/update-location', 'update_location')->name('delivery-boy.update_location');
     });
 
     Route::controller(OrderController::class)->group(function () {
@@ -73,6 +74,7 @@ Route::group(['middleware' => ['user', 'verified', 'unbanned', 'prevent-back-his
         Route::get('/delivery-boy/wallet', 'wallet')->name('delivery-boy.wallet');
         Route::get('/delivery-boy/profile', 'profile')->name('delivery-boy.profile');
         Route::post('/delivery-boy/profile/update', 'profile_update')->name('delivery-boy.profile.update');
+        Route::post('/delivery-boy/update-online-status', 'update_online_status')->name('delivery-boy.update-online-status');
     });
     
 });

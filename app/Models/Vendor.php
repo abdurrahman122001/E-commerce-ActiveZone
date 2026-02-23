@@ -23,7 +23,9 @@ class Vendor extends Model
         'shop_name',
         'address',
         'city_id',
-        'state_id'
+        'state_id',
+        'lat',
+        'long'
     ];
 
     public function addedByEmployee()

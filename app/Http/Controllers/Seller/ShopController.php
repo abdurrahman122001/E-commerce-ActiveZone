@@ -43,6 +43,14 @@ class ShopController extends Controller
         {
             $shop->delivery_pickup_longitude    = $request->delivery_pickup_longitude;
             $shop->delivery_pickup_latitude     = $request->delivery_pickup_latitude;
+
+            // Sync to vendor model
+            $vendor = $shop->user->vendor;
+            if ($vendor) {
+                $vendor->lat = $request->delivery_pickup_latitude;
+                $vendor->long = $request->delivery_pickup_longitude;
+                $vendor->save();
+            }
         } 
         elseif ($request->has('facebook') || $request->has('google') || $request->has('twitter') ||$request->has('youtube') || $request->has('instagram'))
         {

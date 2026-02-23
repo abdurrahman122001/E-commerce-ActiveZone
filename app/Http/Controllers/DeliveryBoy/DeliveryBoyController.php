@@ -145,6 +145,27 @@ class DeliveryBoyController extends Controller
         return view('delivery_boy.wallet');
     }
 
+    public function update_online_status(Request $request)
+    {
+        $delivery_boy = Auth::user()->delivery_boy;
+        if ($delivery_boy) {
+            $delivery_boy->online_status = $request->status;
+            $delivery_boy->save();
+        }
+        return 1;
+    }
+
+    public function update_location(Request $request)
+    {
+        $delivery_boy = Auth::user()->delivery_boy;
+        if ($delivery_boy) {
+            $delivery_boy->lat = $request->lat;
+            $delivery_boy->long = $request->long;
+            $delivery_boy->save();
+        }
+        return response()->json(['status' => 'success']);
+    }
+
     public function profile_update(Request $request)
     {
         $user = Auth::user();

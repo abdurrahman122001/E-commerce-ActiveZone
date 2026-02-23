@@ -54,7 +54,17 @@ class OrderController extends Controller
 
         if($request->status == 'delivered'){
             $order->delivered_date = date("Y-m-d H:i:s");
+            if ($request->has('lat') && $request->has('long')) {
+                $order->delivery_completed_lat = $request->lat;
+                $order->delivery_completed_long = $request->long;
+            }
             $order->save();
+
+            processDeliveryEarnings($order);
+        }
+
+        if ($request->status == 'confirmed') {
+            assign_nearest_rider($order);
         }
 
         if ($request->status == 'cancelled' && $order->payment_type == 'wallet') {

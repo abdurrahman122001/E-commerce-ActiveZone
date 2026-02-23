@@ -1012,6 +1012,161 @@ if (!function_exists('translation_tables')) {
     }
 }
 
+if (!function_exists('assign_nearest_rider')) {
+    function assign_nearest_rider($order) {
+        if ($order->assign_delivery_boy != null) return;
+
+        $pickup_lat = null;
+        $pickup_long = null;
+
+        if ($order->seller_id == get_admin()->id) {
+             $pickup_lat = get_setting('admin_shop_latitude');
+             $pickup_long = get_setting('admin_shop_longitude');
+        } else {
+             $vendor = $order->seller->vendor;
+             $shop = $order->seller->shop;
+             $pickup_lat = ($vendor && $vendor->lat) ? $vendor->lat : ($shop ? $shop->delivery_pickup_latitude : null);
+             $pickup_long = ($vendor && $vendor->long) ? $vendor->long : ($shop ? $shop->delivery_pickup_longitude : null);
+        }
+
+        if (!$pickup_lat || !$pickup_long) return;
+
+        $riders_query = \App\Models\DeliveryBoy::where('status', 1)->where('online_status', 1);
+        
+        $vendor = $order->seller->vendor;
+        if ($vendor && $vendor->franchise_id) {
+            $riders_query->where('franchise_id', $vendor->franchise_id);
+        }
+
+        $riders = $riders_query->get();
+
+        // If no franchise riders found, fallback to all online riders (optional, depends on policy)
+        if ($riders->isEmpty() && $vendor && $vendor->franchise_id) {
+             $riders = \App\Models\DeliveryBoy::where('status', 1)->where('online_status', 1)->get();
+        }
+        
+        $nearest_rider = null;
+        $min_distance = INF;
+
+        foreach ($riders as $rider) {
+            if ($rider->lat && $rider->long) {
+                $dist = get_distance($pickup_lat, $pickup_long, $rider->lat, $rider->long);
+                if ($dist < $min_distance) {
+                    $min_distance = $dist;
+                    $nearest_rider = $rider;
+                }
+            }
+        }
+
+        if ($nearest_rider) {
+            $order->assign_delivery_boy = $nearest_rider->user_id;
+            $order->save();
+
+            $delivery_history = new \App\Models\DeliveryHistory;
+            $delivery_history->order_id = $order->id;
+            $delivery_history->delivery_status = $order->delivery_status;
+            $delivery_history->delivery_boy_id = $nearest_rider->user_id;
+            $delivery_history->save();
+        }
+    }
+}
+
+if (!function_exists('processDeliveryEarnings')) {
+    function processDeliveryEarnings($order) {
+        if ($order->delivery_charge <= 0 || ($order->rider_earning > 0)) return;
+
+        $rider_percentage = get_setting('rider_earning_percentage', 75);
+        $franchise_percentage = get_setting('franchise_earning_percentage', 15);
+        $company_percentage = get_setting('company_earning_percentage', 10);
+
+        $rider_earning = ($order->delivery_charge * $rider_percentage) / 100;
+        $franchise_earning = ($order->delivery_charge * $franchise_percentage) / 100;
+        $company_earning = ($order->delivery_charge * $company_percentage) / 100;
+
+        $order->rider_earning = $rider_earning;
+        $order->franchise_earning = $franchise_earning;
+        $order->company_earning = $company_earning;
+        
+        if ($order->assign_delivery_boy) {
+            $rider_user = $order->delivery_boy;
+            if ($rider_user) {
+                $rider_user->balance += $rider_earning;
+                $rider_user->save();
+                
+                $delivery_boy = $rider_user->delivery_boy;
+                if ($delivery_boy) {
+                    $delivery_boy->total_earning += $rider_earning;
+                    $delivery_boy->save();
+                }
+
+                $wallet = new \App\Models\Wallet;
+                $wallet->user_id = $rider_user->id;
+                $wallet->amount = $rider_earning;
+                $wallet->payment_method = 'Delivery Earning';
+                $wallet->payment_details = 'Earnings from Order: ' . $order->code;
+                $wallet->save();
+            }
+        }
+
+        $vendor = $order->seller->vendor;
+        if ($vendor && $vendor->franchise) {
+            $franchise_user = $vendor->franchise->user;
+            if ($franchise_user) {
+                $franchise_user->balance += $franchise_earning;
+                $franchise_user->save();
+
+                $wallet = new \App\Models\Wallet;
+                $wallet->user_id = $franchise_user->id;
+                $wallet->amount = $franchise_earning;
+                $wallet->payment_method = 'Delivery Commission';
+                $wallet->payment_details = 'Commission from Order: ' . $order->code;
+                $wallet->save();
+            }
+        }
+
+        $admin = get_admin();
+        if ($admin) {
+            $admin->balance += $company_earning;
+            $admin->save();
+
+            $wallet = new \App\Models\Wallet;
+            $wallet->user_id = $admin->id;
+            $wallet->amount = $company_earning;
+            $wallet->payment_method = 'Delivery Service Charge';
+            $wallet->payment_details = 'Earnings from Order: ' . $order->code;
+            $wallet->save();
+        }
+        $order->save();
+    }
+}
+
+if (!function_exists('get_distance')) {
+    function get_distance($lat1, $lon1, $lat2, $lon2) {
+        $api_key = get_setting('google_map_key');
+        if($api_key) {
+            try {
+                $url = "https://maps.googleapis.com/maps/api/distancematrix/json?origins=".$lat1.",".$lon1."&destinations=".$lat2.",".$lon2."&key=".$api_key;
+                $ch = curl_init();
+                curl_setopt($ch, CURLOPT_URL, $url);
+                curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+                $responseJson = curl_exec($ch);
+                curl_close($ch);
+                $response = json_decode($responseJson);
+                if($response && $response->status == 'OK' && $response->rows[0]->elements[0]->status == 'OK') {
+                    return $response->rows[0]->elements[0]->distance->value / 1000; // in KM
+                }
+            } catch (\Exception $e) {}
+        }
+        
+        $theta = $lon1 - $lon2;
+        $dist = sin(deg2rad($lat1)) * sin(deg2rad($lat2)) +  cos(deg2rad($lat1)) * cos(deg2rad($lat2)) * cos(deg2rad($theta));
+        $dist = acos($dist);
+        $dist = rad2deg($dist);
+        $miles = $dist * 60 * 1.1515;
+        return ($miles * 1.609344); // in KM
+    }
+}
+
 function getShippingCost($carts, $index, $shipping_info = '', $carrier = '')
 {
     //Log::alert('area Info', ['shipping_info' => $shipping_info]);
@@ -1077,6 +1232,36 @@ function getShippingCost($carts, $index, $shipping_info = '', $carrier = '')
             $shop = Shop::where('user_id', $product->user_id)->first();
             return ($shop ? $shop->shipping_cost : 0) / count($seller_products[$product->user_id]);
         }
+    } elseif ($shipping_type == 'dynamic_delivery') {
+        $base_fee = get_setting('delivery_base_fee', 0);
+        $per_km_rate = get_setting('delivery_per_km_rate', 0);
+        
+        // Find Shop Lat/Long
+        if ($product->added_by == 'admin') {
+             $shop_lat = get_setting('admin_shop_latitude');
+             $shop_long = get_setting('admin_shop_longitude');
+        } else {
+             $vendor = $product->user->vendor;
+             $shop = $product->user->shop;
+             $shop_lat = ($vendor && $vendor->lat) ? $vendor->lat : ($shop ? $shop->delivery_pickup_latitude : null);
+             $shop_long = ($vendor && $vendor->long) ? $vendor->long : ($shop ? $shop->delivery_pickup_longitude : null);
+        }
+
+        // Find Customer Lat/Long (from shipping info or user address)
+        $customer_lat = $shipping_info['lat'] ?? null;
+        $customer_long = $shipping_info['long'] ?? null;
+
+        if ($shop_lat && $shop_long && $customer_lat && $customer_long) {
+            $distance = get_distance($shop_lat, $shop_long, $customer_lat, $customer_long);
+            $cost = $base_fee + ($distance * $per_km_rate);
+            
+            if ($product->added_by == 'admin') {
+                return $cost / count($admin_products);
+            } else {
+                return $cost / count($seller_products[$product->user_id]);
+            }
+        }
+        return $base_fee;
     } elseif ($shipping_type == 'area_wise_shipping') {
          if (isset($shipping_info['area_id']) && $shipping_info['area_id'] !== null && $shipping_info['area_id']!=0) {
             $area = Area::where('id', $shipping_info['area_id'])->first();

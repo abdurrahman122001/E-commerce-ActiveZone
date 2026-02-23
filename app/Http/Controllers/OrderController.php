@@ -318,6 +318,26 @@ class OrderController extends Controller
             }
 
             $order->grand_total = $subtotal + $tax + $shipping + $gst;
+            $order->delivery_charge = $shipping;
+
+            if (get_setting('shipping_type') == 'dynamic_delivery') {
+                if ($order->seller_id == get_admin()->id) {
+                    $shop_lat = get_setting('admin_shop_latitude');
+                    $shop_long = get_setting('admin_shop_longitude');
+                } else {
+                    $vendor = $order->seller->vendor;
+                    $shop = $order->seller->shop;
+                    $shop_lat = ($vendor && $vendor->lat) ? $vendor->lat : ($shop ? $shop->delivery_pickup_latitude : null);
+                    $shop_long = ($vendor && $vendor->long) ? $vendor->long : ($shop ? $shop->delivery_pickup_longitude : null);
+                }
+
+                $customer_lat = $address ? $address->latitude : null;
+                $customer_long = $address ? $address->longitude : null;
+
+                if ($shop_lat && $shop_long && $customer_lat && $customer_long) {
+                    $order->distance = get_distance($shop_lat, $shop_long, $customer_lat, $customer_long);
+                }
+            }
 
             if ($seller_product[0]->coupon_code != null) {
                 $order->coupon_discount = $coupon_discount;
@@ -429,7 +449,16 @@ class OrderController extends Controller
 
         if($request->status == 'delivered'){
             $order->delivered_date = date("Y-m-d H:i:s");
+            if ($request->has('lat') && $request->has('long')) {
+                $order->delivery_completed_lat = $request->lat;
+                $order->delivery_completed_long = $request->long;
+            }
             $order->save();
+            processDeliveryEarnings($order);
+        }
+
+        if ($request->status == 'confirmed') {
+            assign_nearest_rider($order);
         }
         
         if ($request->status == 'cancelled' && $order->payment_type == 'wallet') {

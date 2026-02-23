@@ -119,6 +119,73 @@
 
         
 
+        <div class="card">
+            <div class="{{ get_setting('shipping_type') == 'dynamic_delivery' ? 'border border-primary border-2 rounded-2' : '' }}">
+                <div class="card-header">
+                    <h5 class="mb-0 h6">{{translate('Dynamic Delivery Charge Settings')}}</h5>
+                </div>
+                <form action="{{ route('business_settings.update') }}" method="POST">
+                    @csrf
+                    <div class="card-body">
+                        <div class="form-group row">
+                            <label class="col-md-4 col-from-label">{{translate('Base Fee')}}</label>
+                            <div class="col-md-8">
+                                <input type="hidden" name="types[]" value="delivery_base_fee">
+                                <input class="form-control" type="number" step="0.01" name="delivery_base_fee" value="{{ get_setting('delivery_base_fee') }}" placeholder="0.00">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-md-4 col-from-label">{{translate('Per KM Rate')}}</label>
+                            <div class="col-md-8">
+                                <input type="hidden" name="types[]" value="delivery_per_km_rate">
+                                <input class="form-control" type="number" step="0.01" name="delivery_per_km_rate" value="{{ get_setting('delivery_per_km_rate') }}" placeholder="0.00">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-md-4 col-from-label">{{translate('Admin Shop Latitude')}}</label>
+                            <div class="col-md-8">
+                                <input type="hidden" name="types[]" value="admin_shop_latitude">
+                                <input class="form-control" type="text" name="admin_shop_latitude" value="{{ get_setting('admin_shop_latitude') }}" placeholder="0.000000">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-md-4 col-from-label">{{translate('Admin Shop Longitude')}}</label>
+                            <div class="col-md-8">
+                                <input type="hidden" name="types[]" value="admin_shop_longitude">
+                                <input class="form-control" type="text" name="admin_shop_longitude" value="{{ get_setting('admin_shop_longitude') }}" placeholder="0.000000">
+                            </div>
+                        </div>
+                        <hr>
+                        <h6>{{translate('Earning Split (%)')}}</h6>
+                        <div class="form-group row">
+                            <label class="col-md-4 col-from-label">{{translate('Rider Earning (%)')}}</label>
+                            <div class="col-md-8">
+                                <input type="hidden" name="types[]" value="rider_earning_percentage">
+                                <input class="form-control" type="number" name="rider_earning_percentage" value="{{ get_setting('rider_earning_percentage', 75) }}">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-md-4 col-from-label">{{translate('City Franchise Earning (%)')}}</label>
+                            <div class="col-md-8">
+                                <input type="hidden" name="types[]" value="franchise_earning_percentage">
+                                <input class="form-control" type="number" name="franchise_earning_percentage" value="{{ get_setting('franchise_earning_percentage', 15) }}">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-md-4 col-from-label">{{translate('Company Earning (%)')}}</label>
+                            <div class="col-md-8">
+                                <input type="hidden" name="types[]" value="company_earning_percentage">
+                                <input class="form-control" type="number" name="company_earning_percentage" value="{{ get_setting('company_earning_percentage', 10) }}">
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <button type="submit" class="btn btn-primary">{{translate('Save Settings')}}</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
         <div class="card ">
             <div class="{{ get_setting('shipping_type') == 'carrier_wise_shipping' ? 'border border-primary border-2 rounded-2' : '' }}">
                 <div class="card-header">
