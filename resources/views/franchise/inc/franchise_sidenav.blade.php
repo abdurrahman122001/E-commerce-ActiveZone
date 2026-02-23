@@ -162,6 +162,13 @@
                             <span class="aiz-side-nav-text">{{ translate('Sales Report') }}</span>
                         </a>
                     </li>
+
+                    <li class="aiz-side-nav-item">
+                        <a href="{{ route('franchise.withdraw_requests') }}" class="aiz-side-nav-link">
+                            <i class="las la-money-bill-wave aiz-side-nav-icon"></i>
+                            <span class="aiz-side-nav-text">{{ translate('Money Withdrawal') }}</span>
+                        </a>
+                    </li>
                     
                     <li class="aiz-side-nav-item">
                         <a href="{{ route('franchise.profile.index') }}" class="aiz-side-nav-link">

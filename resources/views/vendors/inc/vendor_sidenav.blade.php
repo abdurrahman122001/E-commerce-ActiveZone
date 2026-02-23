@@ -432,6 +432,13 @@
                 </li>
 
                 <li class="aiz-side-nav-item">
+                    <a href="{{ route('vendors.withdraw_requests') }}" class="aiz-side-nav-link">
+                        <i class="las la-money-bill-alt aiz-side-nav-icon"></i>
+                        <span class="aiz-side-nav-text">{{ translate('Commission Withdrawal') }}</span>
+                    </a>
+                </li>
+
+                <li class="aiz-side-nav-item">
                     <a href="{{ route('vendors.commission_history') }}" class="aiz-side-nav-link">
                         <i class="las la-money-bill aiz-side-nav-icon"></i>
                         <span class="aiz-side-nav-text">{{ translate('Commission History') }}</span>

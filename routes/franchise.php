@@ -100,6 +100,12 @@ Route::group(['prefix' => 'franchise', 'middleware' => ['auth', 'franchise', 'pr
         Route::post('/support-tickets/reply', 'seller_store')->name('support_tickets.reply');
     });
 
+    // Withdraw Requests
+    Route::controller(App\Http\Controllers\CommissionWithdrawController::class)->group(function () {
+        Route::get('/withdraw-requests', 'index')->name('withdraw_requests');
+        Route::post('/withdraw-requests/store', 'store')->name('withdraw_requests.store');
+    });
+
 });
 // Franchise Employee Routes (Unified Login)
 Route::group(['prefix' => 'franchise-employee', 'as' => 'franchise.employee.'], function () {
@@ -162,6 +168,12 @@ Route::group(['prefix' => 'franchise-employee', 'as' => 'franchise.employee.'], 
             Route::post('/support-tickets/store', 'store')->name('support_tickets.store');
             Route::get('/support-tickets/show/{id}', 'show')->name('support_tickets.show');
             Route::post('/support-tickets/reply', 'reply')->name('support_tickets.reply');
+        });
+
+        // Withdraw Requests for employees
+        Route::controller(App\Http\Controllers\CommissionWithdrawController::class)->group(function () {
+            Route::get('/withdraw-requests', 'employee_index')->name('withdraw_requests');
+            Route::post('/withdraw-requests/store', 'store')->name('withdraw_requests.store');
         });
     });
 });

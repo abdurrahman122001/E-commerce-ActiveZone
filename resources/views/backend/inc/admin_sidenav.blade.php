@@ -979,6 +979,11 @@
                             </a>
                         </li>
                         <li class="aiz-side-nav-item">
+                            <a href="{{ route('commission_withdraw_requests.index') }}" class="aiz-side-nav-link {{ areActiveRoutes(['commission_withdraw_requests.index']) }}">
+                                <span class="aiz-side-nav-text">{{ translate('Commission Withdraw Requests') }}</span>
+                            </a>
+                        </li>
+                        <li class="aiz-side-nav-item">
                             <a href="{{ route('delivery-boys.index') }}" class="aiz-side-nav-link">
                                 <span class="aiz-side-nav-text">{{ translate('Delivery Partners') }}</span>
                             </a>

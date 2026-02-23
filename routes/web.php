@@ -102,6 +102,13 @@ Route::controller(App\Http\Controllers\FranchiseController::class)->group(functi
         
         Route::post('/admin/franchises/set-commission', 'setFranchiseCommission')->name('admin.franchises.set_commission');
         Route::post('/admin/sub-franchises/set-commission', 'setSubFranchiseCommission')->name('admin.sub_franchises.set_commission');
+
+        // Withdraw Requests
+        Route::controller(App\Http\Controllers\CommissionWithdrawController::class)->group(function () {
+            Route::get('/admin/withdraw-requests', 'admin_index')->name('admin.withdraw_requests.index');
+            Route::get('/admin/withdraw-requests/approve/{id}', 'admin_approve')->name('admin.withdraw_requests.approve');
+            Route::post('/admin/withdraw-requests/reject/{id}', 'admin_reject')->name('admin.withdraw_requests.reject');
+        });
     });
 });
 
@@ -115,6 +122,12 @@ Route::group(['middleware' => ['vendor', 'user', 'prevent-back-history']], funct
         Route::post('/vendors/update/{id}', 'update')->name('vendors.update');
         Route::get('/vendor/dashboard', 'dashboard')->name('vendor.dashboard');
         Route::get('/vendors/commission-history', 'commissionHistory')->name('vendors.commission_history');
+        
+        // Withdraw Requests
+        Route::controller(App\Http\Controllers\CommissionWithdrawController::class)->group(function () {
+            Route::get('/vendors/withdraw-requests', 'index')->name('vendors.withdraw_requests');
+            Route::post('/vendors/withdraw-requests/store', 'store')->name('vendors.withdraw_requests.store');
+        });
         
         // Profile
         Route::controller(App\Http\Controllers\Vendor\ProfileController::class)->group(function () {

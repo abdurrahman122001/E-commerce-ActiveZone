@@ -73,6 +73,13 @@
                             <span class="aiz-side-nav-text">{{ translate('Earnings') }}</span>
                         </a>
                     </li>
+
+                    <li class="aiz-side-nav-item">
+                        <a href="{{ route('franchise.employee.withdraw_requests') }}" class="aiz-side-nav-link">
+                            <i class="las la-money-check aiz-side-nav-icon"></i>
+                            <span class="aiz-side-nav-text">{{ translate('Withdraw Request') }}</span>
+                        </a>
+                    </li>
                 @else
                     <li class="aiz-side-nav-item mt-3 px-3">
                         <div class="alert alert-warning text-center">
