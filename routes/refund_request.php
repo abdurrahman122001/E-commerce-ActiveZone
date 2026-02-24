@@ -46,7 +46,7 @@ Route::group(['middleware' => ['user', 'verified']], function () {
 
 
 //Seller panel
-Route::group(['middleware' => ['seller', 'user', 'verified']], function () {
+Route::group(['middleware' => ['seller', 'user']], function () {
     Route::controller(RefundRequestController::class)->group(function () {
         Route::get('/seller/refund-request', 'vendor_index')->name('seller.vendor_refund_request');
         Route::get('/seller/refund-configuration', 'seller_refund_configuration')->name('seller.refund_configuration');

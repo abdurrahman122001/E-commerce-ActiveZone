@@ -29,7 +29,7 @@ Route::group(['prefix' =>'admin', 'middleware' => ['auth', 'admin']], function()
     });
 });
 
-Route::group(['prefix' => 'seller', 'middleware' => ['seller', 'verified', 'user']], function() {
+Route::group(['prefix' => 'seller', 'middleware' => ['seller', 'user']], function() {
     Route::controller(WholesaleProductController::class)->group(function () {
         Route::get('/wholesale-products', 'wholesale_products_list_seller')->name('seller.wholesale_products_list');
 

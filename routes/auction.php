@@ -39,7 +39,7 @@ Route::group(['prefix' =>'admin', 'middleware' => ['auth', 'admin']], function()
     });
 });
 
-Route::group(['prefix' => 'seller', 'middleware' => ['seller', 'verified', 'user']], function() {
+Route::group(['prefix' => 'seller', 'middleware' => ['seller', 'user']], function() {
     Route::controller(AuctionProductController::class)->group(function () {
         Route::get('/auction_products', 'auction_product_list_seller')->name('auction_products.seller.index');
 

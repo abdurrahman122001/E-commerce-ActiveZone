@@ -67,6 +67,11 @@ class OrderController extends Controller
             assign_nearest_rider($order);
         }
 
+        // When vendor marks order as ready to pick, assign nearest delivery boy
+        if ($request->status == 'ready_to_pick') {
+            assign_nearest_rider($order);
+        }
+
         if ($request->status == 'cancelled' && $order->payment_type == 'wallet') {
             $user = User::where('id', $order->user_id)->first();
             $user->balance += $order->grand_total;

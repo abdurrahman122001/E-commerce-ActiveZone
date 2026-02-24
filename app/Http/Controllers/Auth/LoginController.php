@@ -365,6 +365,10 @@ class LoginController extends Controller
                 \Log::info('Redirecting franchise/sub_franchise');
                 return redirect()->route('franchise.dashboard');
             } elseif ($user->user_type == 'delivery_boy') {
+                if ($user->delivery_boy) {
+                    $user->delivery_boy->online_status = 1;
+                    $user->delivery_boy->save();
+                }
                 if ($user->delivery_boy && $user->delivery_boy->status == 1) {
                     return redirect()->route('delivery_boy.dashboard');
                 } else {

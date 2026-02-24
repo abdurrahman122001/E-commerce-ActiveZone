@@ -57,7 +57,7 @@ Route::post('/offline-customer-package-paymnet', [CustomerPackageController::cla
 // Order Re-Payments
 Route::post('/offline-order-re-payment-modal', [ManualPaymentMethodController::class, 'offline_order_re_payment_modal'])->name('offline_order_re_payment_modal');
 
-Route::group(['prefix' => 'seller', 'middleware' => ['seller', 'verified', 'user'], 'as' => 'seller.'], function () {
+Route::group(['prefix' => 'seller', 'middleware' => ['seller', 'user'], 'as' => 'seller.'], function () {
     // Seller Package purchase
     Route::post('/offline-seller-package-purchase-modal', [ManualPaymentMethodController::class, 'offline_seller_package_purchase_modal'])->name('offline_seller_package_purchase_modal');
     Route::post('/offline-seller-package-paymnet',[SellerPackageController::class, 'purchase_package_offline'])->name('make_offline_payment');

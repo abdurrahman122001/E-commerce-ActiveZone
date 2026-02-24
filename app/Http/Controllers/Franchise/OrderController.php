@@ -91,6 +91,11 @@ class OrderController extends Controller
             assign_nearest_rider($order);
         }
 
+        // When vendor/franchise marks order as ready to pick, assign nearest delivery boy
+        if ($request->status == 'ready_to_pick') {
+            assign_nearest_rider($order);
+        }
+
         foreach ($order->orderDetails as $key => $orderDetail) {
             $orderDetail->delivery_status = $request->status;
             $orderDetail->save();

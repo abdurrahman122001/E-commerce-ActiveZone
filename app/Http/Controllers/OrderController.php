@@ -453,11 +453,20 @@ class OrderController extends Controller
                 $order->delivery_completed_lat = $request->lat;
                 $order->delivery_completed_long = $request->long;
             }
+            $order->payment_status = 'paid';
             $order->save();
             processDeliveryEarnings($order);
+            if ($order->commission_calculated == 0) {
+                calculateCommissionAffilationClubPoint($order);
+            }
         }
 
         if ($request->status == 'confirmed') {
+            assign_nearest_rider($order);
+        }
+
+        // When admin marks order as ready to pick, assign nearest delivery boy
+        if ($request->status == 'ready_to_pick') {
             assign_nearest_rider($order);
         }
         

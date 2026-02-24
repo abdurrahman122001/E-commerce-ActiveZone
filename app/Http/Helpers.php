@@ -1031,8 +1031,21 @@ if (!function_exists('assign_nearest_rider')) {
 
         if (!$pickup_lat || !$pickup_long) return;
 
+        $shipping_address = json_decode($order->shipping_address);
+        $order_city = null;
+        if ($shipping_address && isset($shipping_address->city)) {
+            $order_city = $shipping_address->city;
+        }
+
         $riders_query = \App\Models\DeliveryBoy::where('status', 1)->where('online_status', 1);
         
+        // Filter by City if available
+        if ($order_city) {
+            $riders_query->whereHas('user', function($query) use ($order_city) {
+                $query->where('city', 'like', '%' . $order_city . '%');
+            });
+        }
+
         $vendor = $order->seller->vendor;
         if ($vendor && $vendor->franchise_id) {
             $riders_query->where('franchise_id', $vendor->franchise_id);
@@ -1040,8 +1053,18 @@ if (!function_exists('assign_nearest_rider')) {
 
         $riders = $riders_query->get();
 
-        // If no franchise riders found, fallback to all online riders (optional, depends on policy)
-        if ($riders->isEmpty() && $vendor && $vendor->franchise_id) {
+        // If no franchise riders found in city, fallback to all online riders in city
+        if ($riders->isEmpty() && $order_city) {
+             $riders = \App\Models\DeliveryBoy::where('status', 1)
+                ->where('online_status', 1)
+                ->whereHas('user', function($query) use ($order_city) {
+                    $query->where('city', 'like', '%' . $order_city . '%');
+                })
+                ->get();
+        }
+
+        // Final fallback if still empty: any online rider (can be adjusted based on preference)
+        if ($riders->isEmpty()) {
              $riders = \App\Models\DeliveryBoy::where('status', 1)->where('online_status', 1)->get();
         }
         

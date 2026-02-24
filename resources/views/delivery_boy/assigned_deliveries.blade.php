@@ -11,8 +11,9 @@
             <thead>
                 <tr>
                     <th>{{translate('Order Code')}}</th>
-                    <th data-breakpoints="lg">{{translate('Franchise')}}</th>
+                    <th data-breakpoints="lg">{{translate('Vendor / Shop')}}</th>
                     <th data-breakpoints="lg">{{translate('Customer')}}</th>
+                    <th data-breakpoints="lg">{{translate('Customer Address')}}</th>
                     <th data-breakpoints="lg">{{translate('Amount')}}</th>
                     <th data-breakpoints="lg">{{translate('Delivery Status')}}</th>
                     <th data-breakpoints="lg">{{translate('Payment Status')}}</th>
@@ -21,29 +22,59 @@
             </thead>
             <tbody>
                 @foreach($orders as $key => $order)
-                    <tr>
-                        <td>{{ $order->code }}</td>
+                    @php
+                        $shipping_address = json_decode($order->shipping_address);
+                        $vendor = $order->vendor;
+                        $shop   = $order->shop;
+                        $status = $order->delivery_status;
+                    @endphp
+                    <tr class="{{ $status == 'ready_to_pick' ? 'table-warning' : '' }}">
                         <td>
-                            @if($order->vendor && $order->vendor->franchise)
-                                {{ $order->vendor->franchise->franchise_name }}
-                            @elseif($order->vendor && $order->vendor->sub_franchise)
-                                {{ $order->vendor->sub_franchise->sub_franchise_name }}
-                            @else
-                                {{ translate('Admin') }}
+                            {{ $order->code }}
+                            @if($status == 'ready_to_pick')
+                                <br><span class="badge badge-warning badge-sm">{{ translate('Action Required') }}</span>
                             @endif
                         </td>
-                        <td>{{ $order->user->name ?? 'Guest' }}</td>
+                        <td>
+                            @if($vendor)
+                                <strong>{{ $vendor->shop_name ?? ($shop->name ?? translate('N/A')) }}</strong><br>
+                                <small class="text-muted">{{ translate('ID') }}: #{{ $vendor->id }}</small><br>
+                                @if($vendor->address)
+                                    <small>{{ $vendor->address }}</small>
+                                @endif
+                            @elseif($shop)
+                                <strong>{{ $shop->name }}</strong><br>
+                                @if($shop->address)
+                                    <small>{{ $shop->address }}</small>
+                                @endif
+                            @else
+                                <span class="text-muted">{{ translate('Admin') }}</span>
+                            @endif
+                        </td>
+                        <td>
+                            {{ $order->user->name ?? 'Guest' }}<br>
+                            <small class="text-muted">{{ translate('ID') }}: #{{ $order->user_id }}</small>
+                        </td>
+                        <td>
+                            @if($shipping_address)
+                                {{ $shipping_address->address ?? '' }},
+                                {{ $shipping_address->city ?? '' }}
+                                <br>
+                                <small>{{ $shipping_address->phone ?? '' }}</small>
+                            @else
+                                <span class="text-muted">-</span>
+                            @endif
+                        </td>
                         <td>{{ single_price($order->grand_total) }}</td>
                         <td>
-                            @php
-                                $status = $order->delivery_status;
-                            @endphp
                             @if($status == 'delivered')
-                                <span class="badge badge-inline badge-success">{{translate(ucfirst($status))}}</span>
+                                <span class="badge badge-inline badge-success">{{translate(ucfirst(str_replace('_', ' ', $status)))}}</span>
+                            @elseif($status == 'ready_to_pick')
+                                <span class="badge badge-inline badge-warning">{{translate('Ready to Pick')}}</span>
                             @elseif($status == 'pending')
                                 <span class="badge badge-inline badge-danger">{{translate(ucfirst($status))}}</span>
                             @else
-                                <span class="badge badge-inline badge-primary">{{translate(ucfirst($status))}}</span>
+                                <span class="badge badge-inline badge-primary">{{translate(ucfirst(str_replace('_', ' ', $status)))}}</span>
                             @endif
                         </td>
                         <td>

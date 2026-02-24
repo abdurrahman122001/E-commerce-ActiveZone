@@ -118,7 +118,7 @@ Route::group([ 'middleware' => ['isPreorder', ]], function () {
     });
 
     // Seller Routes
-    Route::group(['prefix' => 'seller/preorder', 'middleware' => ['seller', 'verified', 'user'], 'as' => 'seller.'], function() {
+    Route::group(['prefix' => 'seller/preorder', 'middleware' => ['seller', 'user'], 'as' => 'seller.'], function() {
 
         Route::controller(SellerDashboardController::class)->group(function () {
             Route::get('/dashboard', 'index')->name('preorder.dashboard');

@@ -28,7 +28,7 @@ class DeliveryBoyController extends Controller
         }
 
         $total_completed = Order::where('assign_delivery_boy', Auth::id())->where('delivery_status', 'delivered')->count();
-        $total_pending = Order::where('assign_delivery_boy', Auth::id())->where('delivery_status', '!=', 'delivered')->where('delivery_status', '!=', 'cancelled')->count();
+        $total_pending = Order::where('assign_delivery_boy', Auth::id())->whereIn('delivery_status', ['ready_to_pick', 'picked_up', 'on_the_way'])->count();
         $total_cancelled = Order::where('assign_delivery_boy', Auth::id())->where('delivery_status', 'cancelled')->count();
 
         return view('delivery_boy.dashboard', compact('total_completed', 'total_pending', 'total_cancelled'));
@@ -37,7 +37,7 @@ class DeliveryBoyController extends Controller
     public function assigned_delivery()
     {
         $orders = Order::where('assign_delivery_boy', Auth::id())
-            ->whereIn('delivery_status', ['pending', 'confirmed', 'picked_up', 'on_the_way'])
+            ->whereIn('delivery_status', ['ready_to_pick', 'pending', 'confirmed', 'picked_up', 'on_the_way'])
             ->latest()
             ->paginate(10);
         return view('delivery_boy.assigned_deliveries', compact('orders'));
