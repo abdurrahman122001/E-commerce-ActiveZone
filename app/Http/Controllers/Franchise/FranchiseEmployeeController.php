@@ -200,6 +200,38 @@ class FranchiseEmployeeController extends Controller
             ->with('error', 'Employee deletion is not allowed.');
     }
 
+    public function approve($id)
+    {
+        $user = auth()->user();
+        $employee = $this->getAuthorizedEmployee($id, $user);
+
+        if (!$employee) {
+            return back()->with('error', translate('Unauthorized or employee not found'));
+        }
+
+        $employee->status = 'approved';
+        $employee->is_active = true;
+        $employee->save();
+
+        return back()->with('success', translate('Employee approved successfully'));
+    }
+
+    public function reject($id)
+    {
+        $user = auth()->user();
+        $employee = $this->getAuthorizedEmployee($id, $user);
+
+        if (!$employee) {
+            return back()->with('error', translate('Unauthorized or employee not found'));
+        }
+
+        $employee->status = 'rejected';
+        $employee->is_active = false;
+        $employee->save();
+
+        return back()->with('success', translate('Employee rejected successfully'));
+    }
+
     private function getAuthorizedEmployee($id, $user)
     {
         $query = FranchiseEmployee::where('id', $id);

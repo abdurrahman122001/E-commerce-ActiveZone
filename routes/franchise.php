@@ -69,6 +69,8 @@ Route::group(['prefix' => 'franchise', 'middleware' => ['auth', 'franchise', 'pr
         Route::post('/sub-franchises/store', 'store')->name('sub_franchises.store');
         Route::post('/sub-franchises/set-commission', 'set_commission')->name('sub_franchises.set_commission');
         Route::get('/sub-franchises/login/{id}', 'login')->name('sub_franchises.login');
+        Route::get('/sub-franchises/approve/{id}', 'approve')->name('sub_franchises.approve');
+        Route::get('/sub-franchises/reject/{id}', 'reject')->name('sub_franchises.reject');
     });
 
     // Franchise Employees
@@ -79,6 +81,8 @@ Route::group(['prefix' => 'franchise', 'middleware' => ['auth', 'franchise', 'pr
         Route::get('/employees/{id}/edit', 'edit')->name('employees.edit');
         Route::post('/employees/update/{id}', 'update')->name('employees.update');
         Route::get('/employees/destroy/{id}', 'destroy')->name('employees.destroy');
+        Route::get('/employees/approve/{id}', 'approve')->name('employees.approve');
+        Route::get('/employees/reject/{id}', 'reject')->name('employees.reject');
     });
 
     // Franchise Vendors

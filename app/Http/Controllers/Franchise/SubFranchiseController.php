@@ -172,4 +172,60 @@ class SubFranchiseController extends Controller
         flash(translate('User not found.'))->error();
         return back();
     }
+
+    public function approve($id)
+    {
+        $user = Auth::user();
+        $subFranchise = SubFranchise::findOrFail($id);
+
+        // Authorization check
+        if ($user->user_type == 'state_franchise') {
+            if ($subFranchise->state_franchise_id != $user->state_franchise->id) {
+                flash(translate('Access denied.'))->error();
+                return back();
+            }
+        } elseif ($user->user_type == 'franchise') {
+            if ($subFranchise->franchise_id != $user->franchise->id) {
+                flash(translate('Access denied.'))->error();
+                return back();
+            }
+        } else {
+            flash(translate('Access denied.'))->error();
+            return back();
+        }
+
+        $subFranchise->status = 'approved';
+        $subFranchise->save();
+
+        flash(translate('Sub-Franchise approved successfully'))->success();
+        return back();
+    }
+
+    public function reject($id)
+    {
+        $user = Auth::user();
+        $subFranchise = SubFranchise::findOrFail($id);
+
+        // Authorization check
+        if ($user->user_type == 'state_franchise') {
+            if ($subFranchise->state_franchise_id != $user->state_franchise->id) {
+                flash(translate('Access denied.'))->error();
+                return back();
+            }
+        } elseif ($user->user_type == 'franchise') {
+            if ($subFranchise->franchise_id != $user->franchise->id) {
+                flash(translate('Access denied.'))->error();
+                return back();
+            }
+        } else {
+            flash(translate('Access denied.'))->error();
+            return back();
+        }
+
+        $subFranchise->status = 'rejected';
+        $subFranchise->save();
+
+        flash(translate('Sub-Franchise rejected successfully'))->success();
+        return back();
+    }
 }

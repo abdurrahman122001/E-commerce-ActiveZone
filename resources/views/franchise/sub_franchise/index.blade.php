@@ -64,6 +64,14 @@
                                         <i class="las la-ellipsis-v seller-list-icon"></i>
                                     </button>
                                     <div class="dropdown-menu dropdown-menu-right dropdown-menu-xs">
+                                        @if($sub->status == 'pending')
+                                            <a href="{{ route('franchise.sub_franchises.approve', $sub->id) }}" class="dropdown-item">
+                                                {{translate('Approve')}}
+                                            </a>
+                                            <a href="{{ route('franchise.sub_franchises.reject', $sub->id) }}" class="dropdown-item">
+                                                {{translate('Reject')}}
+                                            </a>
+                                        @endif
                                         <a href="javascript:void(0);" onclick="show_commission_modal('{{$sub->id}}', '{{$sub->commission_percentage}}');" class="dropdown-item">
                                             {{translate('Set Commission')}}
                                         </a>
