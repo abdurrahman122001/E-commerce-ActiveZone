@@ -69,6 +69,7 @@ class DeliveryBoyController extends Controller
             }
         }
         
+        $delivery_boy->location = $request->location;
         $delivery_boy->status = 0; // Pending approval by admin
         $delivery_boy->save();
 
@@ -104,6 +105,9 @@ class DeliveryBoyController extends Controller
             $user->password = Hash::make($request->password);
         }
         $user->save();
+
+        $delivery_boy->location = $request->location;
+        $delivery_boy->save();
 
         flash(translate('Delivery Boy has been updated successfully.'))->success();
         

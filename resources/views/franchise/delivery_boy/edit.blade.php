@@ -33,6 +33,12 @@
                     </div>
                 </div>
                 <div class="form-group row">
+                    <label class="col-sm-3 col-from-label">{{translate('Location')}}</label>
+                    <div class="col-sm-9">
+                        <input type="text" name="location" value="{{ $delivery_boy->location }}" placeholder="{{translate('Location')}}" class="form-control">
+                    </div>
+                </div>
+                <div class="form-group row">
                     <label class="col-sm-3 col-from-label">{{translate('Password')}}</label>
                     <div class="col-sm-9">
                         <input type="password" name="password" placeholder="{{translate('Password')}}" class="form-control">

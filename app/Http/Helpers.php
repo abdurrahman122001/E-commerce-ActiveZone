@@ -1029,8 +1029,6 @@ if (!function_exists('assign_nearest_rider')) {
              $pickup_long = ($vendor && $vendor->long) ? $vendor->long : ($shop ? $shop->delivery_pickup_longitude : null);
         }
 
-        if (!$pickup_lat || !$pickup_long) return;
-
         $shipping_address = json_decode($order->shipping_address);
         $order_city = null;
         if ($shipping_address && isset($shipping_address->city)) {
@@ -1039,21 +1037,38 @@ if (!function_exists('assign_nearest_rider')) {
 
         $riders_query = \App\Models\DeliveryBoy::where('status', 1)->where('online_status', 1);
         
-        // Filter by City if available
+        $vendor = $order->seller->vendor;
+        
+        // 1. Try to find riders in the same Franchise/Sub-Franchise AND same City
+        $riders_match = clone $riders_query;
+        if ($vendor) {
+            if ($vendor->franchise_id) {
+                $riders_match->where('franchise_id', $vendor->franchise_id);
+            } elseif ($vendor->sub_franchise_id) {
+                $riders_match->where('sub_franchise_id', $vendor->sub_franchise_id);
+            }
+        }
+        
         if ($order_city) {
-            $riders_query->whereHas('user', function($query) use ($order_city) {
+            $riders_match->whereHas('user', function($query) use ($order_city) {
                 $query->where('city', 'like', '%' . $order_city . '%');
             });
         }
 
-        $vendor = $order->seller->vendor;
-        if ($vendor && $vendor->franchise_id) {
-            $riders_query->where('franchise_id', $vendor->franchise_id);
+        $riders = $riders_match->get();
+
+        // 2. Fallback: Riders in same Franchise/Sub-Franchise (regardless of city)
+        if ($riders->isEmpty() && $vendor) {
+            $riders_franchise = clone $riders_query;
+            if ($vendor->franchise_id) {
+                $riders_franchise->where('franchise_id', $vendor->franchise_id);
+            } elseif ($vendor->sub_franchise_id) {
+                $riders_franchise->where('sub_franchise_id', $vendor->sub_franchise_id);
+            }
+            $riders = $riders_franchise->get();
         }
 
-        $riders = $riders_query->get();
-
-        // If no franchise riders found in city, fallback to all online riders in city
+        // 3. Fallback: Any rider in the same City
         if ($riders->isEmpty() && $order_city) {
              $riders = \App\Models\DeliveryBoy::where('status', 1)
                 ->where('online_status', 1)
@@ -1063,22 +1078,30 @@ if (!function_exists('assign_nearest_rider')) {
                 ->get();
         }
 
-        // Final fallback if still empty: any online rider (can be adjusted based on preference)
+        // 4. Final fallback: Any online rider
         if ($riders->isEmpty()) {
              $riders = \App\Models\DeliveryBoy::where('status', 1)->where('online_status', 1)->get();
         }
         
         $nearest_rider = null;
-        $min_distance = INF;
 
-        foreach ($riders as $rider) {
-            if ($rider->lat && $rider->long) {
-                $dist = get_distance($pickup_lat, $pickup_long, $rider->lat, $rider->long);
-                if ($dist < $min_distance) {
-                    $min_distance = $dist;
-                    $nearest_rider = $rider;
+        // If we have coordinates, find the nearest
+        if ($pickup_lat && $pickup_long) {
+            $min_distance = INF;
+            foreach ($riders as $rider) {
+                if ($rider->lat && $rider->long) {
+                    $dist = get_distance($pickup_lat, $pickup_long, $rider->lat, $rider->long);
+                    if ($dist < $min_distance) {
+                        $min_distance = $dist;
+                        $nearest_rider = $rider;
+                    }
                 }
             }
+        }
+        
+        // If no nearest rider found by distance (or no coords), pick the first from the list
+        if (!$nearest_rider && $riders->isNotEmpty()) {
+            $nearest_rider = $riders->first();
         }
 
         if ($nearest_rider) {

@@ -401,6 +401,13 @@ class AuthController extends Controller
                 ]);
         }
 
+        if ($user->user_type == 'delivery_boy') {
+            if ($user->delivery_boy) {
+                $user->delivery_boy->online_status = 1;
+                $user->delivery_boy->save();
+            }
+        }
+
          if($user->user_type == 'seller'){
             \Log::channel('seller_login')->info('Seller Logged In', [
                 'user_id' => $user->id,

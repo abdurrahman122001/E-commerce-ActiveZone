@@ -23,7 +23,8 @@ class DeliveryBoy extends Model
         'bank_routing_no',
         'holder_name',
         'lat',
-        'long'
+        'long',
+        'location'
     ];
 
     public function user(){
