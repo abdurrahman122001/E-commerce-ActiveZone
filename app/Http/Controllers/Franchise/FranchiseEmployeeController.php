@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\City;
 use App\Models\FranchiseEmployee;
 use App\Models\SubFranchise;
+use App\Models\Franchise;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
@@ -17,26 +18,30 @@ class FranchiseEmployeeController extends Controller
         $query = FranchiseEmployee::query();
 
         // Filter based on user type
-        if ($user->user_type == 'franchise' && $user->franchise) {
-            $franchiseId = $user->franchise->id;
-            // Get all sub-franchise IDs under this franchise
-            $subFranchiseIds = SubFranchise::where('franchise_id', $franchiseId)->pluck('id')->toArray();
-            
-            // Show employees created by this franchise or its sub-franchises
-            $query->where(function ($q) use ($user, $subFranchiseIds) {
-                $q->where('created_by', $user->id)
-                  ->orWhereIn('sub_franchise_id', $subFranchiseIds);
+        if ($user->user_type == 'state_franchise' && $user->state_franchise) {
+            $stateFranchiseId = $user->state_franchise->id;
+            // Show all employees in franchises or sub-franchises belonging to this state franchise
+            $query->where(function ($q) use ($stateFranchiseId) {
+                $q->whereHas('franchise', function($query) use ($stateFranchiseId) {
+                    $query->where('state_franchise_id', $stateFranchiseId);
+                })->orWhereHas('subFranchise', function($query) use ($stateFranchiseId) {
+                    $query->where('state_franchise_id', $stateFranchiseId);
+                });
             });
+        } elseif ($user->user_type == 'franchise' && $user->franchise) {
+            $franchiseId = $user->franchise->id;
+            // Show all employees in this franchise territory (including sub-franchises)
+            $query->where('franchise_id', $franchiseId);
         } elseif ($user->user_type == 'sub_franchise' && $user->sub_franchise) {
             $subFranchiseId = $user->sub_franchise->id;
-            // Show only employees created by this sub-franchise
+            // Show only employees in this sub-franchise
             $query->where('sub_franchise_id', $subFranchiseId);
         } else {
             // Regular users see nothing
             $query->where('id', 0);
         }
 
-        $employees = $query->with(['city', 'subFranchise'])->latest()->paginate(15);
+        $employees = $query->with(['city', 'subFranchise.user', 'franchise.user'])->latest()->paginate(15);
         
         return view('backend.franchise.employees.index', compact('employees'));
     }

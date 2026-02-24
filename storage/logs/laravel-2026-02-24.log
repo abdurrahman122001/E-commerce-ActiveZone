@@ -11164,3 +11164,7 @@ Did you mean this?
 #59 C:\\Users\\Dell\\Downloads\\E-Commerce ActiveZone\\server.php(54): require_once('C:\\\\Users\\\\Dell\\\\D...')
 #60 {main}
 "} 
+[2026-02-24 11:56:29] local.INFO: Authenticated method called {"user_id":9,"user_type":"admin"} 
+[2026-02-24 11:56:29] local.INFO: Redirecting admin/staff  
+[2026-02-24 14:33:05] local.INFO: Authenticated method called {"user_id":16,"user_type":"sub_franchise"} 
+[2026-02-24 14:33:05] local.INFO: Redirecting franchise/sub_franchise  

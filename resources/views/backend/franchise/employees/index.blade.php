@@ -31,6 +31,7 @@
                     <th>{{translate('Mobile')}}</th>
                     <th>{{translate('Role')}}</th>
                     <th>{{translate('Level')}}</th>
+                    <th>{{translate('Franchise/Sub-Franchise')}}</th>
                     <th>{{translate('City')}}</th>
                     <th>{{translate('Status')}}</th>
                     <th class="text-right">{{translate('Options')}}</th>
@@ -49,6 +50,13 @@
                                 <span class="badge badge-inline badge-primary">{{translate('City')}}</span>
                             @else
                                 <span class="badge badge-inline badge-info">{{translate('Sub Franchise')}}</span>
+                            @endif
+                        </td>
+                        <td>
+                            @if($employee->sub_franchise_id)
+                                {{ $employee->subFranchise->user->name ?? translate('Deleted') }} ({{ translate('Sub') }})
+                            @elseif($employee->franchise_id)
+                                {{ $employee->franchise->user->name ?? translate('Deleted') }} ({{ translate('City') }})
                             @endif
                         </td>
                         <td>{{ $employee->city->name ?? '' }}</td>
