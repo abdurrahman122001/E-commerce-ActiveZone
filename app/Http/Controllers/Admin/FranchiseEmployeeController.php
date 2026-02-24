@@ -51,6 +51,10 @@ class FranchiseEmployeeController extends Controller
                 $q->whereNotNull('franchise_id')
                   ->orWhereNotNull('sub_franchise_id');
             });
+        } elseif (Auth::user()->user_type == 'state_franchise') {
+            $state_franchise_id = Auth::user()->state_franchise->id;
+            $franchise_ids = \App\Models\Franchise::where('state_franchise_id', $state_franchise_id)->pluck('id');
+            $vendors = $vendors->whereIn('franchise_id', $franchise_ids);
         }
 
         if ($sub_franchise_id) {
@@ -131,6 +135,10 @@ class FranchiseEmployeeController extends Controller
         $date_range = $request->date_range;
 
         $histories = \App\Models\VendorCommissionHistory::query();
+
+        if (Auth::user()->user_type == 'state_franchise') {
+            $histories = $histories->where('state_franchise_id', Auth::user()->state_franchise->id);
+        }
 
         if ($franchise_id) {
             $histories = $histories->where('franchise_id', $franchise_id);

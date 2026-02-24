@@ -361,7 +361,7 @@ class LoginController extends Controller
                 'time' => now()->toDateTimeString(),
             ]);
             return redirect()->route('seller.dashboard');
-            } elseif (in_array($user->user_type, ['franchise', 'sub_franchise'])) {
+            } elseif (in_array($user->user_type, ['state_franchise', 'franchise', 'sub_franchise'])) {
                 \Log::info('Redirecting franchise/sub_franchise');
                 return redirect()->route('franchise.dashboard');
             } elseif ($user->user_type == 'delivery_boy') {

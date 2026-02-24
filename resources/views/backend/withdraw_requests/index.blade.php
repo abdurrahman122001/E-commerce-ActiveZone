@@ -48,7 +48,7 @@
                                 <div class="d-flex align-items-center">
                                     <div class="ml-2">
                                         <div class="fw-600">
-                                            @if($withdraw_request->user_type == 'franchise')
+                                            @if($withdraw_request->user_type == 'franchise' || $withdraw_request->user_type == 'state_franchise')
                                                 {{ $requester->franchise_name }}
                                             @elseif($withdraw_request->user_type == 'sub_franchise' || $withdraw_request->user_type == 'employee')
                                                 {{ $requester->name }}

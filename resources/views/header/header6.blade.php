@@ -354,7 +354,7 @@ $bottomHeaderTextColor = get_setting('bottom_header_text_color');
                                         @endif
                                         <!-- Become a Seller Links -->
                                         @if (get_setting('vendor_system_activation') == 1)
-                                        <div>
+                                        <div class="border-bottom border-soft-light">
                                             <a href="{{ route(get_setting('seller_registration_verify') === '1' ? 'shop-reg.verification' : 'shops.create') }}"
                                                 class="dropdown-item fs-13 py-2 px-3 hover-bg-light hover-text-primary border-bottom border-soft-light d-flex align-items-center"
                                                 style="min-height: 40px;">
@@ -374,6 +374,25 @@ $bottomHeaderTextColor = get_setting('bottom_header_text_color');
                                             @endif
                                         </div>
                                         @endif
+
+                                        <!-- Franchise Links -->
+                                        <div>
+                                            <a href="{{ route('franchise.state_registration') }}"
+                                                class="dropdown-item fs-13 py-2 px-3 hover-bg-light hover-text-primary border-bottom border-soft-light d-flex align-items-center"
+                                                style="min-height: 40px;">
+                                                {{ translate('Become a State Franchise') }}
+                                            </a>
+                                            <a href="{{ route('franchise.landing') }}"
+                                                class="dropdown-item fs-13 py-2 px-3 hover-bg-light hover-text-primary border-bottom border-soft-light d-flex align-items-center"
+                                                style="min-height: 40px;">
+                                                {{ translate('Become a City Franchise') }}
+                                            </a>
+                                            <a href="{{ route('franchise.sub_landing') }}"
+                                                class="dropdown-item fs-13 py-2 px-3 hover-bg-light hover-text-primary d-flex align-items-center"
+                                                style="min-height: 40px;">
+                                                {{ translate('Become a Sub-Franchise') }}
+                                            </a>
+                                        </div>
                                         <!-- Become a Seller Links -->
                                         <div id="admin-helpline-preview" style="display: {{ get_setting('helpline_number') ? 'block' : 'none' }};">
                                             <div class="helpline-container">

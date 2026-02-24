@@ -76,8 +76,9 @@
                                     <div class="col-md-9">
                                         <select class="form-control aiz-selectpicker @error('franchise_type') is-invalid @enderror" name="franchise_type" id="franchise_type" required>
                                             <option value="">{{ translate('Select Franchise Type') }}</option>
-                                            <option value="city_franchise" {{ old('franchise_type') == 'city_franchise' ? 'selected' : '' }}>{{ translate('City Franchise (Master Franchise)') }}</option>
-                                            <option value="sub_franchise" {{ old('franchise_type') == 'sub_franchise' ? 'selected' : '' }}>{{ translate('Sub-Franchise (Area/Zone/Tehsil)') }}</option>
+                                            <option value="state_franchise" {{ (old('franchise_type') == 'state_franchise' || (isset($type) && $type == 'state_franchise')) ? 'selected' : '' }}>{{ translate('State Franchise') }}</option>
+                                            <option value="city_franchise" {{ (old('franchise_type') == 'city_franchise' || (isset($type) && $type == 'city_franchise')) ? 'selected' : '' }}>{{ translate('City Franchise (Master Franchise)') }}</option>
+                                            <option value="sub_franchise" {{ (old('franchise_type') == 'sub_franchise' || (isset($type) && $type == 'sub_franchise')) ? 'selected' : '' }}>{{ translate('Sub-Franchise (Area/Zone/Tehsil)') }}</option>
                                         </select>
                                         @error('franchise_type')
                                             <div class="invalid-feedback">{{ $message }}</div>
@@ -100,10 +101,10 @@
                                     </div>
                                 </div>
 
-                                <div class="form-group row">
+                                <div class="form-group row" id="city_section">
                                     <label class="col-md-3 col-form-label">{{ translate('City') }} <span class="text-danger">*</span></label>
                                     <div class="col-md-9">
-                                        <select class="form-control aiz-selectpicker @error('city_id') is-invalid @enderror" name="city_id" id="city_id" data-live-search="true" required>
+                                        <select class="form-control aiz-selectpicker @error('city_id') is-invalid @enderror" name="city_id" id="city_id" data-live-search="true">
                                             <option value="">{{ translate('Select City') }}</option>
                                         </select>
                                         @error('city_id')
@@ -168,15 +169,24 @@
         $('#franchise_type').change(function(){
             var type = $(this).val();
             if(type == 'sub_franchise'){
+                $('#city_section').removeClass('d-none');
+                $('#city_id').prop('required', true);
                 $('#area_section').removeClass('d-none');
                 $('#area_id').prop('required', true);
-            } else {
+            } else if(type == 'city_franchise'){
+                $('#city_section').removeClass('d-none');
+                $('#city_id').prop('required', true);
+                $('#area_section').addClass('d-none');
+                $('#area_id').prop('required', false);
+            } else if(type == 'state_franchise'){
+                $('#city_section').addClass('d-none');
+                $('#city_id').prop('required', false);
                 $('#area_section').addClass('d-none');
                 $('#area_id').prop('required', false);
             }
             
             var state_id = $('#state_id').val();
-            if(state_id){
+            if(state_id && type != 'state_franchise'){
                 get_cities(state_id);
             }
         });
@@ -234,6 +244,9 @@
                 $('#area_id').prop('required', true);
             }
         }
+
+        // Trigger change to handle pre-selected type
+        $('#franchise_type').trigger('change');
     });
 
     // Custom file input

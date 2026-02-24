@@ -15,6 +15,8 @@ use DB;
 use App\Models\Vendor;
 use App\Models\DeliveryBoy;
 use App\Models\VendorCommissionHistory;
+use App\Models\Franchise;
+use App\Models\StateFranchise;
 
 class DashboardController extends Controller
 {
@@ -24,7 +26,17 @@ class DashboardController extends Controller
         $authUserId = $user->id;
         
         $all_seller_ids = [$authUserId];
-        if ($user->user_type == 'franchise' && $user->franchise) {
+        if ($user->user_type == 'state_franchise' && $user->state_franchise) {
+            $state_franchise_id = $user->state_franchise->id;
+            $city_franchise_user_ids = Franchise::where('state_franchise_id', $state_franchise_id)->pluck('user_id')->toArray();
+            $sub_franchise_user_ids = SubFranchise::where('state_franchise_id', $state_franchise_id)->pluck('user_id')->toArray();
+            $vendor_user_ids = Vendor::whereIn('franchise_id', function($query) use ($state_franchise_id) {
+                $query->select('id')->from('franchises')->where('state_franchise_id', $state_franchise_id);
+            })->orWhereIn('sub_franchise_id', function($query) use ($state_franchise_id) {
+                $query->select('id')->from('sub_franchises')->where('state_franchise_id', $state_franchise_id);
+            })->pluck('user_id')->toArray();
+            $all_seller_ids = array_unique(array_merge($all_seller_ids, $city_franchise_user_ids, $sub_franchise_user_ids, $vendor_user_ids));
+        } elseif ($user->user_type == 'franchise' && $user->franchise) {
             $franchise_id = $user->franchise->id;
             $vendor_user_ids = \App\Models\Vendor::where('franchise_id', $franchise_id)->pluck('user_id')->toArray();
             $sub_franchise_user_ids = \App\Models\SubFranchise::where('franchise_id', $franchise_id)->pluck('user_id')->toArray();
@@ -89,7 +101,16 @@ class DashboardController extends Controller
         
         // Employee count
         $employeeQuery = FranchiseEmployee::query();
-        if ($user->user_type == 'franchise' && $user->franchise) {
+        if ($user->user_type == 'state_franchise' && $user->state_franchise) {
+            $stateFranchiseId = $user->state_franchise->id;
+            $franchiseIds = Franchise::where('state_franchise_id', $stateFranchiseId)->pluck('id')->toArray();
+            $subFranchiseIds = SubFranchise::where('state_franchise_id', $stateFranchiseId)->pluck('id')->toArray();
+            $employeeQuery->where(function ($q) use ($user, $franchiseIds, $subFranchiseIds) {
+                $q->where('created_by', $user->id)
+                  ->orWhereIn('franchise_id', $franchiseIds)
+                  ->orWhereIn('sub_franchise_id', $subFranchiseIds);
+            });
+        } elseif ($user->user_type == 'franchise' && $user->franchise) {
             $franchiseId = $user->franchise->id;
             $subFranchiseIds = SubFranchise::where('franchise_id', $franchiseId)->pluck('id')->toArray();
             $employeeQuery->where(function ($q) use ($user, $subFranchiseIds) {
@@ -118,6 +139,7 @@ class DashboardController extends Controller
             ->get();
 
         // New Metrics for Franchise Dashboard Request
+        $data['total_franchises'] = 0;
         $data['total_subfranchises'] = 0;
         $data['approved_subfranchises'] = 0;
         $data['unapproved_subfranchises'] = 0;
@@ -128,7 +150,39 @@ class DashboardController extends Controller
         $data['subfranchise_earnings_monthly'] = 0;
         $data['subfranchise_earnings_yearly'] = 0;
 
-        if ($user->user_type == 'franchise' && $user->franchise) {
+        if ($user->user_type == 'state_franchise' && $user->state_franchise) {
+            $data['balance'] = $user->state_franchise->balance;
+            $state_franchise_id = $user->state_franchise->id;
+
+            $data['total_franchises'] = Franchise::where('state_franchise_id', $state_franchise_id)->count();
+            $data['total_subfranchises'] = SubFranchise::where('state_franchise_id', $state_franchise_id)->count();
+            
+            $data['total_vendors'] = Vendor::whereIn('franchise_id', function($q) use ($state_franchise_id){
+                $q->select('id')->from('franchises')->where('state_franchise_id', $state_franchise_id);
+            })->orWhereIn('sub_franchise_id', function($q) use ($state_franchise_id){
+                $q->select('id')->from('sub_franchises')->where('state_franchise_id', $state_franchise_id);
+            })->count();
+
+            $data['total_delivery_boys'] = DeliveryBoy::whereIn('franchise_id', function($q) use ($state_franchise_id){
+                $q->select('user_id')->from('franchises')->where('state_franchise_id', $state_franchise_id);
+            })->orWhereIn('sub_franchise_id', function($q) use ($state_franchise_id) {
+                 $q->select('user_id')->from('sub_franchises')->where('state_franchise_id', $state_franchise_id);
+            })->count();
+
+            // Earnings for State Franchise
+            $earnings_query = VendorCommissionHistory::where('state_franchise_id', $state_franchise_id);
+
+            $data['subfranchise_earnings_daily'] = (clone $earnings_query)->whereDate('created_at', Carbon::today())->sum('state_franchise_commission_amount');
+            $data['subfranchise_earnings_weekly'] = (clone $earnings_query)->whereBetween('created_at', [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()])->sum('state_franchise_commission_amount');
+            $data['subfranchise_earnings_monthly'] = (clone $earnings_query)->whereMonth('created_at', Carbon::now()->month)->whereYear('created_at', Carbon::now()->year)->sum('state_franchise_commission_amount');
+            $data['subfranchise_earnings_yearly'] = (clone $earnings_query)->whereYear('created_at', Carbon::now()->year)->sum('state_franchise_commission_amount');
+
+            $data['recent_earnings'] = VendorCommissionHistory::where('state_franchise_id', $state_franchise_id)
+                                        ->latest()
+                                        ->limit(10)
+                                        ->get();
+
+        } elseif ($user->user_type == 'franchise' && $user->franchise) {
             $data['balance'] = $user->franchise->balance;
             $franchise_id = $user->franchise->id;
 
@@ -187,7 +241,9 @@ class DashboardController extends Controller
 
         $histories = \App\Models\VendorCommissionHistory::query();
 
-        if ($user->user_type == 'franchise' && $user->franchise) {
+        if ($user->user_type == 'state_franchise' && $user->state_franchise) {
+            $histories = $histories->where('state_franchise_id', $user->state_franchise->id);
+        } elseif ($user->user_type == 'franchise' && $user->franchise) {
             $histories = $histories->where('franchise_id', $user->franchise->id);
         } elseif ($user->user_type == 'sub_franchise' && $user->sub_franchise) {
             $histories = $histories->where('sub_franchise_id', $user->sub_franchise->id);

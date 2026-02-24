@@ -15,6 +15,7 @@ use App\Models\FranchisePackage;
 use App\Models\State;
 use App\Models\Vendor;
 use App\Models\FranchiseEmployee;
+use App\Models\StateFranchise;
 use Auth;
 
 class FranchiseController extends Controller
@@ -34,11 +35,21 @@ class FranchiseController extends Controller
     }
 
     // Show Registration Form
-    public function showRegistrationForm()
+    // Show Registration Form
+    public function showRegistrationForm(Request $request)
     {
         $states = State::where('country_id', 101)->where('status', 1)->get();
         $packages = FranchisePackage::all();
-        return view('frontend.franchise.registration', compact('states', 'packages'));
+        $type = $request->type;
+        return view('frontend.franchise.registration', compact('states', 'packages', 'type'));
+    }
+
+    public function showStateRegistrationForm()
+    {
+        $states = State::where('country_id', 101)->where('status', 1)->get();
+        $packages = FranchisePackage::all();
+        $type = 'state_franchise';
+        return view('frontend.franchise.registration', compact('states', 'packages', 'type'));
     }
 
     // Process Registration
@@ -49,15 +60,21 @@ class FranchiseController extends Controller
             'email' => 'required|email|unique:users,email',
             'phone' => 'required|string|unique:users,phone',
             'password' => 'required|string|min:6|confirmed',
-            'franchise_type' => 'required|in:city_franchise,sub_franchise',
+            'franchise_type' => 'required|in:state_franchise,city_franchise,sub_franchise',
             'state_id' => 'required|exists:states,id',
-            'city_id' => 'required|exists:cities,id',
-            'area_id' => 'required_if:franchise_type,sub_franchise',
+            'city_id' => 'nullable|required_if:franchise_type,city_franchise,sub_franchise|exists:cities,id',
+            'area_id' => 'nullable|required_if:franchise_type,sub_franchise|exists:areas,id',
             'franchise_package_id' => 'required|exists:franchise_packages,id',
             'id_proof' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
         ]);
 
-        if ($request->franchise_type == 'city_franchise') {
+        if ($request->franchise_type == 'state_franchise') {
+            $existingStateFranchise = StateFranchise::where('state_id', $request->state_id)->where('status', '!=', 'rejected')->first();
+            if ($existingStateFranchise) {
+                flash(translate('A franchise already exists for the selected state.'))->error();
+                return back()->withInput();
+            }
+        } elseif ($request->franchise_type == 'city_franchise') {
             $existingFranchise = Franchise::where('city_id', $request->city_id)->where('status', '!=', 'rejected')->first();
             if ($existingFranchise) {
                 flash(translate('A franchise already exists for the selected city.'))->error();
@@ -79,7 +96,7 @@ class FranchiseController extends Controller
             $user->email = $request->email;
             $user->phone = $request->phone;
             $user->password = Hash::make($request->password);
-            $user->user_type = $request->franchise_type == 'city_franchise' ? 'franchise' : 'sub_franchise';
+            $user->user_type = $request->franchise_type == 'state_franchise' ? 'state_franchise' : ($request->franchise_type == 'city_franchise' ? 'franchise' : 'sub_franchise');
             $user->verification_status = 0; // Default to unverified
             $user->save();
             
@@ -89,7 +106,23 @@ class FranchiseController extends Controller
                 $id_proof_path = $request->file('id_proof')->store('uploads/franchise/id_proofs', 'public');
             }
 
-            if ($request->franchise_type == 'city_franchise') {
+            if ($request->franchise_type == 'state_franchise') {
+                $stateFranchise = new StateFranchise();
+                $stateFranchise->user_id = $user->id;
+                $stateFranchise->state_id = $request->state_id;
+                $stateFranchise->franchise_name = $request->name . ' State Franchise';
+                $stateFranchise->referral_code = 'STF' . strtoupper(Str::random(8));
+                $stateFranchise->business_experience = $request->business_experience;
+                $stateFranchise->id_proof = $id_proof_path;
+                $stateFranchise->franchise_package_id = $request->franchise_package_id;
+                $stateFranchise->status = 'pending';
+                $stateFranchise->save();
+
+                // Automatically link existing city and sub franchises in this state
+                Franchise::where('state_id', $request->state_id)->update(['state_franchise_id' => $stateFranchise->id]);
+                SubFranchise::where('state_id', $request->state_id)->update(['state_franchise_id' => $stateFranchise->id]);
+
+            } elseif ($request->franchise_type == 'city_franchise') {
                 $franchise = new Franchise();
                 $franchise->user_id = $user->id;
                 $franchise->state_id = $request->state_id;
@@ -100,6 +133,13 @@ class FranchiseController extends Controller
                 $franchise->id_proof = $id_proof_path;
                 $franchise->franchise_package_id = $request->franchise_package_id;
                 $franchise->status = 'pending';
+
+                // Link to State Franchise if exists
+                $stateFranchise = StateFranchise::where('state_id', $request->state_id)->first();
+                if ($stateFranchise) {
+                    $franchise->state_franchise_id = $stateFranchise->id;
+                }
+
                 $franchise->save();
             } else {
                 $subFranchise = new SubFranchise();
@@ -119,6 +159,12 @@ class FranchiseController extends Controller
                     $subFranchise->franchise_id = $parentFranchise->id;
                 }
 
+                // Link to State Franchise if exists
+                $stateFranchise = StateFranchise::where('state_id', $request->state_id)->first();
+                if ($stateFranchise) {
+                    $subFranchise->state_franchise_id = $stateFranchise->id;
+                }
+
                 $subFranchise->save();
             }
 
@@ -136,20 +182,83 @@ class FranchiseController extends Controller
         }
     }
 
-    // Admin: List Franchises
+    // Admin: List State Franchises
+    public function indexState()
+    {
+        $stateFranchises = StateFranchise::with('user', 'state', 'franchise_package')->paginate(15);
+        return view('backend.franchise.state_index', compact('stateFranchises'));
+    }
+
+    // Admin: List Franchises (City Franchises)
     public function index()
     {
-        $franchises = Franchise::with('user', 'city', 'franchise_package')->paginate(15);
+        $franchises = Franchise::with('user', 'city', 'franchise_package', 'state_franchise')->paginate(15);
         return view('backend.franchise.index', compact('franchises'));
     }
     
     // Admin: List Sub Franchises
     public function indexSub()
     {
-        $subFranchises = SubFranchise::with('user', 'city', 'area', 'franchise', 'franchise_package')->paginate(15);
+        $subFranchises = SubFranchise::with('user', 'city', 'area', 'franchise', 'franchise_package', 'state_franchise')->paginate(15);
         return view('backend.franchise.sub_index', compact('subFranchises'));
     }
     
+    // Admin: Create State Franchise Form
+    public function createStateFranchise()
+    {
+        $states = State::where('country_id', 101)->where('status', 1)->get();
+        $packages = FranchisePackage::all();
+        return view('backend.franchise.state_create', compact('states', 'packages'));
+    }
+
+    // Admin: Store State Franchise
+    public function storeStateFranchise(Request $request) {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email',
+            'phone' => 'required|string|unique:users,phone',
+            'password' => 'required|string|min:6',
+            'state_id' => 'required|exists:states,id',
+            'franchise_package_id' => 'required|exists:franchise_packages,id',
+        ]);
+
+        $existingStateFranchise = StateFranchise::where('state_id', $request->state_id)->where('status', '!=', 'rejected')->first();
+        if ($existingStateFranchise) {
+            flash(translate('A state franchise already exists for the selected state.'))->error();
+            return back()->withInput();
+        }
+
+        // Create User
+        $user = new User();
+        $user->name = $request->name;
+        $user->email = $request->email;
+        $user->phone = $request->phone;
+        $user->password = Hash::make($request->password);
+        $user->user_type = 'state_franchise';
+        $user->verification_status = 1;
+        $user->save();
+        
+        // Handle ID Proof Upload
+        $id_proof_path = null;
+        if ($request->hasFile('id_proof')) {
+            $id_proof_path = $request->file('id_proof')->store('uploads/franchise/id_proofs', 'public');
+        }
+
+        $stateFranchise = new StateFranchise();
+        $stateFranchise->user_id = $user->id;
+        $stateFranchise->state_id = $request->state_id;
+        $stateFranchise->franchise_name = $request->name;
+        $stateFranchise->referral_code = 'SF-' . strtoupper(Str::random(10));
+        $stateFranchise->business_experience = $request->business_experience;
+        $stateFranchise->id_proof = $id_proof_path;
+        $stateFranchise->franchise_package_id = $request->franchise_package_id;
+        $stateFranchise->status = 'approved';
+        $stateFranchise->save();
+
+        flash(translate('State Franchise created successfully'))->success();
+        return redirect()->route('admin.state_franchises.index');
+    }
+
     // Admin: Create Franchise Form
     public function createFranchise()
     {
@@ -196,6 +305,13 @@ class FranchiseController extends Controller
         $franchise->user_id = $user->id;
         $franchise->state_id = $request->state_id;
         $franchise->city_id = $request->city_id;
+        
+        // Link to State Franchise
+        $stateFranchise = StateFranchise::where('state_id', $request->state_id)->where('status', 'approved')->first();
+        if ($stateFranchise) {
+            $franchise->state_franchise_id = $stateFranchise->id;
+        }
+
         $franchise->franchise_name = $request->name . ' Franchise';
         $franchise->referral_code = Str::random(10);
         $franchise->business_experience = $request->business_experience;
@@ -262,10 +378,17 @@ class FranchiseController extends Controller
         $subFranchise->franchise_package_id = $request->franchise_package_id;
         $subFranchise->status = 'approved';
 
-        // Link to Parent Franchise if exists for the city (any status)
+        // Link to Parent Franchise if exists for the city
         $parentFranchise = Franchise::where('city_id', $request->city_id)->first();
         if ($parentFranchise) {
             $subFranchise->franchise_id = $parentFranchise->id;
+            $subFranchise->state_franchise_id = $parentFranchise->state_franchise_id;
+        } else {
+            // Link to State Franchise directly if no city franchise
+            $stateFranchise = StateFranchise::where('state_id', $request->state_id)->where('status', 'approved')->first();
+            if ($stateFranchise) {
+                $subFranchise->state_franchise_id = $stateFranchise->id;
+            }
         }
 
         $subFranchise->save();
@@ -280,15 +403,47 @@ class FranchiseController extends Controller
              $franchise->status = 'approved';
              $franchise->save();
              
+             if($franchise->state_franchise_id) {
+                 $commission_percentage = get_setting('state_franchise_commission_on_package');
+                 if ($commission_percentage > 0 && $franchise->franchise_package) {
+                     $package_price = $franchise->franchise_package->price;
+                     $commission_amount = ($package_price * $commission_percentage) / 100;
+
+                     $stateFranchise = StateFranchise::find($franchise->state_franchise_id);
+                     if ($stateFranchise) {
+                         $stateFranchise->balance += $commission_amount;
+                         $stateFranchise->save();
+
+                         $history = new \App\Models\PackageCommissionHistory();
+                         $history->state_franchise_id = $stateFranchise->id;
+                         $history->franchise_id = $franchise->id;
+                         $history->franchise_package_id = $franchise->franchise_package_id;
+                         $history->amount = $commission_amount;
+                         $history->percentage = $commission_percentage;
+                         $history->save();
+                     }
+                 }
+             }
+
              if($franchise->user){
                  $franchise->user->verification_status = 1;
                  $franchise->user->save();
+             }
+         } elseif($type == 'state_franchise') {
+             $state_franchise = StateFranchise::findOrFail($id);
+             $state_franchise->status = 'approved';
+             $state_franchise->save();
+             
+             if($state_franchise->user){
+                 $state_franchise->user->verification_status = 1;
+                 $state_franchise->user->save();
              }
          } else {
 
              $sub = SubFranchise::findOrFail($id);
 
              if ($sub->status != 'approved') {
+                 // Pay Franchise (City)
                  if ($sub->franchise_id) {
                      $commission_percentage = get_setting('franchise_commission_on_package');
                      if ($commission_percentage > 0 && $sub->franchise_package) {
@@ -304,6 +459,30 @@ class FranchiseController extends Controller
                              $history->franchise_id = $franchise->id;
                              $history->sub_franchise_id = $sub->id;
                              $history->franchise_package_id = $sub->franchise_package_id;
+                             $history->amount = $commission_amount;
+                             $history->percentage = $commission_percentage;
+                             $history->save();
+                         }
+                     }
+                 }
+
+                 // Pay State Franchise
+                 if ($sub->state_franchise_id) {
+                     $commission_percentage = get_setting('state_franchise_commission_on_package');
+                     if ($commission_percentage > 0 && $sub->franchise_package) {
+                         $package_price = $sub->franchise_package->price;
+                         $commission_amount = ($package_price * $commission_percentage) / 100;
+
+                         $stateFranchise = StateFranchise::find($sub->state_franchise_id);
+                         if ($stateFranchise) {
+                             $stateFranchise->balance += $commission_amount;
+                             $stateFranchise->save();
+
+                             $history = new \App\Models\PackageCommissionHistory();
+                             $history->state_franchise_id = $stateFranchise->id;
+                             $history->sub_franchise_id = $sub->id;
+                             $history->franchise_package_id = $sub->franchise_package_id;
+                             if($sub->franchise_id) { $history->franchise_id = $sub->franchise_id; }
                              $history->amount = $commission_amount;
                              $history->percentage = $commission_percentage;
                              $history->save();
@@ -329,6 +508,10 @@ class FranchiseController extends Controller
              $franchise = Franchise::findOrFail($id);
              $franchise->status = 'rejected';
              $franchise->save();
+         } elseif($type == 'state_franchise') {
+             $state_franchise = StateFranchise::findOrFail($id);
+             $state_franchise->status = 'rejected';
+             $state_franchise->save();
          } else {
              $sub = SubFranchise::findOrFail($id);
              $sub->status = 'rejected';
@@ -336,6 +519,69 @@ class FranchiseController extends Controller
          }
          flash(translate('Rejected Successfully'))->success();
          return back();
+    }
+
+    public function editStateFranchise($id)
+    {
+        $stateFranchise = StateFranchise::findOrFail($id);
+        $states = State::where('country_id', 101)->where('status', 1)->get();
+        $packages = FranchisePackage::all();
+        return view('backend.franchise.state_edit', compact('stateFranchise', 'states', 'packages'));
+    }
+
+    public function updateStateFranchise(Request $request, $id)
+    {
+        $stateFranchise = StateFranchise::findOrFail($id);
+
+        if ($stateFranchise->state_id != $request->state_id) {
+            $existingStateFranchise = StateFranchise::where('state_id', $request->state_id)->where('status', '!=', 'rejected')->first();
+            if ($existingStateFranchise) {
+                flash(translate('A state franchise already exists for the selected state.'))->error();
+                return back()->withInput();
+            }
+        }
+
+        $stateFranchise->franchise_name = $request->name;
+        $stateFranchise->business_experience = $request->business_experience;
+        $stateFranchise->state_id = $request->state_id;
+        $stateFranchise->franchise_package_id = $request->franchise_package_id;
+        $stateFranchise->invalid_at = $request->invalid_at;
+        $stateFranchise->commission_percentage = $request->commission_percentage ?? 0;
+        
+        if ($request->hasFile('id_proof')) {
+            $stateFranchise->id_proof = $request->file('id_proof')->store('uploads/franchise/id_proofs', 'public');
+        }
+
+        $stateFranchise->bank_name = $request->bank_name;
+        $stateFranchise->bank_acc_name = $request->bank_acc_name;
+        $stateFranchise->bank_acc_no = $request->bank_acc_no;
+        $stateFranchise->bank_routing_no = $request->bank_routing_no;
+        
+        $stateFranchise->save();
+
+        $user = $stateFranchise->user;
+        $user->name = $request->name;
+        $user->email = $request->email;
+        $user->phone = $request->phone;
+        if($request->password){
+            $user->password = Hash::make($request->password);
+        }
+        $user->save();
+
+        flash(translate('State Franchise updated successfully'))->success();
+        return redirect()->route('admin.state_franchises.index');
+    }
+
+    public function destroyStateFranchise($id)
+    {
+        $stateFranchise = StateFranchise::findOrFail($id);
+        $user = $stateFranchise->user;
+        $stateFranchise->delete();
+        if($user){
+            $user->delete();
+        }
+        flash(translate('State Franchise deleted successfully'))->success();
+        return back();
     }
 
     public function editFranchise($id)

@@ -794,7 +794,7 @@
             var order_id = {{ $order->id }};
             var delivery_boy = $('#assign_deliver_boy').val();
             $.post('{{ route('orders.delivery-boy-assign') }}', {
-                _token: '{{ @csrf_token() }}',
+                _token: '{{ csrf_token() }}',
                 order_id: order_id,
                 delivery_boy: delivery_boy
             }, function(data) {
@@ -805,7 +805,7 @@
             var order_id = {{ $order->id }};
             var status = $('#update_delivery_status').val();
             $.post('{{ route('orders.update_delivery_status') }}', {
-                _token: '{{ @csrf_token() }}',
+                _token: '{{ csrf_token() }}',
                 order_id: order_id,
                 status: status
             }, function(data) {
@@ -823,7 +823,7 @@
             $('#confirm-payment-status').modal('hide');
             var order_id = {{ $order->id }};
             $.post('{{ route('orders.update_payment_status') }}', {
-                _token: '{{ @csrf_token() }}',
+                _token: '{{ csrf_token() }}',
                 order_id: order_id,
                 status: 'paid'
             }, function(data) {
@@ -838,7 +838,7 @@
             var order_id = {{ $order->id }};
             var tracking_code = $('#update_tracking_code').val();
             $.post('{{ route('orders.update_tracking_code') }}', {
-                _token: '{{ @csrf_token() }}',
+                _token: '{{ csrf_token() }}',
                 order_id: order_id,
                 tracking_code: tracking_code
             }, function(data) {

@@ -26,12 +26,18 @@ class Franchise extends Model
         'bank_acc_name',
         'bank_acc_no',
         'bank_routing_no',
-        'invalid_at'
+        'invalid_at',
+        'state_franchise_id'
     ];
 
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function state_franchise()
+    {
+        return $this->belongsTo(StateFranchise::class);
     }
 
     public function state()

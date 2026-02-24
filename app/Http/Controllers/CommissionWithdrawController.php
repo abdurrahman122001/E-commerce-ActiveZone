@@ -23,6 +23,9 @@ class CommissionWithdrawController extends Controller
         if ($user_type == 'franchise') {
             $user_id = $user->franchise->id;
             $balance = $user->franchise->balance;
+        } elseif ($user_type == 'state_franchise') {
+            $user_id = $user->state_franchise->id;
+            $balance = $user->state_franchise->balance;
         } elseif ($user_type == 'sub_franchise') {
             $user_id = $user->sub_franchise->id;
             $balance = $user->sub_franchise->balance;
@@ -93,6 +96,15 @@ class CommissionWithdrawController extends Controller
                     'bank_acc_name' => $user->franchise->bank_acc_name,
                     'bank_acc_no' => $user->franchise->bank_acc_no,
                     'bank_routing_no' => $user->franchise->bank_routing_no,
+                ];
+            } elseif ($user_type == 'state_franchise') {
+                $user_id = $user->state_franchise->id;
+                $balance = $user->state_franchise->balance;
+                $bank_info = [
+                    'bank_name' => $user->state_franchise->bank_name,
+                    'bank_acc_name' => $user->state_franchise->bank_acc_name,
+                    'bank_acc_no' => $user->state_franchise->bank_acc_no,
+                    'bank_routing_no' => $user->state_franchise->bank_routing_no,
                 ];
             } elseif ($user_type == 'sub_franchise') {
                 $user_id = $user->sub_franchise->id;
@@ -170,6 +182,11 @@ class CommissionWithdrawController extends Controller
             $franchise->save();
             // Mark history as paid
             VendorCommissionHistory::where('franchise_id', $franchise->id)->update(['franchise_payout_status' => 'paid']);
+        } elseif ($withdraw_request->user_type == 'state_franchise') {
+            $state_franchise = \App\Models\StateFranchise::find($withdraw_request->user_id);
+            $state_franchise->balance = 0;
+            $state_franchise->save();
+            VendorCommissionHistory::where('state_franchise_id', $state_franchise->id)->update(['state_franchise_payout_status' => 'paid']);
         } elseif ($withdraw_request->user_type == 'sub_franchise') {
             $sub_franchise = SubFranchise::find($withdraw_request->user_id);
             $sub_franchise->balance = 0;

@@ -22,6 +22,8 @@ class IsFranchise
                 $status = Auth::user()->franchise ? Auth::user()->franchise->status : null;
             } elseif (Auth::user()->user_type == 'sub_franchise') {
                 $status = Auth::user()->sub_franchise ? Auth::user()->sub_franchise->status : null;
+            } elseif (Auth::user()->user_type == 'state_franchise') {
+                $status = Auth::user()->state_franchise ? Auth::user()->state_franchise->status : null;
             }
 
             if (in_array($status, ['approved', 'pending'])) {
@@ -31,6 +33,8 @@ class IsFranchise
                         $invalid_at = Auth::user()->franchise->invalid_at;
                     } elseif (Auth::user()->user_type == 'sub_franchise' && Auth::user()->sub_franchise) {
                         $invalid_at = Auth::user()->sub_franchise->invalid_at;
+                    } elseif (Auth::user()->user_type == 'state_franchise' && Auth::user()->state_franchise) {
+                        $invalid_at = Auth::user()->state_franchise->invalid_at;
                     }
                     
                     if ($invalid_at != null && strtotime($invalid_at) < strtotime(date('Y-m-d'))) {
@@ -47,6 +51,6 @@ class IsFranchise
             }
         }
         
-        return redirect()->route('home')->with('error', translate('Access denied. You must be an approved franchise or sub-franchise.'));
+        return redirect()->route('home')->with('error', translate('Access denied. You must be an approved state, city, or sub-franchise.'));
     }
 }

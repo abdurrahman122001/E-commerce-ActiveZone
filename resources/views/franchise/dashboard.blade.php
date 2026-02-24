@@ -8,6 +8,8 @@
             $status = $authUser->franchise ? $authUser->franchise->status : 'pending';
         } elseif ($authUser->user_type == 'sub_franchise') {
             $status = $authUser->sub_franchise ? $authUser->sub_franchise->status : 'pending';
+        } elseif ($authUser->user_type == 'state_franchise') {
+            $status = $authUser->state_franchise ? $authUser->state_franchise->status : 'pending';
         }
     @endphp
 
@@ -32,6 +34,9 @@
             } elseif ($authUser->user_type == 'sub_franchise' && $authUser->sub_franchise) {
                 $id_proof = $authUser->sub_franchise->id_proof;
                 $pan_number = $authUser->sub_franchise->pan_number;
+            } elseif ($authUser->user_type == 'state_franchise' && $authUser->state_franchise) {
+                $id_proof = $authUser->state_franchise->id_proof;
+                $pan_number = $authUser->state_franchise->pan_number;
             }
         @endphp
 
@@ -91,6 +96,7 @@
         </div>
     </div>
     <div class="row">
+        @if($authUser->user_type == 'state_franchise')
         <div class="col-sm-6 col-md-6 col-xxl-3">
             <div class="card shadow-none mb-4 bg-primary ">
                 <div class="card-body">
@@ -98,7 +104,29 @@
                         <div class="col">
                             <p class="small text-muted mb-0">
                                 <span class="fe fe-arrow-down fe-12"></span>
-                                <span class="fs-14 text-light">{{ translate('Total Subfranchise') }}</span>
+                                <span class="fs-14 text-light">{{ translate('Total City Franchises') }}</span>
+                            </p>
+                            <h3 class="mb-0 text-white fs-30">
+                                {{ $total_franchises }}
+                            </h3>
+                        </div>
+                        <div class="col-auto text-right">
+                            <i class="las la-building la-3x text-white"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        @endif
+
+        <div class="col-sm-6 col-md-6 col-xxl-3">
+            <div class="card shadow-none mb-4 bg-primary ">
+                <div class="card-body">
+                    <div class="row align-items-center">
+                        <div class="col">
+                            <p class="small text-muted mb-0">
+                                <span class="fe fe-arrow-down fe-12"></span>
+                                <span class="fs-14 text-light">{{ translate('Total Sub Franchises') }}</span>
                             </p>
                             <h3 class="mb-0 text-white fs-30">
                                 {{ $total_subfranchises }}
@@ -537,7 +565,9 @@
                             <td>{{ $history->vendor->user->name ?? translate('Deleted Vendor') }}</td>
                             <td>{{ single_price($history->order_detail->price ?? 0) }}</td>
                             <td class="fw-700 text-success">
-                                @if(auth()->user()->user_type == 'franchise')
+                                @if(auth()->user()->user_type == 'state_franchise')
+                                    {{ single_price($history->state_franchise_commission_amount) }}
+                                @elseif(auth()->user()->user_type == 'franchise')
                                     {{ single_price($history->franchise_commission_amount) }}
                                 @else
                                     {{ single_price($history->sub_franchise_commission_amount) }}

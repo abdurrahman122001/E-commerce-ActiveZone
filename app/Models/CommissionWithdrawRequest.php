@@ -30,6 +30,8 @@ class CommissionWithdrawRequest extends Model
             return SubFranchise::find($this->user_id);
         } elseif ($this->user_type == 'vendor') {
             return Vendor::find($this->user_id);
+        } elseif ($this->user_type == 'state_franchise') {
+            return StateFranchise::find($this->user_id);
         } elseif ($this->user_type == 'employee') {
             return FranchiseEmployee::find($this->user_id);
         }

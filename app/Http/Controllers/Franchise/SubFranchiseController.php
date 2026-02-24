@@ -17,27 +17,44 @@ class SubFranchiseController extends Controller
 {
     public function index()
     {
-        $franchise = Auth::user()->franchise;
-        if (!$franchise) {
-            flash(translate('Franchise record not found.'))->error();
+        $user = Auth::user();
+        if ($user->user_type == 'franchise') {
+            $franchise = $user->franchise;
+            if (!$franchise) {
+                flash(translate('Franchise record not found.'))->error();
+                return back();
+            }
+            $subFranchises = SubFranchise::where('franchise_id', $franchise->id)->with('user', 'city', 'area', 'franchise_package')->paginate(15);
+        } elseif ($user->user_type == 'state_franchise') {
+            $stateFranchise = $user->state_franchise;
+            if (!$stateFranchise) {
+                flash(translate('State Franchise record not found.'))->error();
+                return back();
+            }
+            $subFranchises = SubFranchise::where('state_franchise_id', $stateFranchise->id)->with('user', 'city', 'area', 'franchise_package')->paginate(15);
+        } else {
+            flash(translate('Access denied.'))->error();
             return back();
         }
-        $subFranchises = SubFranchise::where('franchise_id', $franchise->id)->with('user', 'city', 'area', 'franchise_package')->paginate(15);
+        
         return view('franchise.sub_franchise.index', compact('subFranchises'));
     }
 
     public function create()
     {
-        $franchise = Auth::user()->franchise;
-        if (!$franchise) {
-            flash(translate('Franchise record not found.'))->error();
+        $user = Auth::user();
+        $states = [];
+        if ($user->user_type == 'franchise' && $user->franchise) {
+            $states = \App\Models\State::where('id', $user->franchise->state_id)->get();
+        } elseif ($user->user_type == 'state_franchise' && $user->state_franchise) {
+            $states = \App\Models\State::where('id', $user->state_franchise->state_id)->get();
+        } else {
+            flash(translate('Access denied.'))->error();
             return back();
         }
-        $states = \App\Models\State::where('country_id', 101)->where('status', 1)->get();
-        // $city = City::find($franchise->city_id); // Removed fixed city
-        // $areas = Area::where('city_id', $franchise->city_id)->get(); // Removed fixed areas
+
         $packages = FranchisePackage::all();
-        return view('franchise.sub_franchise.create', compact('franchise', 'states', 'packages'));
+        return view('franchise.sub_franchise.create', compact('states', 'packages'));
     }
 
     public function store(Request $request)
@@ -59,7 +76,16 @@ class SubFranchiseController extends Controller
             return back()->withInput();
         }
 
-        $franchise = Auth::user()->franchise;
+        $authUser = Auth::user();
+        $franchise_id = null;
+        $state_franchise_id = null;
+
+        if ($authUser->user_type == 'franchise') {
+            $franchise_id = $authUser->franchise->id;
+            $state_franchise_id = $authUser->franchise->state_franchise_id;
+        } elseif ($authUser->user_type == 'state_franchise') {
+            $state_franchise_id = $authUser->state_franchise->id;
+        }
 
         \DB::beginTransaction();
         try {
@@ -89,7 +115,8 @@ class SubFranchiseController extends Controller
             $subFranchise->id_proof = $id_proof_path;
             $subFranchise->franchise_package_id = $request->franchise_package_id;
             $subFranchise->status = 'pending';
-            $subFranchise->franchise_id = $franchise->id;
+            $subFranchise->franchise_id = $franchise_id;
+            $subFranchise->state_franchise_id = $state_franchise_id;
             $subFranchise->save();
 
             \DB::commit();
@@ -121,7 +148,17 @@ class SubFranchiseController extends Controller
             $sub_id = $id;
         }
         $subFranchise = SubFranchise::findOrFail($sub_id);
-        if ($subFranchise->franchise_id != Auth::user()->franchise->id) {
+        if (Auth::user()->user_type == 'state_franchise') {
+            if ($subFranchise->state_franchise_id != Auth::user()->state_franchise->id) {
+                flash(translate('Access denied.'))->error();
+                return back();
+            }
+        } elseif (Auth::user()->user_type == 'franchise') {
+            if ($subFranchise->franchise_id != Auth::user()->franchise->id) {
+                flash(translate('Access denied.'))->error();
+                return back();
+            }
+        } else {
             flash(translate('Access denied.'))->error();
             return back();
         }

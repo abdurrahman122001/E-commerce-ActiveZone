@@ -31,7 +31,7 @@ class RedirectIfAuthenticated
                 return redirect()->route('admin.dashboard');
             } elseif ($user && $user->user_type == 'seller') {
                 return redirect()->route('seller.dashboard');
-            } elseif ($user && in_array($user->user_type, ['franchise', 'sub_franchise'])) {
+            } elseif ($user && in_array($user->user_type, ['state_franchise', 'franchise', 'sub_franchise'])) {
                 return redirect()->route('franchise.dashboard');
             } else {
                 return redirect()->route('dashboard');

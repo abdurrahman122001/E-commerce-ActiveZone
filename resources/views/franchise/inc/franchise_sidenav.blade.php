@@ -22,6 +22,8 @@
                         $status = Auth::user()->franchise ? Auth::user()->franchise->status : 'pending';
                     } elseif (Auth::user()->user_type == 'sub_franchise') {
                         $status = Auth::user()->sub_franchise ? Auth::user()->sub_franchise->status : 'pending';
+                    } elseif (Auth::user()->user_type == 'state_franchise') {
+                        $status = Auth::user()->state_franchise ? Auth::user()->state_franchise->status : 'pending';
                     }
                 @endphp
 
@@ -62,7 +64,29 @@
                     </li>
                 @endif
                     
-                    @if(Auth::user()->user_type == 'franchise')
+                    @if(Auth::user()->user_type == 'state_franchise')
+                    <li class="aiz-side-nav-item">
+                        <a href="#" class="aiz-side-nav-link">
+                            <i class="las la-building aiz-side-nav-icon"></i>
+                            <span class="aiz-side-nav-text">{{ translate('City Franchises') }}</span>
+                            <span class="aiz-side-nav-arrow"></span>
+                        </a>
+                        <ul class="aiz-side-nav-list level-2">
+                            <li class="aiz-side-nav-item">
+                                <a href="{{ route('franchise.city_franchises.index') }}" class="aiz-side-nav-link">
+                                    <span class="aiz-side-nav-text">{{ translate('All City Franchises') }}</span>
+                                </a>
+                            </li>
+                            <li class="aiz-side-nav-item">
+                                <a href="{{ route('franchise.city_franchises.create') }}" class="aiz-side-nav-link">
+                                    <span class="aiz-side-nav-text">{{ translate('Add New City Franchise') }}</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    @endif
+                    
+                    @if(Auth::user()->user_type == 'franchise' || Auth::user()->user_type == 'state_franchise')
                     <li class="aiz-side-nav-item">
                         <a href="#" class="aiz-side-nav-link">
                             <i class="las la-users aiz-side-nav-icon"></i>

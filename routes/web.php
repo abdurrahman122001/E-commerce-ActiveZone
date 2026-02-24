@@ -68,10 +68,18 @@ Route::controller(App\Http\Controllers\FranchiseController::class)->group(functi
     Route::get('/franchise', 'showLandingPage')->name('franchise.landing');
     Route::get('/franchise/sub-franchise', 'showSubFranchiseLandingPage')->name('franchise.sub_landing');
     Route::get('/franchise/registration', 'showRegistrationForm')->name('franchise.registration');
+    Route::get('/franchise/state-registration', 'showStateRegistrationForm')->name('franchise.state_registration');
     Route::post('/franchise/register', 'register')->name('franchise.register');
     
     // Admin Routes (to be moved to admin.php or protected group later)
     Route::group(['middleware' => ['auth', 'admin']], function () {
+        Route::get('/admin/state-franchises', 'indexState')->name('admin.state_franchises.index');
+        Route::get('/admin/state-franchises/create', 'createStateFranchise')->name('admin.state_franchises.create');
+        Route::post('/admin/state-franchises/store', 'storeStateFranchise')->name('admin.state_franchises.store');
+        Route::get('/admin/state-franchise/edit/{id}', 'editStateFranchise')->name('admin.state_franchises.edit');
+        Route::post('/admin/state-franchise/update/{id}', 'updateStateFranchise')->name('admin.state_franchises.update');
+        Route::get('/admin/state-franchise/destroy/{id}', 'destroyStateFranchise')->name('admin.state_franchises.destroy');
+
         Route::get('/admin/franchises', 'index')->name('admin.franchises.index');
         Route::get('/admin/franchises/create', 'createFranchise')->name('admin.franchises.create');
         Route::post('/admin/franchises/store', 'storeFranchise')->name('admin.franchises.store');

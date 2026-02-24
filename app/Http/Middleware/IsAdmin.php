@@ -16,7 +16,7 @@ class IsAdmin
      */
     public function handle($request, Closure $next)
     {
-        if (Auth::check() && (Auth::user()->user_type == 'admin' || Auth::user()->user_type == 'staff' || Auth::user()->user_type == 'franchise' || Auth::user()->user_type == 'sub_franchise')) {
+        if (Auth::check() && (Auth::user()->user_type == 'admin' || Auth::user()->user_type == 'staff' || Auth::user()->user_type == 'franchise' || Auth::user()->user_type == 'sub_franchise' || Auth::user()->user_type == 'state_franchise')) {
             return $next($request);
         }
         else{

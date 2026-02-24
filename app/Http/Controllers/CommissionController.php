@@ -181,10 +181,8 @@ class CommissionController extends Controller
                         ? $orderDetail->product->commission_percentage
                         : $vendor->commission_percentage;
 
-                    $commission_amount             = 0;
-                    $employee_commission_amount    = 0;
-                    $franchise_commission_amount   = 0;
-                    $sub_franchise_comm_amount     = 0;
+                    $state_franchise_id            = null;
+                    $state_franchise_comm_amount   = 0;
 
                     // ── 1. Vendor Share ──────────────────────────────────────────────────
                     if ($commission_percentage > 0) {
@@ -231,6 +229,23 @@ class CommissionController extends Controller
                                         $franchise->balance += $franchise_commission_amount;
                                         $franchise->save();
                                     }
+                                    
+                                    // State Franchise Share
+                                    $state_franchise_id = $franchise->state_franchise_id;
+                                    if ($state_franchise_id) {
+                                        $state_franchise = \App\Models\StateFranchise::find($state_franchise_id);
+                                        if ($state_franchise) {
+                                            $state_percent = $state_franchise->commission_percentage > 0
+                                                ? $state_franchise->commission_percentage
+                                                : (float) get_setting('state_franchise_commission_on_vendor_sales', 0);
+                                            
+                                            if ($state_percent > 0) {
+                                                $state_franchise_comm_amount = ($orderDetail->price * $state_percent) / 100;
+                                                $state_franchise->balance += $state_franchise_comm_amount;
+                                                $state_franchise->save();
+                                            }
+                                        }
+                                    }
                                 }
                             }
                         }
@@ -247,11 +262,28 @@ class CommissionController extends Controller
                                 $franchise->balance += $franchise_commission_amount;
                                 $franchise->save();
                             }
+                            
+                            // State Franchise Share
+                            $state_franchise_id = $franchise->state_franchise_id;
+                            if ($state_franchise_id) {
+                                $state_franchise = \App\Models\StateFranchise::find($state_franchise_id);
+                                if ($state_franchise) {
+                                    $state_percent = $state_franchise->commission_percentage > 0
+                                        ? $state_franchise->commission_percentage
+                                        : (float) get_setting('state_franchise_commission_on_vendor_sales', 0);
+                                    
+                                    if ($state_percent > 0) {
+                                        $state_franchise_comm_amount = ($orderDetail->price * $state_percent) / 100;
+                                        $state_franchise->balance += $state_franchise_comm_amount;
+                                        $state_franchise->save();
+                                    }
+                                }
+                            }
                         }
                     }
 
                     // ── Save Commission History ────────────────────────────────────
-                    if ($commission_amount > 0 || $sub_franchise_comm_amount > 0 || $franchise_commission_amount > 0 || $employee_commission_amount > 0) {
+                    if ($commission_amount > 0 || $sub_franchise_comm_amount > 0 || $franchise_commission_amount > 0 || $state_franchise_comm_amount > 0 || $employee_commission_amount > 0) {
                         $vendor_commission_history = new \App\Models\VendorCommissionHistory();
                         $vendor_commission_history->order_id                    = $order->id;
                         $vendor_commission_history->order_detail_id             = $orderDetail->id;
@@ -259,9 +291,11 @@ class CommissionController extends Controller
                         $vendor_commission_history->franchise_id                = $vendor->franchise_id
                             ?? ($vendor->sub_franchise ? $vendor->sub_franchise->franchise_id : null);
                         $vendor_commission_history->sub_franchise_id            = $vendor->sub_franchise_id;
+                        $vendor_commission_history->state_franchise_id          = $state_franchise_id;
                         $vendor_commission_history->commission_amount           = $commission_amount;
                         $vendor_commission_history->franchise_commission_amount = $franchise_commission_amount;
                         $vendor_commission_history->sub_franchise_commission_amount = $sub_franchise_comm_amount;
+                        $vendor_commission_history->state_franchise_commission_amount = $state_franchise_comm_amount;
                         $vendor_commission_history->employee_commission_amount  = $employee_commission_amount;
                         $vendor_commission_history->save();
                     }

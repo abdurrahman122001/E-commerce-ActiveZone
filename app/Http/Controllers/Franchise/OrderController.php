@@ -30,6 +30,19 @@ class OrderController extends Controller
                 $query->select('id')->from('sub_franchises')->where('franchise_id', $franchise_id);
             })->pluck('user_id')->toArray();
             $all_seller_ids = array_unique(array_merge($all_seller_ids, $vendor_user_ids, $sub_franchise_user_ids, $sub_franchise_vendor_user_ids));
+        } elseif ($user->user_type == 'state_franchise' && $user->state_franchise) {
+            $state_franchise_id = $user->state_franchise->id;
+            
+            // Vendors linked to franchises under this state franchise
+            $franchise_ids = \App\Models\Franchise::where('state_franchise_id', $state_franchise_id)->pluck('id')->toArray();
+            $vendor_user_ids = Vendor::whereIn('franchise_id', $franchise_ids)->pluck('user_id')->toArray();
+            
+            // Vendors linked to sub-franchises under those franchises
+            $sub_franchise_vendor_user_ids = Vendor::whereIn('sub_franchise_id', function($query) use ($franchise_ids) {
+                $query->select('id')->from('sub_franchises')->whereIn('franchise_id', $franchise_ids);
+            })->pluck('user_id')->toArray();
+            
+            $all_seller_ids = array_unique(array_merge($all_seller_ids, $vendor_user_ids, $sub_franchise_vendor_user_ids));
         } elseif ($user->user_type == 'sub_franchise' && $user->sub_franchise) {
             $sub_franchise_id = $user->sub_franchise->id;
             $vendor_user_ids = Vendor::where('sub_franchise_id', $sub_franchise_id)->pluck('user_id')->toArray();

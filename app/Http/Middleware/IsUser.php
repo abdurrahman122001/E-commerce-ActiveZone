@@ -22,6 +22,7 @@ class IsUser
                 Auth::user()->user_type == 'vendor' || 
                 Auth::user()->user_type == 'franchise' || 
                 Auth::user()->user_type == 'sub_franchise' || 
+                Auth::user()->user_type == 'state_franchise' || 
                 Auth::user()->user_type == 'delivery_boy') ) {
             
             if (Auth::user()->user_type == 'delivery_boy') {

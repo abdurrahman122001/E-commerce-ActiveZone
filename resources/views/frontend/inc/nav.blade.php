@@ -109,10 +109,24 @@
                 @endforeach
             @endif
             <li class="mr-0">
+                <a href="{{ route('franchise.state_registration') }}"
+                    class="fs-13 px-3 py-3 w-100 d-inline-block fw-700 text-dark header_menu_links
+                            @if (url()->current() == route('franchise.state_registration')) active @endif">
+                    {{ translate('State Franchise') }}
+                </a>
+            </li>
+            <li class="mr-0">
                 <a href="{{ route('franchise.landing') }}"
                     class="fs-13 px-3 py-3 w-100 d-inline-block fw-700 text-dark header_menu_links
                             @if (url()->current() == route('franchise.landing')) active @endif">
-                    {{ translate('Franchise') }}
+                    {{ translate('City Franchise') }}
+                </a>
+            </li>
+            <li class="mr-0">
+                <a href="{{ route('franchise.sub_landing') }}"
+                    class="fs-13 px-3 py-3 w-100 d-inline-block fw-700 text-dark header_menu_links
+                            @if (url()->current() == route('franchise.sub_landing')) active @endif">
+                    {{ translate('Sub-Franchise') }}
                 </a>
             </li>
             @auth

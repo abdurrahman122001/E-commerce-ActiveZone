@@ -174,6 +174,11 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasOne(SubFranchise::class);
     }
 
+    public function state_franchise()
+    {
+        return $this->hasOne(StateFranchise::class);
+    }
+
     public function referred_by_user()
     {
         return $this->belongsTo(User::class, 'referred_by');

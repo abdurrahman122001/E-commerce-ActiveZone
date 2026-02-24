@@ -54,6 +54,14 @@ Route::group(['prefix' => 'franchise', 'middleware' => ['auth', 'franchise', 'pr
         Route::post('/orders/update_payment_status', 'update_payment_status')->name('orders.update_payment_status');
     });
 
+    // City Franchises (for State Franchise)
+    Route::controller(App\Http\Controllers\Franchise\CityFranchiseController::class)->group(function () {
+        Route::get('/city-franchises', 'index')->name('city_franchises.index');
+        Route::get('/city-franchises/create', 'create')->name('city_franchises.create');
+        Route::post('/city-franchises/store', 'store')->name('city_franchises.store');
+        Route::get('/city-franchises/login/{id}', 'login')->name('city_franchises.login');
+    });
+
     // Sub-Franchises
     Route::controller(App\Http\Controllers\Franchise\SubFranchiseController::class)->group(function () {
         Route::get('/sub-franchises', 'index')->name('sub_franchises.index');
