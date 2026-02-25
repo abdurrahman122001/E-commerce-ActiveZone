@@ -49,6 +49,7 @@ class VendorController extends Controller
                 }
                 if ($user->user_type == 'state_franchise' && $user->state_franchise) {
                     $state_franchise_id = $user->state_franchise->id;
+                    $q->orWhere('state_franchise_id', $state_franchise_id);
                     $q->orWhereIn('franchise_id', function($query) use ($state_franchise_id) {
                         $query->select('id')->from('franchises')->where('state_franchise_id', $state_franchise_id);
                     });

@@ -358,7 +358,7 @@ $bottomHeaderTextColor = get_setting('bottom_header_text_color');
                                             <a href="{{ route(get_setting('seller_registration_verify') === '1' ? 'shop-reg.verification' : 'shops.create') }}"
                                                 class="dropdown-item fs-13 py-2 px-3 hover-bg-light hover-text-primary border-bottom border-soft-light d-flex align-items-center"
                                                 style="min-height: 40px;">
-                                                {{ translate('Become a Seller') }}
+                                                {{ translate('Register as a Vendor') }}
                                             </a>
                                             <a href="{{ route('seller.login') }}"
                                                 class="dropdown-item fs-13 py-2 px-3 hover-bg-light hover-text-primary border-bottom border-soft-light d-flex align-items-center"

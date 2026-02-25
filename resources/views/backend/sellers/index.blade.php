@@ -94,6 +94,7 @@
                         <th data-breakpoints="lg">{{translate('Seller Verification')}}</th>
                         <th data-breakpoints="lg">{{translate('Verification Approval')}}</th>
                         <th data-breakpoints="lg">{{translate('Referred By')}}</th>
+                        <th data-breakpoints="lg">{{translate('Assigned Franchise')}}</th>
                     @else
                         <th data-breakpoints="lg">{{translate('Rating')}}</th>
                         <th data-breakpoints="lg">{{translate('Followers')}}</th>
@@ -204,6 +205,24 @@
                                     </span>
                                 @else
                                     <span class="badge badge-inline badge-secondary">{{ translate('Direct') }}</span>
+                                @endif
+                            </td>
+                            <td>
+                                @if($shop->user->vendor)
+                                    @if($shop->user->vendor->sub_franchise)
+                                        <div class="small"><b>{{ translate('Sub') }}:</b> {{ $shop->user->vendor->sub_franchise->user->name }}</div>
+                                    @endif
+                                    @if($shop->user->vendor->franchise)
+                                        <div class="small"><b>{{ translate('City') }}:</b> {{ $shop->user->vendor->franchise->user->name }}</div>
+                                    @endif
+                                    @if($shop->user->vendor->state_franchise)
+                                        <div class="small"><b>{{ translate('State') }}:</b> {{ $shop->user->vendor->state_franchise->user->name }}</div>
+                                    @endif
+                                    @if(!$shop->user->vendor->sub_franchise && !$shop->user->vendor->franchise && !$shop->user->vendor->state_franchise)
+                                        <span class="badge badge-inline badge-secondary">{{ translate('None') }}</span>
+                                    @endif
+                                @else
+                                    <span class="badge badge-inline badge-secondary">{{ translate('N/A') }}</span>
                                 @endif
                             </td>
                             

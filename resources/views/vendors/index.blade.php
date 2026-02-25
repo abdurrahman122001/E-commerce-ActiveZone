@@ -31,6 +31,7 @@
                         <th>{{ translate('Status') }}</th>
                         <th>{{ translate('Registered By') }}</th>
                         <th>{{ translate('Referred By') }}</th>
+                        <th>{{ translate('Franchise Info') }}</th>
                         <th width="10%">{{translate('Options')}}</th>
                     </tr>
                 </thead>
@@ -67,6 +68,20 @@
                                     {{ $vendor->referrer->shop_name }} ({{ $vendor->referrer->referral_code }})
                                 @else
                                     <span class="badge badge-inline badge-secondary">{{ translate('Direct') }}</span>
+                                @endif
+                            </td>
+                            <td>
+                                @if($vendor->sub_franchise)
+                                    <div class="small"><b>{{ translate('Sub') }}:</b> {{ $vendor->sub_franchise->user->name }}</div>
+                                @endif
+                                @if($vendor->franchise)
+                                    <div class="small"><b>{{ translate('City') }}:</b> {{ $vendor->franchise->user->name }}</div>
+                                @endif
+                                @if($vendor->state_franchise)
+                                    <div class="small"><b>{{ translate('State') }}:</b> {{ $vendor->state_franchise->user->name }}</div>
+                                @endif
+                                @if(!$vendor->sub_franchise && !$vendor->franchise && !$vendor->state_franchise)
+                                    <span class="badge badge-inline badge-secondary">{{ translate('None') }}</span>
                                 @endif
                             </td>
                             <td>

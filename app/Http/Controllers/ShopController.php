@@ -68,7 +68,13 @@ class ShopController extends Controller
             }
         } else {
             
-            return view('auth.'.get_setting('authentication_layout_select').'.seller_registration', compact('email','phone'));
+            $countries = \App\Models\Country::where('status', 1)->get();
+            $states = \App\Models\State::where('status', 1);
+            if($countries->count() == 1){
+                $states = $states->where('country_id', $countries->first()->id);
+            }
+            $states = $states->get();
+            return view('auth.'.get_setting('authentication_layout_select').'.seller_registration', compact('email','phone', 'states'));
         }
     }
 
@@ -110,9 +116,28 @@ class ShopController extends Controller
             $vendor->user_id = $user->id;
             $vendor->shop_name = $request->shop_name;
             $vendor->address = $request->address;
+            $vendor->state_id = $request->state_id;
+            $vendor->city_id = $request->city_id;
+            $vendor->area_id = $request->area_id;
             $vendor->status = 'pending';
+
+            // Automatic Franchise Association
+            $stateFranchise = \App\Models\StateFranchise::where('state_id', $request->state_id)->where('status', 'approved')->first();
+            if ($stateFranchise) {
+                $vendor->state_franchise_id = $stateFranchise->id;
+            }
+
+            $franchise = \App\Models\Franchise::where('city_id', $request->city_id)->where('status', 'approved')->first();
+            if ($franchise) {
+                $vendor->franchise_id = $franchise->id;
+            }
+
+            $subFranchise = \App\Models\SubFranchise::where('area_id', $request->area_id)->where('status', 'approved')->first();
+            if ($subFranchise) {
+                $vendor->sub_franchise_id = $subFranchise->id;
+            }
             
-            $vendor_referral_code = Cookie::get('vendor_referral_code');
+            $vendor_referral_code = $request->referral_code ?: Cookie::get('vendor_referral_code');
             if ($vendor_referral_code) {
                 $referrer = \App\Models\Vendor::where('referral_code', $vendor_referral_code)->first();
                 if ($referrer) {
@@ -190,7 +215,10 @@ class ShopController extends Controller
         //
     }
 
-    public function verifyRegEmailorPhone(){
+    public function verifyRegEmailorPhone(Request $request){
+        if ($request->has('referral_code')) {
+            Cookie::queue('vendor_referral_code', $request->referral_code, 30 * 24 * 60);
+        }
         $type = 'seller';
         if (Auth::check()) {
             if ((Auth::user()->user_type == 'admin' || Auth::user()->user_type == 'customer')) {

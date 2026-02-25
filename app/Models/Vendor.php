@@ -31,6 +31,7 @@ class Vendor extends Model
         'user_id',
         'franchise_id',
         'sub_franchise_id',
+        'state_franchise_id',
         'status',
         'commission_percentage',
         'added_by_employee_id',
@@ -42,6 +43,7 @@ class Vendor extends Model
         'address',
         'city_id',
         'state_id',
+        'area_id',
         'lat',
         'long',
         'referral_code',
@@ -68,6 +70,11 @@ class Vendor extends Model
         return $this->belongsTo(SubFranchise::class);
     }
 
+    public function state_franchise()
+    {
+        return $this->belongsTo(StateFranchise::class);
+    }
+
     public function orders()
     {
         return $this->hasMany(Order::class);
@@ -81,5 +88,10 @@ class Vendor extends Model
     public function referrals()
     {
         return $this->hasMany(Vendor::class, 'referred_by_id');
+    }
+
+    public function area()
+    {
+        return $this->belongsTo(Area::class);
     }
 }

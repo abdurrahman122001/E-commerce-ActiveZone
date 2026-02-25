@@ -111,6 +111,12 @@
                                             @endif
                                         </div>
 
+                                        <div class="form-group">
+                                            <label for="referral_code" class="fs-12 fw-700 text-soft-dark">{{  translate('Referral Code') }}</label>
+                                            <input type="text" class="form-control rounded-0" value="{{ old('referral_code', Cookie::get('vendor_referral_code')) }}" placeholder="{{  translate('Referral Code') }}" name="referral_code">
+                                            <small class="text-muted">{{ translate('Optional: Enter the referral code if you were referred by another vendor.') }}</small>
+                                        </div>
+
                                         <!-- Recaptcha -->
                                         @if(get_setting('google_recaptcha') == 1 && get_setting('recaptcha_seller_register') == 1)
                                             

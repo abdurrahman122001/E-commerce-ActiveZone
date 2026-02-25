@@ -103,6 +103,30 @@
                                             </div>
 
                                             <div class="form-group">
+                                                <label for="state_id" class="fs-12 fw-700 text-soft-dark">{{  translate('State') }}</label>
+                                                <select class="form-control aiz-selectpicker rounded-0" name="state_id" id="state_id" data-live-search="true" required>
+                                                    <option value="">{{ translate('Select State') }}</option>
+                                                    @foreach ($states as $state)
+                                                        <option value="{{ $state->id }}">{{ $state->name }}</option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label for="city_id" class="fs-12 fw-700 text-soft-dark">{{  translate('City') }}</label>
+                                                <select class="form-control aiz-selectpicker rounded-0" name="city_id" id="city_id" data-live-search="true" required>
+                                                    <option value="">{{ translate('Select City') }}</option>
+                                                </select>
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label for="area_id" class="fs-12 fw-700 text-soft-dark">{{  translate('Area') }}</label>
+                                                <select class="form-control aiz-selectpicker rounded-0" name="area_id" id="area_id" data-live-search="true" required>
+                                                    <option value="">{{ translate('Select Area') }}</option>
+                                                </select>
+                                            </div>
+
+                                            <div class="form-group">
                                                 <label for="address" class="fs-12 fw-700 text-soft-dark">{{  translate('Address') }}</label>
                                                 <input type="text" class="form-control rounded-0{{ $errors->has('address') ? ' is-invalid' : '' }}" value="{{ old('address') }}" placeholder="{{  translate('Address') }}" name="address" required>
                                                 @if ($errors->has('address'))
@@ -110,6 +134,12 @@
                                                         <strong>{{ $errors->first('address') }}</strong>
                                                     </span>
                                                 @endif
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label for="referral_code" class="fs-12 fw-700 text-soft-dark">{{  translate('Referral Code') }}</label>
+                                                <input type="text" class="form-control rounded-0" value="{{ old('referral_code', Cookie::get('vendor_referral_code')) }}" placeholder="{{  translate('Referral Code') }}" name="referral_code">
+                                                <small class="text-muted">{{ translate('Optional: Enter the referral code if you were referred by another vendor.') }}</small>
                                             </div>
 
                                             <!-- Recaptcha -->
@@ -169,4 +199,22 @@
                 });
         </script>
     @endif
+
+    <script type="text/javascript">
+        $(document).on('change', '#state_id', function() {
+            var state_id = $(this).val();
+            $.post('{{ route('get-city') }}', {_token:'{{ csrf_token() }}', state_id:state_id}, function(data){
+                $('#city_id').html(data);
+                AIZ.plugins.bootstrapSelect('refresh');
+            });
+        });
+
+        $(document).on('change', '#city_id', function() {
+            var city_id = $(this).val();
+            $.post('{{ route('get-area') }}', {_token:'{{ csrf_token() }}', city_id:city_id}, function(data){
+                $('#area_id').html(data);
+                AIZ.plugins.bootstrapSelect('refresh');
+            });
+        });
+    </script>
 @endsection

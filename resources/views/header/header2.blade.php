@@ -80,10 +80,12 @@
 
                                 <!-- Dropdown Menu -->
                                 <div class="dropdown-menu fs-12 p-0 mt-1">
-                                    <a class="dropdown-item py-2 px-2 text-dark"
-                                       
-                                        href="{{ route('seller.login') }}">
+                                    <a class="dropdown-item py-2 px-2 text-dark" href="{{ route('seller.login') }}">
                                         {{ translate('Login to Seller') }}
+                                    </a>
+                                    <a class="dropdown-item py-2 px-2 text-dark"
+                                        href="{{ route(get_setting('seller_registration_verify') === '1' ? 'shop-reg.verification' : 'shops.create') }}">
+                                        {{ translate('Register as a Vendor') }}
                                     </a>
                                 </div>
                             </div>

@@ -91,7 +91,9 @@
                 <a href="{{ route('user.login') }}"
                     class="text-reset opacity-60 hov-opacity-100 hov-text-primary fs-12 d-inline-block border-right border-soft-light border-width-2 pr-2 ml-3">{{ translate('Login') }}</a>
                 <a href="{{ route('user.registration') }}"
-                    class="text-reset opacity-60 hov-opacity-100 hov-text-primary fs-12 d-inline-block py-2 pl-2">{{ translate('Registration') }}</a>
+                    class="text-reset opacity-60 hov-opacity-100 hov-text-primary fs-12 d-inline-block border-right border-soft-light border-width-2 pr-2 pl-2">{{ translate('Registration') }}</a>
+                <a href="{{ route(get_setting('seller_registration_verify') === '1' ? 'shop-reg.verification' : 'shops.create') }}"
+                    class="text-reset opacity-60 hov-opacity-100 hov-text-primary fs-12 d-inline-block py-2 pl-2">{{ translate('Vendor Registration') }}</a>
             </span>
             
         @endauth
@@ -127,6 +129,13 @@
                     class="fs-13 px-3 py-3 w-100 d-inline-block fw-700 text-dark header_menu_links
                             @if (url()->current() == route('franchise.sub_landing')) active @endif">
                     {{ translate('Sub-Franchise') }}
+                </a>
+            </li>
+            <li class="mr-0">
+                <a href="{{ route(get_setting('seller_registration_verify') === '1' ? 'shop-reg.verification' : 'shops.create') }}"
+                    class="fs-13 px-3 py-3 w-100 d-inline-block fw-700 text-dark header_menu_links
+                            @if (url()->current() == (get_setting('seller_registration_verify') === '1' ? route('shop-reg.verification') : route('shops.create'))) active @endif">
+                    {{ translate('Vendor Registration') }}
                 </a>
             </li>
             @auth

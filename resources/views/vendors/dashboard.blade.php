@@ -29,6 +29,7 @@
                         </div>
                         <div class="col-auto">
                             <button class="btn btn-sm btn-soft-primary" onclick="copyToClipboard('{{ $vendor->referral_code }}')">{{ translate('Copy Code') }}</button>
+                            <button class="btn btn-sm btn-soft-info" onclick="copyToClipboard('{{ route(get_setting('seller_registration_verify') === '1' ? 'shop-reg.verification' : 'shops.create', ['referral_code' => $vendor->referral_code]) }}')">{{ translate('Copy Link') }}</button>
                         </div>
                     </div>
                 </div>
