@@ -38,24 +38,26 @@ class VendorController extends Controller
         ]);
 
         $vendors = Vendor::query();
-        $vendors->where(function($q) use ($user) {
-            $q->where('user_id', $user->id);
-            if ($user->franchise) {
-                $q->orWhere('franchise_id', $user->franchise->id);
-            }
-            if ($user->sub_franchise) {
-                $q->orWhere('sub_franchise_id', $user->sub_franchise->id);
-            }
-            if ($user->user_type == 'state_franchise' && $user->state_franchise) {
-                $state_franchise_id = $user->state_franchise->id;
-                $q->orWhereIn('franchise_id', function($query) use ($state_franchise_id) {
-                    $query->select('id')->from('franchises')->where('state_franchise_id', $state_franchise_id);
-                });
-                $q->orWhereIn('sub_franchise_id', function($query) use ($state_franchise_id) {
-                    $query->select('id')->from('sub_franchises')->where('state_franchise_id', $state_franchise_id);
-                });
-            }
-        });
+        if ($user->user_type != 'admin' && $user->user_type != 'staff') {
+            $vendors->where(function($q) use ($user) {
+                $q->where('user_id', $user->id);
+                if ($user->franchise) {
+                    $q->orWhere('franchise_id', $user->franchise->id);
+                }
+                if ($user->sub_franchise) {
+                    $q->orWhere('sub_franchise_id', $user->sub_franchise->id);
+                }
+                if ($user->user_type == 'state_franchise' && $user->state_franchise) {
+                    $state_franchise_id = $user->state_franchise->id;
+                    $q->orWhereIn('franchise_id', function($query) use ($state_franchise_id) {
+                        $query->select('id')->from('franchises')->where('state_franchise_id', $state_franchise_id);
+                    });
+                    $q->orWhereIn('sub_franchise_id', function($query) use ($state_franchise_id) {
+                        $query->select('id')->from('sub_franchises')->where('state_franchise_id', $state_franchise_id);
+                    });
+                }
+            });
+        }
 
         $vendors = $vendors->withCount('orders')
             ->withSum('orders', 'grand_total')

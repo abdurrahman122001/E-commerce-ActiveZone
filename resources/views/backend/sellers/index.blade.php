@@ -93,6 +93,7 @@
                         <th data-breakpoints="lg">{{translate('Email Verification')}}</th>
                         <th data-breakpoints="lg">{{translate('Seller Verification')}}</th>
                         <th data-breakpoints="lg">{{translate('Verification Approval')}}</th>
+                        <th data-breakpoints="lg">{{translate('Referred By')}}</th>
                     @else
                         <th data-breakpoints="lg">{{translate('Rating')}}</th>
                         <th data-breakpoints="lg">{{translate('Followers')}}</th>
@@ -195,6 +196,15 @@
                                     >
                                     <span class="slider round"></span>
                                 </label>
+                            </td>
+                            <td>
+                                @if($shop->user->vendor && $shop->user->vendor->referrer)
+                                    <span class="badge badge-inline badge-info">
+                                        {{ $shop->user->vendor->referrer->shop_name }} ({{ $shop->user->vendor->referrer->referral_code }})
+                                    </span>
+                                @else
+                                    <span class="badge badge-inline badge-secondary">{{ translate('Direct') }}</span>
+                                @endif
                             </td>
                             
                             <td>

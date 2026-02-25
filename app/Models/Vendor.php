@@ -8,6 +8,24 @@ use Illuminate\Database\Eloquent\Model;
 class Vendor extends Model
 {
     use HasFactory;
+    
+    protected static function boot()
+    {
+        parent::boot();
+        static::creating(function ($vendor) {
+            if (empty($vendor->referral_code)) {
+                $vendor->referral_code = static::generateUniqueReferralCode();
+            }
+        });
+    }
+
+    public static function generateUniqueReferralCode()
+    {
+        do {
+            $code = 'VND' . strtoupper(\Str::random(8));
+        } while (static::where('referral_code', $code)->exists());
+        return $code;
+    }
 
     protected $fillable = [
         'user_id',
@@ -25,7 +43,9 @@ class Vendor extends Model
         'city_id',
         'state_id',
         'lat',
-        'long'
+        'long',
+        'referral_code',
+        'referred_by_id'
     ];
 
     public function addedByEmployee()
@@ -51,5 +71,15 @@ class Vendor extends Model
     public function orders()
     {
         return $this->hasMany(Order::class);
+    }
+
+    public function referrer()
+    {
+        return $this->belongsTo(Vendor::class, 'referred_by_id');
+    }
+
+    public function referrals()
+    {
+        return $this->hasMany(Vendor::class, 'referred_by_id');
     }
 }

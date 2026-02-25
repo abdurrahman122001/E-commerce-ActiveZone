@@ -8,7 +8,33 @@
             </div>
         </div>
     </div>
-    @php $authUser = auth()->user(); @endphp
+    @php 
+        $authUser = auth()->user(); 
+        $vendor = $authUser->vendor;
+        if($vendor && empty($vendor->referral_code)){
+            $vendor->referral_code = \App\Models\Vendor::generateUniqueReferralCode();
+            $vendor->save();
+        }
+    @endphp
+    
+    <div class="row gutters-10">
+        <div class="col-md-12">
+            <div class="card shadow-none">
+                <div class="card-body">
+                    <div class="row align-items-center">
+                        <div class="col">
+                            <h6 class="mb-0">{{ translate('Your Referral Code') }}</h6>
+                            <div class="h3 fw-700 text-primary mt-2">{{ $vendor->referral_code ?? translate('N/A') }}</div>
+                            <p class="text-muted small mb-0">{{ translate('Share this code with other vendors to refer them.') }}</p>
+                        </div>
+                        <div class="col-auto">
+                            <button class="btn btn-sm btn-soft-primary" onclick="copyToClipboard('{{ $vendor->referral_code }}')">{{ translate('Copy Code') }}</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
     <div class="row">
         <div class="col-sm-6 col-md-6 col-xxl-3">
             <div class="card shadow-none mb-4 bg-primary ">
@@ -429,5 +455,15 @@
                 }
             }
         });
+
+        function copyToClipboard(text) {
+            var tempInput = document.createElement("input");
+            tempInput.value = text;
+            document.body.appendChild(tempInput);
+            tempInput.select();
+            document.execCommand("copy");
+            document.body.removeChild(tempInput);
+            AIZ.plugins.notify('success', '{{ translate('Referral code copied to clipboard') }}');
+        }
     </script>
 @endsection

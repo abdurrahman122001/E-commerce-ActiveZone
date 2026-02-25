@@ -30,6 +30,7 @@
                         <th>{{ translate('Commission (%)') }}</th>
                         <th>{{ translate('Status') }}</th>
                         <th>{{ translate('Registered By') }}</th>
+                        <th>{{ translate('Referred By') }}</th>
                         <th width="10%">{{translate('Options')}}</th>
                     </tr>
                 </thead>
@@ -57,6 +58,13 @@
                             <td>
                                 @if ($vendor->addedByEmployee)
                                     {{ $vendor->addedByEmployee->name }}
+                                @else
+                                    <span class="badge badge-inline badge-secondary">{{ translate('Direct') }}</span>
+                                @endif
+                            </td>
+                            <td>
+                                @if ($vendor->referrer)
+                                    {{ $vendor->referrer->shop_name }} ({{ $vendor->referrer->referral_code }})
                                 @else
                                     <span class="badge badge-inline badge-secondary">{{ translate('Direct') }}</span>
                                 @endif

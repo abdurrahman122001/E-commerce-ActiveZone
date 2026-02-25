@@ -43,8 +43,11 @@ class ShopController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Request $request)
     {
+        if ($request->has('referral_code')) {
+            Cookie::queue('vendor_referral_code', $request->referral_code, 30 * 24 * 60);
+        }
         // check if the seller verification enable
         if(get_setting('seller_registration_verify') === '1' || addon_is_activated('portfolio_system') == 1 ){
             abort(404);
@@ -101,6 +104,22 @@ class ShopController extends Controller
             $shop->registration_approval= 0;
             $shop->slug = preg_replace('/\s+/', '-', str_replace("/", " ", $request->shop_name));
             $shop->save();
+
+            // Create Vendor record
+            $vendor = new \App\Models\Vendor;
+            $vendor->user_id = $user->id;
+            $vendor->shop_name = $request->shop_name;
+            $vendor->address = $request->address;
+            $vendor->status = 'pending';
+            
+            $vendor_referral_code = Cookie::get('vendor_referral_code');
+            if ($vendor_referral_code) {
+                $referrer = \App\Models\Vendor::where('referral_code', $vendor_referral_code)->first();
+                if ($referrer) {
+                    $vendor->referred_by_id = $referrer->id;
+                }
+            }
+            $vendor->save();
 
             //auth()->login($user, true);
             // if (BusinessSetting::where('type', 'email_verification')->first()->value == 0) {
