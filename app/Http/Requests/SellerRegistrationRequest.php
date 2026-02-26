@@ -34,7 +34,7 @@ class SellerRegistrationRequest extends FormRequest
         $rules['l_name']        = 'sometimes|required|string|max:255';
         $rules['email']         = 'required|email|unique:users|max:255';
         $rules['phone']         = 'required|string|max:20';
-        $rules['password' ]     = 'required|string|min:6|confirmed';
+        $rules['password' ]     = 'required|string|confirmed';
         $rules['shop_name' ]    = 'required|max:255';
         $rules['address']       = 'required';
         $rules['state_id']      = 'required';
@@ -63,7 +63,7 @@ class SellerRegistrationRequest extends FormRequest
             'email.max'             => translate('Max 255 characters'),
             'password.required'     => translate('Password is required'),
             'password.string'       => translate('Password should be string type'),
-            'password.min'          => translate('Min 6 characters'),
+
             'password.confirmed'    => translate('Confirm password do not matched'),
             'shop_name.required'    => translate('Shop name is required'),
             'shop_name.max'         => translate('Max 255 characters'),

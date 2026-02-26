@@ -31,6 +31,16 @@
                                         <form id="reg-form" class="form-default" role="form" action="{{ route('shops.store') }}" method="POST">
                                             @csrf
 
+                                            @if($errors->any())
+                                                <div class="alert alert-danger">
+                                                    <ul class="mb-0">
+                                                        @foreach ($errors->all() as $error)
+                                                            <li>{{ $error }}</li>
+                                                        @endforeach
+                                                    </ul>
+                                                </div>
+                                            @endif
+
                                             <div class="fs-15 fw-600 pb-2">{{ translate('Personal Info')}}</div>
                                             <!-- Name -->
                                             <div class="form-group">
@@ -70,9 +80,7 @@
                                                     <input type="password" class="form-control rounded-0{{ $errors->has('password') ? ' is-invalid' : '' }}" placeholder="{{  translate('Password') }}" name="password" required>
                                                     <i class="password-toggle las la-2x la-eye"></i>
                                                 </div>
-                                                <div class="text-right mt-1">
-                                                    <span class="fs-12 fw-400 text-gray-dark">{{ translate('Password must contain at least 6 digits') }}</span>
-                                                </div>
+
                                                 @if ($errors->has('password'))
                                                     <span class="invalid-feedback" role="alert">
                                                         <strong>{{ $errors->first('password') }}</strong>

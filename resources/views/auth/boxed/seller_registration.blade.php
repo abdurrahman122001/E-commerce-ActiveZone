@@ -30,6 +30,16 @@
                                             <form id="reg-form" class="form-default" role="form" action="{{ route('shops.store') }}" method="POST">
                                                 @csrf
 
+                                                @if($errors->any())
+                                                    <div class="alert alert-danger">
+                                                        <ul class="mb-0">
+                                                            @foreach ($errors->all() as $error)
+                                                                <li>{{ $error }}</li>
+                                                            @endforeach
+                                                        </ul>
+                                                    </div>
+                                                @endif
+
                                                 <div class="fs-15 fw-600 pb-2">{{ translate('Personal Info')}}</div>
                                                 <!-- Name -->
                                                 <div class="form-group">
@@ -69,9 +79,7 @@
                                                         <input type="password" class="form-control rounded-0{{ $errors->has('password') ? ' is-invalid' : '' }}" placeholder="{{  translate('Password') }}" name="password" required>
                                                         <i class="password-toggle las la-2x la-eye"></i>
                                                     </div>
-                                                    <div class="text-right mt-1">
-                                                        <span class="fs-12 fw-400 text-gray-dark">{{ translate('Password must contain at least 6 digits') }}</span>
-                                                    </div>
+
                                                     @if ($errors->has('password'))
                                                         <span class="invalid-feedback" role="alert">
                                                             <strong>{{ $errors->first('password') }}</strong>
@@ -99,6 +107,30 @@
                                                             <strong>{{ $errors->first('shop_name') }}</strong>
                                                         </span>
                                                     @endif
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <label for="state_id" class="fs-12 fw-700 text-soft-dark">{{  translate('State') }}</label>
+                                                    <select class="form-control aiz-selectpicker rounded-0" name="state_id" id="state_id" data-live-search="true" required>
+                                                        <option value="">{{ translate('Select State') }}</option>
+                                                        @foreach ($states as $state)
+                                                            <option value="{{ $state->id }}">{{ $state->name }}</option>
+                                                        @endforeach
+                                                    </select>
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <label for="city_id" class="fs-12 fw-700 text-soft-dark">{{  translate('City') }}</label>
+                                                    <select class="form-control aiz-selectpicker rounded-0" name="city_id" id="city_id" data-live-search="true" required>
+                                                        <option value="">{{ translate('Select City') }}</option>
+                                                    </select>
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <label for="area_id" class="fs-12 fw-700 text-soft-dark">{{  translate('Area') }}</label>
+                                                    <select class="form-control aiz-selectpicker rounded-0" name="area_id" id="area_id" data-live-search="true" required>
+                                                        <option value="">{{ translate('Select Area') }}</option>
+                                                    </select>
                                                 </div>
 
                                                 <div class="form-group">
@@ -176,4 +208,22 @@
                 });
         </script>
     @endif
+
+    <script type="text/javascript">
+        $(document).on('change', '#state_id', function() {
+            var state_id = $(this).val();
+            $.post('{{ route('get-city') }}', {_token:'{{ csrf_token() }}', state_id:state_id}, function(data){
+                $('#city_id').html(data);
+                AIZ.plugins.bootstrapSelect('refresh');
+            });
+        });
+
+        $(document).on('change', '#city_id', function() {
+            var city_id = $(this).val();
+            $.post('{{ route('get-area') }}', {_token:'{{ csrf_token() }}', city_id:city_id}, function(data){
+                $('#area_id').html(data);
+                AIZ.plugins.bootstrapSelect('refresh');
+            });
+        });
+    </script>
 @endsection
