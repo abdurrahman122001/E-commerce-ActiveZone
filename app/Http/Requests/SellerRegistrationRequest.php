@@ -37,9 +37,9 @@ class SellerRegistrationRequest extends FormRequest
         $rules['password' ]     = 'required|string|confirmed';
         $rules['shop_name' ]    = 'required|max:255';
         $rules['address']       = 'required';
-        $rules['state_id']      = 'required';
-        $rules['city_id']       = 'required';
-        $rules['area_id']       = 'required';
+        $rules['state_id']      = 'required|integer';
+        $rules['city_id']       = 'nullable|integer';
+        $rules['area_id']       = 'nullable|integer';
         $rules['referral_code'] = 'nullable|string';
         $rules['g-recaptcha-response'] = [
                 Rule::when(get_setting('google_recaptcha') == 1 && 

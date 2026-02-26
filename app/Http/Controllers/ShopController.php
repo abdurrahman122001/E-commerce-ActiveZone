@@ -66,16 +66,15 @@ class ShopController extends Controller
                 flash(translate('This user already a seller'))->error();
                 return back();
             }
-        } else {
-            
-            $countries = \App\Models\Country::where('status', 1)->get();
-            $states = \App\Models\State::where('status', 1);
-            if($countries->count() == 1){
-                $states = $states->where('country_id', $countries->first()->id);
-            }
-            $states = $states->get();
-            return view('auth.'.get_setting('authentication_layout_select').'.seller_registration', compact('email','phone', 'states'));
         }
+
+        $countries = \App\Models\Country::where('status', 1)->get();
+        $states = \App\Models\State::where('status', 1);
+        if ($countries->count() == 1) {
+            $states = $states->where('country_id', $countries->first()->id);
+        }
+        $states = $states->get();
+        return view('auth.'.get_setting('authentication_layout_select').'.seller_registration', compact('email', 'phone', 'states'));
     }
 
     /**

@@ -122,14 +122,14 @@
 
                                             <div class="form-group">
                                                 <label for="city_id" class="fs-12 fw-700 text-soft-dark">{{  translate('City') }}</label>
-                                                <select class="form-control aiz-selectpicker rounded-0" name="city_id" id="city_id" data-live-search="true" required>
+                                                <select class="form-control aiz-selectpicker rounded-0" name="city_id" id="city_id" data-live-search="true">
                                                     <option value="">{{ translate('Select City') }}</option>
                                                 </select>
                                             </div>
 
                                             <div class="form-group">
                                                 <label for="area_id" class="fs-12 fw-700 text-soft-dark">{{  translate('Area') }}</label>
-                                                <select class="form-control aiz-selectpicker rounded-0" name="area_id" id="area_id" data-live-search="true" required>
+                                                <select class="form-control aiz-selectpicker rounded-0" name="area_id" id="area_id" data-live-search="true">
                                                     <option value="">{{ translate('Select Area') }}</option>
                                                 </select>
                                             </div>
