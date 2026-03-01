@@ -264,4 +264,40 @@ class DashboardController extends Controller
 
         return view('franchise.sales_report', compact('histories', 'date_range'));
     }
+
+    public function package_commission_report(Request $request)
+    {
+        $user = auth()->user();
+        $date_range = $request->date_range;
+
+        $histories = \App\Models\PackageCommissionHistory::query();
+
+        if ($user->user_type == 'state_franchise' && $user->state_franchise) {
+            $histories = $histories->where('state_franchise_id', $user->state_franchise->id);
+        } elseif ($user->user_type == 'franchise' && $user->franchise) {
+            // City franchise sees sub_to_city
+            $histories = $histories->where('franchise_id', $user->franchise->id);
+        } else {
+            // Sub franchise doesn't usually get package commission unless it's a direct sale?
+            // But if they do, filter by sub_franchise_id
+            $histories = $histories->where('sub_franchise_id', $user->sub_franchise->id);
+        }
+
+        if ($date_range) {
+            $dates = explode(' to ', $date_range);
+            $start_date = date('Y-m-d 00:00:00', strtotime($dates[0]));
+            if (isset($dates[1])) {
+                $end_date = date('Y-m-d 23:59:59', strtotime($dates[1]));
+            } else {
+                $end_date = date('Y-m-d 23:59:59', strtotime($dates[0]));
+            }
+            $histories = $histories->whereBetween('created_at', [$start_date, $end_date]);
+        }
+
+        $histories = $histories->with(['franchise_package', 'sub_franchise.user', 'franchise.user', 'state_franchise.user'])
+                               ->latest()
+                               ->paginate(15);
+
+        return view('franchise.package_commission_report', compact('histories', 'date_range'));
+    }
 }

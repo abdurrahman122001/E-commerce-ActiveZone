@@ -424,23 +424,31 @@ class FranchiseController extends Controller
 
              // City Franchise package → State Franchise gets commission
              if ($stateFranchise && $franchise->franchise_package) {
-                 $commission_percentage = (float) get_setting('state_franchise_commission_on_package');
-                 if ($commission_percentage > 0) {
-                     $package_price    = $franchise->franchise_package->price;
-                     $commission_amount = ($package_price * $commission_percentage) / 100;
+                 // Check if this specific commission was already recorded to avoid duplicates
+                 $exists = \App\Models\PackageCommissionHistory::where('franchise_id', $franchise->id)
+                     ->where('type', 'city_to_state')
+                     ->exists();
 
-                     $stateFranchise->balance = ($stateFranchise->balance ?? 0) + $commission_amount;
-                     $stateFranchise->save();
+                 if (!$exists) {
+                     // Use per-record commission % set on the state franchise itself
+                     $commission_percentage = (float) $stateFranchise->commission_percentage;
+                     if ($commission_percentage > 0) {
+                         $package_price    = $franchise->franchise_package->price;
+                         $commission_amount = ($package_price * $commission_percentage) / 100;
 
-                     \App\Models\PackageCommissionHistory::create([
-                         'state_franchise_id'   => $stateFranchise->id,
-                         'franchise_id'         => $franchise->id,
-                         'franchise_package_id' => $franchise->franchise_package_id,
-                         'amount'               => $commission_amount,
-                         'percentage'           => $commission_percentage,
-                         'type'                 => 'city_to_state',
-                         'beneficiary_type'     => 'state_franchise',
-                     ]);
+                         $stateFranchise->balance = ($stateFranchise->balance ?? 0) + $commission_amount;
+                         $stateFranchise->save();
+
+                         \App\Models\PackageCommissionHistory::create([
+                             'state_franchise_id'   => $stateFranchise->id,
+                             'franchise_id'         => $franchise->id,
+                             'franchise_package_id' => $franchise->franchise_package_id,
+                             'amount'               => $commission_amount,
+                             'percentage'           => $commission_percentage,
+                             'type'                 => 'city_to_state',
+                             'beneficiary_type'     => 'state_franchise',
+                         ]);
+                     }
                  }
              }
 
@@ -469,7 +477,7 @@ class FranchiseController extends Controller
              // ── Sub-Franchise ─────────────────────────────────────────────────────
              $sub = SubFranchise::with('franchise_package')->findOrFail($id);
 
-             if ($sub->status != 'approved') {
+             if (true) {
 
                  // ── Resolve City Franchise: FK first, fallback via city_id ────────
                  $cityFranchise = null;
@@ -502,47 +510,59 @@ class FranchiseController extends Controller
 
                  // Sub-Franchise package → City Franchise earns commission
                  if ($cityFranchise && $sub->franchise_package) {
-                     $cf_pct = (float) get_setting('franchise_commission_on_package');
-                     if ($cf_pct > 0) {
-                         $package_price     = $sub->franchise_package->price;
-                         $commission_amount = ($package_price * $cf_pct) / 100;
+                     $exists = \App\Models\PackageCommissionHistory::where('sub_franchise_id', $sub->id)
+                         ->where('type', 'sub_to_city')
+                         ->exists();
 
-                         $cityFranchise->balance = ($cityFranchise->balance ?? 0) + $commission_amount;
-                         $cityFranchise->save();
+                     if (!$exists) {
+                         $cf_pct = (float) $cityFranchise->commission_percentage;
+                         if ($cf_pct > 0) {
+                             $package_price     = $sub->franchise_package->price;
+                             $commission_amount = ($package_price * $cf_pct) / 100;
 
-                         \App\Models\PackageCommissionHistory::create([
-                             'franchise_id'         => $cityFranchise->id,
-                             'sub_franchise_id'     => $sub->id,
-                             'state_franchise_id'   => $stateFranchise ? $stateFranchise->id : null,
-                             'franchise_package_id' => $sub->franchise_package_id,
-                             'amount'               => $commission_amount,
-                             'percentage'           => $cf_pct,
-                             'type'                 => 'sub_to_city',
-                             'beneficiary_type'     => 'franchise',
-                         ]);
+                             $cityFranchise->balance = ($cityFranchise->balance ?? 0) + $commission_amount;
+                             $cityFranchise->save();
+
+                             \App\Models\PackageCommissionHistory::create([
+                                 'franchise_id'         => $cityFranchise->id,
+                                 'sub_franchise_id'     => $sub->id,
+                                 'state_franchise_id'   => $stateFranchise ? $stateFranchise->id : null,
+                                 'franchise_package_id' => $sub->franchise_package_id,
+                                 'amount'               => $commission_amount,
+                                 'percentage'           => $cf_pct,
+                                 'type'                 => 'sub_to_city',
+                                 'beneficiary_type'     => 'franchise',
+                             ]);
+                         }
                      }
                  }
 
                  // Sub-Franchise package → State Franchise earns commission
                  if ($stateFranchise && $sub->franchise_package) {
-                     $stf_pct = (float) get_setting('state_franchise_commission_on_package');
-                     if ($stf_pct > 0) {
-                         $package_price     = $sub->franchise_package->price;
-                         $commission_amount = ($package_price * $stf_pct) / 100;
+                     $exists = \App\Models\PackageCommissionHistory::where('sub_franchise_id', $sub->id)
+                         ->where('type', 'sub_to_state')
+                         ->exists();
 
-                         $stateFranchise->balance = ($stateFranchise->balance ?? 0) + $commission_amount;
-                         $stateFranchise->save();
+                     if (!$exists) {
+                         $stf_pct = (float) $stateFranchise->commission_percentage;
+                         if ($stf_pct > 0) {
+                             $package_price     = $sub->franchise_package->price;
+                             $commission_amount = ($package_price * $stf_pct) / 100;
 
-                         \App\Models\PackageCommissionHistory::create([
-                             'state_franchise_id'   => $stateFranchise->id,
-                             'franchise_id'         => $cityFranchise ? $cityFranchise->id : null,
-                             'sub_franchise_id'     => $sub->id,
-                             'franchise_package_id' => $sub->franchise_package_id,
-                             'amount'               => $commission_amount,
-                             'percentage'           => $stf_pct,
-                             'type'                 => 'sub_to_state',
-                             'beneficiary_type'     => 'state_franchise',
-                         ]);
+                             $stateFranchise->balance = ($stateFranchise->balance ?? 0) + $commission_amount;
+                             $stateFranchise->save();
+
+                             \App\Models\PackageCommissionHistory::create([
+                                 'state_franchise_id'   => $stateFranchise->id,
+                                 'franchise_id'         => $cityFranchise ? $cityFranchise->id : null,
+                                 'sub_franchise_id'     => $sub->id,
+                                 'franchise_package_id' => $sub->franchise_package_id,
+                                 'amount'               => $commission_amount,
+                                 'percentage'           => $stf_pct,
+                                 'type'                 => 'sub_to_state',
+                                 'beneficiary_type'     => 'state_franchise',
+                             ]);
+                         }
                      }
                  }
              }

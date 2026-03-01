@@ -14,6 +14,7 @@ Route::group(['prefix' => 'franchise', 'middleware' => ['auth', 'franchise', 'pr
     Route::controller(DashboardController::class)->group(function () {
         Route::get('/dashboard', 'index')->name('dashboard');
         Route::get('/sales-report', 'sales_report')->name('sales_report');
+        Route::get('/package-commission-report', 'package_commission_report')->name('package_commission_report');
     });
 
     // Products
