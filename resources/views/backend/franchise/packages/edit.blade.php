@@ -3,7 +3,17 @@
 @section('content')
 
 <div class="aiz-titlebar text-left mt-2 mb-3">
-    <h1 class="h3">{{translate('Edit Franchise Package')}}</h1>
+    <h1 class="h3">
+        @if($type == 'state_franchise')
+            {{translate('Edit State Franchise Package')}}
+        @elseif($type == 'sub_franchise')
+            {{translate('Edit Sub Franchise Package')}}
+        @elseif($type == 'vendor')
+            {{translate('Edit Vendor Package')}}
+        @else
+            {{translate('Edit Franchise Package')}}
+        @endif
+    </h1>
 </div>
 
 <div class="col-lg-10 mx-auto">
@@ -30,6 +40,26 @@
                         <input type="text" placeholder="{{translate('Name')}}" id="name" name="name" value="{{ $franchise_package->getTranslation('name', $lang) }}" class="form-control" required>
                     </div>
                 </div>
+                @if($lang == 'en' && $type != 'vendor')
+                <div class="form-group row">
+                    <label class="col-sm-2 col-from-label" for="package_type">{{translate('Package Type')}}</label>
+                    <div class="col-sm-10">
+                        <select name="package_type" id="package_type" class="form-control aiz-selectpicker" required>
+                            <option value="state_franchise" @if($franchise_package->package_type == 'state_franchise') selected @endif>{{ translate('State Franchise') }}</option>
+                            <option value="franchise" @if($franchise_package->package_type == 'franchise') selected @endif>{{ translate('City Franchise') }}</option>
+                            <option value="sub_franchise" @if($franchise_package->package_type == 'sub_franchise') selected @endif>{{ translate('Sub Franchise') }}</option>
+                        </select>
+                    </div>
+                </div>
+                @endif
+                @if($lang == 'en' && $type == 'vendor')
+                <div class="form-group row">
+                    <label class="col-sm-2 col-from-label" for="product_limit">{{translate('Product Limit')}}</label>
+                    <div class="col-sm-10">
+                        <input type="number" min="0" step="1" placeholder="{{translate('Product Limit')}}" id="product_limit" name="product_limit" value="{{ $franchise_package->product_limit }}" class="form-control" required>
+                    </div>
+                </div>
+                @endif
                 @if($lang == 'en')
                 <div class="form-group row">
                     <label class="col-sm-2 col-from-label" for="price">{{translate('Price')}}</label>
@@ -51,29 +81,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="form-group row">
-                    <label class="col-sm-2 col-from-label" for="category_id">{{translate('Package Category')}}</label>
-                    <div class="col-sm-10">
-                        <select name="category_id" id="category_id" class="form-control aiz-selectpicker" data-live-search="true">
-                            <option value="">{{ translate('Select Category') }}</option>
-                            @foreach ($categories as $category)
-                                <option value="{{ $category->id }}" @if($franchise_package->category_id == $category->id) selected @endif>{{ $category->getTranslation('name') }}</option>
-                                @foreach ($category->childrenCategories as $childCategory)
-                                    <option value="{{ $childCategory->id }}" @if($franchise_package->category_id == $childCategory->id) selected @endif>-- {{ $childCategory->getTranslation('name') }}</option>
-                                    @foreach ($childCategory->childrenCategories as $grandChildCategory)
-                                        <option value="{{ $grandChildCategory->id }}" @if($franchise_package->category_id == $grandChildCategory->id) selected @endif>---- {{ $grandChildCategory->getTranslation('name') }}</option>
-                                    @endforeach
-                                @endforeach
-                            @endforeach
-                        </select>
-                    </div>
-                </div>
-                <div class="form-group row">
-                    <label class="col-sm-2 col-from-label" for="product_limit">{{translate('Product Limit')}}</label>
-                    <div class="col-sm-10">
-                        <input type="number" min="0" step="1" placeholder="{{translate('Product Limit')}}" id="product_limit" name="product_limit" value="{{ $franchise_package->product_limit }}" class="form-control" required>
-                    </div>
-                </div>
+
                 <div class="form-group row">
                     <label class="col-sm-2 col-from-label" for="duration">{{translate('Duration (Days)')}}</label>
                     <div class="col-sm-10">
@@ -89,6 +97,7 @@
                 </div>
                 @endif
                 <div class="form-group mb-0 text-right">
+                    <a href="{{ route('franchise_packages.index', ['type' => $type]) }}" class="btn btn-secondary mr-2">{{translate('Cancel')}}</a>
                     <button type="submit" class="btn btn-primary">{{translate('Save')}}</button>
                 </div>
             </div>

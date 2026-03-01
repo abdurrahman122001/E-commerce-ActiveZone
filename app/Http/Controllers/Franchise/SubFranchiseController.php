@@ -53,7 +53,7 @@ class SubFranchiseController extends Controller
             return back();
         }
 
-        $packages = FranchisePackage::all();
+        $packages = FranchisePackage::where('package_type', 'sub_franchise')->get();
         return view('franchise.sub_franchise.create', compact('states', 'packages'));
     }
 

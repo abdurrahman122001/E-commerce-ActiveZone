@@ -9,27 +9,48 @@ use App\Models\Category;
 
 class FranchisePackageController extends Controller
 {
-    public function index()
+    /**
+     * Valid package types.
+     */
+    protected $validTypes = ['state_franchise', 'franchise', 'sub_franchise', 'vendor'];
+
+    /**
+     * Display a listing of packages filtered by type.
+     */
+    public function index(Request $request)
     {
-        $franchise_packages = FranchisePackage::paginate(10);
-        return view('backend.franchise.packages.index', compact('franchise_packages'));
+        $type = $request->get('type', 'franchise');
+        if (!in_array($type, $this->validTypes)) {
+            $type = 'franchise';
+        }
+        $franchise_packages = FranchisePackage::where('package_type', $type)->paginate(10);
+        return view('backend.franchise.packages.index', compact('franchise_packages', 'type'));
     }
 
-    public function create()
+    public function create(Request $request)
     {
+        $type = $request->get('type', 'franchise');
+        if (!in_array($type, $this->validTypes)) {
+            $type = 'franchise';
+        }
         $categories = Category::where('parent_id', 0)->with('childrenCategories')->get();
-        return view('backend.franchise.packages.create', compact('categories'));
+        return view('backend.franchise.packages.create', compact('categories', 'type'));
     }
 
     public function store(Request $request)
     {
+        $type = $request->get('package_type', 'franchise');
+        if (!in_array($type, $this->validTypes)) {
+            $type = 'franchise';
+        }
+
         $franchise_package = new FranchisePackage();
         $franchise_package->name = $request->name;
-        $franchise_package->product_limit = $request->product_limit;
+        $franchise_package->package_type = $type;
+        $franchise_package->product_limit = $request->product_limit ?? 0;
         $franchise_package->duration = $request->duration;
         $franchise_package->price = $request->price;
         $franchise_package->logo = $request->logo;
-        $franchise_package->category_id = $request->category_id;
         $franchise_package->features = $request->features;
         $franchise_package->save();
 
@@ -39,29 +60,34 @@ class FranchisePackageController extends Controller
         $franchise_package_translation->lang = $request->lang ?? 'en';
         $franchise_package_translation->save();
 
-        flash(translate('Franchise Package has been inserted successfully'))->success();
-        return redirect()->route('franchise_packages.index');
+        flash(translate('Package has been inserted successfully'))->success();
+        return redirect()->route('franchise_packages.index', ['type' => $type]);
     }
 
     public function edit(Request $request, $id)
     {
         $lang = $request->lang;
         $franchise_package = FranchisePackage::findOrFail($id);
+        $type = $franchise_package->package_type ?? 'franchise';
         $categories = Category::where('parent_id', 0)->with('childrenCategories')->get();
-        return view('backend.franchise.packages.edit', compact('franchise_package', 'categories', 'lang'));
+        return view('backend.franchise.packages.edit', compact('franchise_package', 'categories', 'lang', 'type'));
     }
 
     public function update(Request $request, $id)
     {
         $franchise_package = FranchisePackage::findOrFail($id);
+        $type = $franchise_package->package_type ?? 'franchise';
+
         if ($request->lang == 'en') {
             $franchise_package->name = $request->name;
+            if ($request->has('package_type')) {
+                $franchise_package->package_type = $request->package_type;
+            }
         }
-        $franchise_package->product_limit = $request->product_limit;
+        $franchise_package->product_limit = $request->product_limit ?? 0;
         $franchise_package->duration = $request->duration;
         $franchise_package->price = $request->price;
         $franchise_package->logo = $request->logo;
-        $franchise_package->category_id = $request->category_id;
         $franchise_package->features = $request->features;
         $franchise_package->save();
 
@@ -75,13 +101,15 @@ class FranchisePackageController extends Controller
         $franchise_package_translation->save();
 
         flash(translate('Franchise Package has been updated successfully'))->success();
-        return redirect()->route('franchise_packages.index');
+        return redirect()->route('franchise_packages.index', ['type' => $type]);
     }
 
     public function destroy($id)
     {
+        $franchise_package = FranchisePackage::findOrFail($id);
+        $type = $franchise_package->package_type ?? 'franchise';
         FranchisePackage::destroy($id);
         flash(translate('Franchise Package has been deleted successfully'))->success();
-        return redirect()->route('franchise_packages.index');
+        return redirect()->route('franchise_packages.index', ['type' => $type]);
     }
 }

@@ -23,14 +23,14 @@ class FranchiseController extends Controller
     // Show Franchise Landing Page
     public function showLandingPage()
     {
-        $packages = FranchisePackage::where('status', 1)->get();
+        $packages = FranchisePackage::where('status', 1)->where('package_type', 'franchise')->get();
         return view('frontend.franchise.landing', compact('packages'));
     }
 
     // Show Sub-Franchise Landing Page
     public function showSubFranchiseLandingPage()
     {
-        $packages = FranchisePackage::where('status', 1)->get();
+        $packages = FranchisePackage::where('status', 1)->where('package_type', 'sub_franchise')->get();
         return view('frontend.franchise.sub_landing', compact('packages'));
     }
 
@@ -39,15 +39,21 @@ class FranchiseController extends Controller
     public function showRegistrationForm(Request $request)
     {
         $states = State::where('country_id', 101)->where('status', 1)->get();
-        $packages = FranchisePackage::all();
         $type = $request->type;
+        // Load packages matching the franchise type
+        $packageType = match($type) {
+            'state_franchise' => 'state_franchise',
+            'sub_franchise' => 'sub_franchise',
+            default => 'franchise',
+        };
+        $packages = FranchisePackage::where('package_type', $packageType)->where('status', 1)->get();
         return view('frontend.franchise.registration', compact('states', 'packages', 'type'));
     }
 
     public function showStateRegistrationForm()
     {
         $states = State::where('country_id', 101)->where('status', 1)->get();
-        $packages = FranchisePackage::all();
+        $packages = FranchisePackage::where('package_type', 'state_franchise')->where('status', 1)->get();
         $type = 'state_franchise';
         return view('frontend.franchise.registration', compact('states', 'packages', 'type'));
     }
@@ -207,7 +213,7 @@ class FranchiseController extends Controller
     public function createStateFranchise()
     {
         $states = State::where('country_id', 101)->where('status', 1)->get();
-        $packages = FranchisePackage::all();
+        $packages = FranchisePackage::where('package_type', 'state_franchise')->get();
         return view('backend.franchise.state_create', compact('states', 'packages'));
     }
 
@@ -263,7 +269,7 @@ class FranchiseController extends Controller
     public function createFranchise()
     {
         $states = State::where('country_id', 101)->where('status', 1)->get();
-        $packages = FranchisePackage::all();
+        $packages = FranchisePackage::where('package_type', 'franchise')->get();
         return view('backend.franchise.create', compact('states', 'packages'));
     }
 
@@ -328,7 +334,7 @@ class FranchiseController extends Controller
     public function createSubFranchise()
     {
         $states = State::where('country_id', 101)->where('status', 1)->get();
-        $packages = FranchisePackage::all();
+        $packages = FranchisePackage::where('package_type', 'sub_franchise')->get();
         return view('backend.franchise.create_sub', compact('states', 'packages'));
     }
 
@@ -525,7 +531,7 @@ class FranchiseController extends Controller
     {
         $stateFranchise = StateFranchise::findOrFail($id);
         $states = State::where('country_id', 101)->where('status', 1)->get();
-        $packages = FranchisePackage::all();
+        $packages = FranchisePackage::where('package_type', 'state_franchise')->get();
         return view('backend.franchise.state_edit', compact('stateFranchise', 'states', 'packages'));
     }
 
@@ -588,7 +594,7 @@ class FranchiseController extends Controller
     {
         $franchise = Franchise::findOrFail($id);
         $states = State::where('country_id', 101)->where('status', 1)->get();
-        $packages = FranchisePackage::all();
+        $packages = FranchisePackage::where('package_type', 'franchise')->get();
         return view('backend.franchise.edit', compact('franchise', 'states', 'packages'));
     }
 
@@ -652,7 +658,7 @@ class FranchiseController extends Controller
     {
         $subFranchise = SubFranchise::findOrFail($id);
         $states = State::where('country_id', 101)->where('status', 1)->get();
-        $packages = FranchisePackage::all();
+        $packages = FranchisePackage::where('package_type', 'sub_franchise')->get();
         $franchises = Franchise::all();
         return view('backend.franchise.edit_sub', compact('subFranchise', 'states', 'packages', 'franchises'));
     }

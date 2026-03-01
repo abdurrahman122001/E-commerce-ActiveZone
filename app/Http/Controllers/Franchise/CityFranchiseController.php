@@ -45,7 +45,7 @@ class CityFranchiseController extends Controller
 
         $stateFranchise = $user->state_franchise;
         $states = \App\Models\State::where('id', $stateFranchise->state_id)->get();
-        $packages = FranchisePackage::all();
+        $packages = FranchisePackage::where('package_type', 'franchise')->get();
         
         return view('franchise.city_franchise.create', compact('states', 'packages'));
     }

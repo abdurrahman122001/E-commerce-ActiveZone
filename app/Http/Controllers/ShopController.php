@@ -145,20 +145,6 @@ class ShopController extends Controller
             }
             $vendor->save();
 
-            //auth()->login($user, true);
-            // if (BusinessSetting::where('type', 'email_verification')->first()->value == 0) {
-            //     $user->email_verified_at = date('Y-m-d H:m:s');
-            //     $user->save();
-            // } else {
-            //     try {
-            //         EmailUtility::email_verification($user, 'seller');
-            //     } catch (\Throwable $th) {
-            //         $shop->delete();
-            //         $user->delete();
-            //         flash(translate('Seller registration failed. Please try again later.'))->error();
-            //         return back();
-            //     }
-            // }
 
             // Account Opening Email to Seller
             if ((get_email_template_data('registration_email_to_seller', 'status') == 1)) {

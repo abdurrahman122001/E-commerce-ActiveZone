@@ -964,8 +964,18 @@
                             </a>
                         </li>
                         <li class="aiz-side-nav-item">
-                            <a href="{{ route('franchise_packages.index') }}" class="aiz-side-nav-link">
+                            <a href="{{ route('franchise_packages.index', ['type' => 'state_franchise']) }}" class="aiz-side-nav-link {{ request()->routeIs('franchise_packages.*') && request('type') == 'state_franchise' ? 'active' : '' }}">
+                                <span class="aiz-side-nav-text">{{ translate('State Franchise Packages') }}</span>
+                            </a>
+                        </li>
+                        <li class="aiz-side-nav-item">
+                            <a href="{{ route('franchise_packages.index', ['type' => 'franchise']) }}" class="aiz-side-nav-link {{ request()->routeIs('franchise_packages.*') && request('type') == 'franchise' ? 'active' : '' }}">
                                 <span class="aiz-side-nav-text">{{ translate('Franchise Packages') }}</span>
+                            </a>
+                        </li>
+                        <li class="aiz-side-nav-item">
+                            <a href="{{ route('franchise_packages.index', ['type' => 'sub_franchise']) }}" class="aiz-side-nav-link {{ request()->routeIs('franchise_packages.*') && request('type') == 'sub_franchise' ? 'active' : '' }}">
+                                <span class="aiz-side-nav-text">{{ translate('Sub Franchise Packages') }}</span>
                             </a>
                         </li>
                         <li class="aiz-side-nav-item">
@@ -1094,6 +1104,12 @@
                         </li>
                         @endcan
                         @endif
+                        <li class="aiz-side-nav-item">
+                            <a href="{{ route('franchise_packages.index', ['type' => 'vendor']) }}"
+                                class="aiz-side-nav-link {{ request()->routeIs('franchise_packages.*') && request('type') == 'vendor' ? 'active' : '' }}">
+                                <span class="aiz-side-nav-text">{{ translate('Vendor Packages') }}</span>
+                            </a>
+                        </li>
                         @can('seller_verification_form_configuration')
                         <li class="aiz-side-nav-item">
                             <a href="{{ route('seller_verification_form.index') }}" class="aiz-side-nav-link">

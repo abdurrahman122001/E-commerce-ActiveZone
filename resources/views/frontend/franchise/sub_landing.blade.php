@@ -21,7 +21,7 @@
                 <a href="#franchise-packages" class="btn btn-light btn-lg rounded-0 px-4 shadow" style="color: #5b2c8e;">
                     {{ translate('View Packages') }} <i class="las la-arrow-down ml-1"></i>
                 </a>
-                <a href="{{ route('franchise.registration') }}" class="btn btn-outline-light btn-lg rounded-0 px-4 ml-2" style="color: #fff;">
+                <a href="{{ route('franchise.registration', ['type' => 'sub_franchise']) }}" class="btn btn-outline-light btn-lg rounded-0 px-4 ml-2" style="color: #fff;">
                     {{ translate('Register Now') }}
                 </a>
             </div>
@@ -138,13 +138,6 @@
                             {{-- Package Name --}}
                             <h4 class="fw-700 text-center mb-2">{{ $package->getTranslation('name') }}</h4>
 
-                            {{-- Category --}}
-                            @if($package->category)
-                                <p class="text-center text-secondary fs-12 mb-3">
-                                    <i class="las la-tag mr-1"></i>{{ $package->category->getTranslation('name') }}
-                                </p>
-                            @endif
-
                             {{-- Price --}}
                             <div class="text-center mb-4">
                                 <span class="fw-700" style="font-size: 2.2rem; color: #2d1b69;">{{ single_price($package->price) }}</span>
@@ -155,10 +148,6 @@
 
                             {{-- Details --}}
                             <ul class="list-unstyled mb-4 flex-grow-1">
-                                <li class="d-flex align-items-center py-2 border-bottom">
-                                    <i class="las la-box mr-2 fs-18" style="color:#8b5cf6;"></i>
-                                    <span class="fs-13">{{ translate('Product Limit') }}: <strong>{{ $package->product_limit > 0 ? $package->product_limit : translate('Unlimited') }}</strong></span>
-                                </li>
                                 <li class="d-flex align-items-center py-2 border-bottom">
                                     <i class="las la-calendar mr-2 fs-18" style="color:#8b5cf6;"></i>
                                     <span class="fs-13">{{ translate('Duration') }}: <strong>{{ $package->duration > 0 ? $package->duration . ' ' . translate('Days') : translate('Lifetime') }}</strong></span>
@@ -201,7 +190,7 @@
     <div class="container text-center text-white py-3">
         <h2 class="fw-700 mb-3">{{ translate('Ready to Own Your Zone?') }}</h2>
         <p class="opacity-80 fs-16 mb-4 mx-auto" style="max-width: 500px;">{{ translate('Apply now for a sub-franchise in your area. Select your zone, pick a package, and start your business today.') }}</p>
-        <a href="{{ route('franchise.registration') }}" class="btn btn-light btn-lg rounded-0 px-5 shadow" style="color: #5b2c8e;">
+        <a href="{{ route('franchise.registration', ['type' => 'sub_franchise']) }}" class="btn btn-light btn-lg rounded-0 px-5 shadow" style="color: #5b2c8e;">
             {{ translate('Apply Now') }} <i class="las la-arrow-right ml-2"></i>
         </a>
     </div>
