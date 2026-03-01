@@ -28,6 +28,13 @@
                         <span class="aiz-side-nav-text">{{ translate('Dashboard') }}</span>
                     </a>
                 </li>
+
+                @php
+                    $vendor = Auth::user()->vendor;
+                    $is_approved = $vendor && $vendor->status == 'approved';
+                @endphp
+
+                @if ($is_approved)
                 
                 <li class="aiz-side-nav-item">
                     <a href="#" class="aiz-side-nav-link">
@@ -444,6 +451,7 @@
                         <span class="aiz-side-nav-text">{{ translate('Commission History') }}</span>
                     </a>
                 </li>
+                @endif
 
                 <li class="aiz-side-nav-item">
                     <a href="{{ route('vendor.packages.index') }}" class="aiz-side-nav-link">
@@ -452,6 +460,7 @@
                     </a>
                 </li>
 
+                @if ($is_approved)
                 @if (get_setting('conversation_system') == 1)
                     @php
                         $conversation = \App\Models\Conversation::where('sender_id', Auth::user()->id)
@@ -497,6 +506,7 @@
                         @endif
                     </a>
                 </li>
+                @endif
 
             </ul>
         </div>

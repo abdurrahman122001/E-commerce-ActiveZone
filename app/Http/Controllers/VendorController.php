@@ -224,7 +224,7 @@ class VendorController extends Controller
         $authUserId = Auth::user()->id;
         $vendor = \App\Models\Vendor::where('user_id', $authUserId)->first();
 
-        if ($vendor && $vendor->status == 'unpaid') {
+        if ($vendor && $vendor->status != 'approved') {
             $packages = \App\Models\FranchisePackage::where('package_type', 'vendor')->where('status', 1)->get();
             return view('vendors.packages.index', compact('packages'));
         }

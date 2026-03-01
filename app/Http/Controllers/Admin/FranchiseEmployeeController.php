@@ -42,9 +42,7 @@ class FranchiseEmployeeController extends Controller
         $sub_franchise_id = $request->sub_franchise_id;
         $employee_id = $request->employee_id;
         $date_range = $request->date_range;
-
-        $vendors = \App\Models\Vendor::query();
-
+        $vendors = \App\Models\Vendor::with(['user', 'franchise_package']);
         if (Auth::user()->user_type == 'admin') {
             // Show vendors linked directly to a franchise OR via a sub-franchise
             $vendors = $vendors->where(function($q) {
@@ -219,7 +217,7 @@ class FranchiseEmployeeController extends Controller
 
     public function approveVendor($id)
     {
-        $vendor = \App\Models\Vendor::findOrFail($id);
+        $vendor = \App\Models\Vendor::with(['franchise_package', 'sub_franchise.franchise.state_franchise', 'franchise.state_franchise', 'state_franchise'])->findOrFail($id);
         $vendor->status = 'approved';
         $vendor->save();
 
@@ -227,6 +225,82 @@ class FranchiseEmployeeController extends Controller
         if ($vendor->user && $vendor->user->shop) {
             $vendor->user->shop->registration_approval = 1;
             $vendor->user->shop->save();
+        }
+
+        // Distribute package commissions if vendor has purchased a package
+        if ($vendor->franchise_package_id && $vendor->franchise_package) {
+            $package_price = $vendor->franchise_package->price;
+
+            // --- 1. Sub-Franchise Commission ---
+            $sub_franchise = $vendor->sub_franchise;
+            if ($sub_franchise) {
+                $sf_pct = (float) get_setting('sub_franchise_commission_on_vendor_package');
+                if ($sf_pct > 0) {
+                    $sf_amount = ($package_price * $sf_pct) / 100;
+                    $sub_franchise->balance = ($sub_franchise->balance ?? 0) + $sf_amount;
+                    $sub_franchise->save();
+
+                    \App\Models\PackageCommissionHistory::create([
+                        'sub_franchise_id'   => $sub_franchise->id,
+                        'franchise_id'        => $sub_franchise->franchise_id,
+                        'state_franchise_id'  => $sub_franchise->state_franchise_id,
+                        'vendor_id'           => $vendor->id,
+                        'franchise_package_id'=> $vendor->franchise_package_id,
+                        'amount'              => $sf_amount,
+                        'percentage'          => $sf_pct,
+                        'type'                => 'vendor_package',
+                        'beneficiary_type'    => 'sub_franchise',
+                    ]);
+                }
+            }
+
+            // --- 2. City Franchise Commission ---
+            $franchise = $vendor->franchise ?? ($sub_franchise ? $sub_franchise->franchise : null);
+            if ($franchise) {
+                $cf_pct = (float) get_setting('franchise_commission_on_vendor_package');
+                if ($cf_pct > 0) {
+                    $cf_amount = ($package_price * $cf_pct) / 100;
+                    $franchise->balance = ($franchise->balance ?? 0) + $cf_amount;
+                    $franchise->save();
+
+                    \App\Models\PackageCommissionHistory::create([
+                        'franchise_id'        => $franchise->id,
+                        'sub_franchise_id'    => $sub_franchise ? $sub_franchise->id : null,
+                        'state_franchise_id'  => $franchise->state_franchise_id,
+                        'vendor_id'           => $vendor->id,
+                        'franchise_package_id'=> $vendor->franchise_package_id,
+                        'amount'              => $cf_amount,
+                        'percentage'          => $cf_pct,
+                        'type'                => 'vendor_package',
+                        'beneficiary_type'    => 'franchise',
+                    ]);
+                }
+            }
+
+            // --- 3. State Franchise Commission ---
+            $state_franchise = $vendor->state_franchise
+                ?? ($franchise ? $franchise->state_franchise : null)
+                ?? ($sub_franchise ? $sub_franchise->state_franchise : null);
+            if ($state_franchise) {
+                $stf_pct = (float) get_setting('state_franchise_commission_on_vendor_package');
+                if ($stf_pct > 0) {
+                    $stf_amount = ($package_price * $stf_pct) / 100;
+                    $state_franchise->balance = ($state_franchise->balance ?? 0) + $stf_amount;
+                    $state_franchise->save();
+
+                    \App\Models\PackageCommissionHistory::create([
+                        'state_franchise_id'  => $state_franchise->id,
+                        'franchise_id'        => $franchise ? $franchise->id : null,
+                        'sub_franchise_id'    => $sub_franchise ? $sub_franchise->id : null,
+                        'vendor_id'           => $vendor->id,
+                        'franchise_package_id'=> $vendor->franchise_package_id,
+                        'amount'              => $stf_amount,
+                        'percentage'          => $stf_pct,
+                        'type'                => 'vendor_package',
+                        'beneficiary_type'    => 'state_franchise',
+                    ]);
+                }
+            }
         }
 
         flash(translate('Vendor approved successfully.'))->success();

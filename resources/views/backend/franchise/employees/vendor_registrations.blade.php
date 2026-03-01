@@ -68,6 +68,7 @@
                     <th data-breakpoints="lg">{{translate('Email')}}</th>
                     <th data-breakpoints="lg">{{translate('Registered By')}}</th>
                     <th data-breakpoints="lg">{{translate('Franchise')}}</th>
+                    <th data-breakpoints="lg">{{translate('Package/Paid')}}</th>
                     <th data-breakpoints="lg">{{translate('Status')}}</th>
                     <th data-breakpoints="lg">{{translate('Registration Date')}}</th>
                     <th class="text-right">{{translate('Options')}}</th>
@@ -102,10 +103,20 @@
                             @endif
                         </td>
                         <td>
+                             @if($vendor->franchise_package)
+                                 {{ $vendor->franchise_package->getTranslation('name') }}
+                                 <br><b>{{ single_price($vendor->franchise_package->price) }}</b>
+                             @else
+                                 <span class="badge badge-inline badge-secondary">{{ translate('No Package') }}</span>
+                             @endif
+                        </td>
+                        <td>
                             @if($vendor->status == 'approved')
                                 <span class="badge badge-inline badge-success">{{ translate('Approved') }}</span>
                             @elseif($vendor->status == 'rejected')
                                 <span class="badge badge-inline badge-danger">{{ translate('Rejected') }}</span>
+                            @elseif($vendor->status == 'unpaid')
+                                <span class="badge badge-inline badge-dark">{{ translate('Unpaid') }}</span>
                             @else
                                 <span class="badge badge-inline badge-warning">{{ translate('Pending') }}</span>
                             @endif

@@ -47,7 +47,8 @@ class Vendor extends Model
         'lat',
         'long',
         'referral_code',
-        'referred_by_id'
+        'referred_by_id',
+        'franchise_package_id'
     ];
 
     public function addedByEmployee()
@@ -93,5 +94,10 @@ class Vendor extends Model
     public function area()
     {
         return $this->belongsTo(Area::class);
+    }
+
+    public function franchise_package()
+    {
+        return $this->belongsTo(FranchisePackage::class);
     }
 }

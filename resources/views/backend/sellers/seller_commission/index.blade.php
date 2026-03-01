@@ -159,6 +159,56 @@
         <div class="col-lg-8 mx-auto">
             <div class="card">
                 <div class="card-header">
+                    <h5 class="mb-0 h6">{{translate('Vendor Package Commission Settings')}}</h5>
+                </div>
+                <div class="card-body">
+                    <form class="form-horizontal" action="{{ route('business_settings.update') }}" method="POST" enctype="multipart/form-data">
+                        @csrf
+                        <p class="text-muted mb-3"><i class="las la-info-circle"></i> {{translate('Commissions distributed when a vendor package approval is done.')}}</p>
+                        <div class="form-group row">
+                            <label class="col-md-8 col-from-label">{{translate('Sub-Franchise Commission on Vendor Package')}}</label>
+                            <div class="col-md-4">
+                                <input type="hidden" name="types[]" value="sub_franchise_commission_on_vendor_package">
+                                <div class="input-group">
+                                    <input type="number" lang="en" min="0" step="0.01" value="{{ get_setting('sub_franchise_commission_on_vendor_package') }}" placeholder="0" name="sub_franchise_commission_on_vendor_package" class="form-control">
+                                    <div class="input-group-append"><span class="input-group-text">%</span></div>
+                                </div>
+                                <small class="text-muted">{{translate('Goes to the sub-franchise the vendor belongs to.')}}</small>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-md-8 col-from-label">{{translate('City Franchise Commission on Vendor Package')}}</label>
+                            <div class="col-md-4">
+                                <input type="hidden" name="types[]" value="franchise_commission_on_vendor_package">
+                                <div class="input-group">
+                                    <input type="number" lang="en" min="0" step="0.01" value="{{ get_setting('franchise_commission_on_vendor_package') }}" placeholder="0" name="franchise_commission_on_vendor_package" class="form-control">
+                                    <div class="input-group-append"><span class="input-group-text">%</span></div>
+                                </div>
+                                <small class="text-muted">{{translate('Goes to the city franchise the vendor belongs to.')}}</small>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-md-8 col-from-label">{{translate('State Franchise Commission on Vendor Package')}}</label>
+                            <div class="col-md-4">
+                                <input type="hidden" name="types[]" value="state_franchise_commission_on_vendor_package">
+                                <div class="input-group">
+                                    <input type="number" lang="en" min="0" step="0.01" value="{{ get_setting('state_franchise_commission_on_vendor_package') }}" placeholder="0" name="state_franchise_commission_on_vendor_package" class="form-control">
+                                    <div class="input-group-append"><span class="input-group-text">%</span></div>
+                                </div>
+                                <small class="text-muted">{{translate('Goes to the state franchise the vendor belongs to.')}}</small>
+                            </div>
+                        </div>
+                        <div class="form-group mb-0 text-right">
+                            <button type="submit" class="btn btn-sm btn-primary">{{translate('Save')}}</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-8 mx-auto">
+            <div class="card">
+                <div class="card-header">
                     <h5 class="mb-0 h6">{{translate('Note')}}</h5>
                 </div>
                 <div class="card-body">
