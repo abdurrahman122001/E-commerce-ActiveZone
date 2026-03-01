@@ -51,6 +51,7 @@ class FranchisePackageController extends Controller
         $franchise_package->duration = $request->duration;
         $franchise_package->price = $request->price;
         $franchise_package->logo = $request->logo;
+        $franchise_package->status = 1;
         $franchise_package->features = $request->features;
         $franchise_package->save();
 

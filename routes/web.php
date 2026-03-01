@@ -129,7 +129,9 @@ Route::group(['middleware' => ['vendor', 'user', 'prevent-back-history']], funct
         Route::get('/vendors/edit/{id}', 'edit')->name('vendors.edit');
         Route::post('/vendors/update/{id}', 'update')->name('vendors.update');
         Route::get('/vendor/dashboard', 'dashboard')->name('vendor.dashboard');
+        Route::get('/vendor/packages', 'packages')->name('vendor.packages.index');
         Route::get('/vendors/commission-history', 'commissionHistory')->name('vendors.commission_history');
+        Route::post('/vendor/package-purchase', 'purchasePackage')->name('vendor.package.purchase');
         
         // Withdraw Requests
         Route::controller(App\Http\Controllers\CommissionWithdrawController::class)->group(function () {

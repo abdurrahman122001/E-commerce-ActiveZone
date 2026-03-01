@@ -14,6 +14,13 @@ class DashboardController extends Controller
     public function index()
     {
         $authUserId = auth()->user()->id;
+        $vendor = \App\Models\Vendor::where('user_id', $authUserId)->first();
+
+        if ($vendor && $vendor->status == 'unpaid') {
+            $packages = \App\Models\FranchisePackage::where('package_type', 'vendor')->where('status', 1)->get();
+            return view('vendors.packages.index', compact('packages'));
+        }
+
         $data['this_month_pending_orders'] = OrderDetail::whereSellerId($authUserId)
                                     ->whereDeliveryStatus('pending')
                                     ->whereYear('created_at', Carbon::now()->year)

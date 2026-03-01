@@ -989,6 +989,11 @@
                             </a>
                         </li>
                         <li class="aiz-side-nav-item">
+                            <a href="{{ route('franchise_packages.index', ['type' => 'vendor']) }}" class="aiz-side-nav-link {{ request()->routeIs('franchise_packages.*') && request('type') == 'vendor' ? 'active' : '' }}">
+                                <span class="aiz-side-nav-text">{{ translate('Vendor Packages') }}</span>
+                            </a>
+                        </li>
+                        <li class="aiz-side-nav-item">
                             <a href="{{ route('admin.franchise_employees.sales_report') }}" class="aiz-side-nav-link">
                                 <span class="aiz-side-nav-text">{{ translate('Sales Report') }}</span>
                             </a>

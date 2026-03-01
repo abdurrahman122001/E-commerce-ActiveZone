@@ -222,6 +222,12 @@ class VendorController extends Controller
     
     public function dashboard() {
         $authUserId = Auth::user()->id;
+        $vendor = \App\Models\Vendor::where('user_id', $authUserId)->first();
+
+        if ($vendor && $vendor->status == 'unpaid') {
+            $packages = \App\Models\FranchisePackage::where('package_type', 'vendor')->where('status', 1)->get();
+            return view('vendors.packages.index', compact('packages'));
+        }
         
         $data['total_products'] = \App\Models\Product::where('user_id', $authUserId)->count();
         $data['total_sales'] = \App\Models\OrderDetail::where('seller_id', $authUserId)->where('delivery_status', 'delivered')->sum('price');
@@ -400,5 +406,27 @@ class VendorController extends Controller
         }
 
         return view('vendors.commission_history', compact('commission_history', 'layout'));
+    }
+
+    public function purchasePackage(Request $request)
+    {
+        $vendor = \App\Models\Vendor::where('user_id', Auth::id())->first();
+        if ($vendor) {
+            $vendor->franchise_package_id = $request->package_id;
+            $vendor->status = 'pending'; // Change from unpaid to pending after selection
+            $vendor->save();
+            
+            flash(translate('Package selected successfully. Please wait for administrative approval.'))->success();
+            return redirect()->route('vendor.dashboard');
+        }
+        
+        flash(translate('Vendor record not found.'))->error();
+        return back();
+    }
+
+    public function packages()
+    {
+        $packages = \App\Models\FranchisePackage::where('package_type', 'vendor')->where('status', 1)->get();
+        return view('vendors.packages.index', compact('packages'));
     }
 }
