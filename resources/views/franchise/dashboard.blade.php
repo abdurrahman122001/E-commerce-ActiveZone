@@ -580,6 +580,49 @@
             </table>
         </div>
     </div>
+
+    <div class="card mt-4">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h6 class="mb-0">{{ translate('Recent Package Earnings') }}</h6>
+            <a href="{{ route('franchise.package_commission_report') }}" class="btn btn-sm btn-soft-primary">{{ translate('View All') }}</a>
+        </div>
+        <div class="card-body">
+            <table class="table aiz-table mb-0">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>{{ translate('Source') }}</th>
+                        <th>{{ translate('Package') }}</th>
+                        <th>{{ translate('Package Price') }}</th>
+                        <th>{{ translate('Your Earning') }}</th>
+                        <th>{{ translate('Date') }}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach ($recent_package_earnings ?? [] as $key => $history)
+                        <tr>
+                            <td>{{ $key + 1 }}</td>
+                            <td>
+                                @if($history->type == 'city_to_state')
+                                    <span class="badge badge-inline badge-info">{{ translate('City') }}:</span>
+                                    {{ $history->franchise->user->name ?? translate('N/A') }}
+                                @elseif($history->type == 'sub_to_city' || $history->type == 'sub_to_state')
+                                    <span class="badge badge-inline badge-success">{{ translate('Sub') }}:</span>
+                                    {{ $history->sub_franchise->user->name ?? translate('N/A') }}
+                                @else
+                                    {{ translate('N/A') }}
+                                @endif
+                            </td>
+                            <td>{{ $history->franchise_package->name ?? translate('N/A') }}</td>
+                            <td>{{ single_price($history->franchise_package->price ?? 0) }}</td>
+                            <td class="fw-700 text-success">{{ single_price($history->amount) }}</td>
+                            <td>{{ $history->created_at->format('d-m-Y H:i A') }}</td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
+    </div>
 @endsection
 
 @section('script')

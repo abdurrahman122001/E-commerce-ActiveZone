@@ -182,6 +182,11 @@ class DashboardController extends Controller
                                         ->limit(10)
                                         ->get();
 
+            $data['recent_package_earnings'] = \App\Models\PackageCommissionHistory::where('state_franchise_id', $state_franchise_id)
+                                        ->latest()
+                                        ->limit(10)
+                                        ->get();
+
         } elseif ($user->user_type == 'franchise' && $user->franchise) {
             $data['balance'] = $user->franchise->balance;
             $franchise_id = $user->franchise->id;
@@ -214,6 +219,12 @@ class DashboardController extends Controller
                                         ->latest()
                                         ->limit(10)
                                         ->get();
+
+            $data['recent_package_earnings'] = \App\Models\PackageCommissionHistory::where('franchise_id', $franchise_id)
+                                        ->latest()
+                                        ->limit(10)
+                                        ->get();
+
         } elseif ($user->user_type == 'sub_franchise' && $user->sub_franchise) {
             $data['balance'] = $user->sub_franchise->balance;
             $sub_franchise_id = $user->sub_franchise->id;
@@ -226,6 +237,11 @@ class DashboardController extends Controller
             $data['subfranchise_earnings_yearly'] = (clone $earnings_query)->whereYear('created_at', Carbon::now()->year)->sum('sub_franchise_commission_amount');
 
             $data['recent_earnings'] = VendorCommissionHistory::where('sub_franchise_id', $sub_franchise_id)
+                                        ->latest()
+                                        ->limit(10)
+                                        ->get();
+
+            $data['recent_package_earnings'] = \App\Models\PackageCommissionHistory::where('sub_franchise_id', $sub_franchise_id)
                                         ->latest()
                                         ->limit(10)
                                         ->get();
