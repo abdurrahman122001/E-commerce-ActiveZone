@@ -110,6 +110,7 @@ Route::controller(App\Http\Controllers\FranchiseController::class)->group(functi
         
         Route::post('/admin/franchises/set-commission', 'setFranchiseCommission')->name('admin.franchises.set_commission');
         Route::post('/admin/sub-franchises/set-commission', 'setSubFranchiseCommission')->name('admin.sub_franchises.set_commission');
+        Route::post('/admin/state-franchises/set-commission', 'setStateFranchiseCommission')->name('admin.state_franchises.set_commission');
 
         // Withdraw Requests
         Route::controller(App\Http\Controllers\CommissionWithdrawController::class)->group(function () {

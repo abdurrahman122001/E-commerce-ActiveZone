@@ -32,7 +32,7 @@
                         <th data-breakpoints="lg">{{ translate('Package') }}</th>
                         <th data-breakpoints="lg">{{ translate('Referral Code') }}</th>
                         <th data-breakpoints="lg">{{ translate('Status') }}</th>
-                        <th>{{ translate('Commission (%)') }}</th>
+                        <th>{{ translate('Commission') }}</th>
                         <th class="text-right">{{ translate('Options') }}</th>
                     </tr>
                 </thead>
@@ -57,7 +57,12 @@
                                     <span class="badge badge-inline badge-danger">{{ translate('Rejected') }}</span>
                                 @endif
                             </td>
-                            <td>{{ $sub->commission_percentage }}%</td>
+                            <td>
+                                {{ $sub->commission_percentage }}
+                                @if(($sub->commission_type ?? 'percentage') == 'percentage')
+                                    %
+                                @endif
+                            </td>
                             <td class="text-right">
                                 <div class="dropdown">
                                     <button type="button" class="btn btn-sm btn-circle btn-soft-primary btn-icon dropdown-toggle no-arrow" data-toggle="dropdown" href="javascript:void(0);" role="button" aria-haspopup="false" aria-expanded="false">
@@ -72,7 +77,7 @@
                                                 {{translate('Reject')}}
                                             </a>
                                         @endif
-                                        <a href="javascript:void(0);" onclick="show_commission_modal('{{$sub->id}}', '{{$sub->commission_percentage}}');" class="dropdown-item">
+                                        <a href="javascript:void(0);" onclick="show_commission_modal('{{$sub->id}}', '{{$sub->commission_percentage}}', '{{$sub->commission_type ?? 'percentage'}}');" class="dropdown-item">
                                             {{translate('Set Commission')}}
                                         </a>
                                         <a href="{{route('franchise.sub_franchises.login', encrypt($sub->id))}}" class="dropdown-item">
@@ -105,10 +110,18 @@
                         <button type="button" class="close" data-dismiss="modal"></button>
                     </div>
                     <div class="modal-body">
-                        <div class="form-group row">
-                            <label class="col-md-3 col-from-label">{{translate('Commission')}}</label>
-                            <div class="col-md-9">
-                                <input type="number" step="0.01" min="0" max="100" name="commission_percentage" id="commission_percentage_input" class="form-control" placeholder="0" required>
+                        <div class="form-group">
+                            <label for="commission_percentage">{{ translate('Commission') }}</label>
+                            <div class="row gutters-5">
+                                <div class="col-sm-7">
+                                    <input type="number" step="0.01" min="0" name="commission_percentage" id="commission_percentage_input" class="form-control" placeholder="0" required>
+                                </div>
+                                <div class="col-sm-5">
+                                    <select class="form-control aiz-selectpicker" name="commission_type" id="commission_type_select">
+                                        <option value="percentage">{{translate('Percentage (%)')}}</option>
+                                        <option value="flat">{{translate('Flat Amount')}}</option>
+                                    </select>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -124,9 +137,11 @@
 
 @section('script')
 <script type="text/javascript">
-    function show_commission_modal(id, commission){
+    function show_commission_modal(id, commission, type){
         $('#sub_franchise_id').val(id);
         $('#commission_percentage_input').val(commission);
+        $('#commission_type_select').val(type);
+        $('#commission_type_select').selectpicker('refresh');
         $('#commission_modal').modal('show');
     }
 </script>

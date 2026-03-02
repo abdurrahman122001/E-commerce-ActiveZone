@@ -131,7 +131,12 @@ class CommissionController extends Controller
                 }
                 // calculate commission
                 if($commission_percentage > 0){
-                    if(($seller->commission_type ?? 'percentage') == 'flat'){
+                    $commission_type = $seller->commission_type ?? 'percentage';
+                    if(get_setting('seller_commission_type') == 'fixed_rate'){
+                        $commission_type = get_setting('vendor_commission_type') ?? 'percentage';
+                    }
+
+                    if($commission_type == 'flat'){
                         $admin_commission = $commission_percentage;
                     } else {
                         $admin_commission = ($orderDetail->price * $commission_percentage) / 100;
@@ -222,7 +227,11 @@ class CommissionController extends Controller
                                 : (float) get_setting('subfranchise_commission_on_vendor_sales', 0);
 
                             if ($sub_percent > 0) {
-                                if(($sub_franchise->commission_type ?? 'percentage') == 'flat'){
+                                $sub_comm_type = $sub_franchise->commission_percentage > 0
+                                    ? ($sub_franchise->commission_type ?? 'percentage')
+                                    : (get_setting('subfranchise_commission_on_vendor_sales_type') ?? 'percentage');
+
+                                if($sub_comm_type == 'flat'){
                                     $sub_franchise_comm_amount = $sub_percent;
                                 } else {
                                     $sub_franchise_comm_amount = ($orderDetail->price * $sub_percent) / 100;
@@ -241,7 +250,11 @@ class CommissionController extends Controller
                                         : (float) get_setting('franchise_commission_on_vendor_sales', 0);
 
                                     if ($franchise_percent > 0) {
-                                        if(($franchise->commission_type ?? 'percentage') == 'flat'){
+                                        $fr_comm_type = $franchise->commission_percentage > 0
+                                            ? ($franchise->commission_type ?? 'percentage')
+                                            : (get_setting('franchise_commission_on_vendor_sales_type') ?? 'percentage');
+
+                                        if($fr_comm_type == 'flat'){
                                             $franchise_commission_amount = $franchise_percent;
                                         } else {
                                             $franchise_commission_amount = ($orderDetail->price * $franchise_percent) / 100;
@@ -260,7 +273,11 @@ class CommissionController extends Controller
                                                 : (float) get_setting('state_franchise_commission_on_vendor_sales', 0);
                                             
                                             if ($state_percent > 0) {
-                                                if(($state_franchise->commission_type ?? 'percentage') == 'flat'){
+                                                $st_comm_type = $state_franchise->commission_percentage > 0
+                                                    ? ($state_franchise->commission_type ?? 'percentage')
+                                                    : (get_setting('state_franchise_commission_on_vendor_sales_type') ?? 'percentage');
+
+                                                if($st_comm_type == 'flat'){
                                                     $state_franchise_comm_amount = $state_percent;
                                                 } else {
                                                     $state_franchise_comm_amount = ($orderDetail->price * $state_percent) / 100;
@@ -282,7 +299,11 @@ class CommissionController extends Controller
                                 : (float) get_setting('franchise_commission_on_vendor_sales', 0);
 
                             if ($franchise_percent > 0) {
-                                if(($franchise->commission_type ?? 'percentage') == 'flat'){
+                                $fr_comm_type = $franchise->commission_percentage > 0
+                                    ? ($franchise->commission_type ?? 'percentage')
+                                    : (get_setting('franchise_commission_on_vendor_sales_type') ?? 'percentage');
+
+                                if($fr_comm_type == 'flat'){
                                     $franchise_commission_amount = $franchise_percent;
                                 } else {
                                     $franchise_commission_amount = ($orderDetail->price * $franchise_percent) / 100;
@@ -301,7 +322,11 @@ class CommissionController extends Controller
                                         : (float) get_setting('state_franchise_commission_on_vendor_sales', 0);
                                     
                                     if ($state_percent > 0) {
-                                        if(($state_franchise->commission_type ?? 'percentage') == 'flat'){
+                                        $st_comm_type = $state_franchise->commission_percentage > 0
+                                            ? ($state_franchise->commission_type ?? 'percentage')
+                                            : (get_setting('state_franchise_commission_on_vendor_sales_type') ?? 'percentage');
+
+                                        if($st_comm_type == 'flat'){
                                             $state_franchise_comm_amount = $state_percent;
                                         } else {
                                             $state_franchise_comm_amount = ($orderDetail->price * $state_percent) / 100;

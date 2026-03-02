@@ -127,6 +127,20 @@
                                 </select>
                             </div>
                         </div>
+                        <div class="form-group row">
+                            <label class="col-md-6 col-from-label">{{translate('State Franchise Commission on (City/Sub)Franchise Package Purchase')}}</label>
+                            <div class="col-md-3">
+                                <input type="hidden" name="types[]" value="state_franchise_commission_on_package">
+                                <input type="number" lang="en" min="0" step="0.01" value="{{ get_setting('state_franchise_commission_on_package') }}" placeholder="0" name="state_franchise_commission_on_package" class="form-control">
+                            </div>
+                            <div class="col-md-3">
+                                <input type="hidden" name="types[]" value="state_franchise_commission_on_package_type">
+                                <select class="form-control aiz-selectpicker" name="state_franchise_commission_on_package_type">
+                                    <option value="percentage" @if(get_setting('state_franchise_commission_on_package_type') == 'percentage') selected @endif>{{translate('Percentage')}}</option>
+                                    <option value="flat" @if(get_setting('state_franchise_commission_on_package_type') == 'flat') selected @endif>{{translate('Flat')}}</option>
+                                </select>
+                            </div>
+                        </div>
                          <div class="form-group row">
                             <label class="col-md-6 col-from-label">{{translate('Franchise Commission on Vendor Sales')}}</label>
                             <div class="col-md-3">
@@ -152,6 +166,20 @@
                                 <select class="form-control aiz-selectpicker" name="subfranchise_commission_on_vendor_sales_type">
                                     <option value="percentage" @if(get_setting('subfranchise_commission_on_vendor_sales_type') == 'percentage') selected @endif>{{translate('Percentage')}}</option>
                                     <option value="flat" @if(get_setting('subfranchise_commission_on_vendor_sales_type') == 'flat') selected @endif>{{translate('Flat')}}</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-md-6 col-from-label">{{translate('State Franchise Commission on Vendor Sales')}}</label>
+                            <div class="col-md-3">
+                                <input type="hidden" name="types[]" value="state_franchise_commission_on_vendor_sales">
+                                <input type="number" lang="en" min="0" step="0.01" value="{{ get_setting('state_franchise_commission_on_vendor_sales') }}" placeholder="0" name="state_franchise_commission_on_vendor_sales" class="form-control">
+                            </div>
+                            <div class="col-md-3">
+                                <input type="hidden" name="types[]" value="state_franchise_commission_on_vendor_sales_type">
+                                <select class="form-control aiz-selectpicker" name="state_franchise_commission_on_vendor_sales_type">
+                                    <option value="percentage" @if(get_setting('state_franchise_commission_on_vendor_sales_type') == 'percentage') selected @endif>{{translate('Percentage')}}</option>
+                                    <option value="flat" @if(get_setting('state_franchise_commission_on_vendor_sales_type') == 'flat') selected @endif>{{translate('Flat')}}</option>
                                 </select>
                             </div>
                         </div>

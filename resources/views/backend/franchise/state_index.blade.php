@@ -33,7 +33,7 @@
                     <th>{{translate('Package')}}</th>
                     <th>{{translate('Status')}}</th>
                     <th>{{translate('ID Proof')}}</th>
-                    <th>{{translate('Commission (%)')}}</th>
+                    <th>{{translate('Commission')}}</th>
                     <th class="text-right">{{translate('Options')}}</th>
                 </tr>
             </thead>
@@ -60,7 +60,12 @@
                                 <a href="{{ asset('storage/'.$franchise->id_proof) }}" target="_blank" class="btn btn-sm btn-info">{{ translate('View') }}</a>
                             @endif
                         </td>
-                        <td>{{ $franchise->commission_percentage }}</td>
+                        <td>
+                            {{ $franchise->commission_percentage }}
+                            @if(($franchise->commission_type ?? 'percentage') == 'percentage')
+                                %
+                            @endif
+                        </td>
                         <td class="text-right">
                              <div class="dropdown">
                                 <button type="button" class="btn btn-sm btn-circle btn-soft-primary btn-icon dropdown-toggle no-arrow" data-toggle="dropdown" href="javascript:void(0);" role="button" aria-haspopup="false" aria-expanded="false">
@@ -87,6 +92,10 @@
         
                                     <a href="{{route('admin.state_franchises.edit', $franchise->id)}}" class="dropdown-item">
                                         {{translate('Edit')}}
+                                    </a>
+
+                                    <a href="javascript:void(0);" onclick="show_commission_modal('{{$franchise->id}}', '{{$franchise->commission_percentage}}', '{{$franchise->commission_type ?? 'percentage'}}');" class="dropdown-item">
+                                        {{translate('Set Commission')}}
                                     </a>
 
                                     @if($franchise->user && $franchise->user->banned != 1)
@@ -138,6 +147,40 @@
             </div>
         </div>
     </div>
+    <div class="modal fade" id="commission_modal">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <form action="{{ route('admin.state_franchises.set_commission') }}" method="POST">
+                    @csrf
+                    <input type="hidden" name="id" id="state_franchise_id">
+                    <div class="modal-header">
+                        <h5 class="modal-title h6">{{ translate('Set State Franchise Commission') }}</h5>
+                        <button type="button" class="close" data-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="commission_percentage">{{ translate('Commission') }}</label>
+                            <div class="row gutters-5">
+                                <div class="col-sm-7">
+                                    <input type="number" step="0.01" min="0" name="commission_percentage" id="commission_percentage_input" class="form-control" placeholder="0" required>
+                                </div>
+                                <div class="col-sm-5">
+                                    <select class="form-control aiz-selectpicker" name="commission_type" id="commission_type_select">
+                                        <option value="percentage">{{translate('Percentage (%)')}}</option>
+                                        <option value="flat">{{translate('Flat Amount')}}</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-light" data-dismiss="modal">{{ translate('Cancel') }}</button>
+                        <button type="submit" class="btn btn-primary">{{ translate('Save') }}</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
     @include('modals.delete_modal')
 @endsection
 
@@ -166,6 +209,13 @@
 
             // Show the modal
             $('#universal-confirm-modal').modal('show', { backdrop: 'static' });
+        }
+        function show_commission_modal(id, commission, type){
+            $('#state_franchise_id').val(id);
+            $('#commission_percentage_input').val(commission);
+            $('#commission_type_select').val(type);
+            $('#commission_type_select').selectpicker('refresh');
+            $('#commission_modal').modal('show');
         }
     </script>
 @endsection

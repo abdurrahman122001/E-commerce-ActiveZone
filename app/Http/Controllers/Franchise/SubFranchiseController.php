@@ -134,6 +134,7 @@ class SubFranchiseController extends Controller
     {
         $sub = SubFranchise::findOrFail($request->id);
         $sub->commission_percentage = $request->commission_percentage;
+        $sub->commission_type = $request->commission_type;
         $sub->save();
 
         flash(translate('Commission updated successfully'))->success();

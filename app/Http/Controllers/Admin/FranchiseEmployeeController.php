@@ -240,9 +240,16 @@ class FranchiseEmployeeController extends Controller
             // --- 1. Sub-Franchise Commission ---
             $sub_franchise = $vendor->sub_franchise;
             if ($sub_franchise) {
-                $sf_pct = (float) get_setting('sub_franchise_commission_on_vendor_package');
+                $sf_pct = $sub_franchise->commission_percentage > 0 
+                    ? (float) $sub_franchise->commission_percentage 
+                    : (float) get_setting('sub_franchise_commission_on_vendor_package');
+                
                 if ($sf_pct > 0) {
-                    if (get_setting('sub_franchise_commission_on_vendor_package_type') == 'flat') {
+                    $sf_comm_type = $sub_franchise->commission_percentage > 0 
+                        ? ($sub_franchise->commission_type ?? 'percentage') 
+                        : (get_setting('sub_franchise_commission_on_vendor_package_type') ?? 'percentage');
+
+                    if ($sf_comm_type == 'flat') {
                         $sf_amount = $sf_pct;
                     } else {
                         $sf_amount = ($package_price * $sf_pct) / 100;
@@ -267,9 +274,16 @@ class FranchiseEmployeeController extends Controller
             // --- 2. City Franchise Commission ---
             $franchise = $vendor->franchise ?? ($sub_franchise ? $sub_franchise->franchise : null);
             if ($franchise) {
-                $cf_pct = (float) get_setting('franchise_commission_on_vendor_package');
+                $cf_pct = $franchise->commission_percentage > 0 
+                    ? (float) $franchise->commission_percentage 
+                    : (float) get_setting('franchise_commission_on_vendor_package');
+                
                 if ($cf_pct > 0) {
-                    if (get_setting('franchise_commission_on_vendor_package_type') == 'flat') {
+                    $cf_comm_type = $franchise->commission_percentage > 0 
+                        ? ($franchise->commission_type ?? 'percentage') 
+                        : (get_setting('franchise_commission_on_vendor_package_type') ?? 'percentage');
+
+                    if ($cf_comm_type == 'flat') {
                         $cf_amount = $cf_pct;
                     } else {
                         $cf_amount = ($package_price * $cf_pct) / 100;
@@ -296,9 +310,16 @@ class FranchiseEmployeeController extends Controller
                 ?? ($franchise ? $franchise->state_franchise : null)
                 ?? ($sub_franchise ? $sub_franchise->state_franchise : null);
             if ($state_franchise) {
-                $stf_pct = (float) get_setting('state_franchise_commission_on_vendor_package');
+                $stf_pct = $state_franchise->commission_percentage > 0 
+                    ? (float) $state_franchise->commission_percentage 
+                    : (float) get_setting('state_franchise_commission_on_vendor_package');
+                
                 if ($stf_pct > 0) {
-                    if (get_setting('state_franchise_commission_on_vendor_package_type') == 'flat') {
+                    $stf_comm_type = $state_franchise->commission_percentage > 0 
+                        ? ($state_franchise->commission_type ?? 'percentage') 
+                        : (get_setting('state_franchise_commission_on_vendor_package_type') ?? 'percentage');
+
+                    if ($stf_comm_type == 'flat') {
                         $stf_amount = $stf_pct;
                     } else {
                         $stf_amount = ($package_price * $stf_pct) / 100;

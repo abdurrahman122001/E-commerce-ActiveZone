@@ -451,11 +451,18 @@ class FranchiseController extends Controller
                      ->exists();
 
                  if (!$exists) {
-                     // Use per-record commission % set on the state franchise itself
-                     $commission_percentage = (float) $stateFranchise->commission_percentage;
+                     // Use per-record commission % set on the state franchise itself, fallback to global
+                     $commission_percentage = $stateFranchise->commission_percentage > 0 
+                         ? (float) $stateFranchise->commission_percentage 
+                         : (float) get_setting('state_franchise_commission_on_package', 0);
+
                      if ($commission_percentage > 0) {
                          $package_price    = $franchise->franchise_package->price;
-                         if (($stateFranchise->commission_type ?? 'percentage') == 'flat') {
+                         $comm_type = $stateFranchise->commission_percentage > 0 
+                             ? ($stateFranchise->commission_type ?? 'percentage') 
+                             : (get_setting('state_franchise_commission_on_package_type') ?? 'percentage');
+
+                         if ($comm_type == 'flat') {
                              $commission_amount = $commission_percentage;
                          } else {
                              $commission_amount = ($package_price * $commission_percentage) / 100;
@@ -540,10 +547,17 @@ class FranchiseController extends Controller
                          ->exists();
 
                      if (!$exists) {
-                         $cf_pct = (float) $cityFranchise->commission_percentage;
+                         $cf_pct = $cityFranchise->commission_percentage > 0 
+                             ? (float) $cityFranchise->commission_percentage 
+                             : (float) get_setting('franchise_commission_on_package', 0);
+                         
                          if ($cf_pct > 0) {
                              $package_price     = $sub->franchise_package->price;
-                             if (($cityFranchise->commission_type ?? 'percentage') == 'flat') {
+                             $comm_type = $cityFranchise->commission_percentage > 0 
+                                 ? ($cityFranchise->commission_type ?? 'percentage') 
+                                 : (get_setting('franchise_commission_on_package_type') ?? 'percentage');
+
+                             if ($comm_type == 'flat') {
                                  $commission_amount = $cf_pct;
                              } else {
                                  $commission_amount = ($package_price * $cf_pct) / 100;
@@ -573,10 +587,17 @@ class FranchiseController extends Controller
                          ->exists();
 
                      if (!$exists) {
-                         $stf_pct = (float) $stateFranchise->commission_percentage;
+                         $stf_pct = $stateFranchise->commission_percentage > 0 
+                             ? (float) $stateFranchise->commission_percentage 
+                             : (float) get_setting('state_franchise_commission_on_package', 0);
+                             
                          if ($stf_pct > 0) {
                              $package_price     = $sub->franchise_package->price;
-                             if (($stateFranchise->commission_type ?? 'percentage') == 'flat') {
+                             $comm_type = $stateFranchise->commission_percentage > 0 
+                                 ? ($stateFranchise->commission_type ?? 'percentage') 
+                                 : (get_setting('state_franchise_commission_on_package_type') ?? 'percentage');
+
+                             if ($comm_type == 'flat') {
                                  $commission_amount = $stf_pct;
                              } else {
                                  $commission_amount = ($package_price * $stf_pct) / 100;
@@ -1017,6 +1038,17 @@ class FranchiseController extends Controller
         $franchise->commission_percentage = $request->commission_percentage;
         $franchise->commission_type = $request->commission_type;
         $franchise->save();
+
+        flash(translate('Commission updated successfully'))->success();
+        return back();
+    }
+
+    public function setStateFranchiseCommission(Request $request)
+    {
+        $stateFranchise = \App\Models\StateFranchise::findOrFail($request->id);
+        $stateFranchise->commission_percentage = $request->commission_percentage;
+        $stateFranchise->commission_type = $request->commission_type;
+        $stateFranchise->save();
 
         flash(translate('Commission updated successfully'))->success();
         return back();

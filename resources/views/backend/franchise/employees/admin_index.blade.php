@@ -40,7 +40,7 @@
                     <th data-breakpoints="lg">{{translate('Phone')}}</th>
                     <th data-breakpoints="lg">{{translate('Franchise/Sub')}}</th>
                     <th data-breakpoints="lg">{{translate('Role')}}</th>
-                    <th>{{translate('Commission (%)')}}</th>
+                    <th>{{translate('Commission')}}</th>
                     <th>{{translate('Status')}}</th>
                     <th width="15%" class="text-right">{{translate('Options')}}</th>
                 </tr>
@@ -60,7 +60,15 @@
                             @endif
                         </td>
                         <td>
-                            <input type="number" step="0.01" class="form-control" name="commission_percentage" value="{{ $employee->commission_percentage }}" onchange="update_commission(this, {{ $employee->id }})">
+                            <div class="input-group input-group-sm">
+                                <input type="number" step="0.01" class="form-control" name="commission_percentage" value="{{ $employee->commission_percentage }}" onchange="update_commission(this, {{ $employee->id }}, 'percentage')">
+                                <div class="input-group-append">
+                                    <select class="form-control aiz-selectpicker px-1" style="min-width: 60px;" name="commission_type" onchange="update_commission(this, {{ $employee->id }}, 'type')">
+                                        <option value="percentage" @if(($employee->commission_type ?? 'percentage') == 'percentage') selected @endif>%</option>
+                                        <option value="flat" @if(($employee->commission_type ?? 'percentage') == 'flat') selected @endif>{{ translate('Flat') }}</option>
+                                    </select>
+                                </div>
+                            </div>
                         </td>
                         <td>
                             @if($employee->status == 'pending')
@@ -120,8 +128,24 @@
                 $('#payout_modal').modal('show', {backdrop: 'static'});
             });
         }
-        function update_commission(el, id){
-            $.post('{{ route('admin.franchise_employees.set_commission') }}',{_token:'{{ @csrf_token() }}', id:id, commission_percentage:el.value}, function(data){
+        function update_commission(el, id, update_type){
+            var commission_percentage = 0;
+            var commission_type = '';
+
+            if(update_type == 'percentage'){
+                commission_percentage = el.value;
+                commission_type = $(el).closest('.input-group').find('select[name="commission_type"]').val();
+            }else{
+                commission_type = el.value;
+                commission_percentage = $(el).closest('.input-group').find('input[name="commission_percentage"]').val();
+            }
+
+            $.post('{{ route('admin.franchise_employees.set_commission') }}',{
+                _token:'{{ @csrf_token() }}', 
+                id:id, 
+                commission_percentage:commission_percentage,
+                commission_type:commission_type
+            }, function(data){
                 if(data == 1){
                     AIZ.plugins.notify('success', '{{ translate('Commission updated successfully') }}');
                 }
