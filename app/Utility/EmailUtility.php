@@ -172,7 +172,7 @@ class EmailUtility
             $emailTemplate = EmailTemplate::whereIdentifier($emailIdentifier)->first();
 
             if($emailTemplate != null && $emailTemplate->status == 1){
-                $shopName = $user->user_type == 'seller' ? $user->shop->name : null;
+                $shopName = in_array($user->user_type, ['seller', 'vendor']) ? $user->shop->name : null;
                 $emailSubject = $emailTemplate->subject;
                 $emailSubject = str_replace('[[order_code]]', $order->code, $emailSubject);
     
@@ -328,7 +328,7 @@ class EmailUtility
         $customer = $refundReqest->user;
         $seller = $refundReqest->seller;
         $productName = $refundReqest->orderDetail->product->getTranslation('name');
-        $shopName = $refundReqest?->order?->shop?->user->user_type == 'seller' ? $refundReqest?->order?->shop->name : null;
+        $shopName = in_array($refundReqest?->order?->shop?->user->user_type, ['seller', 'vendor']) ? $refundReqest?->order?->shop->name : null;
 
         $admin = get_admin();
         foreach($emailIdentifiers as $emailIdentifier){

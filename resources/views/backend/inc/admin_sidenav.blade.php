@@ -1,6 +1,6 @@
 <div class="aiz-sidebar-wrap">
     <div class="aiz-sidebar left c-scrollbar">
-        <div class="aiz-side-nav-logo-wrap">
+        {{-- <div class="aiz-side-nav-logo-wrap">
             <a href="{{ route('admin.dashboard') }}" class="d-block text-left">
                 @if(get_setting('system_logo_black') != null)
                 <img class="mw-100" src="{{ uploaded_asset(get_setting('system_logo_black')) }}" class="brand-icon"
@@ -10,7 +10,7 @@
                     alt="{{ get_setting('site_name') }}">
                 @endif
             </a>
-        </div>
+        </div> --}}
         <div class="aiz-side-nav-wrap">
             <div class="px-3 mb-3 position-relative">
                 <input class="form-control bg-transparent rounded-2 form-control-sm text-white fs-14" type="text"

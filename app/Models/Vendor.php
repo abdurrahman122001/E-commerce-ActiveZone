@@ -39,6 +39,7 @@ class Vendor extends Model
         'bank_acc_name',
         'bank_acc_no',
         'bank_routing_no',
+        'ifsc_code',
         'shop_name',
         'address',
         'city_id',

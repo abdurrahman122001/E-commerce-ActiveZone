@@ -24,8 +24,10 @@ class StateFranchise extends Model
         'bank_acc_name',
         'bank_acc_no',
         'bank_routing_no',
+        'ifsc_code',
         'invalid_at',
-        'commission_percentage'
+        'commission_percentage',
+        'commission_type'
     ];
 
     public function user()

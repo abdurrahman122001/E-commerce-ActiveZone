@@ -183,6 +183,7 @@ class DeliveryBoyController extends Controller
             $delivery_boy->holder_name = $request->holder_name;
             $delivery_boy->bank_account_no = $request->bank_account_no;
             $delivery_boy->bank_routing_no = $request->bank_routing_no;
+            $delivery_boy->ifsc_code = $request->ifsc_code;
             $delivery_boy->save();
         }
 

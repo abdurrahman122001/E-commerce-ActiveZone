@@ -21,6 +21,7 @@ class DeliveryBoy extends Model
         'bank_name',
         'bank_account_no',
         'bank_routing_no',
+        'ifsc_code',
         'holder_name',
         'lat',
         'long',

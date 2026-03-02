@@ -68,7 +68,8 @@
                     <th data-breakpoints="lg">{{translate('Email')}}</th>
                     <th data-breakpoints="lg">{{translate('Registered By')}}</th>
                     <th data-breakpoints="lg">{{translate('Franchise')}}</th>
-                    <th data-breakpoints="lg">{{translate('Package/Paid')}}</th>
+                    <th data-breakpoints="lg">{{translate('Referral Used')}}</th>
+                    <th data-breakpoints="lg text-center">{{translate('Package/Paid')}}</th>
                     <th data-breakpoints="lg">{{translate('Status')}}</th>
                     <th data-breakpoints="lg">{{translate('Registration Date')}}</th>
                     <th class="text-right">{{translate('Options')}}</th>
@@ -95,11 +96,23 @@
                             @if($vendor->sub_franchise)
                                 <span class="badge badge-inline badge-info">{{ translate('Sub') }}</span>
                                 {{ $vendor->sub_franchise->user->name ?? 'Sub-Franchise #'.$vendor->sub_franchise_id }}
-                                <br><small class="text-muted">({{ $vendor->sub_franchise->franchise->franchise_name ?? '' }})</small>
+                                <br><small class="text-muted">({{ $vendor->sub_franchise->franchise->franchise_name ?? translate('No City Franchise') }})</small>
                             @elseif($vendor->franchise)
                                 {{ $vendor->franchise->franchise_name }}
+                                <br><small class="text-muted">({{ $vendor->franchise->state_franchise->user->name ?? translate('No State Franchise') }})</small>
+                            @elseif($vendor->state_franchise)
+                                <span class="badge badge-inline badge-primary">{{ translate('State') }}</span>
+                                {{ $vendor->state_franchise->user->name ?? 'State-Franchise #'.$vendor->state_franchise_id }}
                             @else
                                 <span class="text-muted">{{ translate('N/A') }}</span>
+                            @endif
+                        </td>
+                        <td>
+                            @if($vendor->referrer)
+                                <span class="badge badge-inline badge-info">{{ $vendor->referrer->referral_code }}</span>
+                                <br><small class="text-muted">({{ $vendor->referrer->user->name ?? translate('N/A') }})</small>
+                            @else
+                                <span class="text-muted">{{ translate('None') }}</span>
                             @endif
                         </td>
                         <td>

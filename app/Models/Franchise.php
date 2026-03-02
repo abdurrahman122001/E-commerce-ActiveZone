@@ -22,10 +22,12 @@ class Franchise extends Model
         'franchise_package_id',
         'pan_number',
         'commission_percentage',
+        'commission_type',
         'bank_name',
         'bank_acc_name',
         'bank_acc_no',
         'bank_routing_no',
+        'ifsc_code',
         'invalid_at',
         'state_franchise_id'
     ];

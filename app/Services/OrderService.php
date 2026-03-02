@@ -109,7 +109,7 @@ class OrderService{
         $order->payment_status_viewed = '0';
         $order->save();
 
-        if (auth()->user()->user_type == 'seller') {
+        if (in_array(auth()->user()->user_type, ['seller', 'vendor'])) {
             foreach ($order->orderDetails->where('seller_id', auth()->user()->id) as $key => $orderDetail) {
                 $orderDetail->payment_status = $request->status;
                 $orderDetail->save();

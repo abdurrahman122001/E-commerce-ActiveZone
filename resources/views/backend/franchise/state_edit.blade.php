@@ -111,6 +111,12 @@
                         <input type="text" placeholder="{{translate('Bank Routing No')}}" id="bank_routing_no" name="bank_routing_no" value="{{ $stateFranchise->bank_routing_no }}" class="form-control">
                     </div>
                 </div>
+                <div class="form-group row">
+                    <label class="col-sm-3 col-from-label" for="ifsc_code">{{translate('IFSC Code')}}</label>
+                    <div class="col-sm-9">
+                        <input type="text" placeholder="{{translate('IFSC Code')}}" id="ifsc_code" name="ifsc_code" value="{{ $stateFranchise->ifsc_code }}" class="form-control">
+                    </div>
+                </div>
                 
                 <div class="form-group row">
                     <label class="col-sm-3 col-from-label" for="commission_percentage">{{translate('Commission Percentage (%)')}}</label>

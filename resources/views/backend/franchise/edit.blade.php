@@ -119,6 +119,12 @@
                         <input type="text" placeholder="{{translate('Bank Routing No')}}" id="bank_routing_no" name="bank_routing_no" value="{{ $franchise->bank_routing_no }}" class="form-control">
                     </div>
                 </div>
+                <div class="form-group row">
+                    <label class="col-sm-3 col-from-label" for="ifsc_code">{{translate('IFSC Code')}}</label>
+                    <div class="col-sm-9">
+                        <input type="text" placeholder="{{translate('IFSC Code')}}" id="ifsc_code" name="ifsc_code" value="{{ $franchise->ifsc_code }}" class="form-control">
+                    </div>
+                </div>
                 
                 <div class="form-group row">
                     <label class="col-sm-3 col-from-label" for="commission_percentage">{{translate('Commission Percentage (%)')}}</label>
@@ -154,13 +160,8 @@
                 franchise_type: 'city_franchise',
                 exclude_franchise_id: '{{ $franchise->id }}'
             }, function(data){
-                var obj = JSON.parse(data);
-                if(obj.indexOf('disabled') == -1){
-                    var html = '<option value="">{{ translate("Select City") }}</option>';
-                    $('#city_id').html(html + obj);
-                } else {
-                    $('#city_id').html(obj);
-                }
+                // data is plain HTML — do NOT JSON.parse it
+                $('#city_id').html(data);
                 $('#city_id').val('{{ $franchise->city_id }}');
                 $('.aiz-selectpicker').selectpicker('refresh');
             });

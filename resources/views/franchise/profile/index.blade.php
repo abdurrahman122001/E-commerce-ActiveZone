@@ -95,6 +95,12 @@
                         <input type="text" class="form-control" placeholder="{{ translate('Bank Routing Number') }}" name="bank_routing_no" value="{{ $role_data->bank_routing_no ?? '' }}">
                     </div>
                 </div>
+                <div class="form-group row">
+                    <label class="col-md-2 col-from-label">{{ translate('IFSC Code') }}</label>
+                    <div class="col-md-10">
+                        <input type="text" class="form-control" placeholder="{{ translate('IFSC Code') }}" name="ifsc_code" value="{{ $role_data->ifsc_code ?? '' }}">
+                    </div>
+                </div>
                 <!-- Hidden fields to preserve existing user data if updated from this form -->
                 <input type="hidden" name="name" value="{{ Auth::user()->name }}">
                 <input type="hidden" name="phone" value="{{ Auth::user()->phone }}">

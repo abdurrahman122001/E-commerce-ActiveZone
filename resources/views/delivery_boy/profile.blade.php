@@ -98,8 +98,14 @@
                 </div>
                 <div class="col-md-6">
                     <div class="form-group">
-                        <label>{{ translate('Routing / IFSC Code') }}</label>
+                        <label>{{ translate('Bank Routing Number') }}</label>
                         <input type="text" class="form-control" name="bank_routing_no" value="{{ $delivery_boy->bank_routing_no ?? '' }}">
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label>{{ translate('IFSC Code') }}</label>
+                        <input type="text" class="form-control" name="ifsc_code" value="{{ $delivery_boy->ifsc_code ?? '' }}">
                     </div>
                 </div>
             </div>

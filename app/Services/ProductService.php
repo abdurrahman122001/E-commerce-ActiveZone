@@ -487,7 +487,7 @@ class ProductService
 
 
         }
-         elseif ($auth_user->user_type == 'seller') {
+         elseif (in_array($auth_user->user_type, ['seller', 'vendor'])) {
             $products->where('user_id', $auth_user->id);
             $seller_discount = $data['discount'];
             //save to sellerCategory
@@ -540,7 +540,7 @@ class ProductService
 
         $user_id = in_array(auth()->user()->user_type, ['seller', 'franchise', 'sub_franchise']) ? auth()->user()->id : User::where('user_type', 'admin')->first()->id;
         $approved = 1;
-        if (auth()->user()->user_type == 'seller') {
+        if (in_array(auth()->user()->user_type, ['seller', 'vendor'])) {
             if (get_setting('product_approve_by_admin') == 1) {
                 $approved = 0;
             }

@@ -132,6 +132,15 @@
                     @enderror
                 </div>
             </div>
+            <div class="row">
+                <label class="col-md-3 col-form-label" for="ifsc_code">{{ translate('IFSC Code') }}</label>
+                <div class="col-md-9">
+                    <input type="text" name="ifsc_code" value="{{ $user->shop->ifsc_code }}" id="ifsc_code" class="form-control mb-3" placeholder="{{ translate('IFSC Code')}}">
+                    @error('ifsc_code')
+                    <small class="form-text text-danger">{{ $message }}</small>
+                    @enderror
+                </div>
+            </div>
         </div>
     </div>
 

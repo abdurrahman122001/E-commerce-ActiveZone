@@ -42,17 +42,22 @@ class FranchiseEmployeeController extends Controller
         $sub_franchise_id = $request->sub_franchise_id;
         $employee_id = $request->employee_id;
         $date_range = $request->date_range;
-        $vendors = \App\Models\Vendor::with(['user', 'franchise_package']);
+        $vendors = \App\Models\Vendor::with(['user', 'franchise_package', 'referrer']);
         if (Auth::user()->user_type == 'admin') {
-            // Show vendors linked directly to a franchise OR via a sub-franchise
+            // Show vendors linked to any level of franchise
             $vendors = $vendors->where(function($q) {
                 $q->whereNotNull('franchise_id')
-                  ->orWhereNotNull('sub_franchise_id');
+                  ->orWhereNotNull('sub_franchise_id')
+                  ->orWhereNotNull('state_franchise_id');
             });
         } elseif (Auth::user()->user_type == 'state_franchise') {
             $state_franchise_id = Auth::user()->state_franchise->id;
-            $franchise_ids = \App\Models\Franchise::where('state_franchise_id', $state_franchise_id)->pluck('id');
-            $vendors = $vendors->whereIn('franchise_id', $franchise_ids);
+            $vendors = $vendors->where(function($q) use ($state_franchise_id) {
+                $q->where('state_franchise_id', $state_franchise_id)
+                  ->orWhereIn('franchise_id', function($query) use ($state_franchise_id) {
+                      $query->select('id')->from('franchises')->where('state_franchise_id', $state_franchise_id);
+                  });
+            });
         }
 
         if ($sub_franchise_id) {

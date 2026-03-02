@@ -57,10 +57,34 @@
                         </select>
                     </div>
                 </div>
-                 <div class="form-group row">
-                    <label class="col-sm-3 col-from-label" for="business_experience">{{translate('Business Experience')}}</label>
+                <div class="form-group row">
+                    <label class="col-sm-3 col-from-label" for="bank_name">{{translate('Bank Name')}}</label>
                     <div class="col-sm-9">
-                         <textarea class="form-control" name="business_experience" rows="3" placeholder="{{ translate('Briefly describe business experience') }}"></textarea>
+                        <input type="text" placeholder="{{translate('Bank Name')}}" id="bank_name" name="bank_name" class="form-control">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-3 col-from-label" for="bank_acc_name">{{translate('Bank Account Name')}}</label>
+                    <div class="col-sm-9">
+                        <input type="text" placeholder="{{translate('Bank Account Name')}}" id="bank_acc_name" name="bank_acc_name" class="form-control">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-3 col-from-label" for="bank_acc_no">{{translate('Bank Account No')}}</label>
+                    <div class="col-sm-9">
+                        <input type="text" placeholder="{{translate('Bank Account No')}}" id="bank_acc_no" name="bank_acc_no" class="form-control">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-3 col-from-label" for="bank_routing_no">{{translate('Bank Routing No')}}</label>
+                    <div class="col-sm-9">
+                        <input type="text" placeholder="{{translate('Bank Routing No')}}" id="bank_routing_no" name="bank_routing_no" class="form-control">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-3 col-from-label" for="ifsc_code">{{translate('IFSC Code')}}</label>
+                    <div class="col-sm-9">
+                        <input type="text" placeholder="{{translate('IFSC Code')}}" id="ifsc_code" name="ifsc_code" class="form-control">
                     </div>
                 </div>
                 

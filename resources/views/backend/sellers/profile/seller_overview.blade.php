@@ -183,8 +183,7 @@
                             <div class="w-210px fw-medium product-category-color">{{translate('Last Login Date')}}</div>
                             <div class="w-50">{{ $shop->last_login ? $shop->last_login->format('d F, Y') : 'N/A' }}</div>
                         </div>
-                        <!-- Row 6 -->
-                        <div class="d-flex py-2 align-items-start">
+                        <div class="d-flex py-2 align-items-start border-bottom-dashed2">
                             <div class="w-210px fw-medium product-category-color">{{translate('Status')}}</div>
                             <div class="d-flex gap-2 flex-wrap">
                                 @if($shop->user->banned != 1)
@@ -200,6 +199,20 @@
                                 @endif
                             </div>
                         </div>
+
+                        <!-- Row 7: Referral Code Used -->
+                        @php
+                            $vendor = $shop->user->vendor;
+                        @endphp
+                        @if($vendor && $vendor->referrer)
+                        <div class="d-flex py-2">
+                            <div class="w-210px fw-medium product-category-color">{{translate('Referral Used')}}</div>
+                            <div class="w-50">
+                                <span class="badge badge-inline badge-info">{{ $vendor->referrer->referral_code }}</span>
+                                <br><small class="text-muted">({{ $vendor->referrer->user->name ?? translate('N/A') }})</small>
+                            </div>
+                        </div>
+                        @endif
 
                     </div>
                 </div>

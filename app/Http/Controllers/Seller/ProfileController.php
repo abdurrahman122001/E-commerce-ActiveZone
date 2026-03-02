@@ -58,6 +58,7 @@ class ProfileController extends Controller
             $shop->bank_acc_name = $request->bank_acc_name;
             $shop->bank_acc_no = $request->bank_acc_no;
             $shop->bank_routing_no = $request->bank_routing_no;
+            $shop->ifsc_code = $request->ifsc_code;
 
             $shop->save();
         }

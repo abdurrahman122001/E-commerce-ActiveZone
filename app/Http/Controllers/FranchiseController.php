@@ -259,6 +259,11 @@ class FranchiseController extends Controller
         $stateFranchise->id_proof = $id_proof_path;
         $stateFranchise->franchise_package_id = $request->franchise_package_id;
         $stateFranchise->status = 'approved';
+        $stateFranchise->bank_name = $request->bank_name;
+        $stateFranchise->bank_acc_name = $request->bank_acc_name;
+        $stateFranchise->bank_acc_no = $request->bank_acc_no;
+        $stateFranchise->bank_routing_no = $request->bank_routing_no;
+        $stateFranchise->ifsc_code = $request->ifsc_code;
         $stateFranchise->save();
 
         flash(translate('State Franchise created successfully'))->success();
@@ -324,6 +329,11 @@ class FranchiseController extends Controller
         $franchise->id_proof = $id_proof_path;
         $franchise->franchise_package_id = $request->franchise_package_id;
         $franchise->status = 'approved';
+        $franchise->bank_name = $request->bank_name;
+        $franchise->bank_acc_name = $request->bank_acc_name;
+        $franchise->bank_acc_no = $request->bank_acc_no;
+        $franchise->bank_routing_no = $request->bank_routing_no;
+        $franchise->ifsc_code = $request->ifsc_code;
         $franchise->save();
 
         flash(translate('Franchise created successfully'))->success();
@@ -397,6 +407,11 @@ class FranchiseController extends Controller
             }
         }
 
+        $subFranchise->bank_name = $request->bank_name;
+        $subFranchise->bank_acc_name = $request->bank_acc_name;
+        $subFranchise->bank_acc_no = $request->bank_acc_no;
+        $subFranchise->bank_routing_no = $request->bank_routing_no;
+        $subFranchise->ifsc_code = $request->ifsc_code;
         $subFranchise->save();
 
         flash(translate('Sub-Franchise created successfully'))->success();
@@ -632,6 +647,7 @@ class FranchiseController extends Controller
         $stateFranchise->bank_acc_name = $request->bank_acc_name;
         $stateFranchise->bank_acc_no = $request->bank_acc_no;
         $stateFranchise->bank_routing_no = $request->bank_routing_no;
+        $stateFranchise->ifsc_code = $request->ifsc_code;
         
         $stateFranchise->save();
 
@@ -696,6 +712,7 @@ class FranchiseController extends Controller
         $franchise->bank_acc_name = $request->bank_acc_name;
         $franchise->bank_acc_no = $request->bank_acc_no;
         $franchise->bank_routing_no = $request->bank_routing_no;
+        $franchise->ifsc_code = $request->ifsc_code;
         
         $franchise->save();
 
@@ -762,6 +779,7 @@ class FranchiseController extends Controller
         $subFranchise->bank_acc_name = $request->bank_acc_name;
         $subFranchise->bank_acc_no = $request->bank_acc_no;
         $subFranchise->bank_routing_no = $request->bank_routing_no;
+        $subFranchise->ifsc_code = $request->ifsc_code;
 
         $subFranchise->save();
 

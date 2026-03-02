@@ -94,6 +94,12 @@
                         <input type="text" class="form-control" placeholder="{{ translate('Bank Routing Number') }}" name="bank_routing_no" value="{{ $vendor->bank_routing_no ?? '' }}">
                     </div>
                 </div>
+                <div class="form-group row">
+                    <label class="col-md-2 col-from-label">{{ translate('IFSC Code') }}</label>
+                    <div class="col-md-10">
+                        <input type="text" class="form-control" placeholder="{{ translate('IFSC Code') }}" name="ifsc_code" value="{{ $vendor->ifsc_code ?? '' }}">
+                    </div>
+                </div>
                 <div class="form-group mb-0 text-right">
                     <button type="submit" class="btn btn-primary">{{ translate('Update Bank Details') }}</button>
                 </div>

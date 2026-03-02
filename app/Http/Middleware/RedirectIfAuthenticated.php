@@ -25,12 +25,10 @@ class RedirectIfAuthenticated
             $user = Auth::user();
             
             // Redirect based on user type - check vendor first
-            if ($user && $user->user_type == 'vendor') {
+            if ($user && ($user->user_type == 'vendor' || $user->user_type == 'seller')) {
                 return redirect()->route('vendor.dashboard');
             } elseif ($user && ($user->user_type == 'admin' || $user->user_type == 'staff')) {
                 return redirect()->route('admin.dashboard');
-            } elseif ($user && $user->user_type == 'seller') {
-                return redirect()->route('seller.dashboard');
             } elseif ($user && in_array($user->user_type, ['state_franchise', 'franchise', 'sub_franchise'])) {
                 return redirect()->route('franchise.dashboard');
             } else {

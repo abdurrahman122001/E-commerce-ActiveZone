@@ -26,6 +26,7 @@
   <p>{{translate('Bank Acc Name')}} : {{ $shop->bank_acc_name }}</p>
   <p>{{translate('Bank Acc Number')}} : {{ $shop->bank_acc_no }}</p>
   <p>{{translate('Bank Routing Number')}} : {{ $shop->bank_routing_no }}</p>
+  <p>{{translate('IFSC Code')}} : {{ $shop->ifsc_code }}</p>
 
   <br>
 

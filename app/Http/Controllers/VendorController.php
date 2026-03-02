@@ -225,9 +225,12 @@ class VendorController extends Controller
         $vendor = \App\Models\Vendor::where('user_id', $authUserId)->first();
 
         if ($vendor && $vendor->status != 'approved') {
-            $packages = \App\Models\FranchisePackage::where('package_type', 'vendor')->where('status', 1)->get();
-            return view('vendors.packages.index', compact('packages'));
+        if ($vendor->franchise_package_id) {
+            return view('vendors.packages.pending', compact('vendor'));
         }
+        $packages = \App\Models\FranchisePackage::where('package_type', 'vendor')->where('status', 1)->get();
+        return view('vendors.packages.index', compact('packages'));
+    }
         
         $data['total_products'] = \App\Models\Product::where('user_id', $authUserId)->count();
         $data['total_sales'] = \App\Models\OrderDetail::where('seller_id', $authUserId)->where('delivery_status', 'delivered')->sum('price');
@@ -428,5 +431,21 @@ class VendorController extends Controller
     {
         $packages = \App\Models\FranchisePackage::where('package_type', 'vendor')->where('status', 1)->get();
         return view('vendors.packages.index', compact('packages'));
+    }
+
+    public function myReferrals()
+    {
+        $vendor = Auth::user()->vendor;
+        if (!$vendor) {
+            flash(translate('Vendor profile not found.'))->error();
+            return back();
+        }
+
+        $referrals = \App\Models\Vendor::with('user')
+            ->where('referred_by_id', $vendor->id)
+            ->latest()
+            ->paginate(20);
+
+        return view('vendors.my_referrals', compact('vendor', 'referrals'));
     }
 }

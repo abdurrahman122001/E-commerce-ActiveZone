@@ -59,11 +59,11 @@ class ShopController extends Controller
         $phone = null;
         if (Auth::check()) {
             if ((Auth::user()->user_type == 'admin' || Auth::user()->user_type == 'customer')) {
-                flash(translate('Admin or Customer cannot be a seller'))->error();
+                flash(translate('Admin or Customer cannot be a vendor'))->error();
                 return back();
             }
-            if (Auth::user()->user_type == 'seller') {
-                flash(translate('This user already a seller'))->error();
+            if (Auth::user()->user_type == 'vendor') {
+                flash(translate('This user already a vendor'))->error();
                 return back();
             }
         }
@@ -90,7 +90,7 @@ class ShopController extends Controller
         $user->name = $request->name. ($request->filled('l_name') ? ' ' . $request->l_name : '');
         $user->email = $request->email;
         $user->phone = ($request->filled('country_code') ? ' ' . $request->country_code : '').$cleanPhone;
-        $user->user_type = "seller";
+        $user->user_type = "vendor";
         $user->password = Hash::make($request->password);
         $user->email_verified_at = date('Y-m-d H:m:s');
 
@@ -99,14 +99,13 @@ class ShopController extends Controller
             $shop->user_id = $user->id;
             $shop->name = $request->shop_name;
             $shop->address = $request->address;
+            $shop->registration_approval = 1;
+
             if(addon_is_activated('portfolio_system')){
-                $shop->registration_approval= 1;
-                $shop->verification_status= 0;
-                $shop->phone =$user->phone = ($request->filled('country_code') ? ' ' . $request->country_code : '').$cleanPhone;
-            }else{
-                $shop->registration_approval= 0;
+                $shop->verification_status = 0;
             }
-            $shop->registration_approval= 0;
+            
+            $shop->phone = $user->phone;
             $shop->slug = preg_replace('/\s+/', '-', str_replace("/", " ", $request->shop_name));
             $shop->save();
 
@@ -121,19 +120,22 @@ class ShopController extends Controller
             $vendor->status = 'pending';
 
             // Automatic Franchise Association
-            $stateFranchise = \App\Models\StateFranchise::where('state_id', $request->state_id)->where('status', 'approved')->first();
-            if ($stateFranchise) {
-                $vendor->state_franchise_id = $stateFranchise->id;
-            }
-
-            $franchise = \App\Models\Franchise::where('city_id', $request->city_id)->where('status', 'approved')->first();
-            if ($franchise) {
-                $vendor->franchise_id = $franchise->id;
-            }
-
             $subFranchise = \App\Models\SubFranchise::where('area_id', $request->area_id)->where('status', 'approved')->first();
             if ($subFranchise) {
                 $vendor->sub_franchise_id = $subFranchise->id;
+                $vendor->franchise_id = $subFranchise->franchise_id;
+                $vendor->state_franchise_id = $subFranchise->state_franchise_id;
+            } else {
+                $franchise = \App\Models\Franchise::where('city_id', $request->city_id)->where('status', 'approved')->first();
+                if ($franchise) {
+                    $vendor->franchise_id = $franchise->id;
+                    $vendor->state_franchise_id = $franchise->state_franchise_id;
+                } else {
+                    $stateFranchise = \App\Models\StateFranchise::where('state_id', $request->state_id)->where('status', 'approved')->first();
+                    if ($stateFranchise) {
+                        $vendor->state_franchise_id = $stateFranchise->id;
+                    }
+                }
             }
             
             $vendor_referral_code = $request->referral_code ?: Cookie::get('vendor_referral_code');
@@ -160,13 +162,14 @@ class ShopController extends Controller
                 } catch (\Exception $e) {}
             }
 
-            if(addon_is_activated('portfolio_system')){
-                auth()->login($user, true);
-                return redirect()->route('dashboard');
-            }
+            $shop->registration_approval = 1;
+            $shop->save();
 
-            flash(translate('Your Shop has been created successfully! Your seller account is under review. We will notify you once approved. '))->success();
-            return redirect()->route('home');
+            // Auto-login
+            auth()->login($user, true);
+
+            flash(translate('Your Shop has been created successfully! Please select a package to continue.'))->success();
+            return redirect()->route('vendor.dashboard');
         }
 
         flash(translate('Sorry! Something went wrong.'))->error();

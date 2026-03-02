@@ -339,28 +339,21 @@ class LoginController extends Controller
             return redirect()->route('home');
         }
 
-        // Check vendor first to avoid conflicts
-        if ($user->user_type == 'vendor') {
-            \Log::info('Redirecting vendor to dashboard');
-            return redirect()->route('vendor.dashboard');
-        } elseif ($user->user_type == 'admin' || $user->user_type == 'staff') {
-            \Log::info('Redirecting admin/staff');
-            CoreComponentRepository::instantiateShopRepository();
-            return redirect()->route('admin.dashboard');
-        } elseif ($user->user_type == 'seller') {
-            
-            if ($user->shop->registration_approval  == 0) {
+        // Check vendor first
+        if ($user->user_type == 'vendor' || $user->user_type == 'seller') {
+            if ($user->shop && $user->shop->registration_approval == 0) {
                 auth()->logout();
-                flash(translate("Your seller account is under review. We will notify you once approved."));
+                flash(translate("Your vendor account is under review. We will notify you once approved."));
                 return redirect()->route('home');
             }
-            //save the seller login log
-            \Log::channel('seller_login')->info('Seller Logged In', [
+            //save the vendor login log
+            \Log::channel('seller_login')->info('Vendor Logged In', [
                 'user_id' => $user->id,
                 'email' => $user->email,
                 'time' => now()->toDateTimeString(),
             ]);
-            return redirect()->route('seller.dashboard');
+            return redirect()->route('vendor.dashboard');
+        } elseif ($user->user_type == 'admin' || $user->user_type == 'staff') {
             } elseif (in_array($user->user_type, ['state_franchise', 'franchise', 'sub_franchise'])) {
                 \Log::info('Redirecting franchise/sub_franchise');
                 return redirect()->route('franchise.dashboard');

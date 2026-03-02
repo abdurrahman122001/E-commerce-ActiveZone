@@ -70,7 +70,7 @@
                             <option value="">{{ translate('No Parent Franchise') }}</option>
                             @foreach($franchises as $franchise)
                                 <option value="{{ $franchise->id }}" @if($subFranchise->franchise_id == $franchise->id) selected @endif>
-                                    {{ $franchise->franchise_name }} ({{ $franchise->user->name }})
+                                    {{ $franchise->franchise_name }} ({{ $franchise->user->name ?? 'N/A' }})
                                 </option>
                             @endforeach
                         </select>
@@ -140,6 +140,12 @@
                         <input type="text" placeholder="{{translate('Bank Routing No')}}" id="bank_routing_no" name="bank_routing_no" value="{{ $subFranchise->bank_routing_no }}" class="form-control">
                     </div>
                 </div>
+                <div class="form-group row">
+                    <label class="col-sm-3 col-from-label" for="ifsc_code">{{translate('IFSC Code')}}</label>
+                    <div class="col-sm-9">
+                        <input type="text" placeholder="{{translate('IFSC Code')}}" id="ifsc_code" name="ifsc_code" value="{{ $subFranchise->ifsc_code }}" class="form-control">
+                    </div>
+                </div>
                 
                 <div class="form-group row">
                     <label class="col-sm-3 col-from-label" for="commission_percentage">{{translate('Commission Percentage (%)')}}</label>
@@ -175,13 +181,8 @@
 
         function get_cities(state_id){
             $.post('{{ route('get-city') }}', { _token: '{{ csrf_token() }}', state_id: state_id }, function(data){
-                $('#city_id').html(null);
-                $('#city_id').append($('<option>', {
-                    value: '',
-                    text: '{{ translate("Select City") }}'
-                }));
-                var obj = JSON.parse(data);
-                $('#city_id').append(obj);
+                // data is plain HTML — do NOT JSON.parse it
+                $('#city_id').html(data);
                 $('#city_id').val('{{ $subFranchise->city_id }}');
                 $('.aiz-selectpicker').selectpicker('refresh');
                 
@@ -199,13 +200,8 @@
                 franchise_type: 'sub_franchise',
                 exclude_sub_franchise_id: '{{ $subFranchise->id }}'
             }, function(data){
-                var obj = JSON.parse(data);
-                if(obj.indexOf('disabled') == -1){
-                    var html = '<option value="">{{ translate("Select Area") }}</option>';
-                    $('#area_id').html(html + obj);
-                } else {
-                    $('#area_id').html(obj);
-                }
+                // data is plain HTML — do NOT JSON.parse it
+                $('#area_id').html(data);
                 $('#area_id').val('{{ $subFranchise->area_id }}');
                 $('.aiz-selectpicker').selectpicker('refresh');
             });

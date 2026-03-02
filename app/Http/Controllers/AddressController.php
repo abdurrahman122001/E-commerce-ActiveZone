@@ -214,9 +214,11 @@ class AddressController extends Controller
 
     public function getCities(Request $request)
     {
-        $cities = City::where('status', 1)->where('state_id', $request->state_id)->get();
+        $cities = City::where('state_id', $request->state_id)->get();
 
         if ($request->has('franchise_type') && $request->franchise_type == 'city_franchise') {
+            // No condition required: show already registered/occupied cities too
+            /*
             $query = Franchise::where('status', '!=', 'rejected');
             if ($request->has('exclude_franchise_id')) {
                 $query->where('id', '!=', $request->exclude_franchise_id);
@@ -225,25 +227,35 @@ class AddressController extends Controller
             $cities = $cities->filter(function ($city) use ($occupiedCityIds) {
                 return !in_array($city->id, $occupiedCityIds);
             });
+            */
         }
 
-        $html = '';
-        if ($cities->isEmpty() && $request->has('franchise_type') && $request->franchise_type == 'city_franchise') {
-            $html .= '<option value="" disabled>' . translate("Franchise already available in this city") . '</option>';
-        } else {
+        $html = '<option value="">' . translate("Select City") . '</option>';
+        if (!$cities->isEmpty()) {
+            $occupiedCityIds = [];
+            if ($request->has('franchise_type')) {
+                $occupiedCityIds = Franchise::where('status', '!=', 'rejected')->pluck('city_id')->toArray();
+            }
+
             foreach ($cities as $row) {
-                $html .= '<option value="' . $row->id . '">' . $row->getTranslation('name') . '</option>';
+                $label = $row->getTranslation('name');
+                if (in_array($row->id, $occupiedCityIds)) {
+                    $label .= ' (' . translate('Already Registered') . ')';
+                }
+                $html .= '<option value="' . $row->id . '">' . $label . '</option>';
             }
         }
 
-        echo json_encode($html);
+        echo $html;
     }
 
     public function getAreas(Request $request)
     {
-        $areas = Area::where('status', 1)->where('city_id', $request->city_id)->get();
+        $areas = Area::where('city_id', $request->city_id)->get();
 
         if ($request->has('franchise_type') && $request->franchise_type == 'sub_franchise') {
+            // No condition required: show already registered/occupied areas too
+            /*
             $query = SubFranchise::where('status', '!=', 'rejected');
             if ($request->has('exclude_sub_franchise_id')) {
                 $query->where('id', '!=', $request->exclude_sub_franchise_id);
@@ -252,20 +264,26 @@ class AddressController extends Controller
             $areas = $areas->filter(function ($area) use ($occupiedAreaIds) {
                 return !in_array($area->id, $occupiedAreaIds);
             });
+            */
         }
 
-        $html = '';
-        if ($areas->isEmpty()) {
-            $msg = ($request->has('franchise_type') && $request->franchise_type == 'sub_franchise') 
-                    ? translate("No available areas for sub-franchise in this city") 
-                    : translate("Area not available");
-            $html = '<option value="" disabled selected>' . $msg . '</option>';
-        } else {
+        $html = '<option value="">' . translate("Select Area") . '</option>';
+        if (!$areas->isEmpty()) {
+            $occupiedAreaIds = [];
+            if ($request->has('franchise_type')) {
+                $occupiedAreaIds = SubFranchise::where('status', '!=', 'rejected')->pluck('area_id')->toArray();
+            }
+
             foreach ($areas as $row) {
-                $html .= '<option value="' . $row->id . '">' . $row->getTranslation('name') . '</option>';
+                $label = $row->getTranslation('name');
+                if (in_array($row->id, $occupiedAreaIds)) {
+                    $label .= ' (' . translate('Already Registered') . ')';
+                }
+                $html .= '<option value="' . $row->id . '">' . $label . '</option>';
             }
         }
-        echo json_encode($html);
+        
+        echo $html;
     }
 
     public function set_default($id)

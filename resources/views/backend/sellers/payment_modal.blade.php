@@ -35,6 +35,10 @@
                       <td>{{ translate('Bank Routing Number') }}</td>
                       <td>{{ $shop->bank_routing_no }}</td>
                   </tr>
+                  <tr>
+                      <td>{{ translate('IFSC Code') }}</td>
+                      <td>{{ $shop->ifsc_code ?? translate('Not Set') }}</td>
+                  </tr>
               @endif
           </tbody>
       </table>

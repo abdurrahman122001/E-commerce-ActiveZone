@@ -128,7 +128,7 @@ class SellerController extends Controller
         $user           = new User;
         $user->name     = $request->name;
         $user->email    = $request->email;
-        $user->user_type = "seller";
+        $user->user_type = "vendor";
         $user->password = Hash::make($password);
 
         if ($user->save()) {

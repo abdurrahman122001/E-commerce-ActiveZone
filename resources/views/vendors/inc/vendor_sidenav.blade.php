@@ -451,6 +451,17 @@
                         <span class="aiz-side-nav-text">{{ translate('Commission History') }}</span>
                     </a>
                 </li>
+
+                <li class="aiz-side-nav-item">
+                    <a href="{{ route('vendor.my_referrals') }}" class="aiz-side-nav-link {{ areActiveRoutes(['vendor.my_referrals']) }}">
+                        <i class="las la-user-friends aiz-side-nav-icon"></i>
+                        <span class="aiz-side-nav-text">{{ translate('My Referrals') }}</span>
+                        @php $refCount = Auth::user()->vendor ? Auth::user()->vendor->referrals()->count() : 0; @endphp
+                        @if($refCount > 0)
+                            <span class="badge badge-soft-primary ml-auto">{{ $refCount }}</span>
+                        @endif
+                    </a>
+                </li>
                 @endif
 
                 <li class="aiz-side-nav-item">

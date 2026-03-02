@@ -132,6 +132,7 @@ Route::group(['middleware' => ['vendor', 'user', 'prevent-back-history']], funct
         Route::get('/vendor/packages', 'packages')->name('vendor.packages.index');
         Route::get('/vendors/commission-history', 'commissionHistory')->name('vendors.commission_history');
         Route::post('/vendor/package-purchase', 'purchasePackage')->name('vendor.package.purchase');
+        Route::get('/vendor/my-referrals', 'myReferrals')->name('vendor.my_referrals');
         
         // Withdraw Requests
         Route::controller(App\Http\Controllers\CommissionWithdrawController::class)->group(function () {

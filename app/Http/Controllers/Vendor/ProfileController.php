@@ -40,6 +40,7 @@ class ProfileController extends Controller
                 $vendor->bank_acc_name = $request->bank_acc_name;
                 $vendor->bank_acc_no = $request->bank_acc_no;
                 $vendor->bank_routing_no = $request->bank_routing_no;
+                $vendor->ifsc_code = $request->ifsc_code;
                 $vendor->save();
             }
 

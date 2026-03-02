@@ -38,6 +38,7 @@ class ProfileController extends Controller
                 'bank_acc_name' => $request->bank_acc_name,
                 'bank_acc_no' => $request->bank_acc_no,
                 'bank_routing_no' => $request->bank_routing_no,
+                'ifsc_code' => $request->ifsc_code,
             ];
 
             if ($user->user_type == 'franchise' && $user->franchise) {

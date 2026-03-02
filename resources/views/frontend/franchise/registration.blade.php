@@ -101,7 +101,7 @@
                                     </div>
                                 </div>
 
-                                <div class="form-group row" id="city_section">
+                                <div class="form-group row d-none" id="city_section">
                                     <label class="col-md-3 col-form-label">{{ translate('City') }} <span class="text-danger">*</span></label>
                                     <div class="col-md-9">
                                         <select class="form-control aiz-selectpicker @error('city_id') is-invalid @enderror" name="city_id" id="city_id" data-live-search="true">
@@ -166,8 +166,49 @@
 @section('script')
 <script type="text/javascript">
     $(document).ready(function(){
+
+        // Determine franchise type on load (from URL or old input)
+        var urlParams = new URLSearchParams(window.location.search);
+        var selectedPackage = urlParams.get('package');
+        var selectedType = urlParams.get('type') || '{{ old("franchise_type") }}';
+
+        // Auto-select package from query parameter (coming from landing page)
+        if (selectedPackage) {
+            $('#franchise_package_id').val(selectedPackage);
+            $('.aiz-selectpicker').selectpicker('refresh');
+        }
+
+        // Auto-select franchise type
+        if (selectedType) {
+            $('#franchise_type').val(selectedType).selectpicker('refresh');
+        }
+
+        // Initial show/hide based on selected type
+        updateSections($('#franchise_type').val());
+
         $('#franchise_type').change(function(){
             var type = $(this).val();
+            updateSections(type);
+            var state_id = $('#state_id').val();
+            if(state_id && type != 'state_franchise'){
+                get_cities(state_id, type);
+            }
+        });
+
+        $('#state_id').change(function(){
+            var state_id = $(this).val();
+            var type = $('#franchise_type').val();
+            if(type && type != 'state_franchise'){
+                get_cities(state_id, type);
+            }
+        });
+
+        $('#city_id').change(function(){
+            var city_id = $(this).val();
+            get_areas(city_id);
+        });
+
+        function updateSections(type) {
             if(type == 'sub_franchise'){
                 $('#city_section').removeClass('d-none');
                 $('#city_id').prop('required', true);
@@ -177,36 +218,26 @@
                 $('#city_section').removeClass('d-none');
                 $('#city_id').prop('required', true);
                 $('#area_section').addClass('d-none');
-                $('#area_id').prop('required', false);
+                $('#area_id').prop('required', false).val('');
             } else if(type == 'state_franchise'){
+                $('#city_section').addClass('d-none');
+                $('#city_id').prop('required', false).val('');
+                $('#area_section').addClass('d-none');
+                $('#area_id').prop('required', false).val('');
+            } else {
+                // No type selected: hide both
                 $('#city_section').addClass('d-none');
                 $('#city_id').prop('required', false);
                 $('#area_section').addClass('d-none');
                 $('#area_id').prop('required', false);
             }
-            
-            var state_id = $('#state_id').val();
-            if(state_id && type != 'state_franchise'){
-                get_cities(state_id);
-            }
-        });
+        }
 
-        $('#state_id').change(function(){
-            var state_id = $(this).val();
-            get_cities(state_id);
-        });
-
-        $('#city_id').change(function(){
-            var city_id = $(this).val();
-            get_areas(city_id);
-        });
-
-        function get_cities(state_id){
-            var franchise_type = $('#franchise_type').val();
+        function get_cities(state_id, franchise_type){
+            franchise_type = franchise_type || $('#franchise_type').val();
             $.post('{{ route('get-city') }}', { _token: '{{ csrf_token() }}', state_id: state_id, franchise_type: franchise_type }, function(data){
-                var obj = JSON.parse(data);
-                var html = '<option value="">{{ translate("Select City") }}</option>';
-                $('#city_id').html(html + obj);
+                // data is plain HTML from the server — do NOT JSON.parse it
+                $('#city_id').html(data);
                 $('.aiz-selectpicker').selectpicker('refresh');
                 $('#area_id').html('<option value="">{{ translate("Select Area") }}</option>').selectpicker('refresh');
             });
@@ -215,38 +246,11 @@
         function get_areas(city_id) {
             var franchise_type = $('#franchise_type').val();
             $.post('{{ route('get-area') }}', { _token: '{{ csrf_token() }}', city_id: city_id, franchise_type: franchise_type }, function(data){
-                var obj = JSON.parse(data);
-                if(obj.indexOf('disabled') == -1){
-                    var html = '<option value="">{{ translate("Select Area") }}</option>';
-                    $('#area_id').html(html + obj);
-                } else {
-                    $('#area_id').html(obj);
-                }
+                // data is plain HTML from the server — do NOT JSON.parse it
+                $('#area_id').html(data);
                 $('.aiz-selectpicker').selectpicker('refresh');
             });
         }
-
-        // Auto-select package from query parameter (coming from landing page)
-        var urlParams = new URLSearchParams(window.location.search);
-        var selectedPackage = urlParams.get('package');
-        if (selectedPackage) {
-            $('#franchise_package_id').val(selectedPackage);
-            $('.aiz-selectpicker').selectpicker('refresh');
-        }
-
-        // Auto-select franchise type from query parameter (coming from sub-franchise page)
-        var selectedType = urlParams.get('type');
-        if (selectedType) {
-            $('#franchise_type').val(selectedType);
-            $('.aiz-selectpicker').selectpicker('refresh');
-            if (selectedType == 'sub_franchise') {
-                $('#area_section').removeClass('d-none');
-                $('#area_id').prop('required', true);
-            }
-        }
-
-        // Trigger change to handle pre-selected type
-        $('#franchise_type').trigger('change');
     });
 
     // Custom file input

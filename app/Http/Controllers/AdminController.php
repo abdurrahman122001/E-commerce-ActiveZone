@@ -127,9 +127,9 @@ class AdminController extends Controller
             ->whereYear('orders.created_at', Carbon::now()->year)
             ->whereMonth('orders.created_at', Carbon::now()->month)
             ->first();
-        $data['seller_sale_this_month'] = Order::select(DB::raw('COALESCE(users.user_type, "seller") as user_type'), DB::raw('COALESCE(SUM(grand_total), 0) as total_sale'))
+        $data['seller_sale_this_month'] = Order::select(DB::raw('COALESCE(users.user_type, "vendor") as user_type'), DB::raw('COALESCE(SUM(grand_total), 0) as total_sale'))
             ->leftJoin('users', 'orders.seller_id', '=', 'users.id')
-            ->whereRaw('users.user_type = "seller"')
+            ->whereIn('users.user_type', ['seller', 'vendor'])
             ->whereYear('orders.created_at', Carbon::now()->year)
             ->whereMonth('orders.created_at', Carbon::now()->month)
             ->first();
@@ -145,19 +145,19 @@ class AdminController extends Controller
             $new_stat[$row->month][] = $row;
         }
         $data['sales_stat'] = $new_stat;
-        $data['total_sellers'] = User::where('user_type', 'seller')->where('email_verified_at', '!=', null)->count();
+        $data['total_sellers'] = User::whereIn('user_type', ['seller', 'vendor'])->where('email_verified_at', '!=', null)->count();
         $data['status_wise_sellers'] = Shop::select('verification_status', DB::raw('COUNT(*) as total'))
             ->whereIn('user_id', function ($q){
                 $q->select('id')
                     ->from(with(new User)->getTable())
-                    ->where('user_type', 'seller')
+                    ->whereIn('user_type', ['seller', 'vendor'])
                     ->where('email_verified_at', '!=', null);
             })
             ->groupBy('verification_status')
             ->get();
         $data['top_sellers'] = Order::select('orders.seller_id', 'users.name', 'users.user_type', 'users.avatar_original', DB::raw('SUM(grand_total) as total'))
             ->leftJoin('users', 'orders.seller_id', '=', 'users.id')
-            ->whereRaw('users.user_type = "seller"')
+            ->whereIn('users.user_type', ['seller', 'vendor'])
             ->groupBy('users.id')
             ->orderBy('total', 'desc')
             ->limit(6)
@@ -281,7 +281,7 @@ class AdminController extends Controller
             ->whereIn("seller_id", function ($query) {
                 $query->select('id')
                     ->from('users')
-                    ->where('user_type', 'seller');
+                    ->whereIn('user_type', ['seller', 'vendor']);
             })
             ->where('orders.delivery_status', 'delivered')
             ->groupBy('orders.seller_id')
