@@ -215,6 +215,7 @@ class SellerController extends Controller
         }
         if ($user->save()) {
             $shop->commission_percentage = $request->commission_percentage ?? 0;
+            $shop->commission_type = $request->commission_type;
             if ($shop->save()) {
                 flash(translate('Seller has been updated successfully'))->success();
                 return redirect()->route('sellers.index');
@@ -457,6 +458,7 @@ class SellerController extends Controller
             foreach (explode(",", $request->seller_ids) as $shop) {
                 $shop = Shop::where('id', $shop)->first();
                 $shop->commission_percentage = $request->commission_percentage;
+                $shop->commission_type = $request->commission_type;
                 $shop->save();
             }
             flash(translate('Seller commission is added successfully.'))->success();
@@ -471,6 +473,7 @@ class SellerController extends Controller
         if ($request->seller_id != null) {
             $shop = Shop::where('id', $request->seller_id)->first();
             $shop->commission_percentage = $request->commission_percentage;
+            $shop->commission_type = $request->commission_type;
             $shop->save();
 
             return 1;

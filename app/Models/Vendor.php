@@ -34,6 +34,7 @@ class Vendor extends Model
         'state_franchise_id',
         'status',
         'commission_percentage',
+        'commission_type',
         'added_by_employee_id',
         'bank_name',
         'bank_acc_name',

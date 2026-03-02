@@ -69,12 +69,15 @@
                     </div>
                     @if(Auth::check() && (Auth::user()->user_type == 'admin' || Auth::user()->user_type == 'staff'))
                     <div class="form-group row">
-                        <label class="col-md-3 col-from-label">{{translate('Commission Percentage')}} <span class="text-danger">*</span></label>
-                        <div class="col-md-9">
-                            <input type="number" min="0" max="100" step="0.01" class="form-control @error('commission_percentage') is-invalid @enderror" name="commission_percentage" placeholder="{{translate('Commission Percentage')}}" value="{{ old('commission_percentage', 0) }}" required>
-                            @error('commission_percentage')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
+                        <label class="col-md-3 col-from-label">{{translate('Commission')}} <span class="text-danger">*</span></label>
+                        <div class="col-md-5">
+                            <input type="number" min="0" step="0.01" class="form-control @error('commission_percentage') is-invalid @enderror" name="commission_percentage" placeholder="{{translate('Commission')}}" value="{{ old('commission_percentage', 0) }}" required>
+                        </div>
+                        <div class="col-md-4">
+                            <select class="form-control aiz-selectpicker" name="commission_type" required>
+                                <option value="percentage" {{ old('commission_type') == 'percentage' ? 'selected' : '' }}>{{ translate('Percentage (%)') }}</option>
+                                <option value="flat" {{ old('commission_type') == 'flat' ? 'selected' : '' }}>{{ translate('Flat Amount') }}</option>
+                            </select>
                         </div>
                     </div>
                     @endif

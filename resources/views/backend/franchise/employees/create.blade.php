@@ -125,12 +125,15 @@
                     </div>
 
                     <div class="form-group row">
-                        <label class="col-sm-3 col-from-label">{{translate('Commission Percentage (%)')}}</label>
-                        <div class="col-sm-9">
-                            <input type="number" step="0.01" min="0" max="100" class="form-control @error('commission_percentage') is-invalid @enderror" name="commission_percentage" value="{{ old('commission_percentage', 0) }}">
-                            @error('commission_percentage')
-                                <span class="invalid-feedback" role="alert">{{ $message }}</span>
-                            @enderror
+                        <label class="col-sm-3 col-from-label">{{translate('Commission')}}</label>
+                        <div class="col-sm-5">
+                            <input type="number" step="0.01" min="0" class="form-control @error('commission_percentage') is-invalid @enderror" name="commission_percentage" value="{{ old('commission_percentage', 0) }}">
+                        </div>
+                        <div class="col-sm-4">
+                            <select class="form-control aiz-selectpicker" name="commission_type">
+                                <option value="percentage" {{ old('commission_type') == 'percentage' ? 'selected' : '' }}>{{translate('Percentage (%)')}}</option>
+                                <option value="flat" {{ old('commission_type') == 'flat' ? 'selected' : '' }}>{{translate('Flat Amount')}}</option>
+                            </select>
                         </div>
                     </div>
 

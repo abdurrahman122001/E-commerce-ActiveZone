@@ -84,14 +84,16 @@
                         @csrf
                         <div class="form-group row">
                             <label class="col-md-4 col-from-label">{{translate('Seller Commission')}}</label>
-                            <div class="col-md-8">
+                            <div class="col-md-5">
                                 <input type="hidden" name="types[]" value="vendor_commission">
-                                <div class="input-group">
-                                    <input type="number" lang="en" min="0" step="0.01" value="{{ get_setting('vendor_commission') }}" placeholder="{{translate('Seller Commission')}}" name="vendor_commission" class="form-control">
-                                    <div class="input-group-append">
-                                        <span class="input-group-text">%</span>
-                                    </div>
-                                </div>
+                                <input type="number" lang="en" min="0" step="0.01" value="{{ get_setting('vendor_commission') }}" placeholder="{{translate('Seller Commission')}}" name="vendor_commission" class="form-control">
+                            </div>
+                            <div class="col-md-3">
+                                <input type="hidden" name="types[]" value="vendor_commission_type">
+                                <select class="form-control aiz-selectpicker" name="vendor_commission_type">
+                                    <option value="percentage" @if(get_setting('vendor_commission_type') == 'percentage') selected @endif>{{translate('Percentage (%)')}}</option>
+                                    <option value="flat" @if(get_setting('vendor_commission_type') == 'flat') selected @endif>{{translate('Flat Amount')}}</option>
+                                </select>
                             </div>
                         </div>
                         <div class="form-group mb-0 text-right">
@@ -112,39 +114,45 @@
                     <form class="form-horizontal" action="{{ route('business_settings.update') }}" method="POST" enctype="multipart/form-data">
                         @csrf
                         <div class="form-group row">
-                            <label class="col-md-8 col-from-label">{{translate('Franchise Commission on Subfranchise Package Purchase')}}</label>
-                            <div class="col-md-4">
+                            <label class="col-md-6 col-from-label">{{translate('Franchise Commission on Subfranchise Package Purchase')}}</label>
+                            <div class="col-md-3">
                                 <input type="hidden" name="types[]" value="franchise_commission_on_package">
-                                <div class="input-group">
-                                    <input type="number" lang="en" min="0" step="0.01" value="{{ get_setting('franchise_commission_on_package') }}" placeholder="0" name="franchise_commission_on_package" class="form-control">
-                                    <div class="input-group-append">
-                                        <span class="input-group-text">%</span>
-                                    </div>
-                                </div>
+                                <input type="number" lang="en" min="0" step="0.01" value="{{ get_setting('franchise_commission_on_package') }}" placeholder="0" name="franchise_commission_on_package" class="form-control">
+                            </div>
+                            <div class="col-md-3">
+                                <input type="hidden" name="types[]" value="franchise_commission_on_package_type">
+                                <select class="form-control aiz-selectpicker" name="franchise_commission_on_package_type">
+                                    <option value="percentage" @if(get_setting('franchise_commission_on_package_type') == 'percentage') selected @endif>{{translate('Percentage')}}</option>
+                                    <option value="flat" @if(get_setting('franchise_commission_on_package_type') == 'flat') selected @endif>{{translate('Flat')}}</option>
+                                </select>
                             </div>
                         </div>
                          <div class="form-group row">
-                            <label class="col-md-8 col-from-label">{{translate('Franchise Commission on Vendor Sales')}}</label>
-                            <div class="col-md-4">
+                            <label class="col-md-6 col-from-label">{{translate('Franchise Commission on Vendor Sales')}}</label>
+                            <div class="col-md-3">
                                 <input type="hidden" name="types[]" value="franchise_commission_on_vendor_sales">
-                                <div class="input-group">
-                                    <input type="number" lang="en" min="0" step="0.01" value="{{ get_setting('franchise_commission_on_vendor_sales') }}" placeholder="0" name="franchise_commission_on_vendor_sales" class="form-control">
-                                    <div class="input-group-append">
-                                        <span class="input-group-text">%</span>
-                                    </div>
-                                </div>
+                                <input type="number" lang="en" min="0" step="0.01" value="{{ get_setting('franchise_commission_on_vendor_sales') }}" placeholder="0" name="franchise_commission_on_vendor_sales" class="form-control">
+                            </div>
+                            <div class="col-md-3">
+                                <input type="hidden" name="types[]" value="franchise_commission_on_vendor_sales_type">
+                                <select class="form-control aiz-selectpicker" name="franchise_commission_on_vendor_sales_type">
+                                    <option value="percentage" @if(get_setting('franchise_commission_on_vendor_sales_type') == 'percentage') selected @endif>{{translate('Percentage')}}</option>
+                                    <option value="flat" @if(get_setting('franchise_commission_on_vendor_sales_type') == 'flat') selected @endif>{{translate('Flat')}}</option>
+                                </select>
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label class="col-md-8 col-from-label">{{translate('Subfranchise Commission on Vendor Sales')}}</label>
-                            <div class="col-md-4">
+                            <label class="col-md-6 col-from-label">{{translate('Subfranchise Commission on Vendor Sales')}}</label>
+                            <div class="col-md-3">
                                 <input type="hidden" name="types[]" value="subfranchise_commission_on_vendor_sales">
-                                <div class="input-group">
-                                    <input type="number" lang="en" min="0" step="0.01" value="{{ get_setting('subfranchise_commission_on_vendor_sales') }}" placeholder="0" name="subfranchise_commission_on_vendor_sales" class="form-control">
-                                    <div class="input-group-append">
-                                        <span class="input-group-text">%</span>
-                                    </div>
-                                </div>
+                                <input type="number" lang="en" min="0" step="0.01" value="{{ get_setting('subfranchise_commission_on_vendor_sales') }}" placeholder="0" name="subfranchise_commission_on_vendor_sales" class="form-control">
+                            </div>
+                            <div class="col-md-3">
+                                <input type="hidden" name="types[]" value="subfranchise_commission_on_vendor_sales_type">
+                                <select class="form-control aiz-selectpicker" name="subfranchise_commission_on_vendor_sales_type">
+                                    <option value="percentage" @if(get_setting('subfranchise_commission_on_vendor_sales_type') == 'percentage') selected @endif>{{translate('Percentage')}}</option>
+                                    <option value="flat" @if(get_setting('subfranchise_commission_on_vendor_sales_type') == 'flat') selected @endif>{{translate('Flat')}}</option>
+                                </select>
                             </div>
                         </div>
                         <div class="form-group mb-0 text-right">
@@ -166,36 +174,45 @@
                         @csrf
                         <p class="text-muted mb-3"><i class="las la-info-circle"></i> {{translate('Commissions distributed when a vendor package approval is done.')}}</p>
                         <div class="form-group row">
-                            <label class="col-md-8 col-from-label">{{translate('Sub-Franchise Commission on Vendor Package')}}</label>
-                            <div class="col-md-4">
+                            <label class="col-md-6 col-from-label">{{translate('Sub-Franchise Commission on Vendor Package')}}</label>
+                            <div class="col-md-3">
                                 <input type="hidden" name="types[]" value="sub_franchise_commission_on_vendor_package">
-                                <div class="input-group">
-                                    <input type="number" lang="en" min="0" step="0.01" value="{{ get_setting('sub_franchise_commission_on_vendor_package') }}" placeholder="0" name="sub_franchise_commission_on_vendor_package" class="form-control">
-                                    <div class="input-group-append"><span class="input-group-text">%</span></div>
-                                </div>
-                                <small class="text-muted">{{translate('Goes to the sub-franchise the vendor belongs to.')}}</small>
+                                <input type="number" lang="en" min="0" step="0.01" value="{{ get_setting('sub_franchise_commission_on_vendor_package') }}" placeholder="0" name="sub_franchise_commission_on_vendor_package" class="form-control">
+                            </div>
+                            <div class="col-md-3">
+                                <input type="hidden" name="types[]" value="sub_franchise_commission_on_vendor_package_type">
+                                <select class="form-control aiz-selectpicker" name="sub_franchise_commission_on_vendor_package_type">
+                                    <option value="percentage" @if(get_setting('sub_franchise_commission_on_vendor_package_type') == 'percentage') selected @endif>{{translate('Percentage')}}</option>
+                                    <option value="flat" @if(get_setting('sub_franchise_commission_on_vendor_package_type') == 'flat') selected @endif>{{translate('Flat')}}</option>
+                                </select>
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label class="col-md-8 col-from-label">{{translate('City Franchise Commission on Vendor Package')}}</label>
-                            <div class="col-md-4">
+                            <label class="col-md-6 col-from-label">{{translate('City Franchise Commission on Vendor Package')}}</label>
+                            <div class="col-md-3">
                                 <input type="hidden" name="types[]" value="franchise_commission_on_vendor_package">
-                                <div class="input-group">
-                                    <input type="number" lang="en" min="0" step="0.01" value="{{ get_setting('franchise_commission_on_vendor_package') }}" placeholder="0" name="franchise_commission_on_vendor_package" class="form-control">
-                                    <div class="input-group-append"><span class="input-group-text">%</span></div>
-                                </div>
-                                <small class="text-muted">{{translate('Goes to the city franchise the vendor belongs to.')}}</small>
+                                <input type="number" lang="en" min="0" step="0.01" value="{{ get_setting('franchise_commission_on_vendor_package') }}" placeholder="0" name="franchise_commission_on_vendor_package" class="form-control">
+                            </div>
+                            <div class="col-md-3">
+                                <input type="hidden" name="types[]" value="franchise_commission_on_vendor_package_type">
+                                <select class="form-control aiz-selectpicker" name="franchise_commission_on_vendor_package_type">
+                                    <option value="percentage" @if(get_setting('franchise_commission_on_vendor_package_type') == 'percentage') selected @endif>{{translate('Percentage')}}</option>
+                                    <option value="flat" @if(get_setting('franchise_commission_on_vendor_package_type') == 'flat') selected @endif>{{translate('Flat')}}</option>
+                                </select>
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label class="col-md-8 col-from-label">{{translate('State Franchise Commission on Vendor Package')}}</label>
-                            <div class="col-md-4">
+                            <label class="col-md-6 col-from-label">{{translate('State Franchise Commission on Vendor Package')}}</label>
+                            <div class="col-md-3">
                                 <input type="hidden" name="types[]" value="state_franchise_commission_on_vendor_package">
-                                <div class="input-group">
-                                    <input type="number" lang="en" min="0" step="0.01" value="{{ get_setting('state_franchise_commission_on_vendor_package') }}" placeholder="0" name="state_franchise_commission_on_vendor_package" class="form-control">
-                                    <div class="input-group-append"><span class="input-group-text">%</span></div>
-                                </div>
-                                <small class="text-muted">{{translate('Goes to the state franchise the vendor belongs to.')}}</small>
+                                <input type="number" lang="en" min="0" step="0.01" value="{{ get_setting('state_franchise_commission_on_vendor_package') }}" placeholder="0" name="state_franchise_commission_on_vendor_package" class="form-control">
+                            </div>
+                            <div class="col-md-3">
+                                <input type="hidden" name="types[]" value="state_franchise_commission_on_vendor_package_type">
+                                <select class="form-control aiz-selectpicker" name="state_franchise_commission_on_vendor_package_type">
+                                    <option value="percentage" @if(get_setting('state_franchise_commission_on_vendor_package_type') == 'percentage') selected @endif>{{translate('Percentage')}}</option>
+                                    <option value="flat" @if(get_setting('state_franchise_commission_on_vendor_package_type') == 'flat') selected @endif>{{translate('Flat')}}</option>
+                                </select>
                             </div>
                         </div>
                         <div class="form-group mb-0 text-right">

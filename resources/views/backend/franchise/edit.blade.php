@@ -127,9 +127,15 @@
                 </div>
                 
                 <div class="form-group row">
-                    <label class="col-sm-3 col-from-label" for="commission_percentage">{{translate('Commission Percentage (%)')}}</label>
-                    <div class="col-sm-9">
-                        <input type="number" step="0.01" min="0" max="100" placeholder="{{translate('Commission Percentage')}}" id="commission_percentage" name="commission_percentage" value="{{ $franchise->commission_percentage }}" class="form-control">
+                    <label class="col-sm-3 col-from-label" for="commission_percentage">{{translate('Commission')}}</label>
+                    <div class="col-sm-5">
+                        <input type="number" step="0.01" min="0" placeholder="{{translate('Commission Value')}}" id="commission_percentage" name="commission_percentage" value="{{ $franchise->commission_percentage }}" class="form-control" required>
+                    </div>
+                    <div class="col-sm-4">
+                        <select class="form-control aiz-selectpicker" name="commission_type" id="commission_type">
+                            <option value="percentage" @if($franchise->commission_type == 'percentage') selected @endif>{{translate('Percentage (%)')}}</option>
+                            <option value="flat" @if($franchise->commission_type == 'flat') selected @endif>{{translate('Flat Amount')}}</option>
+                        </select>
                     </div>
                 </div>
                 

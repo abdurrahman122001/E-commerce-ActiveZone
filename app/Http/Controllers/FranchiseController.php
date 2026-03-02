@@ -259,6 +259,8 @@ class FranchiseController extends Controller
         $stateFranchise->id_proof = $id_proof_path;
         $stateFranchise->franchise_package_id = $request->franchise_package_id;
         $stateFranchise->status = 'approved';
+        $stateFranchise->commission_percentage = $request->commission_percentage ?? 0;
+        $stateFranchise->commission_type = $request->commission_type;
         $stateFranchise->bank_name = $request->bank_name;
         $stateFranchise->bank_acc_name = $request->bank_acc_name;
         $stateFranchise->bank_acc_no = $request->bank_acc_no;
@@ -329,6 +331,8 @@ class FranchiseController extends Controller
         $franchise->id_proof = $id_proof_path;
         $franchise->franchise_package_id = $request->franchise_package_id;
         $franchise->status = 'approved';
+        $franchise->commission_percentage = $request->commission_percentage ?? 0;
+        $franchise->commission_type = $request->commission_type;
         $franchise->bank_name = $request->bank_name;
         $franchise->bank_acc_name = $request->bank_acc_name;
         $franchise->bank_acc_no = $request->bank_acc_no;
@@ -407,6 +411,8 @@ class FranchiseController extends Controller
             }
         }
 
+        $subFranchise->commission_percentage = $request->commission_percentage ?? 0;
+        $subFranchise->commission_type = $request->commission_type;
         $subFranchise->bank_name = $request->bank_name;
         $subFranchise->bank_acc_name = $request->bank_acc_name;
         $subFranchise->bank_acc_no = $request->bank_acc_no;
@@ -449,7 +455,11 @@ class FranchiseController extends Controller
                      $commission_percentage = (float) $stateFranchise->commission_percentage;
                      if ($commission_percentage > 0) {
                          $package_price    = $franchise->franchise_package->price;
-                         $commission_amount = ($package_price * $commission_percentage) / 100;
+                         if (($stateFranchise->commission_type ?? 'percentage') == 'flat') {
+                             $commission_amount = $commission_percentage;
+                         } else {
+                             $commission_amount = ($package_price * $commission_percentage) / 100;
+                         }
 
                          $stateFranchise->balance = ($stateFranchise->balance ?? 0) + $commission_amount;
                          $stateFranchise->save();
@@ -533,7 +543,11 @@ class FranchiseController extends Controller
                          $cf_pct = (float) $cityFranchise->commission_percentage;
                          if ($cf_pct > 0) {
                              $package_price     = $sub->franchise_package->price;
-                             $commission_amount = ($package_price * $cf_pct) / 100;
+                             if (($cityFranchise->commission_type ?? 'percentage') == 'flat') {
+                                 $commission_amount = $cf_pct;
+                             } else {
+                                 $commission_amount = ($package_price * $cf_pct) / 100;
+                             }
 
                              $cityFranchise->balance = ($cityFranchise->balance ?? 0) + $commission_amount;
                              $cityFranchise->save();
@@ -562,7 +576,11 @@ class FranchiseController extends Controller
                          $stf_pct = (float) $stateFranchise->commission_percentage;
                          if ($stf_pct > 0) {
                              $package_price     = $sub->franchise_package->price;
-                             $commission_amount = ($package_price * $stf_pct) / 100;
+                             if (($stateFranchise->commission_type ?? 'percentage') == 'flat') {
+                                 $commission_amount = $stf_pct;
+                             } else {
+                                 $commission_amount = ($package_price * $stf_pct) / 100;
+                             }
 
                              $stateFranchise->balance = ($stateFranchise->balance ?? 0) + $commission_amount;
                              $stateFranchise->save();
@@ -638,6 +656,7 @@ class FranchiseController extends Controller
         $stateFranchise->franchise_package_id = $request->franchise_package_id;
         $stateFranchise->invalid_at = $request->invalid_at;
         $stateFranchise->commission_percentage = $request->commission_percentage ?? 0;
+        $stateFranchise->commission_type = $request->commission_type;
         
         if ($request->hasFile('id_proof')) {
             $stateFranchise->id_proof = $request->file('id_proof')->store('uploads/franchise/id_proofs', 'public');
@@ -703,6 +722,7 @@ class FranchiseController extends Controller
         $franchise->franchise_package_id = $request->franchise_package_id;
         $franchise->invalid_at = $request->invalid_at;
         $franchise->commission_percentage = $request->commission_percentage ?? 0;
+        $franchise->commission_type = $request->commission_type;
         
         if ($request->hasFile('id_proof')) {
             $franchise->id_proof = $request->file('id_proof')->store('uploads/franchise/id_proofs', 'public');
@@ -770,6 +790,7 @@ class FranchiseController extends Controller
         $subFranchise->franchise_id = $request->franchise_id;
         $subFranchise->invalid_at = $request->invalid_at;
         $subFranchise->commission_percentage = $request->commission_percentage ?? 0;
+        $subFranchise->commission_type = $request->commission_type;
 
         if ($request->hasFile('id_proof')) {
             $subFranchise->id_proof = $request->file('id_proof')->store('uploads/franchise/id_proofs', 'public');
@@ -983,6 +1004,7 @@ class FranchiseController extends Controller
     {
         $sub = SubFranchise::findOrFail($request->id);
         $sub->commission_percentage = $request->commission_percentage;
+        $sub->commission_type = $request->commission_type;
         $sub->save();
 
         flash(translate('Commission updated successfully'))->success();
@@ -993,6 +1015,7 @@ class FranchiseController extends Controller
     {
         $franchise = Franchise::findOrFail($request->id);
         $franchise->commission_percentage = $request->commission_percentage;
+        $franchise->commission_type = $request->commission_type;
         $franchise->save();
 
         flash(translate('Commission updated successfully'))->success();

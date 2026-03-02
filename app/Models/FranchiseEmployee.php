@@ -24,6 +24,7 @@ class FranchiseEmployee extends Authenticatable
         'status',
         'created_by',
         'commission_percentage',
+        'commission_type',
         'bank_name',
         'bank_acc_name',
         'bank_acc_no',

@@ -215,6 +215,7 @@ class FranchiseEmployeeController extends Controller
     {
         $employee = FranchiseEmployee::findOrFail($request->id);
         $employee->commission_percentage = $request->commission_percentage;
+        $employee->commission_type = $request->commission_type;
         $employee->save();
 
         return 1;
@@ -241,7 +242,11 @@ class FranchiseEmployeeController extends Controller
             if ($sub_franchise) {
                 $sf_pct = (float) get_setting('sub_franchise_commission_on_vendor_package');
                 if ($sf_pct > 0) {
-                    $sf_amount = ($package_price * $sf_pct) / 100;
+                    if (get_setting('sub_franchise_commission_on_vendor_package_type') == 'flat') {
+                        $sf_amount = $sf_pct;
+                    } else {
+                        $sf_amount = ($package_price * $sf_pct) / 100;
+                    }
                     $sub_franchise->balance = ($sub_franchise->balance ?? 0) + $sf_amount;
                     $sub_franchise->save();
 
@@ -264,7 +269,11 @@ class FranchiseEmployeeController extends Controller
             if ($franchise) {
                 $cf_pct = (float) get_setting('franchise_commission_on_vendor_package');
                 if ($cf_pct > 0) {
-                    $cf_amount = ($package_price * $cf_pct) / 100;
+                    if (get_setting('franchise_commission_on_vendor_package_type') == 'flat') {
+                        $cf_amount = $cf_pct;
+                    } else {
+                        $cf_amount = ($package_price * $cf_pct) / 100;
+                    }
                     $franchise->balance = ($franchise->balance ?? 0) + $cf_amount;
                     $franchise->save();
 
@@ -289,7 +298,11 @@ class FranchiseEmployeeController extends Controller
             if ($state_franchise) {
                 $stf_pct = (float) get_setting('state_franchise_commission_on_vendor_package');
                 if ($stf_pct > 0) {
-                    $stf_amount = ($package_price * $stf_pct) / 100;
+                    if (get_setting('state_franchise_commission_on_vendor_package_type') == 'flat') {
+                        $stf_amount = $stf_pct;
+                    } else {
+                        $stf_amount = ($package_price * $stf_pct) / 100;
+                    }
                     $state_franchise->balance = ($state_franchise->balance ?? 0) + $stf_amount;
                     $state_franchise->save();
 

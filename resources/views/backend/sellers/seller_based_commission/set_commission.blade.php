@@ -100,8 +100,11 @@
                             <div class="input-group">
                                 <input type="number" class="form-control" id="commission_{{ $shop->id }}" step="0.01" value="{{$shop->commission_percentage}}" min="0" placeholder="{{translate('Commission')}}"
                                     style="border-radius: 8px 0 0 8px;">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text border-left-0" id="inputGroupPrepend" style="border-radius: 0 8px 8px 0;">%</span>
+                                <div class="input-group-append">
+                                    <select class="form-control" id="commission_type_{{ $shop->id }}" style="border-radius: 0 8px 8px 0; min-width: 60px;">
+                                        <option value="percentage" @if($shop->commission_type == 'percentage') selected @endif>%</option>
+                                        <option value="flat" @if($shop->commission_type == 'flat') selected @endif>{{ translate('Flat') }}</option>
+                                    </select>
                                 </div>
                             </div>
                         </td>
@@ -171,6 +174,7 @@ function setCommission(){
     $('#confirm-modal').modal('hide');
     var seller_id = $('#trigger_btn').attr('data-value');
     var commission =  $("#commission_" + seller_id).val();
+    var commission_type = $("#commission_type_" + seller_id).val();
     if(commission < 0) {
         AIZ.plugins.notify('danger', '{{ translate('Commission can not be less than 0') }}');
     }
@@ -179,6 +183,7 @@ function setCommission(){
             _token:'{{ csrf_token() }}',
             seller_id:seller_id,
             commission_percentage:commission,
+            commission_type:commission_type,
         }, function(data) {
             if(data == 1){
                 AIZ.plugins.notify('success', '{{ translate('Seller Based Commission Set Successfully') }}');

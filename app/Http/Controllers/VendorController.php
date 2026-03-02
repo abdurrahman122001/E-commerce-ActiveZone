@@ -132,9 +132,11 @@ class VendorController extends Controller
         ];
 
         if ($isAdmin) {
-            $rules['commission_percentage'] = 'required|numeric|min:0|max:100';
+            $rules['commission_percentage'] = 'required|numeric|min:0';
+            $rules['commission_type'] = 'required|string|in:percentage,flat';
         } else {
-            $rules['commission_percentage'] = 'nullable|numeric|min:0|max:100';
+            $rules['commission_percentage'] = 'nullable|numeric|min:0';
+            $rules['commission_type'] = 'nullable|string|in:percentage,flat';
         }
 
         $validated = $request->validate($rules);
@@ -186,6 +188,7 @@ class VendorController extends Controller
             }
             
             $vendor->commission_percentage = $isAdmin ? ($request->commission_percentage ?? 0) : 0;
+            $vendor->commission_type = $isAdmin ? ($request->commission_type ?? 'percentage') : 'percentage';
             $vendor->status = $isAdmin ? 'approved' : 'pending'; 
             $vendor->save();
 
@@ -330,7 +333,8 @@ class VendorController extends Controller
         ];
 
         if (Auth::user()->user_type == 'admin' || Auth::user()->user_type == 'staff' || Auth::user()->user_type == 'franchise' || Auth::user()->user_type == 'sub_franchise' || Auth::guard('franchise_employee')->check()) {
-            $rules['commission_percentage'] = 'required|numeric|min:0|max:100';
+            $rules['commission_percentage'] = 'required|numeric|min:0';
+            $rules['commission_type'] = 'required|string|in:percentage,flat';
         }
 
         if ($request->password) {
@@ -348,6 +352,7 @@ class VendorController extends Controller
 
         if (isset($validated['commission_percentage'])) {
             $vendor->commission_percentage = $validated['commission_percentage'];
+            $vendor->commission_type = $validated['commission_type'] ?? 'percentage';
         }
         $vendor->shop_name = $request->shop_name;
         $vendor->address = $request->address;
