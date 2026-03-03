@@ -50,6 +50,7 @@ class Vendor extends Model
         'long',
         'referral_code',
         'referred_by_id',
+        'referral_balance',
         'franchise_package_id'
     ];
 
@@ -91,6 +92,11 @@ class Vendor extends Model
     public function referrals()
     {
         return $this->hasMany(Vendor::class, 'referred_by_id');
+    }
+
+    public function referralCommissionHistories()
+    {
+        return $this->hasMany(VendorReferralCommissionHistory::class, 'referrer_vendor_id');
     }
 
     public function area()

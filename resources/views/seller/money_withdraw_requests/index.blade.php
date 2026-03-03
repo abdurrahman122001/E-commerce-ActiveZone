@@ -42,16 +42,25 @@
                       <tr>
                           <th>#</th>
                           <th>{{ translate('Date') }}</th>
+                          <th>{{ translate('Type') }}</th>
                           <th>{{ translate('Amount')}}</th>
                           <th data-breakpoints="lg">{{ translate('Status')}}</th>
-                          <th data-breakpoints="lg" width="60%">{{ translate('Message')}}</th>
+                          <th data-breakpoints="lg" width="40%">{{ translate('Message')}}</th>
                       </tr>
                   </thead>
                   <tbody>
                       @foreach ($seller_withdraw_requests as $key => $seller_withdraw_request)
+                          @php
+                              $withdraw_type = $seller_withdraw_request->withdraw_type ?? 'standard';
+                          @endphp
                           <tr>
                               <td>{{ $key+1 }}</td>
                               <td>{{ date('d-m-Y', strtotime($seller_withdraw_request->created_at)) }}</td>
+                              <td>
+                                  <span class="badge badge-inline {{ $withdraw_type == 'referral' ? 'badge-success' : 'badge-info' }}">
+                                      {{ ucfirst($withdraw_type) }}
+                                  </span>
+                              </td>
                               <td>{{ single_price($seller_withdraw_request->amount) }}</td>
                               <td>
                                   @if ($seller_withdraw_request->status == 1)

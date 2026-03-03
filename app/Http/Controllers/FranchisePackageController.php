@@ -53,6 +53,8 @@ class FranchisePackageController extends Controller
         $franchise_package->logo = $request->logo;
         $franchise_package->status = 1;
         $franchise_package->features = $request->features;
+        $franchise_package->referral_commission = $request->referral_commission ?? 0;
+        $franchise_package->referral_commission_type = $request->referral_commission_type ?? 'percentage';
         $franchise_package->save();
 
         $franchise_package_translation = new FranchisePackageTranslation();
@@ -90,6 +92,10 @@ class FranchisePackageController extends Controller
         $franchise_package->price = $request->price;
         $franchise_package->logo = $request->logo;
         $franchise_package->features = $request->features;
+        if($type == 'vendor'){
+            $franchise_package->referral_commission = $request->referral_commission ?? 0;
+            $franchise_package->referral_commission_type = $request->referral_commission_type ?? 'percentage';
+        }
         $franchise_package->save();
 
         $franchise_package_translation = FranchisePackageTranslation::where('franchise_package_id', $franchise_package->id)->where('lang', $request->lang)->first();

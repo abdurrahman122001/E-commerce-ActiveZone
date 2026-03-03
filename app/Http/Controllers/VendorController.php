@@ -189,7 +189,16 @@ class VendorController extends Controller
             
             $vendor->commission_percentage = $isAdmin ? ($request->commission_percentage ?? 0) : 0;
             $vendor->commission_type = $isAdmin ? ($request->commission_type ?? 'percentage') : 'percentage';
-            $vendor->status = $isAdmin ? 'approved' : 'pending'; 
+            $vendor->status = $isAdmin ? 'approved' : 'pending';
+
+            // Handle referral code
+            if ($request->referral_code) {
+                $referrer = Vendor::where('referral_code', strtoupper(trim($request->referral_code)))->first();
+                if ($referrer) {
+                    $vendor->referred_by_id = $referrer->id;
+                }
+            }
+
             $vendor->save();
 
             // Create shop for vendor
@@ -451,6 +460,33 @@ class VendorController extends Controller
             ->latest()
             ->paginate(20);
 
-        return view('vendors.my_referrals', compact('vendor', 'referrals'));
+        $referral_commissions = \App\Models\VendorReferralCommissionHistory::where('referrer_vendor_id', $vendor->id)
+            ->latest()
+            ->paginate(15);
+
+        $total_referral_earnings = \App\Models\VendorReferralCommissionHistory::where('referrer_vendor_id', $vendor->id)
+            ->sum('amount');
+
+        $withdrawn_referral_earnings = \App\Models\SellerWithdrawRequest::where('user_id', Auth::id())
+            ->where('withdraw_type', 'referral')
+            ->where('status', 1)
+            ->sum('amount');
+
+        $pending_referral_withdrawals = \App\Models\SellerWithdrawRequest::where('user_id', Auth::id())
+            ->where('withdraw_type', 'referral')
+            ->where('status', 0)
+            ->sum('amount');
+
+        $totalReferred = \App\Models\Vendor::where('referred_by_id', $vendor->id)->count();
+
+        return view('vendors.my_referrals', compact(
+            'vendor', 
+            'referrals', 
+            'referral_commissions', 
+            'total_referral_earnings',
+            'withdrawn_referral_earnings',
+            'pending_referral_withdrawals',
+            'totalReferred'
+        ));
     }
 }

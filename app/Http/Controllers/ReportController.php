@@ -23,6 +23,32 @@ class ReportController extends Controller
         $this->middleware(['permission:user_search_report'])->only('user_search_report');
         $this->middleware(['permission:commission_history_report'])->only('commission_history');
         $this->middleware(['permission:wallet_transaction_report'])->only('wallet_transaction_history');
+        $this->middleware(['permission:vendor_referral_history_report'])->only('vendor_referral_history');
+    }
+
+    public function vendor_referral_history(Request $request)
+    {
+        $referrer_id = null;
+        $date_range = null;
+
+        $referral_history = \App\Models\VendorReferralCommissionHistory::orderBy('created_at', 'desc');
+
+        if ($request->date_range) {
+            $date_range = $request->date_range;
+            $date_range_parts = explode(" / ", $request->date_range);
+            $referral_history = $referral_history->whereDate('created_at', '>=', $date_range_parts[0]);
+            $referral_history = $referral_history->whereDate('created_at', '<=', $date_range_parts[1]);
+        }
+        
+        if ($request->referrer_id) {
+            $referrer_id = $request->referrer_id;
+            $referral_history = $referral_history->where('referrer_vendor_id', $referrer_id);
+        }
+
+        $referral_history = $referral_history->paginate(15);
+        $referrers = \App\Models\Vendor::whereIn('id', \App\Models\VendorReferralCommissionHistory::pluck('referrer_vendor_id'))->get();
+
+        return view('backend.reports.vendor_referral_history_report', compact('referral_history', 'referrer_id', 'date_range', 'referrers'));
     }
 
     public function stock_report(Request $request)

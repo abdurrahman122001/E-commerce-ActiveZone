@@ -252,6 +252,46 @@
         </div>
 
         <div class="col-lg-8 mx-auto">
+    <div class="card">
+        <div class="card-header">
+            <h5 class="mb-0 h6">{{translate('Vendor Referral Commission Settings')}}</h5>
+        </div>
+        <div class="card-body">
+            <div class="form-group row">
+                <label class="col-md-6 col-from-label">{{translate('Referral Commission Activation')}}</label>
+                <div class="col-md-6">
+                    <label class="aiz-switch aiz-switch-success mb-0">
+                        <input type="checkbox" onchange="updateSettings(this, 'vendor_referral_commission_activation')" <?php if(get_setting('vendor_referral_commission_activation') == 1) echo "checked";?>>
+                        <span class="slider round"></span>
+                    </label>
+                </div>
+            </div>
+            <form class="form-horizontal" action="{{ route('business_settings.update') }}" method="POST" enctype="multipart/form-data">
+                @csrf
+                <p class="text-muted mb-3"><i class="las la-info-circle"></i> {{translate('Global referral commission. Note: Individual package settings will override these.')}}</p>
+                <div class="form-group row">
+                    <label class="col-md-6 col-from-label">{{translate('Default Referral Commission')}}</label>
+                    <div class="col-md-3">
+                        <input type="hidden" name="types[]" value="vendor_referral_commission_value">
+                        <input type="number" lang="en" min="0" step="0.01" value="{{ get_setting('vendor_referral_commission_value') }}" placeholder="0" name="vendor_referral_commission_value" class="form-control">
+                    </div>
+                    <div class="col-md-3">
+                        <input type="hidden" name="types[]" value="vendor_referral_commission_type">
+                        <select class="form-control aiz-selectpicker" name="vendor_referral_commission_type">
+                            <option value="percentage" @if(get_setting('vendor_referral_commission_type') == 'percentage') selected @endif>{{translate('Percentage (%)')}}</option>
+                            <option value="flat" @if(get_setting('vendor_referral_commission_type') == 'flat') selected @endif>{{translate('Flat Amount')}}</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group mb-0 text-right">
+                    <button type="submit" class="btn btn-sm btn-primary">{{translate('Save')}}</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+        <div class="col-lg-8 mx-auto">
             <div class="card">
                 <div class="card-header">
                     <h5 class="mb-0 h6">{{translate('Note')}}</h5>
@@ -266,6 +306,9 @@
                         </li>
                         <li class="list-group-item text-muted">
                             3. {{ translate('If the Commission Type is Category Based, set commission percentage ') }} <a href="{{ route('categories_wise_commission') }}">{{ translate('Here') }}</a>
+                        </li>
+                        <li class="list-group-item text-muted">
+                            4. {{ translate('Referral commissions are distributed only when a vendor joins via a referral code and their package is approved by admin.') }}
                         </li>
                     </ul>
                 </div>

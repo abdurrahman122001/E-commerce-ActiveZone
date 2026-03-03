@@ -1222,6 +1222,13 @@
                             </a>
                         </li>
                         @endcan
+                        @can('vendor_referral_history_report')
+                        <li class="aiz-side-nav-item">
+                            <a href="{{ route('vendor-referral-history.index') }}" class="aiz-side-nav-link">
+                                <span class="aiz-side-nav-text">{{ translate('Vendor Referral History') }}</span>
+                            </a>
+                        </li>
+                        @endcan
                         @can('wallet_transaction_report')
                         <li class="aiz-side-nav-item">
                             <a href="{{ route('wallet-history.index') }}" class="aiz-side-nav-link">

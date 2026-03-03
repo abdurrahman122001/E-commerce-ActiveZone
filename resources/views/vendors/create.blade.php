@@ -67,6 +67,21 @@
                             <input type="password" class="form-control" name="password_confirmation" placeholder="{{translate('Confirm Password')}}" required>
                         </div>
                     </div>
+                    <div class="form-group row">
+                        <label class="col-md-3 col-from-label">{{translate('Referral Code')}} <small class="text-muted">({{translate('Optional')}})</small></label>
+                        <div class="col-md-9">
+                            <input type="text" class="form-control @error('referral_code') is-invalid @enderror"
+                                   name="referral_code"
+                                   placeholder="{{translate('Enter referral code if you have one')}}"
+                                   value="{{ old('referral_code') }}"
+                                   style="text-transform:uppercase;"
+                                   id="referral_code_input">
+                            @error('referral_code')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                            <small class="text-muted">{{ translate('If another vendor invited you, enter their referral code here.') }}</small>
+                        </div>
+                    </div>
                     @if(Auth::check() && (Auth::user()->user_type == 'admin' || Auth::user()->user_type == 'staff'))
                     <div class="form-group row">
                         <label class="col-md-3 col-from-label">{{translate('Commission')}} <span class="text-danger">*</span></label>

@@ -46,6 +46,21 @@
                         </select>
                     </div>
                 </div>
+                <div class="form-group row">
+                    <label class="col-sm-3 col-from-label" for="referral_commission_value">{{translate('Referral Commission Override')}}</label>
+                    <div class="col-sm-5">
+                        <input type="number" step="0.01" min="0" placeholder="{{translate('Value')}}" id="referral_commission_value" name="referral_commission_value" class="form-control" value="{{ $shop->user->vendor->referral_commission_value }}">
+                    </div>
+                    <div class="col-sm-4">
+                        <select class="form-control aiz-selectpicker" name="referral_commission_type">
+                            <option value="percentage" @if($shop->user->vendor->referral_commission_type == 'percentage') selected @endif>{{translate('Percentage (%)')}}</option>
+                            <option value="flat" @if($shop->user->vendor->referral_commission_type == 'flat') selected @endif>{{translate('Flat Amount')}}</option>
+                        </select>
+                    </div>
+                    <div class="col-sm-9 offset-sm-3">
+                        <small class="text-muted">{{translate('If set, this will override global and package-specific referral commissions for this vendor.')}}</small>
+                    </div>
+                </div>
                 <div class="form-group mb-0 text-right">
                     <button type="submit" class="btn btn-primary">{{translate('Save')}}</button>
                 </div>

@@ -546,6 +546,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin', 'prevent-ba
         Route::get('/wish_report', 'wish_report')->name('wish_report.index');
         Route::get('/user_search_report', 'user_search_report')->name('user_search_report.index');
         Route::get('/commission-log', 'commission_history')->name('commission-log.index');
+        Route::get('/vendor-referral-history', 'vendor_referral_history')->name('vendor-referral-history.index');
         Route::get('/wallet-history', 'wallet_transaction_history')->name('wallet-history.index');
     });
 

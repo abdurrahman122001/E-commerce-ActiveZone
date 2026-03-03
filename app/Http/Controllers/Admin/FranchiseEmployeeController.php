@@ -223,7 +223,7 @@ class FranchiseEmployeeController extends Controller
 
     public function approveVendor($id)
     {
-        $vendor = \App\Models\Vendor::with(['franchise_package', 'sub_franchise.franchise.state_franchise', 'franchise.state_franchise', 'state_franchise'])->findOrFail($id);
+        $vendor = \App\Models\Vendor::with(['franchise_package', 'referrer', 'sub_franchise.franchise.state_franchise', 'franchise.state_franchise', 'state_franchise'])->findOrFail($id);
         $vendor->status = 'approved';
         $vendor->save();
 
@@ -342,9 +342,56 @@ class FranchiseEmployeeController extends Controller
             }
         }
 
-        flash(translate('Vendor approved successfully.'))->success();
-        return back();
+        // --- 4. Vendor Referral Commission ---
+        if (get_setting('vendor_referral_commission_activation') == 1 && $vendor->referred_by_id && $vendor->franchise_package_id && $vendor->franchise_package) {
+            // Prevent duplicate commissions for the same referred vendor
+            $exists = \App\Models\VendorReferralCommissionHistory::where('referred_vendor_id', $vendor->id)->exists();
+            if (!$exists) {
+                $referrer = $vendor->referrer;
+                if ($referrer) {
+                $package = $vendor->franchise_package;
+                
+                // Precedence: Referrer override > Package setting > Global setting
+                if ($referrer->referral_commission_value > 0) {
+                    $ref_commission_type  = $referrer->referral_commission_type ?? 'percentage';
+                    $ref_commission_value = (float) $referrer->referral_commission_value;
+                } elseif ($package->referral_commission > 0) {
+                    $ref_commission_type  = $package->referral_commission_type;
+                    $ref_commission_value = (float) $package->referral_commission;
+                } else {
+                    $ref_commission_type  = get_setting('vendor_referral_commission_type') ?? 'percentage';
+                    $ref_commission_value = (float) (get_setting('vendor_referral_commission_value') ?? 0);
+                }
+
+                if ($ref_commission_value > 0) {
+                    if ($ref_commission_type == 'flat') {
+                        $ref_amount = $ref_commission_value;
+                    } else {
+                        $ref_amount = ($package->price * $ref_commission_value) / 100;
+                    }
+
+                    // Credit referral balance
+                    $referrer->referral_balance = ($referrer->referral_balance ?? 0) + $ref_amount;
+                    $referrer->save();
+
+                    // Record history
+                    \App\Models\VendorReferralCommissionHistory::create([
+                        'referrer_vendor_id'   => $referrer->id,
+                        'referred_vendor_id'   => $vendor->id,
+                        'franchise_package_id' => $vendor->franchise_package_id,
+                        'commission_type'      => $ref_commission_type,
+                        'commission_value'     => $ref_commission_value,
+                        'amount'               => $ref_amount,
+                        'payout_status'        => 'pending',
+                    ]);
+                }
+            }
+        }
     }
+
+    flash(translate('Vendor approved successfully.'))->success();
+    return back();
+}
 
     public function rejectVendor($id)
     {

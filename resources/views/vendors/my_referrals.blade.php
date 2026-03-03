@@ -191,10 +191,87 @@
             <div class="stat-value">{{ \App\Models\Vendor::where('referred_by_id', $vendor->id)->where('status','pending')->count() }}</div>
         </div>
     </div>
+    <div class="stat-card">
+        <div class="stat-icon blue"><i class="las la-money-bill-wave"></i></div>
+        <div class="flex-grow-1">
+            <div class="stat-label">{{ translate('Total Earnings') }}</div>
+            <div class="stat-value">{{ single_price($total_referral_earnings ?? 0) }}</div>
+        </div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-icon text-success" style="background: #ecfdf5;"><i class="las la-check-circle"></i></div>
+        <div class="flex-grow-1">
+            <div class="stat-label">{{ translate('Withdrawn') }}</div>
+            <div class="stat-value">{{ single_price($withdrawn_referral_earnings ?? 0) }}</div>
+        </div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-icon text-warning" style="background: #fffbeb;"><i class="las la-clock"></i></div>
+        <div class="flex-grow-1">
+            <div class="stat-label">{{ translate('Pending Payment') }}</div>
+            <div class="stat-value text-warning">{{ single_price($pending_referral_withdrawals ?? 0) }}</div>
+        </div>
+    </div>
+    <div class="stat-card" style="border: 2px solid #10b981; background: #f0fdf4;">
+        <div class="stat-icon" style="background: #10b981; color: #fff;"><i class="las la-wallet"></i></div>
+        <div class="flex-grow-1">
+            <div class="stat-label" style="color: #065f46;">{{ translate('Available Balance') }}</div>
+            <div class="d-flex align-items-center justify-content-between">
+                <div class="stat-value" style="color: #047857;">{{ single_price($vendor->referral_balance ?? 0) }}</div>
+                @if(($vendor->referral_balance ?? 0) > 0)
+                    @if(empty(Auth::user()->shop->bank_acc_no))
+                        <small class="text-danger font-weight-bold" style="font-size: 10px; line-height: 1;">
+                            <i class="las la-exclamation-triangle"></i> {{ translate('Set bank details to withdraw') }}
+                        </small>
+                    @else
+                        <button class="btn btn-sm btn-success" data-toggle="modal" data-target="#referralWithdrawModal">
+                            {{ translate('Withdraw') }}
+                        </button>
+                    @endif
+                @endif
+            </div>
+        </div>
+    </div>
+</div>
+
+{{-- ── Referral Withdraw Modal ── --}}
+<div class="modal fade" id="referralWithdrawModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title fw-700">{{ translate('Withdraw Referral Earnings') }}</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form action="{{ route('seller.money_withdraw_request.store') }}" method="POST">
+                @csrf
+                <input type="hidden" name="withdraw_type" value="referral">
+                <div class="modal-body">
+                    <div class="alert alert-info">
+                        <i class="las la-info-circle mr-1"></i>
+                        {{ translate('Available Balance') }}: <strong>{{ single_price($vendor->referral_balance ?? 0) }}</strong>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">{{ translate('Amount') }} <span class="text-danger">*</span></label>
+                        <input type="number" step="0.01" max="{{ $vendor->referral_balance }}" min="1" class="form-control" name="amount" placeholder="{{ translate('Enter amount') }}" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">{{ translate('Message') }}</label>
+                        <textarea name="message" rows="3" class="form-control" placeholder="{{ translate('Optional message') }}"></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">{{ translate('Cancel') }}</button>
+                    <button type="submit" class="btn btn-primary">{{ translate('Submit Request') }}</button>
+                </div>
+            </form>
+        </div>
+    </div>
 </div>
 
 {{-- ── Referrals table card ── --}}
-<div class="card" style="border-radius:14px;overflow:hidden;border:1px solid #f1f1f4;box-shadow:0 2px 14px rgba(0,0,0,.05);">
+<div class="card mb-4" style="border-radius:14px;overflow:hidden;border:1px solid #f1f1f4;box-shadow:0 2px 14px rgba(0,0,0,.05);">
     <div class="card-header d-flex align-items-center justify-content-between" style="background:#fff;border-bottom:1px solid #f1f1f4;padding:18px 20px;">
         <h6 class="mb-0 fw-700" style="font-size:14px;">
             <i class="las la-user-friends mr-2 text-primary"></i>
@@ -268,6 +345,84 @@
     @if($referrals->hasPages())
     <div class="card-footer bg-white border-top" style="padding:12px 20px;">
         {{ $referrals->links() }}
+    </div>
+    @endif
+</div>
+
+{{-- ── Commission History Table Card ── --}}
+<div class="card" style="border-radius:14px;overflow:hidden;border:1px solid #f1f1f4;box-shadow:0 2px 14px rgba(0,0,0,.05);">
+    <div class="card-header d-flex align-items-center justify-content-between" style="background:#fff;border-bottom:1px solid #f1f1f4;padding:18px 20px;">
+        <h6 class="mb-0 fw-700" style="font-size:14px;">
+            <i class="las la-wallet mr-2 text-success"></i>
+            {{ translate('Referral Commission History') }}
+        </h6>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table ref-table mb-0">
+            <thead>
+                <tr>
+                    <th style="width:40px;">#</th>
+                    <th>{{ translate('Referred Vendor') }}</th>
+                    <th>{{ translate('Package') }}</th>
+                    <th>{{ translate('Commission') }}</th>
+                    <th>{{ translate('Amount') }}</th>
+                    <th>{{ translate('Status') }}</th>
+                    <th>{{ translate('Date') }}</th>
+                </tr>
+            </thead>
+            <tbody>
+                @forelse($referral_commissions as $i => $commission)
+                <tr>
+                    <td class="text-muted fw-600">{{ $referral_commissions->firstItem() + $i }}</td>
+                    <td>
+                        <div class="d-flex align-items-center" style="gap:10px;">
+                            <div class="vendor-name">{{ $commission->referred->user->name ?? 'N/A' }}</div>
+                        </div>
+                    </td>
+                    <td>
+                        <span class="badge badge-inline badge-info">
+                            {{ $commission->franchise_package->getTranslation('name') ?? translate('N/A') }}
+                        </span>
+                    </td>
+                    <td>
+                        @if($commission->commission_type == 'flat')
+                            {{ single_price($commission->commission_value) }} ({{ translate('Flat') }})
+                        @else
+                            {{ $commission->commission_value }}%
+                        @endif
+                    </td>
+                    <td>
+                        <span class="text-success fw-700">+{{ single_price($commission->amount) }}</span>
+                    </td>
+                    <td>
+                        @if($commission->payout_status == 'paid')
+                            <span class="badge-approved">{{ translate('Paid') }}</span>
+                        @else
+                            <span class="badge-pending">{{ translate('Pending') }}</span>
+                        @endif
+                    </td>
+                    <td class="text-muted">
+                        {{ $commission->created_at->format('d M Y') }}
+                    </td>
+                </tr>
+                @empty
+                <tr>
+                    <td colspan="7">
+                        <div class="empty-state">
+                            <i class="las la-history"></i>
+                            <p>{{ translate('No referral commissions earned yet.') }}</p>
+                        </div>
+                    </td>
+                </tr>
+                @endforelse
+            </tbody>
+        </table>
+    </div>
+
+    @if($referral_commissions->hasPages())
+    <div class="card-footer bg-white border-top" style="padding:12px 20px;">
+        {{ $referral_commissions->links() }}
     </div>
     @endif
 </div>

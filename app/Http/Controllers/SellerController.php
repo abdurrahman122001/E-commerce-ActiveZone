@@ -216,10 +216,18 @@ class SellerController extends Controller
         if ($user->save()) {
             $shop->commission_percentage = $request->commission_percentage ?? 0;
             $shop->commission_type = $request->commission_type;
-            if ($shop->save()) {
-                flash(translate('Seller has been updated successfully'))->success();
-                return redirect()->route('sellers.index');
+            $shop->save();
+
+            // Save referral commission overrides
+            if ($user->vendor) {
+                $vendor = $user->vendor;
+                $vendor->referral_commission_value = $request->referral_commission_value;
+                $vendor->referral_commission_type = $request->referral_commission_type;
+                $vendor->save();
             }
+
+            flash(translate('Seller has been updated successfully'))->success();
+            return redirect()->route('sellers.index');
         }
 
         flash(translate('Something went wrong'))->error();

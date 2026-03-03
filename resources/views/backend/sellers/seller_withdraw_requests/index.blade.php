@@ -11,7 +11,8 @@
                         <th data-breakpoints="lg">#</th>
                         <th data-breakpoints="lg">{{translate('Date')}}</th>
                         <th>{{translate('Seller')}}</th>
-                        <th data-breakpoints="lg">{{translate('Total Amount to Pay')}}</th>
+                        <th>{{translate('Type')}}</th>
+                        <th data-breakpoints="lg">{{translate('Available Balance')}}</th>
                         <th>{{translate('Requested Amount')}}</th>
                         <th data-breakpoints="lg" width="40%">{{ translate('Message') }}</th>
                         <th data-breakpoints="lg">{{ translate('Status') }}</th>
@@ -20,13 +21,34 @@
                 </thead>
                 <tbody>
                     @foreach($seller_withdraw_requests as $key => $seller_withdraw_request)
-                        @php $user = \App\Models\User::find($seller_withdraw_request->user_id); @endphp
-                        @if ($user && $user->shop)
+                        @php 
+                            $user = \App\Models\User::find($seller_withdraw_request->user_id);
+                            $withdraw_type = $seller_withdraw_request->withdraw_type ?? 'standard';
+                            $balance = 0;
+                            if ($user) {
+                                if ($withdraw_type == 'referral' && $user->vendor) {
+                                    $balance = $user->vendor->referral_balance;
+                                } elseif ($user->shop) {
+                                    $balance = $user->shop->admin_to_pay;
+                                }
+                            }
+                        @endphp
+                        @if ($user)
                             <tr>
                                 <td>{{ ($key+1) + ($seller_withdraw_requests->currentPage() - 1)*$seller_withdraw_requests->perPage() }}</td>
                                 <td>{{ $seller_withdraw_request->created_at }}</td>
-                                <td>{{ $user->name }} ({{ $user->shop->name }})</td>
-                                <td>{{ single_price($user->shop->admin_to_pay) }}</td>
+                                <td>
+                                    {{ $user->name }}
+                                    @if($user->shop)
+                                        <br><small class="text-muted">({{ $user->shop->name }})</small>
+                                    @endif
+                                </td>
+                                <td>
+                                    <span class="badge badge-inline {{ $withdraw_type == 'referral' ? 'badge-success' : 'badge-info' }}">
+                                        {{ ucfirst($withdraw_type) }}
+                                    </span>
+                                </td>
+                                <td>{{ single_price($balance) }}</td>
                                 <td>{{ single_price($seller_withdraw_request->amount) }}</td>
                                 <td>
                                     {{ $seller_withdraw_request->message }}

@@ -62,23 +62,37 @@ class CommissionController extends Controller
 
     //redirects to this method after successfull seller payment
     public function seller_payment_done($payment_data, $payment_details){
-        $shop = Shop::findOrFail($payment_data['shop_id']);
-        $shop->admin_to_pay = $shop->admin_to_pay - $payment_data['amount'];
-        $shop->save();
+        $shop = Shop::where('id', $payment_data['shop_id'])->first();
+        $user = $shop ? $shop->user : null;
+        
+        $withdraw_request = null;
+        if ($payment_data['payment_withdraw'] == 'withdraw_request') {
+            $withdraw_request = SellerWithdrawRequest::findOrFail($payment_data['withdraw_request_id']);
+        }
+
+        if ($withdraw_request && $withdraw_request->withdraw_type == 'referral') {
+            $vendor = $user ? $user->vendor : null;
+            if ($vendor) {
+                $vendor->referral_balance -= $payment_data['amount'];
+                $vendor->save();
+            }
+        } elseif ($shop) {
+            $shop->admin_to_pay = $shop->admin_to_pay - $payment_data['amount'];
+            $shop->save();
+        }
 
         $payment = new Payment;
-        $payment->seller_id = $shop->user->id;
+        $payment->seller_id = $user ? $user->id : null;
         $payment->amount = $payment_data['amount'];
         $payment->payment_method = $payment_data['payment_method'];
         $payment->txn_code = $payment_data['txn_code'];
         $payment->payment_details = $payment_details;
         $payment->save();
 
-        if ($payment_data['payment_withdraw'] == 'withdraw_request') {
-            $seller_withdraw_request = SellerWithdrawRequest::findOrFail($payment_data['withdraw_request_id']);
-            $seller_withdraw_request->status = '1';
-            $seller_withdraw_request->viewed = '1';
-            $seller_withdraw_request->save();
+        if ($withdraw_request) {
+            $withdraw_request->status = '1';
+            $withdraw_request->viewed = '1';
+            $withdraw_request->save();
         }
 
         // Seller Payout Notification to seller

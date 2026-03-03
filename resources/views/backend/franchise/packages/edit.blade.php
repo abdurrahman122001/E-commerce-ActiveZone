@@ -67,6 +67,20 @@
                         <input type="number" step="0.01" min="0" placeholder="{{translate('Price')}}" id="price" name="price" value="{{ $franchise_package->price }}" class="form-control" required>
                     </div>
                 </div>
+                @if($lang == 'en' && $type == 'vendor')
+                <div class="form-group row">
+                    <label class="col-sm-2 col-from-label" for="referral_commission">{{translate('Referral Commission')}}</label>
+                    <div class="col-sm-6">
+                        <input type="number" step="0.01" min="0" placeholder="{{translate('Referral Commission Value')}}" id="referral_commission" name="referral_commission" value="{{ $franchise_package->referral_commission }}" class="form-control">
+                    </div>
+                    <div class="col-sm-4">
+                        <select class="form-control aiz-selectpicker" name="referral_commission_type">
+                            <option value="percentage" @if($franchise_package->referral_commission_type == 'percentage') selected @endif>{{translate('Percentage (%)')}}</option>
+                            <option value="flat" @if($franchise_package->referral_commission_type == 'flat') selected @endif>{{translate('Flat Amount')}}</option>
+                        </select>
+                    </div>
+                </div>
+                @endif
                 <div class="form-group row">
                     <label class="col-md-2 col-form-label" for="signinSrEmail">{{translate('Package Logo')}}</label>
                     <div class="col-md-10">
