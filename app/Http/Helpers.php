@@ -1681,6 +1681,26 @@ if (!function_exists('isCustomer')) {
     }
 }
 
+if (!function_exists('isFranchise')) {
+    function isFranchise()
+    {
+        if (Auth::check() && (Auth::user()->user_type == 'franchise' || Auth::user()->user_type == 'sub_franchise' || Auth::user()->user_type == 'state_franchise')) {
+            return true;
+        }
+        return false;
+    }
+}
+
+if (!function_exists('isFranchiseEmployee')) {
+    function isFranchiseEmployee()
+    {
+        if (Auth::guard('franchise_employee')->check()) {
+            return true;
+        }
+        return false;
+    }
+}
+
 if (!function_exists('formatBytes')) {
     function formatBytes($bytes, $precision = 2)
     {
