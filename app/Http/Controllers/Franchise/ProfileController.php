@@ -45,6 +45,8 @@ class ProfileController extends Controller
                 $user->franchise->update($bank_details);
             } elseif ($user->user_type == 'sub_franchise' && $user->sub_franchise) {
                 $user->sub_franchise->update($bank_details);
+            } elseif ($user->user_type == 'state_franchise' && $user->state_franchise) {
+                $user->state_franchise->update($bank_details);
             }
 
             Artisan::call('view:clear');

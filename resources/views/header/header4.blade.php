@@ -474,7 +474,18 @@
                                 </li>
                             @else
                                 <li class="user-top-nav-element border border-top-0" data-id="1">
-                                    <a href="{{ route('dashboard') }}"
+                                    @php
+                                        if (isSeller()) {
+                                            $dashboard_route = route('seller.dashboard');
+                                        } elseif (isFranchise()) {
+                                            $dashboard_route = route('franchise.dashboard');
+                                        } elseif (isFranchiseEmployee()) {
+                                            $dashboard_route = route('franchise.employee.dashboard');
+                                        } else {
+                                            $dashboard_route = route('dashboard');
+                                        }
+                                    @endphp
+                                    <a href="{{ $dashboard_route }}"
                                         class="text-truncate text-dark px-4 fs-14 d-flex align-items-center hov-column-gap-1">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16">
                                             <path id="Path_2916" data-name="Path 2916"

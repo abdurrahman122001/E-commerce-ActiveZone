@@ -563,7 +563,6 @@
     }
 
     function get_area(city_id) {
-        $('[name="area"]').html("");
         $.ajax({
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -574,12 +573,13 @@
                 city_id: city_id
             },
             success: function (response) {
-                var obj = JSON.parse(response);
-                $('[name="area_id"]').html(obj);
+                // Server returns plain HTML, not JSON — inject directly
+                $('[name="area_id"]').html(response);
                 AIZ.plugins.bootstrapSelect('refresh');
-                if (obj.includes('<option') && !obj.includes('disabled selected')) {
+                var optCount = $('<select></select>').html(response).find('option[value!=""]').length;
+                if (optCount > 0) {
                     $('[name="area_id"]').attr('required', true);
-                    $('.area-field').removeClass('d-none'); 
+                    $('.area-field').removeClass('d-none');
                 } else {
                     $('[name="area_id"]').removeAttr('required');
                     $('.area-field').addClass('d-none');

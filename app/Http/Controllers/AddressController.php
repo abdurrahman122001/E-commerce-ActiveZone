@@ -251,7 +251,7 @@ class AddressController extends Controller
 
     public function getAreas(Request $request)
     {
-        $areas = Area::where('city_id', $request->city_id)->get();
+        $areas = Area::where('status', 1)->where('city_id', $request->city_id)->get();
 
         if ($request->has('franchise_type') && $request->franchise_type == 'sub_franchise') {
             // No condition required: show already registered/occupied areas too

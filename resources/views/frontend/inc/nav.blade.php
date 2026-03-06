@@ -150,8 +150,18 @@
                 @else
                     <hr>
                     <li class="mr-0">
-                        <a href="{{ route('dashboard') }}" class="fs-13 px-3 py-3 w-100 d-inline-block fw-700 text-dark header_menu_links
-                                        {{ areActiveRoutes(['dashboard'], ' active') }}">
+                        @php
+                            if (isSeller()) {
+                                $mob_dashboard_route = route('seller.dashboard');
+                            } elseif (isFranchise()) {
+                                $mob_dashboard_route = route('franchise.dashboard');
+                            } elseif (isFranchiseEmployee()) {
+                                $mob_dashboard_route = route('franchise.employee.dashboard');
+                            } else {
+                                $mob_dashboard_route = route('dashboard');
+                            }
+                        @endphp
+                        <a href="{{ $mob_dashboard_route }}" class="fs-13 px-3 py-3 w-100 d-inline-block fw-700 text-dark header_menu_links">
                             {{ translate('My Account') }}
                         </a>
                     </li>

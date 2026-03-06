@@ -67,7 +67,15 @@
         </div>
         <div class="card-body">
             @php
-                $role_data = Auth::user()->user_type == 'franchise' ? Auth::user()->franchise : Auth::user()->sub_franchise;
+                if (Auth::user()->user_type == 'franchise') {
+                    $role_data = Auth::user()->franchise;
+                } elseif (Auth::user()->user_type == 'sub_franchise') {
+                    $role_data = Auth::user()->sub_franchise;
+                } elseif (Auth::user()->user_type == 'state_franchise') {
+                    $role_data = Auth::user()->state_franchise;
+                } else {
+                    $role_data = null;
+                }
             @endphp
             <form action="{{ route('franchise.profile.update', Auth::user()->id) }}" method="POST">
                 @csrf
