@@ -186,6 +186,7 @@ class DashboardController extends Controller
                                         ->latest()
                                         ->limit(10)
                                         ->get();
+            $data['package'] = $user->state_franchise->franchise_package;
 
         } elseif ($user->user_type == 'franchise' && $user->franchise) {
             $data['balance'] = $user->franchise->balance;
@@ -224,6 +225,7 @@ class DashboardController extends Controller
                                         ->latest()
                                         ->limit(10)
                                         ->get();
+            $data['package'] = $user->franchise->franchise_package;
 
         } elseif ($user->user_type == 'sub_franchise' && $user->sub_franchise) {
             $data['balance'] = $user->sub_franchise->balance;
@@ -245,6 +247,7 @@ class DashboardController extends Controller
                                         ->latest()
                                         ->limit(10)
                                         ->get();
+            $data['package'] = $user->sub_franchise->franchise_package;
         }
 
         return view('franchise.dashboard', $data);

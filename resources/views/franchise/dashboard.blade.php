@@ -88,10 +88,16 @@
                 <h1 class="h3 text-primary">{{ translate('Dashboard') }}</h1>
             </div>
             <div class="col-md-6 text-md-right">
-                <div class="d-inline-block p-3 rounded bg-soft-primary border border-primary">
+                <div class="d-inline-block p-3 rounded bg-soft-primary border border-primary mr-2">
                     <span class="text-primary fs-12 d-block fw-600 uppercase">{{ translate('Wallet Balance') }}</span>
                     <h3 class="text-primary mb-0 fw-700">{{ single_price($balance ?? 0) }}</h3>
                 </div>
+                @if(isset($package))
+                    <div class="d-inline-block p-3 rounded bg-soft-info border border-info">
+                        <span class="text-info fs-12 d-block fw-600 uppercase">{{ translate('Current Package') }}</span>
+                        <h3 class="text-info mb-0 fw-700">{{ $package->getTranslation('name') }}</h3>
+                    </div>
+                @endif
             </div>
         </div>
     </div>
