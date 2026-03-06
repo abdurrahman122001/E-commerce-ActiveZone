@@ -98,7 +98,8 @@
     <div class="row">
         @if($authUser->user_type == 'state_franchise')
         <div class="col-sm-6 col-md-6 col-xxl-3">
-            <div class="card shadow-none mb-4 bg-primary ">
+            <a href="{{ route('franchise.city_franchises.index') }}" class="text-decoration-none">
+            <div class="card shadow-none mb-4 bg-primary h-100" style="cursor:pointer;">
                 <div class="card-body">
                     <div class="row align-items-center">
                         <div class="col">
@@ -114,13 +115,19 @@
                             <i class="las la-building la-3x text-white"></i>
                         </div>
                     </div>
+                    <div class="d-flex align-items-center mt-3">
+                        <i class="las la-eye la-1x text-white"></i>
+                        <p class="fs-12 text-light my-0 ml-1">{{ translate('View All') }}</p>
+                    </div>
                 </div>
             </div>
+            </a>
         </div>
         @endif
 
         <div class="col-sm-6 col-md-6 col-xxl-3">
-            <div class="card shadow-none mb-4 bg-primary ">
+            <a href="{{ route('franchise.sub_franchises.index') }}" class="text-decoration-none">
+            <div class="card shadow-none mb-4 bg-primary" style="cursor:pointer;">
                 <div class="card-body">
                     <div class="row align-items-center">
                         <div class="col">
@@ -131,7 +138,6 @@
                             <h3 class="mb-0 text-white fs-30">
                                 {{ $total_subfranchises }}
                             </h3>
-
                         </div>
                         <div class="col-auto text-right">
                             <svg xmlns="http://www.w3.org/2000/svg" width="64.001" height="64" viewBox="0 0 64.001 64">
@@ -141,12 +147,17 @@
                             </svg>
                         </div>
                     </div>
-
+                    <div class="d-flex align-items-center mt-3">
+                        <i class="las la-eye la-1x text-white"></i>
+                        <p class="fs-12 text-light my-0 ml-1">{{ translate('View All') }}</p>
+                    </div>
                 </div>
             </div>
+            </a>
         </div>
         <div class="col-sm-6 col-md-6 col-xxl-3">
-            <div class="card shadow-none mb-4 bg-primary">
+            <a href="{{ route('franchise.employees.index') }}" class="text-decoration-none">
+            <div class="card shadow-none mb-4 bg-primary" style="cursor:pointer;">
                 <div class="card-body">
                     <div class="row align-items-center">
                         <div class="col">
@@ -159,14 +170,20 @@
                             </h3>
                         </div>
                         <div class="col-auto text-right">
-                             <i class="las la-user-friends la-3x text-white"></i>
+                            <i class="las la-user-friends la-3x text-white"></i>
                         </div>
+                    </div>
+                    <div class="d-flex align-items-center mt-3">
+                        <i class="las la-eye la-1x text-white"></i>
+                        <p class="fs-12 text-light my-0 ml-1">{{ translate('View All') }}</p>
                     </div>
                 </div>
             </div>
+            </a>
         </div>
         <div class="col-sm-6 col-md-6 col-xxl-3">
-            <div class="card shadow-none mb-4 bg-primary">
+            <a href="{{ route('franchise.sub_franchises.index') }}?status=approved" class="text-decoration-none">
+            <div class="card shadow-none mb-4 bg-primary" style="cursor:pointer;">
                 <div class="card-body">
                     <div class="row align-items-center">
                         <div class="col">
@@ -218,19 +235,17 @@
                             </svg>
                         </div>
                     </div>
-                    <div class="d-flex justify-content-between mt-3">
-                        <a href="{{ route('franchise.dashboard') }}">
-                        <div class="d-flex align-items-center">
-                            <i class="las la-eye la-1x text-white"></i>
-                            <p class="fs-12 text-light my-2 ml-1">{{ translate('View Dashboard') }}</p>
-                        </div>
-                        </a>
-                     </div>
+                    <div class="d-flex align-items-center mt-3">
+                        <i class="las la-eye la-1x text-white"></i>
+                        <p class="fs-12 text-light my-0 ml-1">{{ translate('View All') }}</p>
+                    </div>
                 </div>
             </div>
+            </a>
         </div>
         <div class="col-sm-6 col-md-6 col-xxl-3">
-            <div class="card shadow-none mb-4 bg-primary">
+            <a href="{{ route('franchise.sub_franchises.index') }}?status=pending" class="text-decoration-none">
+            <div class="card shadow-none mb-4 bg-primary" style="cursor:pointer;">
                 <div class="card-body">
                     <div class="row align-items-center">
                         <div class="col">
@@ -246,13 +261,19 @@
                             <i class="las la-user-times la-3x text-white"></i>
                         </div>
                     </div>
+                    <div class="d-flex align-items-center mt-3">
+                        <i class="las la-eye la-1x text-white"></i>
+                        <p class="fs-12 text-light my-0 ml-1">{{ translate('View Pending') }}</p>
+                    </div>
                 </div>
             </div>
+            </a>
         </div>
 
-        <!-- Employees Card -->
+        <!-- Vendors Card -->
         <div class="col-sm-6 col-md-6 col-xxl-3">
-            <div class="card shadow-none mb-4 bg-primary">
+            <a href="{{ route('franchise.vendors.index') }}" class="text-decoration-none">
+            <div class="card shadow-none mb-4 bg-primary" style="cursor:pointer;">
                 <div class="card-body">
                     <div class="row align-items-center">
                         <div class="col">
@@ -268,12 +289,18 @@
                             <i class="las la-store la-3x text-white"></i>
                         </div>
                     </div>
+                    <div class="d-flex align-items-center mt-3">
+                        <i class="las la-eye la-1x text-white"></i>
+                        <p class="fs-12 text-light my-0 ml-1">{{ translate('View All') }}</p>
+                    </div>
                 </div>
             </div>
+            </a>
         </div>
 
         <div class="col-sm-6 col-md-6 col-xxl-3">
-            <div class="card shadow-none mb-4 bg-primary">
+            <a href="{{ route('franchise.delivery_boys.index') }}" class="text-decoration-none">
+            <div class="card shadow-none mb-4 bg-primary" style="cursor:pointer;">
                 <div class="card-body">
                     <div class="row align-items-center">
                         <div class="col">
@@ -289,8 +316,13 @@
                             <i class="las la-biking la-3x text-white"></i>
                         </div>
                     </div>
+                    <div class="d-flex align-items-center mt-3">
+                        <i class="las la-eye la-1x text-white"></i>
+                        <p class="fs-12 text-light my-0 ml-1">{{ translate('View All') }}</p>
+                    </div>
                 </div>
             </div>
+            </a>
         </div>
 
 

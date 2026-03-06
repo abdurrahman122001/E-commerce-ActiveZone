@@ -47,3 +47,4 @@
 #18 C:\\Users\\Dell\\Downloads\\E-Commerce ActiveZone\\artisan(35): Illuminate\\Foundation\\Console\\Kernel->handle(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
 #19 {main}
 "} 
+[2026-03-06 07:27:26] local.INFO: Vendor Index Query {"user_id":10,"user_type":"franchise","franchise_id":1,"sub_franchise_id":"null"} 
