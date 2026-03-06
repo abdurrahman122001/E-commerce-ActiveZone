@@ -161,8 +161,15 @@ class CityController extends Controller
 
     public function getCities(Request $request)
     {
-        $cities = City::where('state_id', $request->state_id)->get(['id', 'name']);
-        return response()->json($cities);
+        $cities = City::where('state_id', $request->state_id)->where('status', 1)->get();
+        $res = [];
+        foreach ($cities as $city) {
+            $res[] = [
+                'id' => $city->id,
+                'name' => $city->getTranslation('name')
+            ];
+        }
+        return response()->json($res);
     }
 
     public function getCitiesByCountry(Request $request)

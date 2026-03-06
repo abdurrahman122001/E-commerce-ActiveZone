@@ -214,7 +214,7 @@ class AddressController extends Controller
 
     public function getCities(Request $request)
     {
-        $cities = City::where('state_id', $request->state_id)->get();
+        $cities = City::where('status', 1)->where('state_id', $request->state_id)->get();
 
         if ($request->has('franchise_type') && $request->franchise_type == 'city_franchise') {
             // No condition required: show already registered/occupied cities too
