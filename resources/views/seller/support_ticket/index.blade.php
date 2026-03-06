@@ -39,16 +39,21 @@
                           <tr>
                               <td>#{{ $ticket->code }}</td>
                               <td>{{ $ticket->created_at }}</td>
-                              <td>{{ $ticket->subject }}</td>
-                              <td>
-                                  @if ($ticket->status == 'pending')
-                                      <span class="badge badge-inline badge-danger">{{ translate('Pending')}}</span>
-                                  @elseif ($ticket->status == 'open')
-                                      <span class="badge badge-inline badge-secondary">{{ translate('Open')}}</span>
-                                  @else
-                                      <span class="badge badge-inline badge-success">{{ translate('Solved')}}</span>
-                                  @endif
-                              </td>
+                               <td>
+                                   {{ $ticket->subject }}
+                                   @if($ticket->files)
+                                       <i class="las la-paperclip ml-2 text-muted" title="{{ translate('Has attachments') }}"></i>
+                                   @endif
+                               </td>
+                               <td>
+                                   @if ($ticket->status == 'pending')
+                                       <span class="badge badge-inline badge-danger">{{ translate('Pending')}}</span>
+                                   @elseif ($ticket->status == 'open')
+                                       <span class="badge badge-inline badge-secondary">{{ translate('Open')}}</span>
+                                   @else
+                                       <span class="badge badge-inline badge-success">{{ translate('Solved')}}</span>
+                                   @endif
+                               </td>
                               <td>
                                   <a href="{{route('seller.support_ticket.show', encrypt($ticket->id))}}" class="btn btn-styled btn-link py-1 px-0 icon-anim text-underline--none">
                                       {{ translate('View Details')}}

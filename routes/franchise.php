@@ -106,11 +106,11 @@ Route::group(['prefix' => 'franchise', 'middleware' => ['auth', 'franchise', 'pr
     });
 
     // Support Tickets
-    Route::controller(SupportTicketController::class)->group(function () {
+    Route::controller(App\Http\Controllers\Franchise\SupportTicketController::class)->group(function () {
         Route::get('/support-tickets', 'index')->name('support_tickets.index');
         Route::post('/support-tickets/store', 'store')->name('support_tickets.store');
         Route::get('/support-tickets/show/{id}', 'show')->name('support_tickets.show');
-        Route::post('/support-tickets/reply', 'seller_store')->name('support_tickets.reply');
+        Route::post('/support-tickets/reply', 'ticket_reply_store')->name('support_ticket_reply.store');
     });
 
     // Withdraw Requests

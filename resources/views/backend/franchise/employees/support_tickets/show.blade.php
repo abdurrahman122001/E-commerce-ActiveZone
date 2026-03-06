@@ -43,7 +43,7 @@
 </div>
 
 @foreach($ticket_replies as $reply)
-<div class="card mb-3 {{ $reply->user_id == Auth::user()->id ? 'border-primary' : '' }}">
+<div class="card mb-3 {{ $reply->user_id == Auth::guard('franchise_employee')->id() ? 'border-primary' : '' }}">
     <div class="card-header d-flex justify-content-between align-items-center bg-light">
         <span class="font-weight-bold">
             @if($reply->user && $reply->user->user_type == 'admin')

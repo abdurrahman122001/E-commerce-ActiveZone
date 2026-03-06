@@ -30,7 +30,12 @@
                 @foreach($tickets as $ticket)
                 <tr>
                     <td>#{{ $ticket->code }}</td>
-                    <td>{{ $ticket->subject }}</td>
+                    <td>
+                        {{ $ticket->subject }}
+                        @if($ticket->files)
+                            <i class="las la-paperclip ml-2 text-muted" title="{{ translate('Has attachments') }}"></i>
+                        @endif
+                    </td>
                     <td>
                         @if($ticket->status == 'pending')
                             <span class="badge badge-danger">{{ translate('Pending') }}</span>

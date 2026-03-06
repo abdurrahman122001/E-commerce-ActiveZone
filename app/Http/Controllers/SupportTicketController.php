@@ -25,6 +25,9 @@ class SupportTicketController extends Controller
      */
     public function index()
     {
+        if (Auth::user()->user_type == 'franchise' || Auth::user()->user_type == 'sub_franchise' || Auth::user()->user_type == 'state_franchise') {
+            return redirect()->route('franchise.support_tickets.index');
+        }
         $tickets = Ticket::where('user_id', Auth::user()->id)->orderBy('created_at', 'desc')->paginate(10);
         return view('frontend.user.support_ticket.index', compact('tickets'));
     }
@@ -71,6 +74,9 @@ class SupportTicketController extends Controller
         if ($ticket->save()) {
             $this->send_support_mail_to_admin($ticket);
             flash(translate('Ticket has been sent successfully'))->success();
+            if (Auth::user()->user_type == 'franchise' || Auth::user()->user_type == 'sub_franchise' || Auth::user()->user_type == 'state_franchise') {
+                return redirect()->route('franchise.support_tickets.index');
+            }
             return redirect()->route('support_ticket.index');
         } else {
             flash(translate('Something went wrong'))->error();
@@ -161,6 +167,9 @@ class SupportTicketController extends Controller
      */
     public function show($id)
     {
+        if (Auth::user()->user_type == 'franchise' || Auth::user()->user_type == 'sub_franchise' || Auth::user()->user_type == 'state_franchise') {
+            return redirect()->route('franchise.support_tickets.show', $id);
+        }
         $ticket = Ticket::findOrFail(decrypt($id));
         $ticket->client_viewed = 1;
         $ticket->save();

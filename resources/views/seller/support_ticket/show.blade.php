@@ -55,7 +55,7 @@
                                 </a>
                                 <div class="media-body">
                                     <div class="comment-header">
-                                        <span class="text-bold h6 text-muted">{{ $ticketreply->user->name }}</span>
+                                        <span class="text-bold h6 text-muted">{{ $ticketreply->user->name ?? translate('Unknown User') }}</span>
                                         <p class="text-muted text-sm fs-11">{{$ticketreply->created_at}}</p>
                                     </div>
                                 </div>
@@ -63,22 +63,24 @@
                             <div>
                                 @php echo $ticketreply->reply; @endphp
                                 <br>
-                                @foreach ((explode(",",$ticketreply->files)) as $key => $file)
-                                    @php $file_detail = \App\Models\Upload::where('id', $file)->first(); @endphp
-                                    @if($file_detail != null)
-                                        <a href="{{ uploaded_asset($file) }}" download="" class="badge badge-lg badge-inline badge-light mb-1">
-                                            <i class="las la-download text-muted">{{ $file_detail->file_original_name.'.'.$file_detail->extension }}</i>
-                                        </a>
-                                        <br>
-                                    @endif
-                                @endforeach
+                                @if($ticketreply->files)
+                                    @foreach (explode(",", $ticketreply->files) as $file)
+                                        @php $file_detail = \App\Models\Upload::find($file); @endphp
+                                        @if($file_detail)
+                                            <a href="{{ uploaded_asset($file) }}" download="" class="badge badge-lg badge-inline badge-light mb-1 border mr-1">
+                                                <i class="las la-download text-muted mr-1"></i>
+                                                {{ $file_detail->file_original_name }}.{{ $file_detail->extension }}
+                                            </a>
+                                        @endif
+                                    @endforeach
+                                @endif
                             </div>
                         </li>
                     @endforeach
                     <li class="list-group-item px-0">
                         <div class="media">
                             <a class="media-left" href="#">
-                                @if($ticket->user->avatar_original != null)
+                                @if($ticket->user && $ticket->user->avatar_original != null)
                                     <span class="avatar avatar-sm mr-3">
                                         <img src="{{ uploaded_asset($ticket->user->avatar_original) }}" onerror="this.onerror=null;this.src='{{ static_asset('assets/img/avatar-place.png') }}';">
                                     </span>
@@ -90,7 +92,7 @@
                             </a>
                             <div class="media-body">
                                 <div class="comment-header">
-                                    <span class="text-bold h6 text-muted">{{ $ticket->user->name }}</span>
+                                    <span class="text-bold h6 text-muted">{{ $ticket->user->name ?? translate('Unknown User') }}</span>
                                     <p class="text-muted text-sm fs-11">{{ $ticket->created_at }}</p>
                                 </div>
                             </div>
@@ -98,15 +100,17 @@
                         <div>
                             @php echo $ticket->details; @endphp
                             <br>
-                            @foreach ((explode(",",$ticket->files)) as $key => $file)
-                                @php $file_detail = \App\Models\Upload::where('id', $file)->first(); @endphp
-                                @if($file_detail != null)
-                                    <a href="{{ uploaded_asset($file) }}" download="" class="badge badge-lg badge-inline badge-light mb-1">
-                                        <i class="las la-download text-muted">{{ $file_detail->file_original_name.'.'.$file_detail->extension }}</i>
-                                    </a>
-                                    <br>
-                                @endif
-                            @endforeach
+                            @if($ticket->files)
+                                @foreach (explode(",", $ticket->files) as $file)
+                                    @php $file_detail = \App\Models\Upload::find($file); @endphp
+                                    @if($file_detail)
+                                        <a href="{{ uploaded_asset($file) }}" download="" class="badge badge-lg badge-inline badge-light mb-1 border mr-1">
+                                            <i class="las la-download text-muted mr-1"></i>
+                                            {{ $file_detail->file_original_name }}.{{ $file_detail->extension }}
+                                        </a>
+                                    @endif
+                                @endforeach
+                            @endif
                         </div>
                     </li>
                 </ul>

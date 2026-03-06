@@ -36,16 +36,21 @@
                           <tr>
                               <td class="pl-0 fw-700">#{{ $ticket->code }}</td>
                               <td>{{ date('Y.m.d h:i:m', strtotime($ticket->created_at)) }}</td>
-                              <td>{{ $ticket->subject }}</td>
-                              <td>
-                                  @if ($ticket->status == 'pending')
-                                      <span class="badge badge-inline badge-danger p-3 fs-12" style="border-radius: 25px; min-width: 80px !important;">{{ translate('Pending')}}</span>
-                                  @elseif ($ticket->status == 'open')
-                                      <span class="badge badge-inline badge-secondary p-3 fs-12" style="border-radius: 25px; min-width: 80px !important;">{{ translate('Open')}}</span>
-                                  @else
-                                      <span class="badge badge-inline badge-success p-3 fs-12" style="border-radius: 25px; min-width: 80px !important;">{{ translate('Solved')}}</span>
-                                  @endif
-                              </td>
+                               <td>
+                                   {{ $ticket->subject }}
+                                   @if($ticket->files)
+                                       <i class="las la-paperclip ml-2 text-muted" title="{{ translate('Has attachments') }}"></i>
+                                   @endif
+                               </td>
+                               <td>
+                                   @if ($ticket->status == 'pending')
+                                       <span class="badge badge-inline badge-danger p-3 fs-12" style="border-radius: 25px; min-width: 80px !important;">{{ translate('Pending')}}</span>
+                                   @elseif ($ticket->status == 'open')
+                                       <span class="badge badge-inline badge-secondary p-3 fs-12" style="border-radius: 25px; min-width: 80px !important;">{{ translate('Open')}}</span>
+                                   @else
+                                       <span class="badge badge-inline badge-success p-3 fs-12" style="border-radius: 25px; min-width: 80px !important;">{{ translate('Solved')}}</span>
+                                   @endif
+                               </td>
                               <td class="text-right pr-0">
                                   <a href="{{route('support_ticket.show', encrypt($ticket->id))}}" class="btn btn-styled btn-link fw-700 py-1 px-0 icon-anim text-decoration-none">
                                       {{ translate('View Details')}}

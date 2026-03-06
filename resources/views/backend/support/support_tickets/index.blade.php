@@ -32,7 +32,6 @@
             </thead>
             <tbody>
                     @foreach ($tickets as $key => $ticket)
-                    @if ($ticket->user != null)
                         <tr>
                             <td>#{{ $ticket->code }}</td>
                             <td>{{ $ticket->created_at }} @if($ticket->viewed == 0) <span class="badge badge-inline badge-info">{{ translate('New') }}</span> @endif</td>
@@ -43,10 +42,10 @@
                                  @endif
                              </td>
                             <td>
-                                @if($ticket->user_role == 'franchise_employee')
-                                    {{ explode(']', str_replace('[', '', $ticket->subject))[0] ?? $ticket->user->name }}
+                                @if($ticket->user_role == 'franchise_employee' && strpos($ticket->subject, '[') !== false && strpos($ticket->subject, ']') !== false)
+                                    {{ explode(']', str_replace('[', '', $ticket->subject))[0] }}
                                 @else
-                                    {{ $ticket->user->name }}
+                                    {{ $ticket->user->name ?? translate('Unknown User') }}
                                 @endif
                             </td>
                             <td>
@@ -78,8 +77,7 @@
                                 </a>
                             </td>
                         </tr>
-                    @endif
-                @endforeach
+                    @endforeach
             </tbody>
         </table>
         <div class="clearfix">
