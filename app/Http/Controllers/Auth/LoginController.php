@@ -42,9 +42,14 @@ class LoginController extends Controller
      */
     public function redirectTo()
     {
-        if (auth()->user()->user_type == 'vendor') {
+        if (auth()->user()->user_type == 'vendor' || auth()->user()->user_type == 'seller') {
             return route('vendor.dashboard');
         }
+        
+        if (auth()->user()->user_type == 'admin' || auth()->user()->user_type == 'staff') {
+            return route('admin.dashboard');
+        }
+
         return '/home';
     }
 
@@ -354,9 +359,10 @@ class LoginController extends Controller
             ]);
             return redirect()->route('vendor.dashboard');
         } elseif ($user->user_type == 'admin' || $user->user_type == 'staff') {
-            } elseif (in_array($user->user_type, ['state_franchise', 'franchise', 'sub_franchise'])) {
-                \Log::info('Redirecting franchise/sub_franchise');
-                return redirect()->route('franchise.dashboard');
+            return redirect()->route('admin.dashboard');
+        } elseif (in_array($user->user_type, ['state_franchise', 'franchise', 'sub_franchise'])) {
+            \Log::info('Redirecting franchise/sub_franchise');
+            return redirect()->route('franchise.dashboard');
             } elseif ($user->user_type == 'delivery_boy') {
                 if ($user->delivery_boy) {
                     $user->delivery_boy->online_status = 1;

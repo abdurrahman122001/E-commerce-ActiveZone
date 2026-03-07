@@ -210,8 +210,11 @@ class RegisterController extends Controller
             return redirect()->route('verification');
         }elseif(session('link') != null){
             return redirect(session('link'));
-        }else {
-            if(addon_is_activated('portfolio_system') && get_setting('customer_verification')){
+        } else {
+            if ($user->user_type == 'admin' || $user->user_type == 'staff') {
+                return redirect()->route('admin.dashboard');
+            }
+            if (addon_is_activated('portfolio_system') && get_setting('customer_verification')) {
                 return redirect()->route('dashboard');
             }
             return redirect()->route('home');

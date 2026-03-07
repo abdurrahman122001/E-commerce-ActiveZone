@@ -665,62 +665,84 @@
 
 @section('script')
     <script type="text/javascript">
-        $(document).on("change", ".custom-file-input", function() {
-            var fileName = $(this).val().split("\\").pop();
-            $(this).next(".custom-file-label").addClass("selected").html(fileName);
-        });
-        
-        $(document).ready(function() {
-            AIZ.plugins.chart('#graph-1', {
-            type: 'bar',
-            data: {
-                labels: [
-                    @foreach ($last_7_days_sales as $key => $last_7_days_sale)
-                        '{{ $key }}',
-                    @endforeach
-                ],
-                datasets: [{
-                    label: '{{ translate('Sales') }}',
-                    data: [
-                        @foreach ($last_7_days_sales as $key => $last_7_days_sale)
-                            '{{ $last_7_days_sale }}',
-                        @endforeach
-                    ],
-                    backgroundColor: '#2E294E',
-                    borderColor: '#2E294E',
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                scales: {
-                    yAxes: [{
-                        gridLines: {
-                            color: '#E0E0E0',
-                            zeroLineColor: '#E0E0E0'
-                        },
-                        ticks: {
-                            fontColor: "#AFAFAF",
-                            fontFamily: 'Roboto',
-                            fontSize: 10,
-                            beginAtZero: true
-                        },
-                    }],
-                    xAxes: [{
-                        gridLines: {
-                            display: false
-                        },
-                        ticks: {
-                            fontColor: "#AFAFAF",
-                            fontFamily: 'Roboto',
-                            fontSize: 10
-                        },
-                        barThickness: 7
-                    }],
-                },
-                legend: {
-                    display: false
+        $(document).on('change', '.custom-file-input', function() {
+            var input = $(this);
+            var file = this.files[0];
+            var label = input.siblings('.custom-file-label');
+            
+            if (file) {
+                var fileName = file.name;
+                label.addClass("selected").html(fileName);
+                
+                // Show local preview if it's an image
+                if (file.type.match('image.*')) {
+                    var reader = new FileReader();
+                    reader.onload = function(e) {
+                        if ($('#id-proof-preview-img').length == 0) {
+                            input.closest('.col-md-9').append('<div class="mt-3 text-left" id="id-proof-preview-container"><img id="id-proof-preview-img" src="" class="img-fluid rounded shadow-sm" style="max-height: 120px; border: 1px solid #ddd; background: #f8f9fa; padding: 5px;"></div>');
+                        }
+                        $('#id-proof-preview-img').attr('src', e.target.result);
+                        $('#id-proof-preview-container').show();
+                    }
+                    reader.readAsDataURL(file);
+                } else {
+                    $('#id-proof-preview-container').hide();
                 }
             }
+        });
+
+        $(document).ready(function() {
+            AIZ.plugins.chart('#graph-1', {
+                type: 'bar',
+                data: {
+                    labels: [
+                        @foreach ($last_7_days_sales as $key => $last_7_days_sale)
+                            '{{ $key }}',
+                        @endforeach
+                    ],
+                    datasets: [{
+                        label: '{{ translate('Sales') }}',
+                        data: [
+                            @foreach ($last_7_days_sales as $key => $last_7_days_sale)
+                                '{{ $last_7_days_sale }}',
+                            @endforeach
+                        ],
+                        backgroundColor: '#2E294E',
+                        borderColor: '#2E294E',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        yAxes: [{
+                            gridLines: {
+                                color: '#E0E0E0',
+                                zeroLineColor: '#E0E0E0'
+                            },
+                            ticks: {
+                                fontColor: "#AFAFAF",
+                                fontFamily: 'Roboto',
+                                fontSize: 10,
+                                beginAtZero: true
+                            },
+                        }],
+                        xAxes: [{
+                            gridLines: {
+                                display: false
+                            },
+                            ticks: {
+                                fontColor: "#AFAFAF",
+                                fontFamily: 'Roboto',
+                                fontSize: 10
+                            },
+                            barThickness: 7
+                        }],
+                    },
+                    legend: {
+                        display: false
+                    }
+                }
+            });
         });
     </script>
 @endsection

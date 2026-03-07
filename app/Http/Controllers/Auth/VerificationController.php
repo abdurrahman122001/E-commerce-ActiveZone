@@ -61,8 +61,10 @@ class VerificationController extends Controller
                     } else {
                         return redirect()->route('delivery_boy.pending');
                     }
-                } elseif (in_array($request->user()->user_type, ['franchise', 'sub_franchise'])) {
+                } elseif (in_array($request->user()->user_type, ['state_franchise', 'franchise', 'sub_franchise'])) {
                      return redirect()->route('franchise.dashboard');
+                } elseif ($request->user()->user_type == 'admin' || $request->user()->user_type == 'staff') {
+                    return redirect()->route('admin.dashboard');
                 }
                 return redirect($this->redirectPath());
             }
@@ -114,8 +116,10 @@ class VerificationController extends Controller
             } else {
                 return redirect()->route('delivery_boy.pending');
             }
-        } elseif (in_array($user->user_type, ['franchise', 'sub_franchise'])) {
+        } elseif (in_array($user->user_type, ['state_franchise', 'franchise', 'sub_franchise'])) {
              return redirect()->route('franchise.dashboard');
+        } elseif ($user->user_type == 'admin' || $user->user_type == 'staff') {
+            return redirect()->route('admin.dashboard');
         }
 
         return redirect()->route('dashboard');

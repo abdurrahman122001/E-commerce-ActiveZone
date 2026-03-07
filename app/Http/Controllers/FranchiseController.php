@@ -1010,6 +1010,16 @@ class FranchiseController extends Controller
                 $sub->save();
                 $saved = true;
             }
+        } elseif ($user->user_type == 'state_franchise') {
+            $state_franchise = StateFranchise::where('user_id', $user->id)->first();
+            if ($state_franchise) {
+                if ($id_proof_path) {
+                    $state_franchise->id_proof = $id_proof_path;
+                }
+                $state_franchise->pan_number = $request->pan_number;
+                $state_franchise->save();
+                $saved = true;
+            }
         }
 
         if ($saved) {
