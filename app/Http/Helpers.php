@@ -1681,6 +1681,16 @@ if (!function_exists('isCustomer')) {
     }
 }
 
+if (!function_exists('isVendor')) {
+    function isVendor()
+    {
+        if (Auth::check() && Auth::user()->user_type == 'vendor') {
+            return true;
+        }
+        return false;
+    }
+}
+
 if (!function_exists('isFranchise')) {
     function isFranchise()
     {

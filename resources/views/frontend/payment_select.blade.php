@@ -503,7 +503,7 @@
                                                 }
                                             }
                                         @endphp
-                                        @if ($digital != 1 && $cod_on == 1)
+                                        @if ($digital != 1 && ($cod_on == 1 || count(get_activate_payment_methods()) == 0))
                                             <div class="col-6 col-xl-3 col-md-4">
                                                 <label class="aiz-megabox d-block mb-3">
                                                     <input value="cash_on_delivery" class="online_payment" type="radio"

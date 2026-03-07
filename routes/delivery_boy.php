@@ -20,6 +20,7 @@ use App\Http\Controllers\OrderController;
 Route::group(['prefix' =>'admin', 'middleware' => ['auth', 'admin', 'prevent-back-history']], function(){
     //Delivery Boy
     Route::resource('delivery-boys', DeliveryBoyController::class);
+    Route::get('/delivery-boys/destroy/{id}', [DeliveryBoyController::class, 'destroy'])->name('delivery-boys.destroy');
     
     Route::controller(DeliveryBoyController::class)->group(function () {
         Route::get('/delivery-boy/ban/{id}', 'ban')->name('delivery-boy.ban');

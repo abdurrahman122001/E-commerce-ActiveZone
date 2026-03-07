@@ -477,6 +477,8 @@
                                     @php
                                         if (isSeller()) {
                                             $dashboard_route = route('seller.dashboard');
+                                        } elseif (isVendor()) {
+                                            $dashboard_route = route('vendor.dashboard');
                                         } elseif (isFranchise()) {
                                             $dashboard_route = route('franchise.dashboard');
                                         } elseif (isFranchiseEmployee()) {

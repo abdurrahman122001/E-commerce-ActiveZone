@@ -31,6 +31,7 @@
                     <th>{{translate('Name')}}</th>
                     <th data-breakpoints="lg">{{translate('Email')}}</th>
                     <th data-breakpoints="lg">{{translate('Phone')}}</th>
+                    <th data-breakpoints="lg">{{translate('Location')}}</th>
                     <th>{{translate('Status')}}</th>
                     <th width="10%" class="text-right">{{translate('Options')}}</th>
                 </tr>
@@ -43,6 +44,7 @@
                             <td>{{$delivery_boy->user->name}}</td>
                             <td>{{$delivery_boy->user->email}}</td>
                             <td>{{$delivery_boy->user->phone}}</td>
+                            <td>{{$delivery_boy->location}}</td>
                             <td>
                                 @if ($delivery_boy->status == 1)
                                     <span class="badge badge-inline badge-success">{{translate('Approved')}}</span>

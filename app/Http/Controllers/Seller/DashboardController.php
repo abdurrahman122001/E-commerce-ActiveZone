@@ -16,7 +16,10 @@ class DashboardController extends Controller
         $authUserId = auth()->user()->id;
         $vendor = \App\Models\Vendor::where('user_id', $authUserId)->first();
 
-        if ($vendor && $vendor->status == 'unpaid') {
+        if ($vendor && $vendor->status != 'approved') {
+            if ($vendor->franchise_package_id) {
+                return view('vendors.packages.pending', compact('vendor'));
+            }
             $packages = \App\Models\FranchisePackage::where('package_type', 'vendor')->where('status', 1)->get();
             return view('vendors.packages.index', compact('packages'));
         }

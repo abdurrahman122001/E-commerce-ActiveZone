@@ -36,7 +36,23 @@ class DeliveryBoyController extends Controller
      */
     public function create()
     {
-        return view('backend.delivery_boy.create');
+        $areas = $this->get_filtered_areas();
+        return view('backend.delivery_boy.create', compact('areas'));
+    }
+
+    private function get_filtered_areas()
+    {
+        $user = auth()->user();
+        if ($user->user_type == 'admin' || $user->user_type == 'staff') {
+            return \App\Models\Area::all();
+        } elseif ($user->user_type == 'franchise' && $user->franchise) {
+            return \App\Models\Area::where('city_id', $user->franchise->city_id)->get();
+        } elseif ($user->user_type == 'sub_franchise' && $user->sub_franchise) {
+            return \App\Models\Area::where('city_id', $user->sub_franchise->city_id)->get();
+        } elseif ($user->user_type == 'state_franchise' && $user->state_franchise) {
+            return \App\Models\Area::where('state_id', $user->state_franchise->state_id)->get();
+        }
+        return [];
     }
 
     /**
@@ -65,7 +81,19 @@ class DeliveryBoyController extends Controller
 
         $delivery_boy = new DeliveryBoy();
         $delivery_boy->user_id = $user->id;
-        $delivery_boy->status = 1; // Admin created are auto-approved
+        $delivery_boy->status = 1; // Admin/Franchise created are auto-approved
+        
+        $auth_user = auth()->user();
+        if ($auth_user->user_type == 'franchise') {
+             $delivery_boy->franchise_id = $auth_user->id;
+        } elseif ($auth_user->user_type == 'sub_franchise') {
+             $delivery_boy->sub_franchise_id = $auth_user->id;
+             if ($auth_user->sub_franchise && $auth_user->sub_franchise->franchise) {
+                 $delivery_boy->franchise_id = $auth_user->sub_franchise->franchise->user_id;
+             }
+        }
+        
+        $delivery_boy->location = $request->location;
         $delivery_boy->save();
 
         flash(translate('Delivery boy has been inserted successfully'))->success();
@@ -92,7 +120,8 @@ class DeliveryBoyController extends Controller
     public function edit($id)
     {
         $delivery_boy = DeliveryBoy::findOrFail($id);
-        return view('backend.delivery_boy.edit', compact('delivery_boy'));
+        $areas = $this->get_filtered_areas();
+        return view('backend.delivery_boy.edit', compact('delivery_boy', 'areas'));
     }
 
     /**
@@ -120,6 +149,9 @@ class DeliveryBoyController extends Controller
             $user->password = Hash::make($request->password);
         }
         $user->save();
+
+        $delivery_boy->location = $request->location;
+        $delivery_boy->save();
 
         flash(translate('Delivery boy has been updated successfully'))->success();
         return redirect()->route('delivery-boys.index');

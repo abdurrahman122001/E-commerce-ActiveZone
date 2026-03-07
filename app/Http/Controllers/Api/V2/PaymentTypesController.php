@@ -335,15 +335,14 @@ class PaymentTypesController
                         ($request->has('temp_user_id') ? Cart::where('temp_user_id', $request->temp_user_id)->active()->get() : [] );
 
                 foreach ($carts as $key => $cart) {
-                    $haveDigitalProduct =  $cart->product->digital == 1;
-                    $cash_on_delivery =  $cart->product->cash_on_delivery == 0;
-                    if ($haveDigitalProduct || $cash_on_delivery) {
+                    if ($cart->product->digital == 1) {
+                        $haveDigitalProduct = true;
                         break;
                     }
                 }
             }
 
-            if (get_setting('cash_payment') == 1  && !$haveDigitalProduct && !$cash_on_delivery) {
+            if (get_setting('cash_payment') == 1  && !$haveDigitalProduct) {
                 $payment_type = array();
                 $payment_type['payment_type'] = 'cash_payment';
                 $payment_type['payment_type_key'] = 'cash_on_delivery';

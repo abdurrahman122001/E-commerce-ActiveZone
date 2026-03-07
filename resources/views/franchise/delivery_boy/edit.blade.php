@@ -35,7 +35,11 @@
                 <div class="form-group row">
                     <label class="col-sm-3 col-from-label">{{translate('Location')}}</label>
                     <div class="col-sm-9">
-                        <input type="text" name="location" value="{{ $delivery_boy->location }}" placeholder="{{translate('Location')}}" class="form-control">
+                        <select id="location" name="location" class="form-control aiz-selectpicker" data-live-search="true" required>
+                             @foreach($areas as $area)
+                                 <option value="{{ $area->name }}" @if($delivery_boy->location == $area->name) selected @endif>{{ $area->getTranslation('name') }}</option>
+                             @endforeach
+                        </select>
                     </div>
                 </div>
                 <div class="form-group row">

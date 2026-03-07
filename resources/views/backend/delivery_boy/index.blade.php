@@ -36,6 +36,7 @@
                     <th>{{translate('Name')}}</th>
                     <th data-breakpoints="lg">{{translate('Email')}}</th>
                     <th data-breakpoints="lg">{{translate('Phone')}}</th>
+                    <th data-breakpoints="lg">{{translate('Location')}}</th>
                     <th data-breakpoints="lg">{{translate('Created By')}}</th>
                     <th>{{translate('Status')}}</th>
                     <th width="10%" class="text-right">{{translate('Options')}}</th>
@@ -49,6 +50,7 @@
                             <td>{{$delivery_boy->user->name}}</td>
                             <td>{{$delivery_boy->user->email}}</td>
                             <td>{{$delivery_boy->user->phone}}</td>
+                            <td>{{$delivery_boy->location}}</td>
                             <td>
                                 @if($delivery_boy->franchise_id)
                                     @php $f = \App\Models\User::find($delivery_boy->franchise_id); @endphp
@@ -85,6 +87,10 @@
     </div>
 </div>
 
+@endsection
+
+@section('modal')
+    @include('modals.delete_modal')
 @endsection
 
 @section('script')

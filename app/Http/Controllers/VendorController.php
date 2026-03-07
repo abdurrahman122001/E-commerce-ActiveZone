@@ -207,7 +207,7 @@ class VendorController extends Controller
             $shop->name = $request->shop_name;
             $shop->address = $request->address;
             $shop->slug = \Str::slug($request->shop_name) . '-' . $user->id;
-            $shop->registration_approval = $isAdmin ? 1 : 0;
+            $shop->registration_approval = 1;
             $shop->save();
 
             \DB::commit();

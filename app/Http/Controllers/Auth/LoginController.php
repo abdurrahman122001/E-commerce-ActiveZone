@@ -346,11 +346,6 @@ class LoginController extends Controller
 
         // Check vendor first
         if ($user->user_type == 'vendor' || $user->user_type == 'seller') {
-            if ($user->shop && $user->shop->registration_approval == 0) {
-                auth()->logout();
-                flash(translate("Your vendor account is under review. We will notify you once approved."));
-                return redirect()->route('home');
-            }
             //save the vendor login log
             \Log::channel('seller_login')->info('Vendor Logged In', [
                 'user_id' => $user->id,

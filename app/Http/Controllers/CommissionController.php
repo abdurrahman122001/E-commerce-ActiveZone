@@ -205,20 +205,13 @@ class CommissionController extends Controller
                         : $vendor->commission_percentage;
 
                     $state_franchise_id            = null;
+                    $commission_amount             = 0;
+                    $sub_franchise_comm_amount     = 0;
+                    $franchise_commission_amount   = 0;
                     $state_franchise_comm_amount   = 0;
+                    $employee_commission_amount    = 0;
 
-                    // ── 1. Vendor Share ──────────────────────────────────────────────────
-                    if ($commission_percentage > 0) {
-                        if(($vendor->commission_type ?? 'percentage') == 'flat'){
-                            $commission_amount = $commission_percentage;
-                        } else {
-                            $commission_amount = ($orderDetail->price * $commission_percentage) / 100;
-                        }
-                        $vendor->balance += $commission_amount;
-                        $vendor->save();
-                    }
-
-                    // ── 2. Employee Share ──────────────────────────────────────────
+                    // ── 1. Employee Share ──────────────────────────────────────────
                     if ($vendor->added_by_employee_id) {
                         $employee = \App\Models\FranchiseEmployee::find($vendor->added_by_employee_id);
                         if ($employee && $employee->commission_percentage > 0) {
@@ -232,7 +225,7 @@ class CommissionController extends Controller
                         }
                     }
 
-                    // ── 3. Sub-Franchise & Franchise Share ────────────────────────────────
+                    // ── 2. Sub-Franchise & Franchise Share ────────────────────────────────
                     if ($vendor->sub_franchise_id) {
                         $sub_franchise = \App\Models\SubFranchise::find($vendor->sub_franchise_id);
                         if ($sub_franchise) {
@@ -351,6 +344,15 @@ class CommissionController extends Controller
                                 }
                             }
                         }
+                    }
+
+                    // ── 3. Vendor Share (Remaining Amount) ────────────────────────────────
+                    $total_deductions = $sub_franchise_comm_amount + $franchise_commission_amount + $state_franchise_comm_amount + $employee_commission_amount;
+                    $commission_amount = $orderDetail->price - $total_deductions;
+                    
+                    if ($commission_amount > 0) {
+                        $vendor->balance += $commission_amount;
+                        $vendor->save();
                     }
 
                     // ── Save Commission History ────────────────────────────────────

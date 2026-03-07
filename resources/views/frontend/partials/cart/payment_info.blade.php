@@ -34,19 +34,17 @@
 
         @php
             $digital = 0;
-            $cod_on = 1;
             $blocking_products = [];
             foreach ($carts as $cartItem) {
                 $product = get_single_product($cartItem['product_id']);
                 if ($product) {
-                    if ($product->digital == 1 || $product->cash_on_delivery == 0) {
+                    if ($product->digital == 1) {
                         $blocking_products[] = $product->getTranslation('name');
-                        if ($product->digital == 1) $digital = 1;
-                        if ($product->cash_on_delivery == 0) $cod_on = 0;
+                        $digital = 1;
                     }
                 }
             }
-            $show_cod = (get_setting('cash_payment') == 1 && $digital != 1 && $cod_on == 1);
+            $show_cod = (get_setting('cash_payment') == 1 && $digital != 1);
         @endphp
 
         @if ($show_cod)
@@ -118,7 +116,7 @@
                     @if(get_setting('cash_payment') == 1 && !empty($blocking_products))
                         <br><small>{{ translate('Note: Cash on Delivery is disabled because of these products:') }} 
                         <strong>{{ implode(', ', array_unique($blocking_products)) }}</strong>.
-                        {{ translate('Please ensure "Cash on Delivery" is enabled in each product\'s shipping settings.') }}
+                        {{ translate('Please ensure "Cash on Delivery" is enabled.') }}
                         </small>
                     @endif
                 </div>
