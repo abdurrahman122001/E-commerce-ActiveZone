@@ -408,4 +408,45 @@ class FranchiseEmployeeController extends Controller
         flash(translate('Vendor rejected.'))->success();
         return back();
     }
+
+    /**
+     * Remove the specified vendor account from storage.
+     * Use this for deleting vendor registrations.
+     */
+    public function destroyVendor($id)
+    {
+        $vendor = \App\Models\Vendor::findOrFail($id);
+        
+        if ($vendor->user) {
+            $user = $vendor->user;
+            
+            // Delete associated Shop if it exists
+            if ($user->shop) {
+                $shop = $user->shop;
+                
+                // Cleanup products like in SellerController.destroy
+                foreach ($user->products as $product) {
+                    $product->product_translations()->delete();
+                    $product->categories()->detach();
+                    $product->stocks()->delete();
+                    $product->taxes()->delete();
+                    $product->delete();
+                }
+                
+                // Delete Shop record
+                if ($shop) {
+                   \App\Models\Shop::destroy($shop->id);
+                }
+            }
+            
+            // Delete the User record
+            \App\Models\User::destroy($user->id);
+        }
+
+        // Delete the Vendor record itself
+        $vendor->delete();
+
+        flash(translate('Vendor account has been deleted successfully.'))->success();
+        return back();
+    }
 }

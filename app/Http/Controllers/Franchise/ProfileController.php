@@ -27,7 +27,35 @@ class ProfileController extends Controller
             $user->password = Hash::make($request->new_password);
         }
 
-        if ($request->has('avatar')) {
+        if ($request->hasFile('avatar')) {
+            $type = [
+                "jpg" => "image",
+                "jpeg" => "image",
+                "png" => "image",
+                "svg" => "image",
+                "webp" => "image",
+                "gif" => "image",
+            ];
+            $file = $request->file('avatar');
+            $extension = strtolower($file->getClientOriginalExtension());
+            if (isset($type[$extension])) {
+                $filename = str_replace(' ', '_', $file->getClientOriginalName());
+                $filename = time().'_'.$filename;
+                
+                $upload = new \App\Models\Upload;
+                $upload->file_original_name = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
+                $upload->extension = $extension;
+                $upload->file_name = 'uploads/all/' . $filename;
+                $upload->user_id = $user->id;
+                $upload->type = $type[$extension];
+                $upload->file_size = $file->getSize();
+                $upload->save();
+
+                $file->move(public_path('uploads/all'), $filename);
+                
+                $user->avatar_original = $upload->id;
+            }
+        } elseif ($request->has('avatar')) {
             $user->avatar_original = $request->avatar;
         }
 

@@ -91,4 +91,32 @@
             </form>
         </div>
     </div>
+@section('script')
+    <script type="text/javascript">
+        $(document).on('change', '.custom-file-input', function() {
+            var input = $(this);
+            var file = this.files[0];
+            var label = input.siblings('.custom-file-label');
+            
+            if (file) {
+                var fileName = file.name;
+                label.addClass("selected").html(fileName);
+                
+                // Show local preview if it's an image
+                if (file.type.match('image.*')) {
+                    var reader = new FileReader();
+                    reader.onload = function(e) {
+                        var container = input.closest('.col-md-9').find('.profile-preview-container');
+                        if (container.length == 0) {
+                            input.closest('.col-md-9').append('<div class="mt-3 profile-preview-container"><img class="img-fluid rounded shadow-sm profile-preview-img" src="" style="max-height: 120px; border: 1px solid #ddd; background: #f8f9fa; padding: 5px;"></div>');
+                            container = input.closest('.col-md-9').find('.profile-preview-container');
+                        }
+                        container.find('.profile-preview-img').attr('src', e.target.result);
+                        container.show();
+                    }
+                    reader.readAsDataURL(file);
+                }
+            }
+        });
+    </script>
 @endsection

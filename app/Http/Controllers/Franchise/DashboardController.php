@@ -183,6 +183,7 @@ class DashboardController extends Controller
                                         ->get();
 
             $data['recent_package_earnings'] = \App\Models\PackageCommissionHistory::where('state_franchise_id', $state_franchise_id)
+                                        ->where('beneficiary_type', 'state_franchise')
                                         ->latest()
                                         ->limit(10)
                                         ->get();
@@ -222,6 +223,7 @@ class DashboardController extends Controller
                                         ->get();
 
             $data['recent_package_earnings'] = \App\Models\PackageCommissionHistory::where('franchise_id', $franchise_id)
+                                        ->where('beneficiary_type', 'franchise')
                                         ->latest()
                                         ->limit(10)
                                         ->get();
@@ -244,6 +246,7 @@ class DashboardController extends Controller
                                         ->get();
 
             $data['recent_package_earnings'] = \App\Models\PackageCommissionHistory::where('sub_franchise_id', $sub_franchise_id)
+                                        ->where('beneficiary_type', 'sub_franchise')
                                         ->latest()
                                         ->limit(10)
                                         ->get();
@@ -292,14 +295,17 @@ class DashboardController extends Controller
         $histories = \App\Models\PackageCommissionHistory::query();
 
         if ($user->user_type == 'state_franchise' && $user->state_franchise) {
-            $histories = $histories->where('state_franchise_id', $user->state_franchise->id);
+            $histories = $histories->where('state_franchise_id', $user->state_franchise->id)
+                                   ->where('beneficiary_type', 'state_franchise');
         } elseif ($user->user_type == 'franchise' && $user->franchise) {
             // City franchise sees sub_to_city
-            $histories = $histories->where('franchise_id', $user->franchise->id);
+            $histories = $histories->where('franchise_id', $user->franchise->id)
+                                   ->where('beneficiary_type', 'franchise');
         } else {
             // Sub franchise doesn't usually get package commission unless it's a direct sale?
             // But if they do, filter by sub_franchise_id
-            $histories = $histories->where('sub_franchise_id', $user->sub_franchise->id);
+            $histories = $histories->where('sub_franchise_id', $user->sub_franchise->id)
+                                   ->where('beneficiary_type', 'sub_franchise');
         }
 
         if ($date_range) {

@@ -684,6 +684,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin', 'prevent-ba
         // Vendor approve/reject from vendor registrations page
         Route::get('/vendors/approve/{id}', 'approveVendor')->name('admin.vendors.approve');
         Route::get('/vendors/reject/{id}', 'rejectVendor')->name('admin.vendors.reject');
+        Route::get('/vendors/destroy/{id}', 'destroyVendor')->name('admin.vendors.destroy');
     });
 
 

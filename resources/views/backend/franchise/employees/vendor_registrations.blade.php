@@ -153,6 +153,12 @@
                                     <i class="las la-times"></i>
                                 </a>
                             @endif
+                            <a href="{{ route('admin.vendors.destroy', $vendor->id) }}"
+                               class="btn btn-soft-danger btn-icon btn-circle btn-sm"
+                               title="{{ translate('Delete Vendor') }}"
+                               onclick="return confirm('{{ translate('Are you sure you want to delete this vendor account? This will remove the vendor and their associated user account.') }}')">
+                                <i class="las la-trash"></i>
+                            </a>
                         </td>
                     </tr>
                 @endforeach

@@ -39,14 +39,14 @@
             <div class="form-group row">
                 <label class="col-md-2 col-form-label">{{ translate('Photo') }}</label>
                 <div class="col-md-10">
-                    <div class="input-group" data-toggle="aizuploader" data-type="image">
-                        <div class="input-group-prepend">
-                            <div class="input-group-text bg-soft-secondary font-weight-medium">{{ translate('Browse')}}</div>
-                        </div>
-                        <div class="form-control file-amount">{{ translate('Choose File') }}</div>
-                        <input type="hidden" name="photo" value="{{ $user->avatar_original }}" class="selected-files">
+                    <div class="custom-file">
+                        <input type="file" class="custom-file-input" name="photo" id="photo" accept="image/*">
+                        <label class="custom-file-label" for="photo">{{ translate('Choose file') }}</label>
                     </div>
-                    <div class="file-preview box sm">
+                    <div class="profile-preview-container mt-3" style="display:{{ $user->avatar_original ? 'block' : 'none' }}">
+                        <img class="img-fluid rounded shadow-sm profile-preview-img" 
+                             src="{{ uploaded_asset($user->avatar_original) }}" 
+                             style="max-height: 120px; border: 1px solid #ddd; background: #f8f9fa; padding: 5px;">
                     </div>
                 </div>
             </div>
@@ -430,6 +430,33 @@
 
 @section('script')
 <script type="text/javascript">
+    $(document).on('change', '.custom-file-input', function() {
+        var input = $(this);
+        var file = this.files[0];
+        var label = input.siblings('.custom-file-label');
+        
+        if (file) {
+            var fileName = file.name;
+            label.addClass("selected").html(fileName);
+            
+            // Show local preview if it's an image
+            if (file.type.match('image.*')) {
+                var reader = new FileReader();
+                reader.onload = function(e) {
+                    // Find or create preview container
+                    var container = input.closest('.col-md-10').find('.profile-preview-container');
+                    if (container.length == 0) {
+                        input.closest('.col-md-10').append('<div class="mt-3 profile-preview-container"><img class="img-fluid rounded shadow-sm profile-preview-img" src="" style="max-height: 120px; border: 1px solid #ddd; background: #f8f9fa; padding: 5px;"></div>');
+                        container = input.closest('.col-md-10').find('.profile-preview-container');
+                    }
+                    container.find('.profile-preview-img').attr('src', e.target.result);
+                    container.show();
+                }
+                reader.readAsDataURL(file);
+            }
+        }
+    });
+
     $('.new-email-verification').on('click', function() {
         $(this).find('.loading').removeClass('d-none');
         $(this).find('.default').addClass('d-none');

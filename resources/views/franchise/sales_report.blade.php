@@ -60,7 +60,9 @@
                             <td>{{ $history->vendor->user->name ?? translate('N/A') }}</td>
                             <td>{{ single_price($history->order_detail->price ?? 0) }}</td>
                             <td class="text-success fw-700">
-                                @if(auth()->user()->user_type == 'franchise')
+                                @if(auth()->user()->user_type == 'state_franchise')
+                                    {{ single_price($history->state_franchise_commission_amount) }}
+                                @elseif(auth()->user()->user_type == 'franchise')
                                     {{ single_price($history->franchise_commission_amount) }}
                                 @else
                                     {{ single_price($history->sub_franchise_commission_amount) }}
