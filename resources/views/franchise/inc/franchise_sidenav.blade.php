@@ -183,7 +183,7 @@
                     <li class="aiz-side-nav-item">
                         <a href="{{ route('franchise.sales_report') }}" class="aiz-side-nav-link">
                             <i class="las la-chart-bar aiz-side-nav-icon"></i>
-                            <span class="aiz-side-nav-text">{{ translate('Sales Report') }}</span>
+                            <span class="aiz-side-nav-text">{{ translate('Product Commissions') }}</span>
                         </a>
                     </li>
 

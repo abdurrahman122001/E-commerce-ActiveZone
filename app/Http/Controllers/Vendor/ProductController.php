@@ -62,8 +62,21 @@ class ProductController extends Controller
 
     public function store(ProductRequest $request)
     {
+        if ($request->hasFile('thumbnail_img_file')) {
+            $thumbnail_img = $this->upload_thumbnail_img($request->file('thumbnail_img_file'));
+            $request->merge(['thumbnail_img' => $thumbnail_img]);
+        }
+
+        if ($request->hasFile('photos_file')) {
+            $photos = [];
+            foreach ($request->file('photos_file') as $file) {
+                $photos[] = $this->upload_thumbnail_img($file);
+            }
+            $request->merge(['photos' => implode(',', array_filter($photos))]);
+        }
+
         $product = $this->productService->store($request->except([
-            '_token', 'sku', 'choice', 'tax_id', 'tax', 'tax_type'
+            '_token', 'sku', 'choice', 'tax_id', 'tax', 'tax_type', 'thumbnail_img_file', 'photos_file'
         ]));
         
         $request->merge(['product_id' => $product->id]);
@@ -109,8 +122,21 @@ class ProductController extends Controller
             abort(403);
         }
 
+        if ($request->hasFile('thumbnail_img_file')) {
+            $thumbnail_img = $this->upload_thumbnail_img($request->file('thumbnail_img_file'));
+            $request->merge(['thumbnail_img' => $thumbnail_img]);
+        }
+
+        if ($request->hasFile('photos_file')) {
+            $photos = [];
+            foreach ($request->file('photos_file') as $file) {
+                $photos[] = $this->upload_thumbnail_img($file);
+            }
+            $request->merge(['photos' => implode(',', array_filter($photos))]);
+        }
+
         $product = $this->productService->update($request->except([
-            '_token', 'sku', 'choice', 'tax_id', 'tax', 'tax_type'
+            '_token', 'sku', 'choice', 'tax_id', 'tax', 'tax_type', 'thumbnail_img_file', 'photos_file'
         ]), $product);
 
         if ($request->has('category_ids')) {
@@ -143,5 +169,36 @@ class ProductController extends Controller
 
         flash(translate('Product has been deleted successfully'))->success();
         return back();
+    }
+
+    private function upload_thumbnail_img($file)
+    {
+        $type = [
+            "jpg" => "image",
+            "jpeg" => "image",
+            "png" => "image",
+            "svg" => "image",
+            "webp" => "image",
+            "gif" => "image",
+        ];
+        $extension = strtolower($file->getClientOriginalExtension());
+        if (isset($type[$extension])) {
+            $filename = str_replace(' ', '_', $file->getClientOriginalName());
+            $filename = time() . '_' . $filename;
+
+            $upload = new \App\Models\Upload;
+            $upload->file_original_name = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
+            $upload->extension = $extension;
+            $upload->file_name = 'uploads/all/' . $filename;
+            $upload->user_id = Auth::user()->id;
+            $upload->type = $type[$extension];
+            $upload->file_size = $file->getSize();
+            $upload->save();
+
+            $file->move(public_path('uploads/all'), $filename);
+
+            return $upload->id;
+        }
+        return null;
     }
 }

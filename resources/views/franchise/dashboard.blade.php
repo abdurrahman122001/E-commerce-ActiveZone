@@ -334,8 +334,14 @@
 
 
         <div class="col-12 d-flex justify-content-between align-items-center mb-3">
-            <h5 class="text-primary mb-0">{{ translate('Earnings from Subfranchise') }}</h5>
-            <a href="{{ route('franchise.vendors.commission_history') }}" class="btn btn-sm btn-soft-primary">{{ translate('View History') }}</a>
+            <div>
+                <h5 class="text-primary mb-0">{{ translate('Total Earnings') }}</h5>
+                <small class="text-muted">{{ translate('Product Commissions + Package Commissions') }}</small>
+            </div>
+            <div>
+                <a href="{{ route('franchise.sales_report') }}" class="btn btn-sm btn-soft-primary mr-1">{{ translate('Product Commissions') }}</a>
+                <a href="{{ route('franchise.package_commission_report') }}" class="btn btn-sm btn-soft-info">{{ translate('Package Earnings') }}</a>
+            </div>
         </div>
 
         <div class="col-sm-6 col-md-6 col-xxl-3">
@@ -349,6 +355,7 @@
                             <h3 class="mb-0 text-primary fs-30">
                                 {{ single_price($subfranchise_earnings_daily) }}
                             </h3>
+                            <small class="text-muted">{{ translate('Products + Packages') }}</small>
                         </div>
                     </div>
                 </div>
@@ -366,6 +373,7 @@
                             <h3 class="mb-0 text-primary fs-30">
                                 {{ single_price($subfranchise_earnings_weekly) }}
                             </h3>
+                            <small class="text-muted">{{ translate('Products + Packages') }}</small>
                         </div>
                     </div>
                 </div>
@@ -383,6 +391,7 @@
                             <h3 class="mb-0 text-primary fs-30">
                                 {{ single_price($subfranchise_earnings_monthly) }}
                             </h3>
+                            <small class="text-muted">{{ translate('Products + Packages') }}</small>
                         </div>
                     </div>
                 </div>
@@ -400,6 +409,7 @@
                             <h3 class="mb-0 text-primary fs-30">
                                 {{ single_price($subfranchise_earnings_yearly) }}
                             </h3>
+                            <small class="text-muted">{{ translate('Products + Packages') }}</small>
                         </div>
                     </div>
                 </div>

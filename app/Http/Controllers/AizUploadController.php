@@ -202,6 +202,12 @@ class AizUploadController extends Controller
                     }
                     try {
                         $path = 'uploads/all/'. Str::random(40) . '.' .$extension;
+                        $full_path = public_path($path);
+                        $dir = dirname($full_path);
+                        if (!file_exists($dir)) {
+                            mkdir($dir, 0777, true);
+                        }
+
                         $img = Image::make($request->file('aiz_file')->getRealPath())->encode($extension, 75);
                         $height = $img->height();
                         $width = $img->width();
@@ -211,19 +217,25 @@ class AizUploadController extends Controller
                             $watermark_position = get_setting('watermark_position', 'top-left');
                             // watermark Image
                             if (get_setting('image_watermark_type') == "image") {
-                                $watermarkImg = Image::make(uploaded_asset(get_setting('watermark_image')));
-                                if ($width > $height) {
-                                    $wmarkHeight = $height / 2;
-                                    $watermarkImg->resize(null, $wmarkHeight, function ($constraint) {
-                                        $constraint->aspectRatio();
-                                    });
-                                } else {
-                                    $wmarkWidth = $width / 2;
-                                    $watermarkImg->resize(null, $wmarkWidth, function ($constraint) {
-                                        $constraint->aspectRatio();
-                                    });
+                                $watermarkId = get_setting('watermark_image');
+                                if ($watermarkId) {
+                                    $watermarkAsset = uploaded_asset($watermarkId);
+                                    if ($watermarkAsset) {
+                                        $watermarkImg = Image::make($watermarkAsset);
+                                        if ($width > $height) {
+                                            $wmarkHeight = $height / 2;
+                                            $watermarkImg->resize(null, $wmarkHeight, function ($constraint) {
+                                                $constraint->aspectRatio();
+                                            });
+                                        } else {
+                                            $wmarkWidth = $width / 2;
+                                            $watermarkImg->resize(null, $wmarkWidth, function ($constraint) {
+                                                $constraint->aspectRatio();
+                                            });
+                                        }
+                                        $img->insert($watermarkImg, $watermark_position, 10, 10);
+                                    }
                                 }
-                                $img->insert($watermarkImg, $watermark_position, 10, 10);
 
                                 // // --------watermark Image multiple times------
                                 // if ($width > 1999) {
@@ -281,11 +293,11 @@ class AizUploadController extends Controller
                             }
                         }
 
-                        $img->save(base_path('public/') . $path);
+                        $img->save($full_path);
                         clearstatcache();
                         $size = $img->filesize();
                     } catch (\Exception $e) {
-                        //dd($e);
+                        \Log::error("Image upload error: " . $e->getMessage());
                     }
                 } else {
                     $path = $request->file('aiz_file')->store('uploads/all', 'local');
