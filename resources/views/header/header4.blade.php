@@ -106,7 +106,7 @@
                             </a>
                             <div class="dropdown-menu fs-12 p-0 mt-1">
                                 <a class="dropdown-item py-2 px-2 text-dark"
-                                    href="{{ route('franchise.state_registration') }}">
+                                    href="{{ route('franchise.state_landing') }}">
                                     {{ translate('State Franchise') }}
                                 </a>
                                 <a class="dropdown-item py-2 px-2 text-dark"

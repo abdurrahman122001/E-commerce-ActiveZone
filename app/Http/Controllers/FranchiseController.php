@@ -34,6 +34,13 @@ class FranchiseController extends Controller
         return view('frontend.franchise.sub_landing', compact('packages'));
     }
 
+    // Show State Franchise Landing Page
+    public function showStateFranchiseLandingPage()
+    {
+        $packages = FranchisePackage::where('status', 1)->where('package_type', 'state_franchise')->get();
+        return view('frontend.franchise.state_landing', compact('packages'));
+    }
+
     // Show Registration Form
     // Show Registration Form
     public function showRegistrationForm(Request $request)

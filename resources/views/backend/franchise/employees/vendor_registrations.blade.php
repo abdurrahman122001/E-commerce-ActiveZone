@@ -17,7 +17,7 @@
     <div class="card-body">
         <form action="" method="GET">
             <div class="row gutters-5">
-                <div class="col-md-3">
+                <div class="col-md-2">
                     <select class="form-control aiz-selectpicker" name="franchise_id" id="franchise_id" data-live-search="true">
                         <option value="">{{ translate('All Franchises') }}</option>
                         @foreach($franchises as $franchise)
@@ -25,7 +25,7 @@
                         @endforeach
                     </select>
                 </div>
-                <div class="col-md-3">
+                <div class="col-md-2">
                     <select class="form-control aiz-selectpicker" name="sub_franchise_id" id="sub_franchise_id" data-live-search="true">
                         <option value="">{{ translate('All Sub-Franchises') }}</option>
                         @foreach($sub_franchises as $sf)
@@ -47,8 +47,11 @@
                     <input type="text" class="form-control aiz-date-range" name="date_range" @isset($date_range) value="{{ $date_range }}" @endisset placeholder="{{ translate('Select Date Range') }}" autocomplete="off">
                 </div>
                 <div class="col-md-2">
-                    <button type="submit" class="btn btn-primary">{{ translate('Filter') }}</button>
-                    <a href="{{ route('admin.franchise_employees.vendor_registrations') }}" class="btn btn-outline-secondary">{{ translate('Reset') }}</a>
+                    <input type="text" class="form-control" name="search" @isset($search) value="{{ $search }}" @endisset placeholder="{{ translate('Search Shop/Name/Email/Phone') }}">
+                </div>
+                <div class="col-md-2">
+                    <button type="submit" class="btn btn-primary btn-sm">{{ translate('Filter') }}</button>
+                    <a href="{{ route('admin.franchise_employees.vendor_registrations') }}" class="btn btn-outline-secondary btn-sm">{{ translate('Reset') }}</a>
                 </div>
             </div>
         </form>
@@ -64,14 +67,15 @@
             <thead>
                 <tr>
                     <th data-breakpoints="lg">#</th>
-                    <th>{{translate('Vendor Name')}}</th>
-                    <th data-breakpoints="lg">{{translate('Email')}}</th>
+                    <th>{{translate('Vendor Info')}}</th>
+                    <th data-breakpoints="lg">{{translate('Shop Info')}}</th>
+                    <th data-breakpoints="lg">{{translate('Location')}}</th>
                     <th data-breakpoints="lg">{{translate('Registered By')}}</th>
                     <th data-breakpoints="lg">{{translate('Franchise')}}</th>
                     <th data-breakpoints="lg">{{translate('Referral Used')}}</th>
                     <th data-breakpoints="lg text-center">{{translate('Package/Paid')}}</th>
                     <th data-breakpoints="lg">{{translate('Status')}}</th>
-                    <th data-breakpoints="lg">{{translate('Registration Date')}}</th>
+                    <th data-breakpoints="lg">{{translate('Date')}}</th>
                     <th class="text-right">{{translate('Options')}}</th>
                 </tr>
             </thead>
@@ -79,8 +83,24 @@
                 @foreach($vendors as $key => $vendor)
                     <tr>
                         <td>{{ ($key+1) + ($vendors->currentPage() - 1)*$vendors->perPage() }}</td>
-                        <td>{{ $vendor->user->name ?? translate('N/A') }}</td>
-                        <td>{{ $vendor->user->email ?? translate('N/A') }}</td>
+                        <td>
+                            {{ $vendor->user->name ?? translate('N/A') }}
+                            <br><small class="text-muted">{{ $vendor->user->email ?? translate('N/A') }}</small>
+                            <br><small class="text-muted">{{ $vendor->user->phone ?? translate('N/A') }}</small>
+                        </td>
+                        <td>
+                            <b>{{ $vendor->shop_name ?? translate('No Shop Name') }}</b>
+                            @if($vendor->address)
+                                <br><small class="text-muted">{{ $vendor->address }}</small>
+                            @endif
+                        </td>
+                        <td>
+                            <small>
+                                <b>{{ translate('State') }}:</b> {{ $vendor->state->name ?? translate('N/A') }}<br>
+                                <b>{{ translate('City') }}:</b> {{ $vendor->city->name ?? translate('N/A') }}<br>
+                                <b>{{ translate('Area') }}:</b> {{ $vendor->area->name ?? translate('N/A') }}
+                            </small>
+                        </td>
                         <td>
                             @if($vendor->addedByEmployee)
                                 {{ $vendor->addedByEmployee->name }}

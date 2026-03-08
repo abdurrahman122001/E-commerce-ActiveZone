@@ -66,6 +66,7 @@ use App\Http\Controllers\SizeChartController;
 // Franchise Routes
 Route::controller(App\Http\Controllers\FranchiseController::class)->group(function () {
     Route::get('/franchise', 'showLandingPage')->name('franchise.landing');
+    Route::get('/franchise/state', 'showStateFranchiseLandingPage')->name('franchise.state_landing');
     Route::get('/franchise/sub-franchise', 'showSubFranchiseLandingPage')->name('franchise.sub_landing');
     Route::get('/franchise/registration', 'showRegistrationForm')->name('franchise.registration');
     Route::get('/franchise/state-registration', 'showStateRegistrationForm')->name('franchise.state_registration');

@@ -104,6 +104,16 @@ class Vendor extends Model
         return $this->belongsTo(Area::class);
     }
 
+    public function city()
+    {
+        return $this->belongsTo(City::class);
+    }
+
+    public function state()
+    {
+        return $this->belongsTo(State::class);
+    }
+
     public function franchise_package()
     {
         return $this->belongsTo(FranchisePackage::class);

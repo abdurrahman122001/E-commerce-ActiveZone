@@ -120,39 +120,45 @@
             <p class="text-secondary fs-14 mt-2">{{ translate('Choose the franchise model that fits you best') }}</p>
         </div>
         <div class="row justify-content-center">
-            <div class="col-lg-5 col-md-6 mb-4">
+            <div class="col-lg-4 col-md-6 mb-4">
                 <div class="card border-0 shadow-sm h-100 rounded-0">
-                    <div class="card-body p-4">
-                        <div class="d-flex align-items-center mb-3">
-                            <div class="mr-3" style="width:50px;height:50px;background:linear-gradient(135deg,#667eea,#764ba2);border-radius:10px;display:flex;align-items:center;justify-content:center;">
-                                <i class="las la-city text-white fs-24"></i>
-                            </div>
-                            <h5 class="fw-700 mb-0">{{ translate('City Franchise') }}</h5>
+                    <div class="card-body p-4 text-center">
+                        <div class="mx-auto mb-3" style="width:60px;height:60px;background:linear-gradient(135deg,#1a1a2e,#0f3460);border-radius:12px;display:flex;align-items:center;justify-content:center;">
+                            <i class="las la-globe-americas text-white fs-28"></i>
                         </div>
-                        <p class="text-secondary fs-13 mb-3">{{ translate('Become the master franchise partner for an entire city. Manage operations, build a team, and serve the complete city market under our brand.') }}</p>
-                        <ul class="list-unstyled fs-13 text-secondary">
-                            <li class="mb-2"><i class="las la-check-circle text-success mr-1"></i> {{ translate('Full city-level rights') }}</li>
-                            <li class="mb-2"><i class="las la-check-circle text-success mr-1"></i> {{ translate('Manage sub-franchises') }}</li>
-                            <li class="mb-2"><i class="las la-check-circle text-success mr-1"></i> {{ translate('Higher earning potential') }}</li>
-                        </ul>
+                        <h5 class="fw-700 mb-2">{{ translate('State Franchise') }}</h5>
+                        <p class="text-secondary fs-13 mb-3">{{ translate('Take ownership of an entire state. The peak level partnership with maximum reach and recurring revenue.') }}</p>
+                        <a href="{{ route('franchise.state_landing') }}" class="btn btn-soft-primary btn-sm rounded-0">
+                            {{ translate('Learn More') }} <i class="las la-arrow-right ml-1"></i>
+                        </a>
                     </div>
                 </div>
             </div>
-            <div class="col-lg-5 col-md-6 mb-4">
+            <div class="col-lg-4 col-md-6 mb-4">
                 <div class="card border-0 shadow-sm h-100 rounded-0">
-                    <div class="card-body p-4">
-                        <div class="d-flex align-items-center mb-3">
-                            <div class="mr-3" style="width:50px;height:50px;background:linear-gradient(135deg,#f093fb,#f5576c);border-radius:10px;display:flex;align-items:center;justify-content:center;">
-                                <i class="las la-map-marker-alt text-white fs-24"></i>
-                            </div>
-                            <h5 class="fw-700 mb-0">{{ translate('Sub-Franchise') }}</h5>
+                    <div class="card-body p-4 text-center">
+                        <div class="mx-auto mb-3" style="width:60px;height:60px;background:linear-gradient(135deg,#667eea,#764ba2);border-radius:12px;display:flex;align-items:center;justify-content:center;">
+                            <i class="las la-city text-white fs-28"></i>
                         </div>
-                        <p class="text-secondary fs-13 mb-3">{{ translate('Operate at the area, zone, or tehsil level. Perfect for entrepreneurs who want to start small and grow within a defined territory.') }}</p>
-                        <ul class="list-unstyled fs-13 text-secondary">
-                            <li class="mb-2"><i class="las la-check-circle text-success mr-1"></i> {{ translate('Area/Zone level rights') }}</li>
-                            <li class="mb-2"><i class="las la-check-circle text-success mr-1"></i> {{ translate('Lower investment required') }}</li>
-                            <li class="mb-2"><i class="las la-check-circle text-success mr-1"></i> {{ translate('Backed by city franchise') }}</li>
-                        </ul>
+                        <h5 class="fw-700 mb-2">{{ translate('City Franchise') }}</h5>
+                        <p class="text-secondary fs-13 mb-3">{{ translate('Manage the complete master franchise operations for a specific city. Direct control over your urban market.') }}</p>
+                        <a href="{{ route('franchise.landing') }}" class="btn btn-soft-primary btn-sm rounded-0">
+                            {{ translate('Learn More') }} <i class="las la-arrow-right ml-1"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6 mb-4">
+                <div class="card border-0 shadow-sm h-100 rounded-0">
+                    <div class="card-body p-4 text-center">
+                        <div class="mx-auto mb-3" style="width:60px;height:60px;background:linear-gradient(135deg,#f093fb,#f5576c);border-radius:12px;display:flex;align-items:center;justify-content:center;">
+                            <i class="las la-map-marker-alt text-white fs-28"></i>
+                        </div>
+                        <h5 class="fw-700 mb-2">{{ translate('Sub-Franchise') }}</h5>
+                        <p class="text-secondary fs-13 mb-3">{{ translate('Perfect for local entrepreneurs. Manage a specific area, zone, or tehsil with lower investment entries.') }}</p>
+                        <a href="{{ route('franchise.sub_landing') }}" class="btn btn-soft-primary btn-sm rounded-0">
+                            {{ translate('Learn More') }} <i class="las la-arrow-right ml-1"></i>
+                        </a>
                     </div>
                 </div>
             </div>

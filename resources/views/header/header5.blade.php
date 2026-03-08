@@ -298,7 +298,7 @@ $middleHeaderTextColor = get_setting('middle_header_text_color');
 
                                     <!-- Franchise Links -->
                                     <div>
-                                        <a href="{{ route('franchise.state_registration') }}"
+                                        <a href="{{ route('franchise.state_landing') }}"
                                             class="dropdown-item fs-13 py-2 px-3 hover-bg-light hover-text-primary border-bottom border-soft-light d-flex align-items-center"
                                             style="min-height: 40px;">
                                             {{ translate('Become a State Franchise') }}

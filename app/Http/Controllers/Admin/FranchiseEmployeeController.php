@@ -42,7 +42,8 @@ class FranchiseEmployeeController extends Controller
         $sub_franchise_id = $request->sub_franchise_id;
         $employee_id = $request->employee_id;
         $date_range = $request->date_range;
-        $vendors = \App\Models\Vendor::with(['user', 'franchise_package', 'referrer']);
+        $search = $request->search;
+        $vendors = \App\Models\Vendor::with(['user', 'franchise_package', 'referrer', 'area', 'city', 'state']);
         if (Auth::user()->user_type == 'admin') {
             // Show vendors linked to any level of franchise
             $vendors = $vendors->where(function($q) {
@@ -87,6 +88,17 @@ class FranchiseEmployeeController extends Controller
             $vendors = $vendors->whereBetween('created_at', [$start_date, $end_date]);
         }
 
+        if ($search) {
+            $vendors = $vendors->where(function($q) use ($search) {
+                $q->where('shop_name', 'like', '%'.$search.'%')
+                  ->orWhereHas('user', function($q2) use ($search) {
+                      $q2->where('name', 'like', '%'.$search.'%')
+                        ->orWhere('email', 'like', '%'.$search.'%')
+                        ->orWhere('phone', 'like', '%'.$search.'%');
+                  });
+            });
+        }
+
         $vendors = $vendors->latest()->paginate(15);
         $franchises = \App\Models\Franchise::all();
         $sub_franchises = \App\Models\SubFranchise::when($franchise_id, function($q) use ($franchise_id) {
@@ -94,7 +106,7 @@ class FranchiseEmployeeController extends Controller
         })->get();
         $employees = FranchiseEmployee::all();
 
-        return view('backend.franchise.employees.vendor_registrations', compact('vendors', 'franchises', 'sub_franchises', 'employees', 'franchise_id', 'sub_franchise_id', 'employee_id', 'date_range'));
+        return view('backend.franchise.employees.vendor_registrations', compact('vendors', 'franchises', 'sub_franchises', 'employees', 'franchise_id', 'sub_franchise_id', 'employee_id', 'date_range', 'search'));
     }
 
     public function payout_modal(Request $request)
