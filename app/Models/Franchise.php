@@ -29,7 +29,9 @@ class Franchise extends Model
         'bank_routing_no',
         'ifsc_code',
         'invalid_at',
-        'state_franchise_id'
+        'state_franchise_id',
+        'package_payment_status',
+        'offline_package_payment_proof'
     ];
 
     public function user()

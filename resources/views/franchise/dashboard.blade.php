@@ -15,68 +15,119 @@
 
     {{-- Pending Approval Alert --}}
     @if($status != 'approved')
+        @php
+            $pkg_status = 'unpaid';
+            if ($authUser->user_type == 'franchise') {
+                $pkg_status = $authUser->franchise ? $authUser->franchise->package_payment_status : 'unpaid';
+            } elseif ($authUser->user_type == 'sub_franchise') {
+                $pkg_status = $authUser->sub_franchise ? $authUser->sub_franchise->package_payment_status : 'unpaid';
+            } elseif ($authUser->user_type == 'state_franchise') {
+                $pkg_status = $authUser->state_franchise ? $authUser->state_franchise->package_payment_status : 'unpaid';
+            }
+        @endphp
+
         <div class="alert alert-warning alert-dismissible fade show mb-4" role="alert">
             <div class="d-flex align-items-center">
                 <i class="las la-exclamation-triangle la-2x mr-3"></i>
                 <div>
                     <strong>{{ translate('Account Pending Approval') }}</strong>
-                    <p class="mb-0">{{ translate('Your account is currently unverified. Please upload your verification documents (Aadhar Card and PAN Number) to proceed.') }}</p>
+                    <p class="mb-0">
+                        {{ translate('Your account is currently unverified.') }}
+                        @if($pkg_status != 'paid')
+                            {{ translate('Package purchase and document verification are both mandatory for account activation.') }}
+                        @else
+                            {{ translate('Please ensure your documents are uploaded. Wait for admin to verify your package payment and documents.') }}
+                        @endif
+                    </p>
                 </div>
             </div>
         </div>
 
-        @php
-            $id_proof = null;
-            $pan_number = null;
-            if ($authUser->user_type == 'franchise' && $authUser->franchise) {
-                $id_proof = $authUser->franchise->id_proof;
-                $pan_number = $authUser->franchise->pan_number;
-            } elseif ($authUser->user_type == 'sub_franchise' && $authUser->sub_franchise) {
-                $id_proof = $authUser->sub_franchise->id_proof;
-                $pan_number = $authUser->sub_franchise->pan_number;
-            } elseif ($authUser->user_type == 'state_franchise' && $authUser->state_franchise) {
-                $id_proof = $authUser->state_franchise->id_proof;
-                $pan_number = $authUser->state_franchise->pan_number;
-            }
-        @endphp
+        <div class="row">
+            <div class="col-md-6">
+                @php
+                    $id_proof = null;
+                    $pan_number = null;
+                    if ($authUser->user_type == 'franchise' && $authUser->franchise) {
+                        $id_proof = $authUser->franchise->id_proof;
+                        $pan_number = $authUser->franchise->pan_number;
+                    } elseif ($authUser->user_type == 'sub_franchise' && $authUser->sub_franchise) {
+                        $id_proof = $authUser->sub_franchise->id_proof;
+                        $pan_number = $authUser->sub_franchise->pan_number;
+                    } elseif ($authUser->user_type == 'state_franchise' && $authUser->state_franchise) {
+                        $id_proof = $authUser->state_franchise->id_proof;
+                        $pan_number = $authUser->state_franchise->pan_number;
+                    }
+                @endphp
 
-        <div class="card mb-4">
-            <div class="card-header">
-                <h5 class="mb-0 h6">{{ translate('Verification Details') }}</h5>
-            </div>
-            <div class="card-body">
-                <form action="{{ route('franchise.verification_info_update') }}" method="POST" enctype="multipart/form-data">
-                    @csrf
-                    <div class="form-group row">
-                        <label class="col-md-3 col-form-label">{{ translate('Aadhar Card (Image/PDF)') }} <span class="text-danger">*</span></label>
-                        <div class="col-md-9">
-                            <div class="custom-file">
-                                <input type="file" class="custom-file-input @error('id_proof') is-invalid @enderror" name="id_proof" id="id_proof" {{ $id_proof ? '' : 'required' }}>
-                                <label class="custom-file-label" for="id_proof">{{ translate('Choose file') }}</label>
-                            </div>
-                            @error('id_proof')
-                                <div class="text-danger mt-1 fs-12">{{ $message }}</div>
-                            @enderror
-                            @if($id_proof)
-                                <div class="mt-2">
-                                    <a href="{{ asset('storage/' . $id_proof) }}" target="_blank" class="btn btn-sm btn-soft-info">{{ translate('View Current Document') }}</a>
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5 class="mb-0 h6">{{ translate('1. Verification Details') }}</h5>
+                    </div>
+                    <div class="card-body">
+                        <form action="{{ route('franchise.verification_info_update') }}" method="POST" enctype="multipart/form-data">
+                            @csrf
+                            <div class="form-group row">
+                                <label class="col-md-3 col-form-label">{{ translate('Aadhar Card (Image/PDF)') }} <span class="text-danger">*</span></label>
+                                <div class="col-md-9">
+                                    <div class="custom-file">
+                                        <input type="file" class="custom-file-input @error('id_proof') is-invalid @enderror" name="id_proof" id="id_proof" {{ $id_proof ? '' : 'required' }}>
+                                        <label class="custom-file-label" for="id_proof">{{ translate('Choose file') }}</label>
+                                    </div>
+                                    @error('id_proof')
+                                        <div class="text-danger mt-1 fs-12">{{ $message }}</div>
+                                    @enderror
+                                    @if($id_proof)
+                                        <div class="mt-2">
+                                            <a href="{{ asset('storage/' . $id_proof) }}" target="_blank" class="btn btn-sm btn-soft-info">{{ translate('View Current Document') }}</a>
+                                        </div>
+                                    @endif
                                 </div>
-                            @endif
-                        </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-md-3 col-form-label">{{ translate('PAN Number') }} <span class="text-danger">*</span></label>
+                                <div class="col-md-9">
+                                    <input type="text" class="form-control @error('pan_number') is-invalid @enderror" name="pan_number" value="{{ old('pan_number', $pan_number) }}" placeholder="{{ translate('Enter PAN Number') }}" required>
+                                    @error('pan_number')
+                                        <div class="text-danger mt-1 fs-12">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                            </div>
+                            <div class="form-group mb-0 text-right">
+                                <button type="submit" class="btn btn-primary">{{ translate('Upload & Submit') }}</button>
+                            </div>
+                        </form>
                     </div>
-                    <div class="form-group row">
-                        <label class="col-md-3 col-form-label">{{ translate('PAN Number') }} <span class="text-danger">*</span></label>
-                        <div class="col-md-9">
-                            <input type="text" class="form-control @error('pan_number') is-invalid @enderror" name="pan_number" value="{{ old('pan_number', $pan_number) }}" placeholder="{{ translate('Enter PAN Number') }}" required>
-                            @error('pan_number')
-                                <div class="text-danger mt-1 fs-12">{{ $message }}</div>
-                            @enderror
-                        </div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="card mb-4 h-100">
+                    <div class="card-header">
+                        <h5 class="mb-0 h6">{{ translate('2. Package Buy & Status') }}</h5>
                     </div>
-                    <div class="form-group mb-0 text-right">
-                        <button type="submit" class="btn btn-primary">{{ translate('Upload & Submit') }}</button>
+                    <div class="card-body text-center d-flex flex-column justify-content-center">
+                        @if($pkg_status == 'paid')
+                            <i class="las la-check-circle la-4x text-success mb-3"></i>
+                            <h5 class="fw-600 text-success">{{ translate('Package Paid') }}</h5>
+                            <p class="text-muted">{{ translate('Your package payment has been verified.') }}</p>
+                        @elseif($pkg_status == 'pending')
+                            <i class="las la-clock la-4x text-warning mb-3"></i>
+                            <h5 class="fw-600 text-warning">{{ translate('Pending Verification') }}</h5>
+                            <p class="text-muted">{{ translate('Wait for admin to verify your package payment proof.') }}</p>
+                            <a href="{{ route('franchise.packages.index') }}" class="btn btn-soft-primary btn-sm mx-auto">
+                                {{ translate('View/Change Proof') }}
+                            </a>
+                        @else
+                            <i class="las la-exclamation-circle la-4x text-danger mb-3"></i>
+                            <h5 class="fw-600 text-danger">{{ translate('Package Unpaid') }}</h5>
+                            <p class="text-muted">{{ translate('Payment for the selected package is mandatory for account approval.') }}</p>
+                            <a href="{{ route('franchise.packages.index') }}" class="btn btn-primary px-4 mx-auto">
+                                {{ translate('Buy/Pay Now') }}
+                            </a>
+                        @endif
                     </div>
-                </form>
+                </div>
             </div>
         </div>
     @endif

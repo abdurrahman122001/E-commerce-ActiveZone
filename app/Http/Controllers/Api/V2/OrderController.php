@@ -89,6 +89,7 @@ class OrderController extends Controller
             $order->payment_status_viewed = '0';
             $order->code = date('Ymd-His') . rand(10, 99);
             $order->date = strtotime('now');
+            $order->delivery_status = 'ready_to_pick';
             if ($set_paid) {
                 $order->payment_status = 'paid';
             } else {
@@ -153,6 +154,7 @@ class OrderController extends Controller
                 }
 
                 $order_detail->quantity = $cartItem['quantity'];
+                $order_detail->delivery_status = 'ready_to_pick';
                 $order_detail->save();
 
                 $product->num_of_sale = $product->num_of_sale + $cartItem['quantity'];
@@ -205,6 +207,10 @@ class OrderController extends Controller
             }
 
             $order->save();
+
+            if ($order->delivery_status == 'ready_to_pick') {
+                assign_nearest_rider($order);
+            }
         }
         $combined_order->save();
 

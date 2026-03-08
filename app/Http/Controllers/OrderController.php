@@ -213,6 +213,7 @@ class OrderController extends Controller
             $order->payment_status_viewed = '0';
             $order->code = date('Ymd-His') . rand(10, 99);
             $order->date = strtotime('now');
+            $order->delivery_status = 'ready_to_pick';
             if ($seller_product[0]->product->user->vendor) {
                 $order->vendor_id = $seller_product[0]->product->user->vendor->id;
             }
@@ -285,7 +286,7 @@ class OrderController extends Controller
                 if (addon_is_activated('club_point')) {
                     $order_detail->earn_point = $product->earn_point;
                 }
-
+                $order_detail->delivery_status = 'ready_to_pick';
                 $order_detail->save();
 
                 $product->num_of_sale += $cartItem['quantity'];
@@ -352,6 +353,10 @@ class OrderController extends Controller
             $combined_order->grand_total += $order->grand_total;
 
             $order->save();
+
+            if ($order->delivery_status == 'ready_to_pick') {
+                assign_nearest_rider($order);
+            }
         }
 
         $combined_order->save();

@@ -27,7 +27,9 @@ class StateFranchise extends Model
         'ifsc_code',
         'invalid_at',
         'commission_percentage',
-        'commission_type'
+        'commission_type',
+        'package_payment_status',
+        'offline_package_payment_proof'
     ];
 
     public function user()

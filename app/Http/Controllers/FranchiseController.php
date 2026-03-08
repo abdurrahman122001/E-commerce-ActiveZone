@@ -122,6 +122,7 @@ class FranchiseController extends Controller
                 $stateFranchise->id_proof = $id_proof_path;
                 $stateFranchise->franchise_package_id = $request->franchise_package_id;
                 $stateFranchise->status = 'pending';
+                $stateFranchise->package_payment_status = 'unpaid';
                 $stateFranchise->save();
 
                 // Automatically link existing city and sub franchises in this state
@@ -139,6 +140,7 @@ class FranchiseController extends Controller
                 $franchise->id_proof = $id_proof_path;
                 $franchise->franchise_package_id = $request->franchise_package_id;
                 $franchise->status = 'pending';
+                $franchise->package_payment_status = 'unpaid';
 
                 // Link to State Franchise if exists
                 $stateFranchise = StateFranchise::where('state_id', $request->state_id)->first();
@@ -158,6 +160,7 @@ class FranchiseController extends Controller
                 $subFranchise->id_proof = $id_proof_path;
                 $subFranchise->franchise_package_id = $request->franchise_package_id;
                 $subFranchise->status = 'pending';
+                $subFranchise->package_payment_status = 'unpaid';
                 
                 // Link to Parent Franchise if exists for the city (any status)
                 $parentFranchise = Franchise::where('city_id', $request->city_id)->first();
@@ -648,6 +651,176 @@ class FranchiseController extends Controller
              $sub->save();
          }
          flash(translate('Rejected Successfully'))->success();
+         return back();
+    }
+
+    public function payment_approve($id, $type) {
+         if($type == 'state_franchise') {
+             $franchise = StateFranchise::findOrFail($id);
+             $franchise->package_payment_status = 'paid';
+             $franchise->save();
+             
+             // State Franchise buys package -> No immediate commission beneficiaries in current logic?
+             // Unless admin gets it, or we add global referral
+         } elseif($type == 'franchise') {
+             $franchise = Franchise::with('franchise_package')->findOrFail($id);
+             $franchise->package_payment_status = 'paid';
+             $franchise->save();
+
+             // City Franchise buys package -> State Franchise earns commission
+             $stateFranchise = null;
+             if ($franchise->state_franchise_id) {
+                 $stateFranchise = StateFranchise::find($franchise->state_franchise_id);
+             }
+             if (!$stateFranchise && $franchise->state_id) {
+                 $stateFranchise = StateFranchise::where('state_id', $franchise->state_id)
+                     ->where('status', 'approved')->first();
+             }
+
+             if ($stateFranchise && $franchise->franchise_package) {
+                 $exists = \App\Models\PackageCommissionHistory::where('franchise_id', $franchise->id)
+                     ->where('type', 'city_to_state')
+                     ->exists();
+
+                 if (!$exists) {
+                     $stf_pct = $stateFranchise->commission_percentage > 0 
+                         ? (float) $stateFranchise->commission_percentage 
+                         : (float) get_setting('state_franchise_commission_on_package', 0);
+                         
+                     if ($stf_pct > 0) {
+                         $package_price = (float) $franchise->franchise_package->price;
+                         $comm_type     = $stateFranchise->commission_percentage > 0 
+                             ? ($stateFranchise->commission_type ?? 'percentage') 
+                             : (get_setting('state_franchise_commission_on_package_type') ?? 'percentage');
+
+                         if ($comm_type == 'flat') {
+                             $commission_amount = $stf_pct;
+                         } else {
+                             $commission_amount = ($package_price * $stf_pct) / 100;
+                         }
+
+                         $stateFranchise->balance = ($stateFranchise->balance ?? 0) + $commission_amount;
+                         $stateFranchise->save();
+
+                         \App\Models\PackageCommissionHistory::create([
+                             'franchise_id'         => $franchise->id,
+                             'state_franchise_id'   => $stateFranchise->id,
+                             'franchise_package_id' => $franchise->franchise_package_id,
+                             'amount'               => $commission_amount,
+                             'percentage'           => $stf_pct,
+                             'type'                 => 'city_to_state',
+                             'beneficiary_type'     => 'state_franchise',
+                         ]);
+                     }
+                 }
+             }
+
+         } else { // sub_franchise
+             $sub = SubFranchise::with('franchise_package')->findOrFail($id);
+             $sub->package_payment_status = 'paid';
+             $sub->save();
+
+             // Sub-Franchise buys package -> City Franchise & State Franchise earn commission
+             $cityFranchise = null;
+             if ($sub->franchise_id) {
+                 $cityFranchise = Franchise::find($sub->franchise_id);
+             }
+             if (!$cityFranchise && $sub->city_id) {
+                 $cityFranchise = Franchise::where('city_id', $sub->city_id)
+                     ->where('status', 'approved')->first();
+             }
+
+             $stateFranchise = null;
+             if ($sub->state_franchise_id) {
+                 $stateFranchise = StateFranchise::find($sub->state_franchise_id);
+             }
+             if (!$stateFranchise && $sub->state_id) {
+                 $stateFranchise = StateFranchise::where('state_id', $sub->state_id)
+                     ->where('status', 'approved')->first();
+             }
+
+             // Sub to City
+             if ($cityFranchise && $sub->franchise_package) {
+                 $exists = \App\Models\PackageCommissionHistory::where('sub_franchise_id', $sub->id)
+                     ->where('type', 'sub_to_city')
+                     ->exists();
+
+                 if (!$exists) {
+                     $cf_pct = $cityFranchise->commission_percentage > 0 
+                         ? (float) $cityFranchise->commission_percentage 
+                         : (float) get_setting('franchise_commission_on_package', 0);
+                     
+                     if ($cf_pct > 0) {
+                         $package_price = (float) $sub->franchise_package->price;
+                         $comm_type     = $cityFranchise->commission_percentage > 0 
+                             ? ($cityFranchise->commission_type ?? 'percentage') 
+                             : (get_setting('franchise_commission_on_package_type') ?? 'percentage');
+
+                         if ($comm_type == 'flat') {
+                             $commission_amount = $cf_pct;
+                         } else {
+                             $commission_amount = ($package_price * $cf_pct) / 100;
+                         }
+
+                         $cityFranchise->balance = ($cityFranchise->balance ?? 0) + $commission_amount;
+                         $cityFranchise->save();
+
+                         \App\Models\PackageCommissionHistory::create([
+                             'franchise_id'         => $cityFranchise->id,
+                             'sub_franchise_id'     => $sub->id,
+                             'state_franchise_id'   => $stateFranchise ? $stateFranchise->id : null,
+                             'franchise_package_id' => $sub->franchise_package_id,
+                             'amount'               => $commission_amount,
+                             'percentage'           => $cf_pct,
+                             'type'                 => 'sub_to_city',
+                             'beneficiary_type'     => 'franchise',
+                         ]);
+                     }
+                 }
+             }
+
+             // Sub to State
+             if ($stateFranchise && $sub->franchise_package) {
+                 $exists = \App\Models\PackageCommissionHistory::where('sub_franchise_id', $sub->id)
+                     ->where('type', 'sub_to_state')
+                     ->exists();
+
+                 if (!$exists) {
+                     $stf_pct = $stateFranchise->commission_percentage > 0 
+                         ? (float) $stateFranchise->commission_percentage 
+                         : (float) get_setting('state_franchise_commission_on_package', 0);
+                         
+                     if ($stf_pct > 0) {
+                         $package_price = (float) $sub->franchise_package->price;
+                         $comm_type     = $stateFranchise->commission_percentage > 0 
+                             ? ($stateFranchise->commission_type ?? 'percentage') 
+                             : (get_setting('state_franchise_commission_on_package_type') ?? 'percentage');
+
+                         if ($comm_type == 'flat') {
+                             $commission_amount = $stf_pct;
+                         } else {
+                             $commission_amount = ($package_price * $stf_pct) / 100;
+                         }
+
+                         $stateFranchise->balance = ($stateFranchise->balance ?? 0) + $commission_amount;
+                         $stateFranchise->save();
+
+                         \App\Models\PackageCommissionHistory::create([
+                             'franchise_id'         => $cityFranchise ? $cityFranchise->id : null,
+                             'sub_franchise_id'     => $sub->id,
+                             'state_franchise_id'   => $stateFranchise->id,
+                             'franchise_package_id' => $sub->franchise_package_id,
+                             'amount'               => $commission_amount,
+                             'percentage'           => $stf_pct,
+                             'type'                 => 'sub_to_state',
+                             'beneficiary_type'     => 'state_franchise',
+                         ]);
+                     }
+                 }
+             }
+         }
+         
+         flash(translate('Payment Approved Successfully'))->success();
          return back();
     }
 

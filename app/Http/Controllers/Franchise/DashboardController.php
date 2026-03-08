@@ -343,4 +343,49 @@ class DashboardController extends Controller
 
         return view('franchise.package_commission_report', compact('histories', 'date_range'));
     }
+
+    public function packages_index()
+    {
+        $user = auth()->user();
+        $franchise = null;
+        if ($user->user_type == 'state_franchise') {
+            $franchise = $user->state_franchise;
+        } elseif ($user->user_type == 'franchise') {
+            $franchise = $user->franchise;
+        } elseif ($user->user_type == 'sub_franchise') {
+            $franchise = $user->sub_franchise;
+        }
+
+        $package = $franchise ? $franchise->franchise_package : null;
+        
+        return view('franchise.packages.index', compact('user', 'franchise', 'package'));
+    }
+
+    public function package_payment_upload(Request $request)
+    {
+        $user = auth()->user();
+        $request->validate([
+            'payment_proof' => 'required|file|mimes:jpg,jpeg,png,pdf|max:2048',
+        ]);
+
+        $franchise = null;
+        if ($user->user_type == 'state_franchise') {
+            $franchise = $user->state_franchise;
+        } elseif ($user->user_type == 'franchise') {
+            $franchise = $user->franchise;
+        } elseif ($user->user_type == 'sub_franchise') {
+            $franchise = $user->sub_franchise;
+        }
+
+        if ($franchise) {
+            if ($request->hasFile('payment_proof')) {
+                $franchise->offline_package_payment_proof = $request->file('payment_proof')->store('uploads/franchise/package_payments', 'public');
+                $franchise->package_payment_status = 'pending';
+                $franchise->save();
+                flash(translate('Payment proof uploaded successfully. Wait for admin verification.'))->success();
+            }
+        }
+
+        return back();
+    }
 }

@@ -107,6 +107,7 @@ Route::controller(App\Http\Controllers\FranchiseController::class)->group(functi
 
         Route::get('/admin/franchise/approve/{id}/{type}', 'approve')->name('admin.franchise.approve');
         Route::get('/admin/franchise/reject/{id}/{type}', 'reject')->name('admin.franchise.reject');
+        Route::get('/admin/franchise/payment-approve/{id}/{type}', 'payment_approve')->name('admin.franchise.payment_approve');
         
         Route::post('/admin/franchises/set-commission', 'setFranchiseCommission')->name('admin.franchises.set_commission');
         Route::post('/admin/sub-franchises/set-commission', 'setSubFranchiseCommission')->name('admin.sub_franchises.set_commission');

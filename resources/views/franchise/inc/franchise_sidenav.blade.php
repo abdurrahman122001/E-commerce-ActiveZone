@@ -16,6 +16,13 @@
                     </a>
                 </li>
 
+                <li class="aiz-side-nav-item">
+                    <a href="{{ route('franchise.packages.index') }}" class="aiz-side-nav-link {{ areActiveRoutes(['franchise.packages.index']) }}">
+                        <i class="las la-archive aiz-side-nav-icon"></i>
+                        <span class="aiz-side-nav-text">{{ translate('My Package') }}</span>
+                    </a>
+                </li>
+
                 @php
                     $status = 'pending';
                     if (Auth::user()->user_type == 'franchise') {

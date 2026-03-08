@@ -34,6 +34,7 @@
                     <th>{{translate('Parent Franchise')}}</th>
                     <th>{{translate('Package')}}</th>
                     <th>{{translate('Status')}}</th>
+                    <th>{{translate('Payment')}}</th>
                     <th>{{translate('ID Proof')}}</th>
                     <th>{{translate('PAN Number')}}</th>
                     <th>{{translate('Commission')}}</th>
@@ -58,6 +59,19 @@
                                 <span class="badge badge-inline badge-success">{{translate('Approved')}}</span>
                             @else
                                 <span class="badge badge-inline badge-danger">{{translate('Rejected')}}</span>
+                            @endif
+                        </td>
+                        <td>
+                            @if($sub->package_payment_status == 'paid')
+                                <span class="badge badge-inline badge-success">{{translate('Paid')}}</span>
+                            @elseif($sub->package_payment_status == 'pending')
+                                <span class="badge badge-inline badge-warning">{{translate('Pending')}}</span>
+                                @if($sub->offline_package_payment_proof)
+                                    <a href="{{ asset('storage/'.$sub->offline_package_payment_proof) }}" target="_blank" class="btn btn-xs btn-outline-info ml-1">{{ translate('View Proof') }}</a>
+                                @endif
+                                <a href="{{ route('admin.franchise.payment_approve', ['id'=>$sub->id, 'type'=>'sub_franchise']) }}" class="btn btn-xs btn-outline-success ml-1" title="{{ translate('Approve Payment') }}"><i class="las la-check"></i></a>
+                            @else
+                                <span class="badge badge-inline badge-danger">{{translate('Unpaid')}}</span>
                             @endif
                         </td>
                         <td>
