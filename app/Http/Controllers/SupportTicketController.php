@@ -69,7 +69,17 @@ class SupportTicketController extends Controller
         $ticket->user_role = Auth::user()->user_type;
         $ticket->subject = $request->subject;
         $ticket->details = $request->details;
-        $ticket->files = $request->attachments;
+        
+        $photos = [];
+        if($request->hasFile('attachments')){
+            foreach ($request->file('attachments') as $file) {
+                $upload_id = $this->upload_attachment($file);
+                if($upload_id) $photos[] = $upload_id;
+            }
+            $ticket->files = count($photos) > 0 ? implode(',', $photos) : null;
+        } else {
+            $ticket->files = $request->attachments;
+        }
 
         if ($ticket->save()) {
             $this->send_support_mail_to_admin($ticket);
@@ -126,7 +136,17 @@ class SupportTicketController extends Controller
         $ticket_reply->ticket_id = $request->ticket_id;
         $ticket_reply->user_id = Auth::user()->id;
         $ticket_reply->reply = $request->reply;
-        $ticket_reply->files = $request->attachments;
+        
+        $photos = [];
+        if($request->hasFile('attachments')){
+            foreach ($request->file('attachments') as $file) {
+                $upload_id = $this->upload_attachment($file);
+                if($upload_id) $photos[] = $upload_id;
+            }
+            $ticket_reply->files = count($photos) > 0 ? implode(',', $photos) : null;
+        } else {
+            $ticket_reply->files = $request->attachments;
+        }
         $ticket_reply->ticket->client_viewed = 0;
         $ticket_reply->ticket->status = $request->status;
         $ticket_reply->ticket->save();
@@ -146,7 +166,17 @@ class SupportTicketController extends Controller
         $ticket_reply->ticket_id = $request->ticket_id;
         $ticket_reply->user_id = $request->user_id;
         $ticket_reply->reply = $request->reply;
-        $ticket_reply->files = $request->attachments;
+        
+        $photos = [];
+        if($request->hasFile('attachments')){
+            foreach ($request->file('attachments') as $file) {
+                $upload_id = $this->upload_attachment($file);
+                if($upload_id) $photos[] = $upload_id;
+            }
+            $ticket_reply->files = count($photos) > 0 ? implode(',', $photos) : null;
+        } else {
+            $ticket_reply->files = $request->attachments;
+        }
         $ticket_reply->ticket->viewed = 0;
         $ticket_reply->ticket->status = 'pending';
         $ticket_reply->ticket->save();
@@ -217,5 +247,36 @@ class SupportTicketController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    private function upload_attachment($file)
+    {
+        $type = [
+            "jpg" => "image",
+            "jpeg" => "image",
+            "png" => "image",
+            "svg" => "image",
+            "webp" => "image",
+            "gif" => "image",
+        ];
+        $extension = strtolower($file->getClientOriginalExtension());
+        if (isset($type[$extension])) {
+            $filename = str_replace(' ', '_', $file->getClientOriginalName());
+            $filename = time() . '_' . $filename;
+
+            $upload = new \App\Models\Upload;
+            $upload->file_original_name = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
+            $upload->extension = $extension;
+            $upload->file_name = 'uploads/all/' . $filename;
+            $upload->user_id = Auth::user()->id ?? 0;
+            $upload->type = $type[$extension];
+            $upload->file_size = $file->getSize();
+            $upload->save();
+
+            $file->move(public_path('uploads/all'), $filename);
+
+            return $upload->id;
+        }
+        return null;
     }
 }

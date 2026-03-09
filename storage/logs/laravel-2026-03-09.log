@@ -1,0 +1,3 @@
+[2026-03-09 05:44:45] local.INFO: Authenticated method called {"user_id":9,"user_type":"admin"} 
+[2026-03-09 05:45:29] local.INFO: Authenticated method called {"user_id":52,"user_type":"franchise"} 
+[2026-03-09 05:45:29] local.INFO: Redirecting franchise/sub_franchise  

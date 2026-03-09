@@ -172,15 +172,23 @@ class DashboardController extends Controller
             // Product Commission Earnings for State Franchise
             $earnings_query = VendorCommissionHistory::where('state_franchise_id', $state_franchise_id);
             $pkg_query = \App\Models\PackageCommissionHistory::where('state_franchise_id', $state_franchise_id)->where('beneficiary_type', 'state_franchise');
+            
+            // Employee Payouts assigned to this state's hierarchy
+            $emp_ids = FranchiseEmployee::where('state_franchise_id', $state_franchise_id)->pluck('id')->toArray();
+            $payout_query = \App\Models\EmployeePayout::whereIn('employee_id', $emp_ids);
 
-            $data['subfranchise_earnings_daily']   = (clone $earnings_query)->whereDate('created_at', Carbon::today())->sum('state_franchise_commission_amount')
-                                                   + (clone $pkg_query)->whereDate('created_at', Carbon::today())->sum('amount');
-            $data['subfranchise_earnings_weekly']  = (clone $earnings_query)->whereBetween('created_at', [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()])->sum('state_franchise_commission_amount')
-                                                   + (clone $pkg_query)->whereBetween('created_at', [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()])->sum('amount');
-            $data['subfranchise_earnings_monthly'] = (clone $earnings_query)->whereMonth('created_at', Carbon::now()->month)->whereYear('created_at', Carbon::now()->year)->sum('state_franchise_commission_amount')
-                                                   + (clone $pkg_query)->whereMonth('created_at', Carbon::now()->month)->whereYear('created_at', Carbon::now()->year)->sum('amount');
-            $data['subfranchise_earnings_yearly']  = (clone $earnings_query)->whereYear('created_at', Carbon::now()->year)->sum('state_franchise_commission_amount')
-                                                   + (clone $pkg_query)->whereYear('created_at', Carbon::now()->year)->sum('amount');
+            $data['subfranchise_earnings_daily']   = (clone $earnings_query)->whereDate('created_at', Carbon::today())->sum(DB::raw('state_franchise_commission_amount + employee_commission_amount'))
+                                                   + (clone $pkg_query)->whereDate('created_at', Carbon::today())->sum('amount')
+                                                   + (clone $payout_query)->whereDate('created_at', Carbon::today())->sum('amount');
+            $data['subfranchise_earnings_weekly']  = (clone $earnings_query)->whereBetween('created_at', [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()])->sum(DB::raw('state_franchise_commission_amount + employee_commission_amount'))
+                                                   + (clone $pkg_query)->whereBetween('created_at', [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()])->sum('amount')
+                                                   + (clone $payout_query)->whereBetween('created_at', [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()])->sum('amount');
+            $data['subfranchise_earnings_monthly'] = (clone $earnings_query)->whereMonth('created_at', Carbon::now()->month)->whereYear('created_at', Carbon::now()->year)->sum(DB::raw('state_franchise_commission_amount + employee_commission_amount'))
+                                                   + (clone $pkg_query)->whereMonth('created_at', Carbon::now()->month)->whereYear('created_at', Carbon::now()->year)->sum('amount')
+                                                   + (clone $payout_query)->whereMonth('created_at', Carbon::now()->month)->whereYear('created_at', Carbon::now()->year)->sum('amount');
+            $data['subfranchise_earnings_yearly']  = (clone $earnings_query)->whereYear('created_at', Carbon::now()->year)->sum(DB::raw('state_franchise_commission_amount + employee_commission_amount'))
+                                                   + (clone $pkg_query)->whereYear('created_at', Carbon::now()->year)->sum('amount')
+                                                   + (clone $payout_query)->whereYear('created_at', Carbon::now()->year)->sum('amount');
 
             $data['recent_earnings'] = VendorCommissionHistory::where('state_franchise_id', $state_franchise_id)
                                         ->latest()
@@ -216,15 +224,23 @@ class DashboardController extends Controller
             // Product Commission Earnings for City Franchise (all vendors including sub-franchise ones)
             $earnings_query = VendorCommissionHistory::where('franchise_id', $franchise_id);
             $pkg_query = \App\Models\PackageCommissionHistory::where('franchise_id', $franchise_id)->where('beneficiary_type', 'franchise');
+            
+            // Employee Payouts assigned to this city's hierarchy
+            $emp_ids = FranchiseEmployee::where('franchise_id', $franchise_id)->pluck('id')->toArray();
+            $payout_query = \App\Models\EmployeePayout::whereIn('employee_id', $emp_ids);
 
-            $data['subfranchise_earnings_daily']   = (clone $earnings_query)->whereDate('created_at', Carbon::today())->sum('franchise_commission_amount')
-                                                   + (clone $pkg_query)->whereDate('created_at', Carbon::today())->sum('amount');
-            $data['subfranchise_earnings_weekly']  = (clone $earnings_query)->whereBetween('created_at', [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()])->sum('franchise_commission_amount')
-                                                   + (clone $pkg_query)->whereBetween('created_at', [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()])->sum('amount');
-            $data['subfranchise_earnings_monthly'] = (clone $earnings_query)->whereMonth('created_at', Carbon::now()->month)->whereYear('created_at', Carbon::now()->year)->sum('franchise_commission_amount')
-                                                   + (clone $pkg_query)->whereMonth('created_at', Carbon::now()->month)->whereYear('created_at', Carbon::now()->year)->sum('amount');
-            $data['subfranchise_earnings_yearly']  = (clone $earnings_query)->whereYear('created_at', Carbon::now()->year)->sum('franchise_commission_amount')
-                                                   + (clone $pkg_query)->whereYear('created_at', Carbon::now()->year)->sum('amount');
+            $data['subfranchise_earnings_daily']   = (clone $earnings_query)->whereDate('created_at', Carbon::today())->sum(DB::raw('franchise_commission_amount + employee_commission_amount'))
+                                                   + (clone $pkg_query)->whereDate('created_at', Carbon::today())->sum('amount')
+                                                   + (clone $payout_query)->whereDate('created_at', Carbon::today())->sum('amount');
+            $data['subfranchise_earnings_weekly']  = (clone $earnings_query)->whereBetween('created_at', [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()])->sum(DB::raw('franchise_commission_amount + employee_commission_amount'))
+                                                   + (clone $pkg_query)->whereBetween('created_at', [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()])->sum('amount')
+                                                   + (clone $payout_query)->whereBetween('created_at', [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()])->sum('amount');
+            $data['subfranchise_earnings_monthly'] = (clone $earnings_query)->whereMonth('created_at', Carbon::now()->month)->whereYear('created_at', Carbon::now()->year)->sum(DB::raw('franchise_commission_amount + employee_commission_amount'))
+                                                   + (clone $pkg_query)->whereMonth('created_at', Carbon::now()->month)->whereYear('created_at', Carbon::now()->year)->sum('amount')
+                                                   + (clone $payout_query)->whereMonth('created_at', Carbon::now()->month)->whereYear('created_at', Carbon::now()->year)->sum('amount');
+            $data['subfranchise_earnings_yearly']  = (clone $earnings_query)->whereYear('created_at', Carbon::now()->year)->sum(DB::raw('franchise_commission_amount + employee_commission_amount'))
+                                                   + (clone $pkg_query)->whereYear('created_at', Carbon::now()->year)->sum('amount')
+                                                   + (clone $payout_query)->whereYear('created_at', Carbon::now()->year)->sum('amount');
             
             $data['recent_earnings'] = VendorCommissionHistory::where('franchise_id', $franchise_id)
                                         ->latest()
@@ -244,15 +260,23 @@ class DashboardController extends Controller
 
             $earnings_query = VendorCommissionHistory::where('sub_franchise_id', $sub_franchise_id);
             $pkg_query = \App\Models\PackageCommissionHistory::where('sub_franchise_id', $sub_franchise_id)->where('beneficiary_type', 'sub_franchise');
+            
+            // Employee Payouts assigned to this sub-franchise
+            $emp_ids = FranchiseEmployee::where('sub_franchise_id', $sub_franchise_id)->pluck('id')->toArray();
+            $payout_query = \App\Models\EmployeePayout::whereIn('employee_id', $emp_ids);
 
-            $data['subfranchise_earnings_daily']   = (clone $earnings_query)->whereDate('created_at', Carbon::today())->sum('sub_franchise_commission_amount')
-                                                   + (clone $pkg_query)->whereDate('created_at', Carbon::today())->sum('amount');
-            $data['subfranchise_earnings_weekly']  = (clone $earnings_query)->whereBetween('created_at', [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()])->sum('sub_franchise_commission_amount')
-                                                   + (clone $pkg_query)->whereBetween('created_at', [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()])->sum('amount');
-            $data['subfranchise_earnings_monthly'] = (clone $earnings_query)->whereMonth('created_at', Carbon::now()->month)->whereYear('created_at', Carbon::now()->year)->sum('sub_franchise_commission_amount')
-                                                   + (clone $pkg_query)->whereMonth('created_at', Carbon::now()->month)->whereYear('created_at', Carbon::now()->year)->sum('amount');
-            $data['subfranchise_earnings_yearly']  = (clone $earnings_query)->whereYear('created_at', Carbon::now()->year)->sum('sub_franchise_commission_amount')
-                                                   + (clone $pkg_query)->whereYear('created_at', Carbon::now()->year)->sum('amount');
+            $data['subfranchise_earnings_daily']   = (clone $earnings_query)->whereDate('created_at', Carbon::today())->sum(DB::raw('sub_franchise_commission_amount + employee_commission_amount'))
+                                                   + (clone $pkg_query)->whereDate('created_at', Carbon::today())->sum('amount')
+                                                   + (clone $payout_query)->whereDate('created_at', Carbon::today())->sum('amount');
+            $data['subfranchise_earnings_weekly']  = (clone $earnings_query)->whereBetween('created_at', [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()])->sum(DB::raw('sub_franchise_commission_amount + employee_commission_amount'))
+                                                   + (clone $pkg_query)->whereBetween('created_at', [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()])->sum('amount')
+                                                   + (clone $payout_query)->whereBetween('created_at', [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()])->sum('amount');
+            $data['subfranchise_earnings_monthly'] = (clone $earnings_query)->whereMonth('created_at', Carbon::now()->month)->whereYear('created_at', Carbon::now()->year)->sum(DB::raw('sub_franchise_commission_amount + employee_commission_amount'))
+                                                   + (clone $pkg_query)->whereMonth('created_at', Carbon::now()->month)->whereYear('created_at', Carbon::now()->year)->sum('amount')
+                                                   + (clone $payout_query)->whereMonth('created_at', Carbon::now()->month)->whereYear('created_at', Carbon::now()->year)->sum('amount');
+            $data['subfranchise_earnings_yearly']  = (clone $earnings_query)->whereYear('created_at', Carbon::now()->year)->sum(DB::raw('sub_franchise_commission_amount + employee_commission_amount'))
+                                                   + (clone $pkg_query)->whereYear('created_at', Carbon::now()->year)->sum('amount')
+                                                   + (clone $payout_query)->whereYear('created_at', Carbon::now()->year)->sum('amount');
 
             $data['recent_earnings'] = VendorCommissionHistory::where('sub_franchise_id', $sub_franchise_id)
                                         ->latest()

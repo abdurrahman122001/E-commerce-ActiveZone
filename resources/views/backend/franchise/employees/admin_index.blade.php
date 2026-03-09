@@ -38,7 +38,9 @@
                     <th>{{translate('Name')}}</th>
                     <th data-breakpoints="lg">{{translate('Email')}}</th>
                     <th data-breakpoints="lg">{{translate('Phone')}}</th>
+                    <th>{{translate('Level')}}</th>
                     <th data-breakpoints="lg">{{translate('Franchise/Sub')}}</th>
+                    <th data-breakpoints="lg">{{translate('Registered By')}}</th>
                     <th data-breakpoints="lg">{{translate('Role')}}</th>
                     <th>{{translate('Commission')}}</th>
                     <th>{{translate('Status')}}</th>
@@ -51,12 +53,34 @@
                         <td>{{ ($key+1) + ($employees->currentPage() - 1)*$employees->perPage() }}</td>
                         <td>{{ $employee->name }}</td>
                         <td>{{ $employee->email }}</td>
-                        <td>{{ $employee->phone }}</td>
+                        <td>{{ $employee->mobile }}</td>
                         <td>
-                            @if($employee->franchise)
-                                {{ $employee->franchise->franchise_name }}
+                            @if(strtoupper($employee->franchise_level) == 'STATE')
+                                <span class="badge badge-inline badge-primary">{{ translate('State') }}</span>
+                            @elseif(strtoupper($employee->franchise_level) == 'CITY')
+                                <span class="badge badge-inline badge-info">{{ translate('City') }}</span>
+                            @elseif(strtoupper($employee->franchise_level) == 'SUB')
+                                <span class="badge badge-inline badge-secondary">{{ translate('Sub') }}</span>
+                            @else
+                                <span class="badge badge-inline badge-dark">{{ $employee->franchise_level }}</span>
+                            @endif
+                        </td>
+                        <td>
+                            @if($employee->subFranchise)
+                                {{ $employee->subFranchise->referral_code }} ({{ translate('Sub') }})
+                            @elseif($employee->franchise)
+                                {{ $employee->franchise->franchise_name }} ({{ translate('City') }})
+                            @elseif($employee->city)
+                                {{ $employee->city->name }} ({{ translate('State Level') }})
                             @else
                                 <span class="text-muted">{{ translate('N/A') }}</span>
+                            @endif
+                        </td>
+                        <td>
+                            @if($employee->creator)
+                                {{ $employee->creator->name }}
+                            @else
+                                <span class="badge badge-inline badge-dark">{{ translate('Admin') }}</span>
                             @endif
                         </td>
                         <td>

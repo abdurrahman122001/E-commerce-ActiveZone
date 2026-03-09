@@ -53,7 +53,14 @@ class SupportTicketController extends Controller
         $ticket->user_role = 'franchise_employee';
         $ticket->subject = '[' . $employee->name . '] ' . $request->subject;
         $ticket->details = $request->details;
-        $ticket->files = $request->attachments;
+        $photos = [];
+        if($request->hasFile('attachments')){
+            foreach ($request->file('attachments') as $file) {
+                $upload_id = $this->upload_attachment($file);
+                if($upload_id) $photos[] = $upload_id;
+            }
+        }
+        $ticket->files = count($photos) > 0 ? implode(',', $photos) : null;
 
         if ($ticket->save()) {
             $this->notifyAdmin($ticket, $employee);
@@ -79,7 +86,14 @@ class SupportTicketController extends Controller
         $ticket_reply->ticket_id = $request->ticket_id;
         $ticket_reply->user_id = 1; // placeholder
         $ticket_reply->reply = $request->reply;
-        $ticket_reply->files = $request->attachments;
+        $photos = [];
+        if($request->hasFile('attachments')){
+            foreach ($request->file('attachments') as $file) {
+                $upload_id = $this->upload_attachment($file);
+                if($upload_id) $photos[] = $upload_id;
+            }
+        }
+        $ticket_reply->files = count($photos) > 0 ? implode(',', $photos) : null;
         if ($ticket_reply->save()) {
             // Mark ticket as pending/unread by admin
             DB::table('tickets')->where('id', $request->ticket_id)->update(['viewed' => 0, 'status' => 'pending']);
@@ -102,5 +116,35 @@ class SupportTicketController extends Controller
         try {
             Mail::to(get_admin()->email)->queue(new SupportMailManager($array));
         } catch (\Exception $e) {}
+    }
+    private function upload_attachment($file)
+    {
+        $type = [
+            "jpg" => "image",
+            "jpeg" => "image",
+            "png" => "image",
+            "svg" => "image",
+            "webp" => "image",
+            "gif" => "image",
+        ];
+        $extension = strtolower($file->getClientOriginalExtension());
+        if (isset($type[$extension])) {
+            $filename = str_replace(' ', '_', $file->getClientOriginalName());
+            $filename = time() . '_' . $filename;
+
+            $upload = new \App\Models\Upload;
+            $upload->file_original_name = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
+            $upload->extension = $extension;
+            $upload->file_name = 'uploads/all/' . $filename;
+            $upload->user_id = Auth::guard('franchise_employee')->id() ?? 0;
+            $upload->type = $type[$extension];
+            $upload->file_size = $file->getSize();
+            $upload->save();
+
+            $file->move(public_path('uploads/all'), $filename);
+
+            return $upload->id;
+        }
+        return null;
     }
 }

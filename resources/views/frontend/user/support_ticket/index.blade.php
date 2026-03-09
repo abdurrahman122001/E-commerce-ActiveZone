@@ -100,20 +100,17 @@
                                 <textarea type="text" class="form-control mb-3 rounded-0" rows="3" name="details" placeholder="{{ translate('Type your reply')}}" data-buttons="bold,underline,italic,|,ul,ol,|,paragraph,|,undo,redo" required></textarea>
                             </div>
                         </div>
-                        <div class="form-group row">
-                            <label class="col-md-2 col-form-label">{{ translate('Photo') }}</label>
-                            <div class="col-md-10">
-                                <div class="input-group" data-toggle="aizuploader" data-type="image" data-multiple="true">
-                                    <div class="input-group-prepend">
-                                        <div class="input-group-text bg-soft-secondary font-weight-medium rounded-0">{{ translate('Browse')}}</div>
+                            <div class="form-group row">
+                                <label class="col-md-2 col-form-label">{{ translate('Photo') }}</label>
+                                <div class="col-md-10">
+                                    <div class="custom-file">
+                                        <input type="file" class="custom-file-input" name="attachments[]" id="attachments" accept="image/*" multiple>
+                                        <label class="custom-file-label" for="attachments">{{ translate('Choose file') }}</label>
                                     </div>
-                                    <div class="form-control file-amount">{{ translate('Choose File') }}</div>
-                                    <input type="hidden" name="attachments" class="selected-files">
-                                </div>
-                                <div class="file-preview box sm">
+                                    <div class="attachments-preview-container mt-3 d-flex flex-wrap">
+                                    </div>
                                 </div>
                             </div>
-                        </div>
                         <div class="text-right mt-4">
                             <button type="button" class="btn btn-secondary rounded-0 w-150px" data-dismiss="modal">{{ translate('cancel')}}</button>
                             <button type="submit" class="btn btn-primary rounded-0 w-150px">{{ translate('Send Ticket')}}</button>
@@ -123,4 +120,36 @@
             </div>
         </div>
     </div>
+@endsection
+
+@section('script')
+    <script type="text/javascript">
+        $(document).on('change', '.custom-file-input', function() {
+            var input = $(this);
+            var files = this.files;
+            var label = input.siblings('.custom-file-label');
+            
+            if (files.length > 0) {
+                if(input.attr('multiple')) {
+                    label.html(files.length + ' {{ translate("files selected") }}');
+                } else {
+                    label.html(files[0].name);
+                }
+                
+                var container = input.closest('.col-md-10').find('.attachments-preview-container');
+                container.html(''); // Clear previous previews
+                $.each(files, function(i, file) {
+                    if (file.type.match('image.*')) {
+                        var reader = new FileReader();
+                        reader.onload = function(e) {
+                            container.append('<div class="mr-2 mb-2"><img class="img-fluid rounded shadow-sm" src="' + e.target.result + '" style="max-height: 100px; border: 1px solid #ddd; background: #f8f9fa; padding: 5px;"></div>');
+                        }
+                        reader.readAsDataURL(file);
+                    }
+                });
+            } else {
+                label.html('{{ translate("Choose file") }}');
+            }
+        });
+    </script>
 @endsection

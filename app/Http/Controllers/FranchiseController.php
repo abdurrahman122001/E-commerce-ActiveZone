@@ -218,6 +218,88 @@ class FranchiseController extends Controller
         $subFranchises = SubFranchise::with('user', 'city', 'area', 'franchise', 'franchise_package', 'state_franchise')->paginate(15);
         return view('backend.franchise.sub_index', compact('subFranchises'));
     }
+
+    // Admin: List All Franchise Registrations
+    public function indexAll(Request $request)
+    {
+        $search = $request->search;
+        $status = $request->status;
+        $type = $request->type;
+
+        // Fetch State Franchises
+        $stateFranchises = StateFranchise::with('user', 'state', 'franchise_package')
+            ->when($status, function($q) use ($status) {
+                return $q->where('status', $status);
+            })
+            ->when($search, function($q) use ($search) {
+                return $q->where('franchise_name', 'like', '%'.$search.'%')
+                         ->orWhereHas('user', function($qu) use ($search) {
+                             $qu->where('name', 'like', '%'.$search.'%')->orWhere('email', 'like', '%'.$search.'%');
+                         });
+            })
+            ->get()->map(function($item) {
+                $item->franchise_type = 'State Franchise';
+                $item->sort_type = 1;
+                return $item;
+            });
+
+        // Fetch City Franchises
+        $franchises = Franchise::with('user', 'city', 'state', 'franchise_package', 'state_franchise')
+            ->when($status, function($q) use ($status) {
+                return $q->where('status', $status);
+            })
+            ->when($search, function($q) use ($search) {
+                return $q->where('franchise_name', 'like', '%'.$search.'%')
+                         ->orWhereHas('user', function($qu) use ($search) {
+                             $qu->where('name', 'like', '%'.$search.'%')->orWhere('email', 'like', '%'.$search.'%');
+                         });
+            })
+            ->get()->map(function($item) {
+                $item->franchise_type = 'City Franchise';
+                $item->sort_type = 2;
+                return $item;
+            });
+
+        // Fetch Sub Franchises
+        $subFranchises = SubFranchise::with('user', 'city', 'area', 'franchise', 'franchise_package', 'state_franchise')
+            ->when($status, function($q) use ($status) {
+                return $q->where('status', $status);
+            })
+            ->when($search, function($q) use ($search) {
+                return $q->whereHas('user', function($qu) use ($search) {
+                             $qu->where('name', 'like', '%'.$search.'%')->orWhere('email', 'like', '%'.$search.'%');
+                         });
+            })
+            ->get()->map(function($item) {
+                $item->franchise_type = 'Sub-Franchise';
+                $item->sort_type = 3;
+                return $item;
+            });
+
+        // Combine and Paginate manually or just show all if not too many
+        // For now, let's merge and sort by created_at desc
+        $combined = $stateFranchises->concat($franchises)->concat($subFranchises)
+            ->filter(function($item) use ($type) {
+                if (!$type) return true;
+                if ($type == 'state' && $item->franchise_type == 'State Franchise') return true;
+                if ($type == 'city' && $item->franchise_type == 'City Franchise') return true;
+                if ($type == 'sub' && $item->franchise_type == 'Sub-Franchise') return true;
+                return false;
+            })
+            ->sortByDesc('created_at');
+
+        // Manual Pagination
+        $perPage = 15;
+        $page = $request->get('page', 1);
+        $offset = ($page * $perPage) - $perPage;
+        $itemsForCurrentPage = $combined->slice($offset, $perPage)->all();
+        $registrations = new \Illuminate\Pagination\LengthAwarePaginator(
+            $itemsForCurrentPage, $combined->count(), $perPage, $page,
+            ['path' => $request->url(), 'query' => $request->query()]
+        );
+
+        return view('backend.franchise.all_registrations', compact('registrations', 'search', 'status', 'type'));
+    }
     
     // Admin: Create State Franchise Form
     public function createStateFranchise()

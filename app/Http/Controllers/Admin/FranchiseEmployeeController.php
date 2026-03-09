@@ -16,7 +16,7 @@ class FranchiseEmployeeController extends Controller
         $sort_search = null;
         $franchise_id = $request->franchise_id;
         
-        $employees = FranchiseEmployee::orderBy('name', 'asc');
+        $employees = FranchiseEmployee::with(['creator', 'franchise', 'subFranchise', 'city'])->orderBy('name', 'asc');
         
         if ($request->has('search')){
             $sort_search = $request->search;
@@ -131,6 +131,12 @@ class FranchiseEmployeeController extends Controller
             'payment_method' => $request->payment_method,
             'remark' => $request->remark
         ]);
+
+        $employee = FranchiseEmployee::find($request->employee_id);
+        if ($employee) {
+            $employee->balance += $request->amount;
+            $employee->save();
+        }
 
         flash(translate('Payout processed successfully'))->success();
         return back();

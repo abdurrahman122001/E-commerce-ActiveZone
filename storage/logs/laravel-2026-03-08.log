@@ -365,3 +365,6 @@
 [2026-03-08 06:35:05] local.INFO: Authenticated method called {"user_id":9,"user_type":"admin"} 
 [2026-03-08 06:35:39] local.INFO: Authenticated method called {"user_id":52,"user_type":"franchise"} 
 [2026-03-08 06:35:39] local.INFO: Redirecting franchise/sub_franchise  
+[2026-03-08 07:10:32] local.INFO: Authenticated method called {"user_id":9,"user_type":"admin"} 
+[2026-03-08 07:11:40] local.INFO: Authenticated method called {"user_id":4,"user_type":"franchise_employee"} 
+[2026-03-08 07:11:40] local.INFO: Redirecting franchise employee from main login  

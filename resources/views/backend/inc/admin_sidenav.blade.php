@@ -949,6 +949,11 @@
                     </a>
                     <ul class="aiz-side-nav-list level-2">
                         <li class="aiz-side-nav-item">
+                            <a href="{{ route('admin.all_franchises.registrations') }}" class="aiz-side-nav-link {{ areActiveRoutes(['admin.all_franchises.registrations']) }}">
+                                <span class="aiz-side-nav-text">{{ translate('All Registrations') }}</span>
+                            </a>
+                        </li>
+                        <li class="aiz-side-nav-item">
                             <a href="{{ route('admin.state_franchises.index') }}" class="aiz-side-nav-link">
                                 <span class="aiz-side-nav-text">{{ translate('State Franchises') }}</span>
                             </a>
