@@ -174,7 +174,7 @@ class DashboardController extends Controller
             $pkg_query = \App\Models\PackageCommissionHistory::where('state_franchise_id', $state_franchise_id)->where('beneficiary_type', 'state_franchise');
             
             // Employee Payouts assigned to this state's hierarchy
-            $emp_ids = FranchiseEmployee::where('state_franchise_id', $state_franchise_id)->pluck('id')->toArray();
+            $emp_ids = (clone $employeeQuery)->pluck('id')->toArray();
             $payout_query = \App\Models\EmployeePayout::whereIn('employee_id', $emp_ids);
 
             $data['subfranchise_earnings_daily']   = (clone $earnings_query)->whereDate('created_at', Carbon::today())->sum(DB::raw('state_franchise_commission_amount + employee_commission_amount'))
@@ -226,7 +226,7 @@ class DashboardController extends Controller
             $pkg_query = \App\Models\PackageCommissionHistory::where('franchise_id', $franchise_id)->where('beneficiary_type', 'franchise');
             
             // Employee Payouts assigned to this city's hierarchy
-            $emp_ids = FranchiseEmployee::where('franchise_id', $franchise_id)->pluck('id')->toArray();
+            $emp_ids = (clone $employeeQuery)->pluck('id')->toArray();
             $payout_query = \App\Models\EmployeePayout::whereIn('employee_id', $emp_ids);
 
             $data['subfranchise_earnings_daily']   = (clone $earnings_query)->whereDate('created_at', Carbon::today())->sum(DB::raw('franchise_commission_amount + employee_commission_amount'))
@@ -262,7 +262,7 @@ class DashboardController extends Controller
             $pkg_query = \App\Models\PackageCommissionHistory::where('sub_franchise_id', $sub_franchise_id)->where('beneficiary_type', 'sub_franchise');
             
             // Employee Payouts assigned to this sub-franchise
-            $emp_ids = FranchiseEmployee::where('sub_franchise_id', $sub_franchise_id)->pluck('id')->toArray();
+            $emp_ids = (clone $employeeQuery)->pluck('id')->toArray();
             $payout_query = \App\Models\EmployeePayout::whereIn('employee_id', $emp_ids);
 
             $data['subfranchise_earnings_daily']   = (clone $earnings_query)->whereDate('created_at', Carbon::today())->sum(DB::raw('sub_franchise_commission_amount + employee_commission_amount'))
