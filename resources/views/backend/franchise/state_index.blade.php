@@ -35,6 +35,7 @@
                     <th>{{translate('Payment')}}</th>
                     <th>{{translate('ID Proof')}}</th>
                     <th>{{translate('Commission')}}</th>
+                    <th>{{translate('Registration Date')}}</th>
                     <th class="text-right">{{translate('Options')}}</th>
                 </tr>
             </thead>
@@ -80,6 +81,7 @@
                                 %
                             @endif
                         </td>
+                        <td>{{ $franchise->created_at->format('Y-m-d H:i:s') }}</td>
                         <td class="text-right">
                              <div class="dropdown">
                                 <button type="button" class="btn btn-sm btn-circle btn-soft-primary btn-icon dropdown-toggle no-arrow" data-toggle="dropdown" href="javascript:void(0);" role="button" aria-haspopup="false" aria-expanded="false">

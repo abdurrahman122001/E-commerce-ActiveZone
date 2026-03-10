@@ -28,7 +28,7 @@
                             <div class="ml-3 flex-grow-1">
                                 <div class="bg-light p-3 rounded-lg border">
                                     <div class="fw-700 mb-1 text-dark">{{ $ticket->user->name ?? translate('Unknown User') }}</div>
-                                    <div class="text-secondary lh-1-6">{{ $ticket->details }}</div>
+                                    <div class="text-secondary lh-1-6">{!! $ticket->details !!}</div>
                                     @if($ticket->files)
                                         <div class="mt-3">
                                             @foreach (explode(',', $ticket->files) as $file)
@@ -62,7 +62,7 @@
                                             <span class="fw-700 text-dark">{{ $reply->user->name ?? translate('Unknown User') }}</span>
                                             <span class="fs-11 text-muted">{{ $reply->created_at->format('d M, Y H:i A') }}</span>
                                         </div>
-                                        <div class="text-secondary lh-1-6">{{ $reply->reply }}</div>
+                                        <div class="text-secondary lh-1-6">{!! $reply->reply !!}</div>
                                         @if($reply->files)
                                             <div class="mt-3">
                                                 @foreach (explode(',', $reply->files) as $file)

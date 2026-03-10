@@ -1154,7 +1154,11 @@ class FranchiseController extends Controller
 
     public function profile($id)
     {
-        $user_id = decrypt($id);
+        try {
+            $user_id = decrypt($id);
+        } catch (\Exception $e) {
+            $user_id = $id;
+        }
         $user = User::findOrFail($user_id);
         
         $subFranchises = collect();
@@ -1180,6 +1184,35 @@ class FranchiseController extends Controller
                  $sub_franchise_vendors = Vendor::where('sub_franchise_id', $subFranchise->id)->get();
                  $sub_franchise_employees = FranchiseEmployee::where('sub_franchise_id', $subFranchise->id)->get();
                  $delivery_boys = \App\Models\DeliveryBoy::where('sub_franchise_id', $user->id)->get();
+             }
+        } elseif ($user->user_type == 'state_franchise') {
+             $stateFranchise = $user->state_franchise;
+             if($stateFranchise) {
+                 // City franchises under this state franchise
+                 $subFranchises = Franchise::where('state_franchise_id', $stateFranchise->id)->get();
+                 $cityFranchiseIds = $subFranchises->pluck('id')->toArray();
+
+                 // Vendors: use state_franchise_id which exists on vendors table
+                 $franchise_vendors = Vendor::where('state_franchise_id', $stateFranchise->id)
+                     ->whereNull('franchise_id')->whereNull('sub_franchise_id')->get();
+                 $sub_franchise_vendors = Vendor::where('state_franchise_id', $stateFranchise->id)
+                     ->where(function($q) {
+                         $q->whereNotNull('franchise_id')->orWhereNotNull('sub_franchise_id');
+                     })->get();
+
+                 // FranchiseEmployee has no state_franchise_id column — query via franchise_id
+                 if (!empty($cityFranchiseIds)) {
+                     $franchise_employees = FranchiseEmployee::whereIn('franchise_id', $cityFranchiseIds)
+                         ->whereNull('sub_franchise_id')->get();
+                     $sub_franchise_employees = FranchiseEmployee::whereIn('franchise_id', $cityFranchiseIds)
+                         ->whereNotNull('sub_franchise_id')->get();
+                     // DeliveryBoy also has no state_franchise_id — query via franchise_id
+                     $delivery_boys = \App\Models\DeliveryBoy::whereIn('franchise_id', $cityFranchiseIds)->get();
+                 } else {
+                     $franchise_employees = collect();
+                     $sub_franchise_employees = collect();
+                     $delivery_boys = collect();
+                 }
              }
         }
 

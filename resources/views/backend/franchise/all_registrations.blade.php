@@ -58,6 +58,7 @@
                     <th>{{translate('Registered By / Hierarchy')}}</th>
                     <th>{{translate('Status')}}</th>
                     <th>{{translate('Payment')}}</th>
+                    <th>{{translate('Registration Date')}}</th>
                     <th class="text-right">{{translate('Options')}}</th>
                 </tr>
             </thead>
@@ -142,6 +143,7 @@
                                 <span class="badge badge-inline badge-danger">{{translate('Unpaid')}}</span>
                             @endif
                         </td>
+                        <td>{{ $reg->created_at->format('Y-m-d H:i:s') }}</td>
                         <td class="text-right">
                              <div class="dropdown">
                                 <button type="button" class="btn btn-sm btn-circle btn-soft-primary btn-icon dropdown-toggle no-arrow" data-toggle="dropdown">

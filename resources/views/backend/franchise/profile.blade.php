@@ -15,6 +15,8 @@
                         <img src="{{ uploaded_asset($user->franchise->photo) }}" onerror="this.onerror=null;this.src='{{ static_asset('assets/img/avatar-place.png') }}';">
                     @elseif($user->sub_franchise && $user->sub_franchise->photo)
                         <img src="{{ uploaded_asset($user->sub_franchise->photo) }}" onerror="this.onerror=null;this.src='{{ static_asset('assets/img/avatar-place.png') }}';">
+                    @elseif($user->state_franchise && $user->state_franchise->photo)
+                        <img src="{{ uploaded_asset($user->state_franchise->photo) }}" onerror="this.onerror=null;this.src='{{ static_asset('assets/img/avatar-place.png') }}';">
                     @else
                         <img src="{{ static_asset('assets/img/avatar-place.png') }}">
                     @endif
@@ -31,6 +33,10 @@
                     @elseif($user->sub_franchise && $user->sub_franchise->status == 'pending')
                         <span class="badge badge-inline badge-warning">{{translate('Pending')}}</span>
                     @elseif($user->sub_franchise && $user->sub_franchise->status == 'approved')
+                        <span class="badge badge-inline badge-success">{{translate('Approved')}}</span>
+                    @elseif($user->state_franchise && $user->state_franchise->status == 'pending')
+                        <span class="badge badge-inline badge-warning">{{translate('Pending')}}</span>
+                    @elseif($user->state_franchise && $user->state_franchise->status == 'approved')
                         <span class="badge badge-inline badge-success">{{translate('Approved')}}</span>
                     @else
                         <span class="badge badge-inline badge-danger">{{translate('Rejected')}}</span>
@@ -82,12 +88,25 @@
                         <label>{{translate('Package')}}</label>
                         <p>{{ $user->sub_franchise->franchise_package->name ?? '' }}</p>
                     </div>
+                @elseif($user->state_franchise)
+                    <div class="form-group">
+                        <label>{{translate('State Franchise Name')}}</label>
+                        <p>{{ $user->state_franchise->franchise_name }}</p>
+                    </div>
+                    <div class="form-group">
+                        <label>{{translate('State')}}</label>
+                        <p>{{ $user->state_franchise->state->name ?? '' }}</p>
+                    </div>
+                     <div class="form-group">
+                        <label>{{translate('Package')}}</label>
+                        <p>{{ $user->state_franchise->franchise_package->name ?? '' }}</p>
+                    </div>
                 @endif
                 <hr>
                 <h5 class="mb-3 h6">{{translate('Verification Documents')}}</h5>
                 @php
-                    $id_proof = $user->franchise ? $user->franchise->id_proof : ($user->sub_franchise ? $user->sub_franchise->id_proof : null);
-                    $pan_number = $user->franchise ? $user->franchise->pan_number : ($user->sub_franchise ? $user->sub_franchise->pan_number : null);
+                    $id_proof = $user->franchise ? $user->franchise->id_proof : ($user->sub_franchise ? $user->sub_franchise->id_proof : ($user->state_franchise ? $user->state_franchise->id_proof : null));
+                    $pan_number = $user->franchise ? $user->franchise->pan_number : ($user->sub_franchise ? $user->sub_franchise->pan_number : ($user->state_franchise ? $user->state_franchise->pan_number : null));
                 @endphp
                 <div class="form-group">
                     <label>{{translate('PAN Number')}}</label>
@@ -111,10 +130,10 @@
             </div>
             <div class="card-body">
                 @php
-                    $bank_name = $user->franchise ? $user->franchise->bank_name : ($user->sub_franchise ? $user->sub_franchise->bank_name : null);
-                    $bank_acc_name = $user->franchise ? $user->franchise->bank_acc_name : ($user->sub_franchise ? $user->sub_franchise->bank_acc_name : null);
-                    $bank_acc_no = $user->franchise ? $user->franchise->bank_acc_no : ($user->sub_franchise ? $user->sub_franchise->bank_acc_no : null);
-                    $bank_routing_no = $user->franchise ? $user->franchise->bank_routing_no : ($user->sub_franchise ? $user->sub_franchise->bank_routing_no : null);
+                    $bank_name = $user->franchise ? $user->franchise->bank_name : ($user->sub_franchise ? $user->sub_franchise->bank_name : ($user->state_franchise ? $user->state_franchise->bank_name : null));
+                    $bank_acc_name = $user->franchise ? $user->franchise->bank_acc_name : ($user->sub_franchise ? $user->sub_franchise->bank_acc_name : ($user->state_franchise ? $user->state_franchise->bank_acc_name : null));
+                    $bank_acc_no = $user->franchise ? $user->franchise->bank_acc_no : ($user->sub_franchise ? $user->sub_franchise->bank_acc_no : ($user->state_franchise ? $user->state_franchise->bank_acc_no : null));
+                    $bank_routing_no = $user->franchise ? $user->franchise->bank_routing_no : ($user->sub_franchise ? $user->sub_franchise->bank_routing_no : ($user->state_franchise ? $user->state_franchise->bank_routing_no : null));
                 @endphp
                 <div class="form-group text-center">
                     <label class="d-block">{{translate('Bank Name')}}</label>
@@ -142,7 +161,7 @@
                 <div class="card bg-primary text-white">
                      <div class="card-body text-center">
                         <h1 class="h3">{{ $subFranchises->count() }}</h1>
-                        <p>{{ translate('Sub-Franchises') }}</p>
+                        <p>{{ $user->user_type == 'state_franchise' ? translate('City Franchises') : translate('Sub-Franchises') }}</p>
                      </div>
                 </div>
             </div>
@@ -175,7 +194,7 @@
         @if($subFranchises->count() > 0)
         <div class="card">
             <div class="card-header">
-                <h5 class="mb-0 h6">{{translate('Sub-Franchises')}}</h5>
+                <h5 class="mb-0 h6">{{ $user->user_type == 'state_franchise' ? translate('City Franchises') : translate('Sub-Franchises') }}</h5>
             </div>
             <div class="card-body">
                 <table class="table aiz-table mb-0">
@@ -184,7 +203,7 @@
                             <th>{{translate('Name')}}</th>
                             <th>{{translate('Email')}}</th>
                             <th>{{translate('Phone')}}</th>
-                            <th>{{translate('Area')}}</th>
+                            <th>{{ $user->user_type == 'state_franchise' ? translate('City') : translate('Area') }}</th>
                             <th>{{translate('Status')}}</th>
                         </tr>
                     </thead>
@@ -194,7 +213,7 @@
                                 <td>{{ $sub->user->name ?? 'N/A' }}</td>
                                 <td>{{ $sub->user->email ?? 'N/A' }}</td>
                                 <td>{{ $sub->user->phone ?? 'N/A' }}</td>
-                                <td>{{ $sub->area->name ?? '' }}</td>
+                                <td>{{ $user->user_type == 'state_franchise' ? ($sub->city->name ?? '') : ($sub->area->name ?? '') }}</td>
                                 <td>
                                     @if ($sub->status == 'pending')
                                         <span class="badge badge-inline badge-warning">{{translate('Pending')}}</span>
@@ -238,7 +257,14 @@
                                 <li class="list-group-item d-flex justify-content-between align-items-center">
                                     <div>
                                         {{ $employee->name }}
-                                        <small class="text-muted d-block">{{ $employee->subFranchise->user->name ?? '' }} ({{ $employee->subFranchise->area->name ?? '' }})</small>
+                                        <small class="text-muted d-block">
+                                            @if($user->user_type == 'state_franchise')
+                                                {{ $employee->franchise->user->name ?? ($employee->subFranchise->user->name ?? '') }}
+                                            @else
+                                                {{ $employee->subFranchise->user->name ?? '' }} 
+                                            @endif
+                                            ({{ $employee->subFranchise->area->name ?? ($employee->franchise->city->name ?? '') }})
+                                        </small>
                                     </div>
                                     <span class="badge badge-info badge-pill">{{ $employee->role }}</span>
                                 </li>
@@ -281,7 +307,14 @@
                                 <li class="list-group-item d-flex justify-content-between align-items-center">
                                     <div>
                                         {{ $vendor->user->name ?? 'N/A' }}
-                                        <small class="text-muted d-block">{{ $vendor->sub_franchise->user->name ?? '' }} ({{ $vendor->sub_franchise->area->name ?? '' }})</small>
+                                        <small class="text-muted d-block">
+                                            @if($user->user_type == 'state_franchise')
+                                                {{ $vendor->franchise->user->name ?? ($vendor->sub_franchise->user->name ?? '') }}
+                                            @else
+                                                {{ $vendor->sub_franchise->user->name ?? '' }}
+                                            @endif
+                                            ({{ $vendor->sub_franchise->area->name ?? ($vendor->franchise->city->name ?? '') }})
+                                        </small>
                                     </div>
                                     @if($vendor->status == 1)
                                         <span class="badge badge-success badge-pill">{{ translate('Active') }}</span>

@@ -23,7 +23,7 @@
         </span>
     </div>
     <div class="card-body">
-        <p>{!! nl2br(e($ticket->details)) !!}</p>
+        <p>{!! $ticket->details !!}</p>
         
         @if($ticket->files)
             <div class="mt-3">
@@ -55,7 +55,7 @@
         <small class="text-muted">{{ $reply->created_at->format('d M Y, h:i A') }}</small>
     </div>
     <div class="card-body">
-        <p>{!! nl2br(e($reply->reply)) !!}</p>
+        <p>{!! $reply->reply !!}</p>
         
         @if($reply->files)
             <div class="mt-3">
