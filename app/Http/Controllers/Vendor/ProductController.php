@@ -174,6 +174,8 @@ class ProductController extends Controller
             '_token', 'sku', 'choice', 'tax_id', 'tax', 'tax_type', 'thumbnail_img_file', 'photos_file', 'pdf_file', 'meta_img_file'
         ]), $product);
 
+        $request->merge(['product_id' => $product->id]);
+
         if ($request->has('category_ids')) {
             $product->categories()->sync($request->category_ids);
         }
@@ -186,7 +188,6 @@ class ProductController extends Controller
         //VAT & Tax
         if ($request->tax_id) {
             $product->taxes()->delete();
-            $request->merge(['product_id' => $product->id]);
             $this->productTaxService->store($request->only([
                 'tax_id', 'tax', 'tax_type', 'product_id'
             ]));
@@ -197,6 +198,17 @@ class ProductController extends Controller
         $this->frequentlyBoughtProductService->store($request->only([
             'product_id', 'frequently_bought_selection_type', 'fq_bought_product_ids', 'fq_bought_product_category_id'
         ]));
+
+        // Product Translations
+        $request->merge(['lang' => env('DEFAULT_LANGUAGE')]);
+        ProductTranslation::updateOrCreate(
+            $request->only([
+                'lang', 'product_id'
+            ]),
+            $request->only([
+                'name', 'unit', 'description'
+            ])
+        );
 
         flash(translate('Product has been updated successfully'))->success();
 
@@ -334,5 +346,20 @@ class ProductController extends Controller
     public function get_selected_products(Request $request){
         $products = Product::whereIn('id', $request->product_ids)->get();
         return view('partials.product.frequently_bought_selected_product', compact('products'));
+    }
+
+    public function check_refundable_category(Request $request)
+    {
+        $category = Category::findOrFail($request->category_id);
+        if ($category->refundable) {
+            return response()->json([
+                'status' => 'success',
+                'is_refundable' => true
+            ]);
+        }
+        return response()->json([
+            'status' => 'success',
+            'is_refundable' => false
+        ]);
     }
 }

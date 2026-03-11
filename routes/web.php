@@ -165,6 +165,7 @@ Route::group(['middleware' => ['vendor', 'user', 'prevent-back-history']], funct
         Route::post('/vendor/products/add-more-choice-option', 'add_more_choice_option')->name('vendor.products.add-more-choice-option');
         Route::post('/vendor/product-search', 'product_search')->name('vendor.product.search');
         Route::post('/vendor/get-selected-products', 'get_selected_products')->name('vendor.get-selected-products');
+        Route::post('/vendor/products/check-refundable-category', 'check_refundable_category')->name('vendor.products.check_refundable_category');
     });
 
     // Vendor Categories

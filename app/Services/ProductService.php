@@ -97,7 +97,7 @@ class ProductService
         if (
             isset($collection['colors_active']) &&
             $collection['colors_active'] &&
-            $collection['colors'] &&
+            isset($collection['colors']) &&
             count($collection['colors']) > 0
         ) {
             $colors = json_encode($collection['colors']);
@@ -155,6 +155,11 @@ class ProductService
         }
         unset($collection['button']);
 
+        $collection['refundable'] = isset($collection['refundable']) ? 1 : 0;
+        $collection['is_quantity_multiplied'] = isset($collection['is_quantity_multiplied']) ? 1 : 0;
+        $collection['cash_on_delivery'] = isset($collection['cash_on_delivery']) ? 1 : 0;
+        $collection['featured'] = isset($collection['featured']) ? 1 : 0;
+        $collection['todays_deal'] = isset($collection['todays_deal']) ? 1 : 0;
         $collection['has_warranty'] = isset($collection['has_warranty']) ? 1 : 0;
 
         $data = $collection->merge(compact(
@@ -259,7 +264,7 @@ class ProductService
         if (
             isset($collection['colors_active']) && 
             $collection['colors_active'] &&
-            $collection['colors'] &&
+            isset($collection['colors']) &&
             count($collection['colors']) > 0
         ) {
             $colors = json_encode($collection['colors']);
