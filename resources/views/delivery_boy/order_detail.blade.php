@@ -49,18 +49,25 @@
                                     <td class="text-muted"><strong>{{ translate('Address') }}</strong></td>
                                     <td>{{ $vendor->address ?? translate('N/A') }}</td>
                                 </tr>
-                                @if($vendor->franchise)
-                                <tr>
-                                    <td class="text-muted"><strong>{{ translate('Franchise') }}</strong></td>
-                                    <td>{{ $vendor->franchise->franchise_name }}</td>
-                                </tr>
-                                @elseif($vendor->sub_franchise)
-                                <tr>
-                                    <td class="text-muted"><strong>{{ translate('Sub-Franchise') }}</strong></td>
-                                    <td>{{ $vendor->sub_franchise->user->name ?? ('Sub-Franchise #' . $vendor->sub_franchise_id) }}</td>
-                                </tr>
-                                @endif
-                            </table>
+                            @if($vendor->franchise)
+                            <tr>
+                                <td class="text-muted"><strong>{{ translate('Franchise') }}</strong></td>
+                                <td>{{ $vendor->franchise->franchise_name }}</td>
+                            </tr>
+                            @elseif($vendor->sub_franchise)
+                            <tr>
+                                <td class="text-muted"><strong>{{ translate('Sub-Franchise') }}</strong></td>
+                                <td>{{ $vendor->sub_franchise->user->name ?? ('Sub-Franchise #' . $vendor->sub_franchise_id) }}</td>
+                            </tr>
+                            @endif
+                            <tr>
+                                <td colspan="2" class="text-center pt-3 border-top-0">
+                                    <a href="https://www.google.com/maps/dir/?api=1&destination={{ urlencode($vendor->address ?? $shop->name ?? '') }}" target="_blank" class="btn btn-sm btn-outline-warning btn-block" onclick="appendOrigin(this)">
+                                        <i class="las la-directions fs-16"></i> {{ translate('Get Directions to Vendor') }}
+                                    </a>
+                                </td>
+                            </tr>
+                        </table>
                         @elseif($shop)
                             <table class="table table-sm mb-0">
                                 <tr>
@@ -68,10 +75,17 @@
                                     <td>{{ $shop->name }}</td>
                                 </tr>
                                 <tr>
-                                    <td class="text-muted"><strong>{{ translate('Address') }}</strong></td>
-                                    <td>{{ $shop->address ?? translate('N/A') }}</td>
-                                </tr>
-                            </table>
+                                <td class="text-muted"><strong>{{ translate('Address') }}</strong></td>
+                                <td>{{ $shop->address ?? translate('N/A') }}</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2" class="text-center pt-3 border-top-0">
+                                    <a href="https://www.google.com/maps/dir/?api=1&destination={{ urlencode($shop->address ?? $shop->name ?? '') }}" target="_blank" class="btn btn-sm btn-outline-warning btn-block" onclick="appendOrigin(this)">
+                                        <i class="las la-directions fs-16"></i> {{ translate('Get Directions to Shop') }}
+                                    </a>
+                                </td>
+                            </tr>
+                        </table>
                         @else
                             <p class="text-muted mb-0">{{ translate('Admin / In-house order') }}</p>
                         @endif
@@ -118,11 +132,41 @@
                                     @endif
                                 </td>
                             </tr>
+                            <tr>
+                                <td colspan="2" class="text-center pt-3 border-top-0">
+                                    @php
+                                        $d_lat = $shipping_address->latitude ?? $shipping_address->lat ?? null;
+                                        $d_long = $shipping_address->longitude ?? $shipping_address->long ?? $shipping_address->lang ?? null;
+                                        $d_addr = ($shipping_address->address ?? '') . ', ' . ($shipping_address->city ?? '') . ', ' . ($shipping_address->country ?? '');
+                                    @endphp
+                                    <a href="https://www.google.com/maps/dir/?api=1&destination={{ $d_lat && $d_long ? $d_lat.','.$d_long : urlencode($d_addr) }}" target="_blank" class="btn btn-sm btn-primary btn-block fw-700" onclick="appendOrigin(this)">
+                                        <i class="las la-directions fs-16"></i> {{ translate('Get Directions to Customer') }}
+                                    </a>
+                                </td>
+                            </tr>
                         </table>
                     </div>
                 </div>
             </div>
         </div>
+
+        @if(get_setting('google_map') == 1)
+        {{-- MAP EMBED --}}
+        <div class="row">
+            <div class="col-12 mb-3">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-header bg-soft-primary">
+                        <h6 class="mb-0 fw-600"><i class="las la-map-marker text-primary"></i> {{ translate('Customer Location Map') }}</h6>
+                    </div>
+                    <div class="card-body p-0">
+                        <iframe width="100%" height="300" frameborder="0" style="border:0;" 
+                            src="https://www.google.com/maps/embed/v1/place?key={{ get_setting('google_map_key') }}&q={{ $d_lat && $d_long ? $d_lat.','.$d_long : urlencode($d_addr) }}" 
+                            allowfullscreen></iframe>
+                    </div>
+                </div>
+            </div>
+        </div>
+        @endif
 
         {{-- ORDER SUMMARY --}}
         <div class="row">
@@ -201,13 +245,28 @@
 
 @section('script')
 <script>
+    var currentLat = null;
+    var currentLong = null;
+
     $(document).ready(function() {
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(function(position) {
-                $('#lat').val(position.coords.latitude);
-                $('#long').val(position.coords.longitude);
+                currentLat = position.coords.latitude;
+                currentLong = position.coords.longitude;
+                // Keep existing behavior (e.g. for status updates)
+                $('#lat').val(currentLat);
+                $('#long').val(currentLong);
             });
         }
     });
+
+    function appendOrigin(element) {
+        var a = $(element);
+        var href = a.attr('href');
+        if (currentLat && currentLong && href.indexOf('&origin=') === -1) {
+            a.attr('href', href + '&origin=' + currentLat + ',' + currentLong);
+        }
+        return true;
+    }
 </script>
 @endsection
