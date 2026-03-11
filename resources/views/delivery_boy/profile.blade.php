@@ -81,31 +81,31 @@
                 <div class="col-md-6">
                     <div class="form-group">
                         <label>{{ translate('Bank Name') }}</label>
-                        <input type="text" class="form-control" name="bank_name" value="{{ $delivery_boy->bank_name ?? '' }}">
+                        <input type="text" class="form-control" name="bank_name" value="{{ $delivery_boy->bank_name ?? '' }}" {{ !empty($delivery_boy->bank_name) ? 'readonly' : '' }}>
                     </div>
                 </div>
                 <div class="col-md-6">
                     <div class="form-group">
                         <label>{{ translate('Account Holder Name') }}</label>
-                        <input type="text" class="form-control" name="holder_name" value="{{ $delivery_boy->holder_name ?? '' }}">
+                        <input type="text" class="form-control" name="holder_name" value="{{ $delivery_boy->holder_name ?? '' }}" {{ !empty($delivery_boy->holder_name) ? 'readonly' : '' }}>
                     </div>
                 </div>
                 <div class="col-md-6">
                     <div class="form-group">
                         <label>{{ translate('Account Number') }}</label>
-                        <input type="text" class="form-control" name="bank_account_no" value="{{ $delivery_boy->bank_account_no ?? '' }}">
+                        <input type="text" class="form-control" name="bank_account_no" value="{{ $delivery_boy->bank_account_no ?? '' }}" {{ !empty($delivery_boy->bank_account_no) ? 'readonly' : '' }}>
                     </div>
                 </div>
                 <div class="col-md-6">
                     <div class="form-group">
                         <label>{{ translate('Bank Routing Number') }}</label>
-                        <input type="text" class="form-control" name="bank_routing_no" value="{{ $delivery_boy->bank_routing_no ?? '' }}">
+                        <input type="text" class="form-control" name="bank_routing_no" value="{{ $delivery_boy->bank_routing_no ?? '' }}" {{ !empty($delivery_boy->bank_routing_no) ? 'readonly' : '' }}>
                     </div>
                 </div>
                 <div class="col-md-6">
                     <div class="form-group">
                         <label>{{ translate('IFSC Code') }}</label>
-                        <input type="text" class="form-control" name="ifsc_code" value="{{ $delivery_boy->ifsc_code ?? '' }}">
+                        <input type="text" class="form-control" name="ifsc_code" value="{{ $delivery_boy->ifsc_code ?? '' }}" {{ !empty($delivery_boy->ifsc_code) ? 'readonly' : '' }}>
                     </div>
                 </div>
             </div>

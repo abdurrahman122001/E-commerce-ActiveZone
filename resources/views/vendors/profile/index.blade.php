@@ -73,31 +73,31 @@
                 <div class="form-group row">
                     <label class="col-md-2 col-from-label">{{ translate('Bank Name') }}</label>
                     <div class="col-md-10">
-                        <input type="text" class="form-control" placeholder="{{ translate('Bank Name') }}" name="bank_name" value="{{ $vendor->bank_name ?? '' }}">
+                        <input type="text" class="form-control" placeholder="{{ translate('Bank Name') }}" name="bank_name" value="{{ $vendor->bank_name ?? '' }}" {{ !empty($vendor->bank_name) ? 'readonly' : '' }}>
                     </div>
                 </div>
                 <div class="form-group row">
                     <label class="col-md-2 col-from-label">{{ translate('Bank Account Name') }}</label>
                     <div class="col-md-10">
-                        <input type="text" class="form-control" placeholder="{{ translate('Bank Account Name') }}" name="bank_acc_name" value="{{ $vendor->bank_acc_name ?? '' }}">
+                        <input type="text" class="form-control" placeholder="{{ translate('Bank Account Name') }}" name="bank_acc_name" value="{{ $vendor->bank_acc_name ?? '' }}" {{ !empty($vendor->bank_acc_name) ? 'readonly' : '' }}>
                     </div>
                 </div>
                 <div class="form-group row">
                     <label class="col-md-2 col-from-label">{{ translate('Bank Account Number') }}</label>
                     <div class="col-md-10">
-                        <input type="text" class="form-control" placeholder="{{ translate('Bank Account Number') }}" name="bank_acc_no" value="{{ $vendor->bank_acc_no ?? '' }}">
+                        <input type="text" class="form-control" placeholder="{{ translate('Bank Account Number') }}" name="bank_acc_no" value="{{ $vendor->bank_acc_no ?? '' }}" {{ !empty($vendor->bank_acc_no) ? 'readonly' : '' }}>
                     </div>
                 </div>
                 <div class="form-group row">
                     <label class="col-md-2 col-from-label">{{ translate('Bank Routing Number') }}</label>
                     <div class="col-md-10">
-                        <input type="text" class="form-control" placeholder="{{ translate('Bank Routing Number') }}" name="bank_routing_no" value="{{ $vendor->bank_routing_no ?? '' }}">
+                        <input type="text" class="form-control" placeholder="{{ translate('Bank Routing Number') }}" name="bank_routing_no" value="{{ $vendor->bank_routing_no ?? '' }}" {{ !empty($vendor->bank_routing_no) ? 'readonly' : '' }}>
                     </div>
                 </div>
                 <div class="form-group row">
                     <label class="col-md-2 col-from-label">{{ translate('IFSC Code') }}</label>
                     <div class="col-md-10">
-                        <input type="text" class="form-control" placeholder="{{ translate('IFSC Code') }}" name="ifsc_code" value="{{ $vendor->ifsc_code ?? '' }}">
+                        <input type="text" class="form-control" placeholder="{{ translate('IFSC Code') }}" name="ifsc_code" value="{{ $vendor->ifsc_code ?? '' }}" {{ !empty($vendor->ifsc_code) ? 'readonly' : '' }}>
                     </div>
                 </div>
                 <div class="form-group mb-0 text-right">

@@ -99,7 +99,7 @@
             <div class="row">
                 <label class="col-md-3 col-form-label" for="bank_name">{{ translate('Bank Name') }}</label>
                 <div class="col-md-9">
-                    <input type="text" name="bank_name" value="{{ $user->shop->bank_name }}" id="bank_name" class="form-control mb-3" placeholder="{{ translate('Bank Name')}}">
+                    <input type="text" name="bank_name" value="{{ $user->shop->bank_name }}" id="bank_name" class="form-control mb-3" placeholder="{{ translate('Bank Name')}}" {{ $user->shop->bank_name ? 'readonly' : '' }}>
                     @error('bank_name')
                     <small class="form-text text-danger">{{ $message }}</small>
                     @enderror
@@ -108,7 +108,7 @@
             <div class="row">
                 <label class="col-md-3 col-form-label" for="bank_acc_name">{{ translate('Bank Account Name') }}</label>
                 <div class="col-md-9">
-                    <input type="text" name="bank_acc_name" value="{{ $user->shop->bank_acc_name }}" id="bank_acc_name" class="form-control mb-3" placeholder="{{ translate('Bank Account Name')}}">
+                    <input type="text" name="bank_acc_name" value="{{ $user->shop->bank_acc_name }}" id="bank_acc_name" class="form-control mb-3" placeholder="{{ translate('Bank Account Name')}}" {{ $user->shop->bank_acc_name ? 'readonly' : '' }}>
                     @error('bank_acc_name')
                     <small class="form-text text-danger">{{ $message }}</small>
                     @enderror
@@ -117,7 +117,7 @@
             <div class="row">
                 <label class="col-md-3 col-form-label" for="bank_acc_no">{{ translate('Bank Account Number') }}</label>
                 <div class="col-md-9">
-                    <input type="text" name="bank_acc_no" value="{{ $user->shop->bank_acc_no }}" id="bank_acc_no" class="form-control mb-3" placeholder="{{ translate('Bank Account Number')}}">
+                    <input type="text" name="bank_acc_no" value="{{ $user->shop->bank_acc_no }}" id="bank_acc_no" class="form-control mb-3" placeholder="{{ translate('Bank Account Number')}}" {{ $user->shop->bank_acc_no ? 'readonly' : '' }}>
                     @error('bank_acc_no')
                     <small class="form-text text-danger">{{ $message }}</small>
                     @enderror
@@ -126,7 +126,7 @@
             <div class="row">
                 <label class="col-md-3 col-form-label" for="bank_routing_no">{{ translate('Bank Routing Number') }}</label>
                 <div class="col-md-9">
-                    <input type="number" name="bank_routing_no" value="{{ $user->shop->bank_routing_no }}" id="bank_routing_no" lang="en" class="form-control mb-3" placeholder="{{ translate('Bank Routing Number')}}">
+                    <input type="number" name="bank_routing_no" value="{{ $user->shop->bank_routing_no }}" id="bank_routing_no" lang="en" class="form-control mb-3" placeholder="{{ translate('Bank Routing Number')}}" {{ $user->shop->bank_routing_no ? 'readonly' : '' }}>
                     @error('bank_routing_no')
                     <small class="form-text text-danger">{{ $message }}</small>
                     @enderror
@@ -135,7 +135,7 @@
             <div class="row">
                 <label class="col-md-3 col-form-label" for="ifsc_code">{{ translate('IFSC Code') }}</label>
                 <div class="col-md-9">
-                    <input type="text" name="ifsc_code" value="{{ $user->shop->ifsc_code }}" id="ifsc_code" class="form-control mb-3" placeholder="{{ translate('IFSC Code')}}">
+                    <input type="text" name="ifsc_code" value="{{ $user->shop->ifsc_code }}" id="ifsc_code" class="form-control mb-3" placeholder="{{ translate('IFSC Code')}}" {{ $user->shop->ifsc_code ? 'readonly' : '' }}>
                     @error('ifsc_code')
                     <small class="form-text text-danger">{{ $message }}</small>
                     @enderror
