@@ -32,7 +32,9 @@
                     <th>{{translate('Requester')}}</th>
                     <th>{{translate('Type')}}</th>
                     <th>{{translate('Amount')}}</th>
-                    <th>{{translate('Status')}}</th>
+                    <th data-breakpoints="lg">{{translate('Status')}}</th>
+                    <th data-breakpoints="lg">{{translate('Request Date')}}</th>
+                    <th data-breakpoints="lg">{{translate('Processed Date')}}</th>
                     <th data-breakpoints="lg">{{translate('Message')}}</th>
                     <th data-breakpoints="lg">{{translate('Bank Details')}}</th>
                     <th class="text-right">{{translate('Options')}}</th>
@@ -73,6 +75,14 @@
                                 <span class="badge badge-inline badge-danger">{{translate('Rejected')}}</span>
                             @endif
                         </td>
+                        <td>{{ $withdraw_request->created_at->format('d-m-Y H:i A') }}</td>
+                        <td>
+                            @if($withdraw_request->status != 'pending')
+                                {{ $withdraw_request->updated_at->format('d-m-Y H:i A') }}
+                            @else
+                                -
+                            @endif
+                        </td>
                         <td>{{ $withdraw_request->message }}</td>
                         <td>
                             <div class="small">
@@ -84,7 +94,7 @@
                         </td>
                         <td class="text-right">
                             @if($withdraw_request->status == 'pending')
-                                <a href="javascript:void(0)" onclick="confirm_modal('{{ route('admin.withdraw_requests.approve', $withdraw_request->id) }}')" class="btn btn-soft-success btn-icon btn-circle btn-sm" title="{{ translate('Approve') }}">
+                                <a href="javascript:void(0)" onclick="approve_modal('{{ $withdraw_request->id }}')" class="btn btn-soft-success btn-icon btn-circle btn-sm" title="{{ translate('Approve') }}">
                                     <i class="las la-check"></i>
                                 </a>
                                 <a href="javascript:void(0)" onclick="reject_modal('{{ $withdraw_request->id }}')" class="btn btn-soft-danger btn-icon btn-circle btn-sm" title="{{ translate('Reject') }}">
@@ -129,21 +139,26 @@
         </div>
     </div>
 
-    <!-- Universal Confirmation Modal -->
-    <div class="modal fade" id="universal-confirm-modal">
-        <div class="modal-dialog modal-dialog-centered">
+    <div class="modal fade" id="approve-modal">
+        <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title h6" id="universal-modal-title">{{ translate('Confirmation') }}</h5>
+                    <h5 class="modal-title h6">{{translate('Approve Withdrawal Request')}}</h5>
                     <button type="button" class="close" data-dismiss="modal"></button>
                 </div>
-                <div class="modal-body">
-                    <p id="universal-modal-message">{{ translate('Do you really want to approve this withdrawal request?') }}</p>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-light" data-dismiss="modal">{{ translate('Cancel') }}</button>
-                    <a class="btn btn-primary" id="universal-confirm-button" href="">{{ translate('Proceed!') }}</a>
-                </div>
+                <form id="approve-form" action="" method="POST">
+                    @csrf
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label>{{translate('Admin Remarks/Note')}}</label>
+                            <textarea name="admin_note" rows="3" class="form-control" placeholder="{{translate('Enter remarks (optional)')}}"></textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-light" data-dismiss="modal">{{translate('Cancel')}}</button>
+                        <button type="submit" class="btn btn-primary">{{translate('Approve')}}</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
@@ -151,10 +166,10 @@
 
 @section('script')
     <script type="text/javascript">
-        function confirm_modal(url)
+        function approve_modal(id)
         {
-            document.getElementById('universal-confirm-button').setAttribute('href', url);
-            $('#universal-confirm-modal').modal('show', {backdrop: 'static'});
+            $('#approve-form').attr('action', '{{ url('admin/withdraw-requests/approve') }}/'+id);
+            $('#approve-modal').modal('show');
         }
 
         function reject_modal(id){

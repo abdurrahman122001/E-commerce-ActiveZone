@@ -49,7 +49,8 @@
                         <thead>
                             <tr>
                                 <th>#</th>
-                                <th>{{ translate('Date') }}</th>
+                                <th>{{ translate('Request Date') }}</th>
+                                <th>{{ translate('Processed Date') }}</th>
                                 <th>{{ translate('Amount') }}</th>
                                 <th>{{ translate('Status') }}</th>
                                 <th data-breakpoints="lg">{{ translate('Message') }}</th>
@@ -61,6 +62,13 @@
                                 <tr>
                                     <td>{{ $key + 1 }}</td>
                                     <td>{{ $withdraw_request->created_at->format('d-m-Y H:i A') }}</td>
+                                    <td>
+                                        @if($withdraw_request->status != 'pending')
+                                            {{ $withdraw_request->updated_at->format('d-m-Y H:i A') }}
+                                        @else
+                                            -
+                                        @endif
+                                    </td>
                                     <td>{{ single_price($withdraw_request->amount) }}</td>
                                     <td>
                                         @if ($withdraw_request->status == 'pending')

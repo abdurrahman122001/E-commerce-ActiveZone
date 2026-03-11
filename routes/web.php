@@ -119,7 +119,7 @@ Route::controller(App\Http\Controllers\FranchiseController::class)->group(functi
         // Withdraw Requests
         Route::controller(App\Http\Controllers\CommissionWithdrawController::class)->group(function () {
             Route::get('/admin/withdraw-requests', 'admin_index')->name('admin.withdraw_requests.index');
-            Route::get('/admin/withdraw-requests/approve/{id}', 'admin_approve')->name('admin.withdraw_requests.approve');
+            Route::post('/admin/withdraw-requests/approve/{id}', 'admin_approve')->name('admin.withdraw_requests.approve');
             Route::post('/admin/withdraw-requests/reject/{id}', 'admin_reject')->name('admin.withdraw_requests.reject');
         });
     });
@@ -160,6 +160,11 @@ Route::group(['middleware' => ['vendor', 'user', 'prevent-back-history']], funct
         Route::get('/vendor/product/{id}/edit', 'edit')->name('vendor.products.edit');
         Route::post('/vendor/products/update/{product}', 'update')->name('vendor.products.update');
         Route::get('/vendor/products/destroy/{id}', 'destroy')->name('vendor.products.destroy');
+        Route::post('/vendor/products/sku_combination', 'sku_combination')->name('vendor.products.sku_combination');
+        Route::post('/vendor/products/sku_combination_edit', 'sku_combination_edit')->name('vendor.products.sku_combination_edit');
+        Route::post('/vendor/products/add-more-choice-option', 'add_more_choice_option')->name('vendor.products.add-more-choice-option');
+        Route::post('/vendor/product-search', 'product_search')->name('vendor.product.search');
+        Route::post('/vendor/get-selected-products', 'get_selected_products')->name('vendor.get-selected-products');
     });
 
     // Vendor Categories

@@ -160,7 +160,7 @@ class CommissionWithdrawController extends Controller
         return view('backend.withdraw_requests.index', compact('requests', 'status'));
     }
 
-    public function admin_approve($id)
+    public function admin_approve(Request $request, $id)
     {
         $withdraw_request = CommissionWithdrawRequest::findOrFail($id);
         if ($withdraw_request->status != 'pending') {
@@ -169,6 +169,7 @@ class CommissionWithdrawController extends Controller
         }
 
         $withdraw_request->status = 'approved';
+        $withdraw_request->admin_note = $request->admin_note;
         $withdraw_request->save();
 
         // Approved: earnign should be set as zero (Full balance clear as per user instruction)
@@ -178,40 +179,117 @@ class CommissionWithdrawController extends Controller
 
         if ($withdraw_request->user_type == 'franchise') {
             $franchise = Franchise::find($withdraw_request->user_id);
-            $franchise->balance = 0;
-            $franchise->save();
-            // Mark history as paid
-            VendorCommissionHistory::where('franchise_id', $franchise->id)->update(['franchise_payout_status' => 'paid']);
+            if ($franchise) {
+                $franchise->balance -= $withdraw_request->amount;
+                $franchise->save();
+                
+                // Partially mark history as paid (FIFO)
+                $amountToMark = $withdraw_request->amount;
+                $histories = VendorCommissionHistory::where('franchise_id', $franchise->id)
+                    ->where('franchise_payout_status', 'unpaid')
+                    ->oldest()
+                    ->get();
+                foreach ($histories as $history) {
+                    if ($amountToMark >= $history->franchise_commission_amount) {
+                        $history->franchise_payout_status = 'paid';
+                        $history->save();
+                        $amountToMark -= $history->franchise_commission_amount;
+                    } else {
+                        break;
+                    }
+                }
+            }
         } elseif ($withdraw_request->user_type == 'state_franchise') {
             $state_franchise = \App\Models\StateFranchise::find($withdraw_request->user_id);
-            $state_franchise->balance = 0;
-            $state_franchise->save();
-            VendorCommissionHistory::where('state_franchise_id', $state_franchise->id)->update(['state_franchise_payout_status' => 'paid']);
+            if ($state_franchise) {
+                $state_franchise->balance -= $withdraw_request->amount;
+                $state_franchise->save();
+
+                $amountToMark = $withdraw_request->amount;
+                $histories = VendorCommissionHistory::where('state_franchise_id', $state_franchise->id)
+                    ->where('state_franchise_payout_status', 'unpaid')
+                    ->oldest()
+                    ->get();
+                foreach ($histories as $history) {
+                    if ($amountToMark >= $history->state_franchise_commission_amount) {
+                        $history->state_franchise_payout_status = 'paid';
+                        $history->save();
+                        $amountToMark -= $history->state_franchise_commission_amount;
+                    } else {
+                        break;
+                    }
+                }
+            }
         } elseif ($withdraw_request->user_type == 'sub_franchise') {
             $sub_franchise = SubFranchise::find($withdraw_request->user_id);
-            $sub_franchise->balance = 0;
-            $sub_franchise->save();
-            VendorCommissionHistory::where('sub_franchise_id', $sub_franchise->id)->update(['sub_franchise_payout_status' => 'paid']);
+            if ($sub_franchise) {
+                $sub_franchise->balance -= $withdraw_request->amount;
+                $sub_franchise->save();
+
+                $amountToMark = $withdraw_request->amount;
+                $histories = VendorCommissionHistory::where('sub_franchise_id', $sub_franchise->id)
+                    ->where('sub_franchise_payout_status', 'unpaid')
+                    ->oldest()
+                    ->get();
+                foreach ($histories as $history) {
+                    if ($amountToMark >= $history->sub_franchise_commission_amount) {
+                        $history->sub_franchise_payout_status = 'paid';
+                        $history->save();
+                        $amountToMark -= $history->sub_franchise_commission_amount;
+                    } else {
+                        break;
+                    }
+                }
+            }
         } elseif ($withdraw_request->user_type == 'vendor') {
             $vendor = Vendor::find($withdraw_request->user_id);
-            $vendor->balance = 0;
-            $vendor->save();
-            VendorCommissionHistory::where('vendor_id', $vendor->id)->update(['vendor_payout_status' => 'paid']);
+            if ($vendor) {
+                $vendor->balance -= $withdraw_request->amount;
+                $vendor->save();
+
+                $amountToMark = $withdraw_request->amount;
+                $histories = VendorCommissionHistory::where('vendor_id', $vendor->id)
+                    ->where('vendor_payout_status', 'unpaid')
+                    ->oldest()
+                    ->get();
+                foreach ($histories as $history) {
+                    if ($amountToMark >= $history->commission_amount) {
+                        $history->vendor_payout_status = 'paid';
+                        $history->save();
+                        $amountToMark -= $history->commission_amount;
+                    } else {
+                        break;
+                    }
+                }
+            }
         } elseif ($withdraw_request->user_type == 'employee') {
             $employee = FranchiseEmployee::find($withdraw_request->user_id);
-            $employee->balance = 0;
-            $employee->save();
-            // Need to handle employee in history - wait, history has employee_commission_amount but not employee_id?
-            // Actually, I should probably check how employees are linked to specific records.
-            // In my calculated commission, I used $vendor->added_by_employee_id.
-            // So I should find records where vendor's added_by_employee_id matches this employee.
-            VendorCommissionHistory::whereHas('vendor', function($q) use ($employee) {
-                $q->where('added_by_employee_id', $employee->id);
-            })->update(['employee_payout_status' => 'paid']);
+            if ($employee) {
+                $employee->balance -= $withdraw_request->amount;
+                $employee->save();
+
+                $amountToMark = $withdraw_request->amount;
+                $histories = VendorCommissionHistory::whereHas('vendor', function($q) use ($employee) {
+                        $q->where('added_by_employee_id', $employee->id);
+                    })
+                    ->where('employee_payout_status', 'unpaid')
+                    ->oldest()
+                    ->get();
+                foreach ($histories as $history) {
+                    if ($amountToMark >= $history->employee_commission_amount) {
+                        $history->employee_payout_status = 'paid';
+                        $history->save();
+                        $amountToMark -= $history->employee_commission_amount;
+                    } else {
+                        break;
+                    }
+                }
+            }
         }
 
-        flash(translate('Withdrawal request approved and balance cleared'))->success();
+        flash(translate('Withdrawal request approved and amount deducted from balance'))->success();
         return back();
+
     }
 
     public function admin_reject(Request $request, $id)

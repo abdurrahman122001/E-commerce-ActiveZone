@@ -58,3 +58,10 @@ Route::group(['middleware' => ['seller', 'user']], function () {
         Route::post('/seller/products/check-refundable-category', 'checkSellerRefundableCategory')->name('seller.products.check_refundable_category');
     });
 });
+
+//Vendor panel
+Route::group(['middleware' => ['vendor', 'user']], function () {
+    Route::controller(RefundRequestController::class)->group(function () {
+        Route::post('/vendor/products/check-refundable-category', 'checkSellerRefundableCategory')->name('vendor.products.check_refundable_category');
+    });
+});
