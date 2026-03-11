@@ -77,7 +77,10 @@
                         </td>
                         <td>
                             @if($sub->id_proof)
-                                <a href="{{ asset('storage/'.$sub->id_proof) }}" target="_blank" class="btn btn-sm btn-info">{{ translate('View') }}</a>
+                                <a href="{{ asset('storage/'.$sub->id_proof) }}" target="_blank" class="btn btn-sm btn-info mb-1">{{ translate('Front') }}</a>
+                            @endif
+                            @if($sub->id_proof_back)
+                                <a href="{{ asset('storage/'.$sub->id_proof_back) }}" target="_blank" class="btn btn-sm btn-info">{{ translate('Back') }}</a>
                             @endif
                         </td>
                         <td>{{ $sub->pan_number }}</td>

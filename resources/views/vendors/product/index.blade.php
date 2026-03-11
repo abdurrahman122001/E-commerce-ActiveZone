@@ -7,7 +7,7 @@
             <h1 class="h3">{{ translate('Products') }}</h1>
         </div>
         <div class="col-md-6 text-right">
-            <a href="{{ route('vendor.products.create') }}" class="btn btn-primary">
+            <a href="{{ route('vendor.products.create', ['new' => 1]) }}" class="btn btn-primary">
                 <span>{{ translate('Add New Product') }}</span>
             </a>
         </div>
@@ -36,6 +36,9 @@
                         <th>{{ translate('Name') }}</th>
                         <th data-breakpoints="lg">{{ translate('Category') }}</th>
                         <th data-breakpoints="lg">{{ translate('Base Price') }}</th>
+                        @if(get_setting('product_approve_by_admin') == 1)
+                            <th data-breakpoints="lg">{{ translate('Approval') }}</th>
+                        @endif
                         <th data-breakpoints="lg">{{ translate('Published') }}</th>
                         <th data-breakpoints="lg" class="text-right">{{ translate('Options') }}</th>
                     </tr>
@@ -55,9 +58,18 @@
                                 </div>
                             </td>
                             <td>
-                                {{ $product->category ? $product->category->getTranslation('name') : '' }}
+                                {{ $product->main_category ? $product->main_category->getTranslation('name') : '' }}
                             </td>
                             <td>{{ $product->unit_price }}</td>
+                            @if(get_setting('product_approve_by_admin') == 1)
+                                <td>
+                                    @if ($product->approved == 1)
+                                        <span class="badge badge-inline badge-success">{{ translate('Approved') }}</span>
+                                    @else
+                                        <span class="badge badge-inline badge-info">{{ translate('Pending') }}</span>
+                                    @endif
+                                </td>
+                            @endif
                             <td>
                                 <label class="aiz-switch aiz-switch-success mb-0">
                                     <input type="checkbox" onchange="update_published(this)" value="{{ $product->id }}" <?php if($product->published == 1) echo "checked";?>>
@@ -85,6 +97,15 @@
 
 @section('script')
     <script type="text/javascript">
+        @if (session('product_success'))
+            $(document).ready(function() {
+                localStorage.setItem('tempdataproduct_physical', '{}');
+                localStorage.setItem('tempload_physical', 'no');
+                localStorage.setItem('tempdataproduct_digital', '{}');
+                localStorage.setItem('tempload_digital', 'no');
+            });
+        @endif
+
         function update_published(el){
             if(el.checked){
                 var status = 1;

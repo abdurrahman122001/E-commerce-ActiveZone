@@ -258,6 +258,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin', 'prevent-ba
         Route::get('/sellers/profile/tab/data/{shop}',  'getSellerProfileTab')->name('sellers.profile.tab');
         Route::get('seller-suspicious/{seller}', 'suspicious')->name('seller.suspicious');
         Route::get('/seller/verification-file/delete', 'deleteVerificationFile')->name('seller.verification.file.delete');
+        Route::post('/sellers/request-additional-docs/{id}', 'requestAdditionalDocs')->name('sellers.request_additional_docs');
     });
 
     // Seller Payment

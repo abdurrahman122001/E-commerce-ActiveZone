@@ -71,7 +71,7 @@
                     </div>
                 </div>
                 <div class="form-group row">
-                    <label class="col-sm-3 col-from-label" for="id_proof">{{translate('ID Proof')}}</label>
+                    <label class="col-sm-3 col-from-label" for="id_proof">{{translate('ID Proof Front')}}</label>
                     <div class="col-sm-9">
                         <div class="custom-file">
                             <label class="custom-file-label">
@@ -81,7 +81,23 @@
                         </div>
                         @if($stateFranchise->id_proof)
                             <div class="mt-2">
-                                <a href="{{ asset('storage/'.$stateFranchise->id_proof) }}" target="_blank" class="text-info">{{ translate('View Current ID Proof') }}</a>
+                                <a href="{{ asset('storage/'.$stateFranchise->id_proof) }}" target="_blank" class="text-info">{{ translate('View Current Front') }}</a>
+                            </div>
+                        @endif
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-3 col-from-label" for="id_proof_back">{{translate('ID Proof Back')}}</label>
+                    <div class="col-sm-9">
+                        <div class="custom-file">
+                            <label class="custom-file-label">
+                                <input type="file" name="id_proof_back" class="custom-file-input">
+                                <span class="custom-file-name">{{ translate('Choose File') }}</span>
+                            </label>
+                        </div>
+                        @if($stateFranchise->id_proof_back)
+                            <div class="mt-2">
+                                <a href="{{ asset('storage/'.$stateFranchise->id_proof_back) }}" target="_blank" class="text-info">{{ translate('View Current Back') }}</a>
                             </div>
                         @endif
                     </div>

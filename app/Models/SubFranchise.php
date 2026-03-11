@@ -32,7 +32,9 @@ class SubFranchise extends Model
         'invalid_at',
         'state_franchise_id',
         'package_payment_status',
-        'offline_package_payment_proof'
+        'offline_package_payment_proof',
+        'additional_doc_request',
+        'additional_doc_request_note'
     ];
 
     public function user()

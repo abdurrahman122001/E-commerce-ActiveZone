@@ -50,13 +50,22 @@
                     $pan_number = null;
                     if ($authUser->user_type == 'franchise' && $authUser->franchise) {
                         $id_proof = $authUser->franchise->id_proof;
+                        $id_proof_back = $authUser->franchise->id_proof_back;
                         $pan_number = $authUser->franchise->pan_number;
+                        $doc_request = $authUser->franchise->additional_doc_request;
+                        $doc_note = $authUser->franchise->additional_doc_request_note;
                     } elseif ($authUser->user_type == 'sub_franchise' && $authUser->sub_franchise) {
                         $id_proof = $authUser->sub_franchise->id_proof;
+                        $id_proof_back = $authUser->sub_franchise->id_proof_back;
                         $pan_number = $authUser->sub_franchise->pan_number;
+                        $doc_request = $authUser->sub_franchise->additional_doc_request;
+                        $doc_note = $authUser->sub_franchise->additional_doc_request_note;
                     } elseif ($authUser->user_type == 'state_franchise' && $authUser->state_franchise) {
                         $id_proof = $authUser->state_franchise->id_proof;
+                        $id_proof_back = $authUser->state_franchise->id_proof_back;
                         $pan_number = $authUser->state_franchise->pan_number;
+                        $doc_request = $authUser->state_franchise->additional_doc_request;
+                        $doc_note = $authUser->state_franchise->additional_doc_request_note;
                     }
                 @endphp
 
@@ -65,10 +74,16 @@
                         <h5 class="mb-0 h6">{{ translate('1. Verification Details') }}</h5>
                     </div>
                     <div class="card-body">
+                        @if(!empty($doc_request) && $doc_request)
+                            <div class="alert alert-danger px-3 py-2">
+                                <strong><i class="la la-exclamation-triangle"></i> {{translate('Additional Documents Requested')}}:</strong><br>
+                                {{ $doc_note }}
+                            </div>
+                        @endif
                         <form action="{{ route('franchise.verification_info_update') }}" method="POST" enctype="multipart/form-data">
                             @csrf
                             <div class="form-group row">
-                                <label class="col-md-3 col-form-label">{{ translate('Aadhar Card (Image/PDF)') }} <span class="text-danger">*</span></label>
+                                <label class="col-md-3 col-form-label">{{ translate('Aadhar Card Front') }} <span class="text-danger">*</span></label>
                                 <div class="col-md-9">
                                     <div class="custom-file">
                                         <input type="file" class="custom-file-input @error('id_proof') is-invalid @enderror" name="id_proof" id="id_proof" {{ $id_proof ? '' : 'required' }}>
@@ -79,7 +94,24 @@
                                     @enderror
                                     @if($id_proof)
                                         <div class="mt-2">
-                                            <a href="{{ asset('storage/' . $id_proof) }}" target="_blank" class="btn btn-sm btn-soft-info">{{ translate('View Current Document') }}</a>
+                                            <a href="{{ asset('storage/' . $id_proof) }}" target="_blank" class="btn btn-sm btn-soft-info">{{ translate('View Current Front') }}</a>
+                                        </div>
+                                    @endif
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-md-3 col-form-label">{{ translate('Aadhar Card Back') }} <span class="text-danger">*</span></label>
+                                <div class="col-md-9">
+                                    <div class="custom-file">
+                                        <input type="file" class="custom-file-input @error('id_proof_back') is-invalid @enderror" name="id_proof_back" id="id_proof_back" {{ $id_proof_back ? '' : 'required' }}>
+                                        <label class="custom-file-label" for="id_proof_back">{{ translate('Choose file') }}</label>
+                                    </div>
+                                    @error('id_proof_back')
+                                        <div class="text-danger mt-1 fs-12">{{ $message }}</div>
+                                    @enderror
+                                    @if($id_proof_back)
+                                        <div class="mt-2">
+                                            <a href="{{ asset('storage/' . $id_proof_back) }}" target="_blank" class="btn btn-sm btn-soft-info">{{ translate('View Current Back') }}</a>
                                         </div>
                                     @endif
                                 </div>

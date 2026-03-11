@@ -598,11 +598,26 @@
     $(document).ready(function() {
         $("#treeview").hummingbird();
 
+        // Initialize checked states for categories
+        let checked_ids = [];
+        $("#treeview li[data-checked='true']").each(function() {
+            checked_ids.push($(this).attr('id'));
+        });
+        if (checked_ids.length > 0) {
+            $("#treeview").hummingbird("checkNode", {sel: "id", vals: checked_ids});
+        }
+
+        // Initialize selected main category (radio)
+        let selected_id = $("#treeview li[data-selected='true']").attr('id');
+        if (selected_id) {
+            $('#treeview input:radio[value='+selected_id+']').prop('checked',true).trigger('change');
+        }
+
         $('#treeview input:checkbox').on("click", function (){
             let $this = $(this);
             if ($this.prop('checked') && ($('#treeview input:radio:checked').length == 0)) {
                 let val = $this.val();
-                $('#treeview input:radio[value='+val+']').prop('checked',true);
+                $('#treeview input:radio[value='+val+']').prop('checked',true).trigger('change');
             }
         });
         
@@ -750,6 +765,12 @@
         isRefundable();
     });
 
+    function check_filter(event) {
+        // console.log('check_filter triggered');
+    }
+    function check_filter_main(event) {
+        // console.log('check_filter_main triggered');
+    }
 </script>
 
 @include('partials.product.product_temp_data')

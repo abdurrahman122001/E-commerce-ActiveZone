@@ -33,7 +33,7 @@
             <div class="row gutters-5">
                 <div class="col-lg-8">
                     @csrf
-                    <input type="hidden" name="added_by" value="vendor">
+                    <input type="hidden" name="added_by" value="seller">
                     <div class="card">
                         <div class="card-header">
                             <h5 class="mb-0 h6">{{ translate('Product Information') }}</h5>
@@ -545,13 +545,24 @@
 @section('script')
 <script type="text/javascript">
     $(document).ready(function() {
+        // Clear temp data if new=1 is in URL
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.has('new')) {
+            var data_type = $('#data_type').val();
+            localStorage.setItem('tempdataproduct_'+data_type, '{}');
+            localStorage.setItem('tempload_'+data_type, 'no');
+            // Remove the 'new' parameter from URL without reloading if you want, 
+            // but the product_temp_data.blade.php already loaded data.
+            // Actually, we should clear it BEFORE product_temp_data loads.
+        }
+
         $("#treeview").hummingbird();
 
         $('#treeview input:checkbox').on("click", function (){
             let $this = $(this);
             if ($this.prop('checked') && ($('#treeview input:radio:checked').length == 0)) {
                 let val = $this.val();
-                $('#treeview input:radio[value='+val+']').prop('checked',true);
+                $('#treeview input:radio[value='+val+']').prop('checked',true).trigger('change');
             }
         });
         
@@ -698,6 +709,12 @@
         isRefundable();
     });
 
+    function check_filter(event) {
+        // console.log('check_filter triggered');
+    }
+    function check_filter_main(event) {
+        // console.log('check_filter_main triggered');
+    }
 </script>
 
 @include('partials.product.product_temp_data')

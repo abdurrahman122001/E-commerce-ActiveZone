@@ -66,6 +66,28 @@
                     </div>
                 </div>
                 <div class="form-group row">
+                    <label class="col-sm-3 col-from-label" for="id_proof">{{translate('ID Proof Front')}}</label>
+                    <div class="col-sm-9">
+                        <div class="custom-file">
+                            <label class="custom-file-label">
+                                <input type="file" name="id_proof" class="custom-file-input">
+                                <span class="custom-file-name">{{ translate('Choose File') }}</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-3 col-from-label" for="id_proof_back">{{translate('ID Proof Back')}}</label>
+                    <div class="col-sm-9">
+                        <div class="custom-file">
+                            <label class="custom-file-label">
+                                <input type="file" name="id_proof_back" class="custom-file-input">
+                                <span class="custom-file-name">{{ translate('Choose File') }}</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group row">
                     <label class="col-sm-3 col-from-label" for="bank_name">{{translate('Bank Name')}}</label>
                     <div class="col-sm-9">
                         <input type="text" placeholder="{{translate('Bank Name')}}" id="bank_name" name="bank_name" class="form-control">

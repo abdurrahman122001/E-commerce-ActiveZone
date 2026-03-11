@@ -157,8 +157,9 @@ class ShopController extends Controller
 
     public function verify_form()
     {
-        if (Auth::user()->shop->verification_info == null) {
-            $shop = Auth::user()->shop;
+        $shop = Auth::user()->shop;
+        // Allow resubmission if admin requested additional docs
+        if ($shop->verification_info == null || $shop->additional_doc_request) {
             return view('seller.verify_form', compact('shop'));
         } else {
             flash(translate('Sorry! You have sent verification request already.'))->error();
@@ -192,15 +193,35 @@ class ShopController extends Controller
             array_push($data, $item);
             $i++;
         }
+
+        // Handle Aadhaar card front
+        if ($request->hasFile('aadhaar_front')) {
+            $data[] = [
+                'type'  => 'aadhaar_front',
+                'label' => 'Aadhaar Card (Front)',
+                'value' => $request->file('aadhaar_front')->store('uploads/verification_form'),
+            ];
+        }
+        // Handle Aadhaar card back
+        if ($request->hasFile('aadhaar_back')) {
+            $data[] = [
+                'type'  => 'aadhaar_back',
+                'label' => 'Aadhaar Card (Back)',
+                'value' => $request->file('aadhaar_back')->store('uploads/verification_form'),
+            ];
+        }
         $shop = Auth::user()->shop;
         $shop->verification_info = json_encode($data);
+        // Clear additional doc request flag after resubmission
+        $shop->additional_doc_request = 0;
+        $shop->additional_doc_request_note = null;
         if ($shop->save()) {
             $users = User::findMany([User::where('user_type', 'admin')->first()->id]);
-            $data = array();
-            $data['shop'] = $shop;
-            $data['status'] = 'submitted';
-            $data['notification_type_id'] = get_notification_type('shop_verify_request_submitted', 'type')->id;
-            Notification::send($users, new ShopVerificationNotification($data));
+            $notifData = [];
+            $notifData['shop'] = $shop;
+            $notifData['status'] = 'submitted';
+            $notifData['notification_type_id'] = get_notification_type('shop_verify_request_submitted', 'type')->id;
+            Notification::send($users, new ShopVerificationNotification($notifData));
             
             flash(translate('Your shop verification request has been submitted successfully!'))->success();
             return redirect()->route('seller.dashboard');

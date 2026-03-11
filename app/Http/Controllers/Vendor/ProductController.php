@@ -89,7 +89,7 @@ class ProductController extends Controller
         }
 
         $product = $this->productService->store($request->except([
-            '_token', 'sku', 'choice', 'tax_id', 'tax', 'tax_type', 'thumbnail_img_file', 'photos_file', 'pdf_file', 'meta_img_file'
+            '_token', 'sku', 'choice', 'tax_id', 'tax', 'tax_type', 'thumbnail_img_file', 'photos_file', 'pdf_file', 'meta_img_file', 'category_ids'
         ]));
         
         $request->merge(['product_id' => $product->id]);
@@ -127,7 +127,7 @@ class ProductController extends Controller
         Artisan::call('view:clear');
         Artisan::call('cache:clear');
 
-        return redirect()->route('vendor.products');
+        return redirect()->route('vendor.products')->with('product_success', true);
     }
 
     public function edit($id)
@@ -171,14 +171,12 @@ class ProductController extends Controller
         }
 
         $product = $this->productService->update($request->except([
-            '_token', 'sku', 'choice', 'tax_id', 'tax', 'tax_type', 'thumbnail_img_file', 'photos_file', 'pdf_file', 'meta_img_file'
+            '_token', 'sku', 'choice', 'tax_id', 'tax', 'tax_type', 'thumbnail_img_file', 'photos_file', 'pdf_file', 'meta_img_file', 'category_ids'
         ]), $product);
 
         $request->merge(['product_id' => $product->id]);
 
-        if ($request->has('category_ids')) {
-            $product->categories()->sync($request->category_ids);
-        }
+        $product->categories()->sync($request->category_ids ?? []);
 
         $product->stocks()->delete();
         $this->productStockService->store($request->only([

@@ -160,7 +160,7 @@ class ProductController extends Controller
             } elseif ($request->seller_type == 'admin') {
                 $products = $products->where('added_by', 'admin');
             } elseif ($request->seller_type == 'seller') {
-                $products = $products->where('added_by', 'seller');
+                $products = $products->whereIn('added_by', ['seller', 'vendor']);
                 if ($request->user_id != null) {
                     $products = $products->where('user_id', $request->user_id);
                 }

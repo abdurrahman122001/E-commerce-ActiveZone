@@ -79,6 +79,7 @@ class FranchiseController extends Controller
             'area_id' => 'nullable|required_if:franchise_type,sub_franchise|exists:areas,id',
             'franchise_package_id' => 'required|exists:franchise_packages,id',
             'id_proof' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
+            'id_proof_back' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
         ]);
 
         if ($request->franchise_type == 'state_franchise') {
@@ -118,6 +119,10 @@ class FranchiseController extends Controller
             if ($request->hasFile('id_proof')) {
                 $id_proof_path = $request->file('id_proof')->store('uploads/franchise/id_proofs', 'public');
             }
+            $id_proof_back_path = null;
+            if ($request->hasFile('id_proof_back')) {
+                $id_proof_back_path = $request->file('id_proof_back')->store('uploads/franchise/id_proofs', 'public');
+            }
 
             if ($request->franchise_type == 'state_franchise') {
                 $stateFranchise = new StateFranchise();
@@ -127,6 +132,7 @@ class FranchiseController extends Controller
                 $stateFranchise->referral_code = 'STF' . strtoupper(Str::random(8));
                 $stateFranchise->business_experience = $request->business_experience;
                 $stateFranchise->id_proof = $id_proof_path;
+                $stateFranchise->id_proof_back = $id_proof_back_path;
                 $stateFranchise->franchise_package_id = $request->franchise_package_id;
                 $stateFranchise->status = 'pending';
                 $stateFranchise->package_payment_status = 'unpaid';
@@ -145,6 +151,7 @@ class FranchiseController extends Controller
                 $franchise->referral_code = 'CF' . strtoupper(Str::random(8));
                 $franchise->business_experience = $request->business_experience;
                 $franchise->id_proof = $id_proof_path;
+                $franchise->id_proof_back = $id_proof_back_path;
                 $franchise->franchise_package_id = $request->franchise_package_id;
                 $franchise->status = 'pending';
                 $franchise->package_payment_status = 'unpaid';
@@ -165,6 +172,7 @@ class FranchiseController extends Controller
                 $subFranchise->referral_code = 'SF' . strtoupper(Str::random(8));
                 $subFranchise->business_experience = $request->business_experience;
                 $subFranchise->id_proof = $id_proof_path;
+                $subFranchise->id_proof_back = $id_proof_back_path;
                 $subFranchise->franchise_package_id = $request->franchise_package_id;
                 $subFranchise->status = 'pending';
                 $subFranchise->package_payment_status = 'unpaid';
@@ -341,6 +349,10 @@ class FranchiseController extends Controller
         if ($request->hasFile('id_proof')) {
             $id_proof_path = $request->file('id_proof')->store('uploads/franchise/id_proofs', 'public');
         }
+        $id_proof_back_path = null;
+        if ($request->hasFile('id_proof_back')) {
+            $id_proof_back_path = $request->file('id_proof_back')->store('uploads/franchise/id_proofs', 'public');
+        }
 
         $stateFranchise = new StateFranchise();
         $stateFranchise->user_id = $user->id;
@@ -349,6 +361,7 @@ class FranchiseController extends Controller
         $stateFranchise->referral_code = 'SF-' . strtoupper(Str::random(10));
         $stateFranchise->business_experience = $request->business_experience;
         $stateFranchise->id_proof = $id_proof_path;
+        $stateFranchise->id_proof_back = $id_proof_back_path;
         $stateFranchise->franchise_package_id = $request->franchise_package_id;
         $stateFranchise->status = 'approved';
         $stateFranchise->commission_percentage = $request->commission_percentage ?? 0;
@@ -405,6 +418,10 @@ class FranchiseController extends Controller
         if ($request->hasFile('id_proof')) {
             $id_proof_path = $request->file('id_proof')->store('uploads/franchise/id_proofs', 'public');
         }
+        $id_proof_back_path = null;
+        if ($request->hasFile('id_proof_back')) {
+            $id_proof_back_path = $request->file('id_proof_back')->store('uploads/franchise/id_proofs', 'public');
+        }
 
         $franchise = new Franchise();
         $franchise->user_id = $user->id;
@@ -421,6 +438,7 @@ class FranchiseController extends Controller
         $franchise->referral_code = Str::random(10);
         $franchise->business_experience = $request->business_experience;
         $franchise->id_proof = $id_proof_path;
+        $franchise->id_proof_back = $id_proof_back_path;
         $franchise->franchise_package_id = $request->franchise_package_id;
         $franchise->status = 'approved';
         $franchise->commission_percentage = $request->commission_percentage ?? 0;
@@ -478,6 +496,10 @@ class FranchiseController extends Controller
         if ($request->hasFile('id_proof')) {
             $id_proof_path = $request->file('id_proof')->store('uploads/franchise/id_proofs', 'public');
         }
+        $id_proof_back_path = null;
+        if ($request->hasFile('id_proof_back')) {
+            $id_proof_back_path = $request->file('id_proof_back')->store('uploads/franchise/id_proofs', 'public');
+        }
 
         $subFranchise = new SubFranchise();
         $subFranchise->user_id = $user->id;
@@ -487,6 +509,7 @@ class FranchiseController extends Controller
         $subFranchise->referral_code = Str::random(10);
         $subFranchise->business_experience = $request->business_experience;
         $subFranchise->id_proof = $id_proof_path;
+        $subFranchise->id_proof_back = $id_proof_back_path;
         $subFranchise->franchise_package_id = $request->franchise_package_id;
         $subFranchise->status = 'approved';
 
@@ -944,6 +967,9 @@ class FranchiseController extends Controller
         if ($request->hasFile('id_proof')) {
             $stateFranchise->id_proof = $request->file('id_proof')->store('uploads/franchise/id_proofs', 'public');
         }
+        if ($request->hasFile('id_proof_back')) {
+            $stateFranchise->id_proof_back = $request->file('id_proof_back')->store('uploads/franchise/id_proofs', 'public');
+        }
 
         $stateFranchise->bank_name = $request->bank_name;
         $stateFranchise->bank_acc_name = $request->bank_acc_name;
@@ -1009,6 +1035,9 @@ class FranchiseController extends Controller
         
         if ($request->hasFile('id_proof')) {
             $franchise->id_proof = $request->file('id_proof')->store('uploads/franchise/id_proofs', 'public');
+        }
+        if ($request->hasFile('id_proof_back')) {
+            $franchise->id_proof_back = $request->file('id_proof_back')->store('uploads/franchise/id_proofs', 'public');
         }
 
         $franchise->bank_name = $request->bank_name;
@@ -1077,6 +1106,9 @@ class FranchiseController extends Controller
 
         if ($request->hasFile('id_proof')) {
             $subFranchise->id_proof = $request->file('id_proof')->store('uploads/franchise/id_proofs', 'public');
+        }
+        if ($request->hasFile('id_proof_back')) {
+            $subFranchise->id_proof_back = $request->file('id_proof_back')->store('uploads/franchise/id_proofs', 'public');
         }
 
         $subFranchise->bank_name = $request->bank_name;
@@ -1275,6 +1307,7 @@ class FranchiseController extends Controller
     {
         $request->validate([
             'id_proof' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
+            'id_proof_back' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
             'pan_number' => 'required|string|max:20',
         ]);
 
@@ -1284,6 +1317,11 @@ class FranchiseController extends Controller
             $id_proof_path = $request->file('id_proof')->store('uploads/franchise/id_proofs', 'public');
         }
 
+        $id_proof_back_path = null;
+        if ($request->hasFile('id_proof_back')) {
+            $id_proof_back_path = $request->file('id_proof_back')->store('uploads/franchise/id_proofs', 'public');
+        }
+
         $saved = false;
         if ($user->user_type == 'franchise') {
             $franchise = Franchise::where('user_id', $user->id)->first();
@@ -1291,7 +1329,12 @@ class FranchiseController extends Controller
                 if ($id_proof_path) {
                     $franchise->id_proof = $id_proof_path;
                 }
+                if ($id_proof_back_path) {
+                    $franchise->id_proof_back = $id_proof_back_path;
+                }
                 $franchise->pan_number = $request->pan_number;
+                $franchise->additional_doc_request = 0;
+                $franchise->additional_doc_request_note = null;
                 $franchise->save();
                 $saved = true;
             }
@@ -1301,7 +1344,12 @@ class FranchiseController extends Controller
                 if ($id_proof_path) {
                     $sub->id_proof = $id_proof_path;
                 }
+                if ($id_proof_back_path) {
+                    $sub->id_proof_back = $id_proof_back_path;
+                }
                 $sub->pan_number = $request->pan_number;
+                $sub->additional_doc_request = 0;
+                $sub->additional_doc_request_note = null;
                 $sub->save();
                 $saved = true;
             }
@@ -1311,7 +1359,12 @@ class FranchiseController extends Controller
                 if ($id_proof_path) {
                     $state_franchise->id_proof = $id_proof_path;
                 }
+                if ($id_proof_back_path) {
+                    $state_franchise->id_proof_back = $id_proof_back_path;
+                }
                 $state_franchise->pan_number = $request->pan_number;
+                $state_franchise->additional_doc_request = 0;
+                $state_franchise->additional_doc_request_note = null;
                 $state_franchise->save();
                 $saved = true;
             }
@@ -1356,6 +1409,28 @@ class FranchiseController extends Controller
         $stateFranchise->save();
 
         flash(translate('Commission updated successfully'))->success();
+        return back();
+    }
+
+    public function requestAdditionalDocs(\Illuminate\Http\Request $request, $id, $type)
+    {
+        $request->validate([
+            'doc_request_note' => 'required|string|max:1000',
+        ]);
+
+        if ($type == 'state_franchise') {
+            $entity = StateFranchise::findOrFail($id);
+        } elseif ($type == 'franchise') {
+            $entity = Franchise::findOrFail($id);
+        } else {
+            $entity = SubFranchise::findOrFail($id);
+        }
+
+        $entity->additional_doc_request = 1;
+        $entity->additional_doc_request_note = $request->doc_request_note;
+        $entity->save();
+
+        flash(translate('Additional document request has been sent.'))->success();
         return back();
     }
 }

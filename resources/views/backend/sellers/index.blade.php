@@ -183,7 +183,10 @@
                                         <span class="badge badge-inline badge-success mb-1"> {{ translate('Verified') }}</span>
                                         <span class="badge badge-inline badge-secondary">{{ translate('By Admin') }}</span>
                                     @else
-                                        <span class="badge badge-inline badge-secondary"> {{ translate('Not Applied') }}</span>
+                                        <span class="badge badge-inline badge-secondary mb-1"> {{ translate('Not Applied') }}</span>
+                                    @endif
+                                    @if(!empty($shop->additional_doc_request) && $shop->additional_doc_request)
+                                        <span class="badge badge-inline badge-info mt-1" title="{{ $shop->additional_doc_request_note }}"><i class="la la-file-upload"></i> {{translate('Docs Requested')}}</span>
                                     @endif
                                 </div>
                             </td>

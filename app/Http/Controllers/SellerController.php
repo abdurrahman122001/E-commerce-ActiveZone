@@ -55,11 +55,11 @@ class SellerController extends Controller
         $shops = Shop::where('registration_approval', 1)->whereIn('user_id', function ($query) {
             $query->select('id')
                 ->from(with(new User)->getTable())
-                ->where('user_type', 'seller');
+                ->whereIn('user_type', ['seller', 'vendor']);
         })->latest();
 
         if ($sort_search != null || $verification_status != null) {
-            $user_ids = User::where('user_type', 'seller');
+            $user_ids = User::whereIn('user_type', ['seller', 'vendor']);
             if ($sort_search != null) {
                 $user_ids = $user_ids->where(function ($user) use ($sort_search) {
                     $user->where('name', 'like', '%' . $sort_search . '%')
@@ -431,11 +431,11 @@ class SellerController extends Controller
         $shops = Shop::whereIn('user_id', function ($query) {
             $query->select('id')
                 ->from(with(new User)->getTable())
-                ->where('user_type', 'seller');
+                ->whereIn('user_type', ['seller', 'vendor']);
         })->latest();
 
         if ($sort_search != null || $verification_status != null) {
-            $user_ids = User::where('user_type', 'seller');
+            $user_ids = User::whereIn('user_type', ['seller', 'vendor']);
             if ($sort_search != null) {
                 $user_ids = $user_ids->where(function ($user) use ($sort_search) {
                     $user->where('name', 'like', '%' . $sort_search . '%')
@@ -518,7 +518,7 @@ class SellerController extends Controller
         }
 
         if ($sort_search != null) {
-            $user_ids = User::where('user_type', 'seller')
+            $user_ids = User::whereIn('user_type', ['seller', 'vendor'])
                 ->where(function ($query) use ($sort_search) {
                     $query->where('name', 'like', '%' . $sort_search . '%')
                         ->orWhere('email', 'like', '%' . $sort_search . '%')
@@ -666,5 +666,22 @@ class SellerController extends Controller
             flash(translate('Failed to delete verification file. Please try again later.'))->error();
             return back();
         }
+    }
+    public function requestAdditionalDocs(Request $request, $id)
+    {
+        $request->validate([
+            'doc_request_note' => 'required|string|max:1000',
+        ]);
+
+        $shop = Shop::findOrFail($id);
+        $shop->additional_doc_request = 1;
+        $shop->additional_doc_request_note = $request->doc_request_note;
+        // Reset verification so seller can re-submit
+        $shop->verification_info = null;
+        $shop->verification_status = 0;
+        $shop->save();
+
+        flash(translate('Additional document request has been sent to the seller.'))->success();
+        return back();
     }
 }

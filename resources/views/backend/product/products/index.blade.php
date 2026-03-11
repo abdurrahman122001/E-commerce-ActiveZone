@@ -109,7 +109,7 @@
                     <div class="col-md-2 mr-0 px-0 inner-select ml-1">
                         <select class="form-control  aiz-selectpicker mb-2 mb-md-0 bg-light" id="user_id" name="user_id" onchange="sort_products()">
                             <option value="" class="hov-bg-light text-secondary fs-14 fw-40">{{ translate('All Sellers') }}</option>
-                            @foreach (App\Models\User::where('user_type', '=', 'seller')->get() as $key => $seller)
+                            @foreach (App\Models\User::whereIn('user_type', ['seller', 'vendor'])->get() as $key => $seller)
                                 <option class="hov-bg-light text-secondary fs-14 fw-40" value="{{ $seller->id }}">
                                     {{ $seller->shop?->name }} ({{ $seller->name }})
                                 </option>

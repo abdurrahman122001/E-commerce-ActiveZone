@@ -130,6 +130,9 @@
                             @else
                                 <span class="badge badge-inline badge-danger">{{translate('Rejected')}}</span>
                             @endif
+                            @if(!empty($reg->additional_doc_request) && $reg->additional_doc_request)
+                                <br><span class="badge badge-inline badge-info mt-1" title="{{ $reg->additional_doc_request_note }}"><i class="la la-file-upload"></i> {{translate('Docs Requested')}}</span>
+                            @endif
                         </td>
                         <td>
                             @if($reg->package_payment_status == 'paid')
@@ -192,6 +195,42 @@
                                     <a href="javascript:void(0);" class="dropdown-item confirm-delete" data-href="{{ $destroy_route }}" >
                                         {{translate('Delete')}}
                                     </a>
+                                    <a href="javascript:void(0);" class="dropdown-item text-warning"
+                                       data-toggle="modal" data-target="#requestDocModal_{{ $type_param }}_{{ $reg->id }}">
+                                        <i class="la la-file-upload"></i> {{translate('Request Docs')}}
+                                    </a>
+                                </div>
+                            </div>
+
+                            {{-- Request Additional Docs Modal for this franchise --}}
+                            <div class="modal fade" id="requestDocModal_{{ $type_param }}_{{ $reg->id }}" tabindex="-1" role="dialog">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <form action="{{ route('admin.franchise.request_additional_docs', ['id' => $reg->id, 'type' => $type_param]) }}" method="POST">
+                                            @csrf
+                                            <div class="modal-header">
+                                                <h5 class="modal-title">{{ translate('Request Additional Documents') }}</h5>
+                                                <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <p class="text-muted">{{ translate('Specify what additional documents you need.') }}</p>
+                                                @if($reg->additional_doc_request_note)
+                                                    <div class="alert alert-info">
+                                                        <strong>{{ translate('Previous request') }}:</strong> {{ $reg->additional_doc_request_note }}
+                                                    </div>
+                                                @endif
+                                                <div class="form-group">
+                                                    <label>{{ translate('Document Request Note') }} <span class="text-danger">*</span></label>
+                                                    <textarea name="doc_request_note" class="form-control" rows="4" required
+                                                        placeholder="{{ translate('e.g. Please submit a clearer copy of your ID proof and PAN card.') }}">{{ $reg->additional_doc_request_note }}</textarea>
+                                                </div>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">{{ translate('Cancel') }}</button>
+                                                <button type="submit" class="btn btn-warning">{{ translate('Send Request') }}</button>
+                                            </div>
+                                        </form>
+                                    </div>
                                 </div>
                             </div>
                         </td>
