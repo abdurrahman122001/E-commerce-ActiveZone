@@ -969,3 +969,7 @@
 [2026-03-11 08:20:14] local.INFO: Authenticated method called {"user_id":61,"user_type":"state_franchise"} 
 [2026-03-11 08:20:14] local.INFO: Redirecting franchise/sub_franchise  
 [2026-03-11 08:39:23] local.INFO: Authenticated method called {"user_id":64,"user_type":"vendor"} 
+[2026-03-11 08:55:52] local.INFO: Authenticated method called {"user_id":8,"user_type":"customer"} 
+[2026-03-11 08:55:52] local.INFO: Redirecting to default dashboard  
+[2026-03-11 09:00:23] local.INFO: Authenticated method called {"user_id":63,"user_type":"sub_franchise"} 
+[2026-03-11 09:00:23] local.INFO: Redirecting franchise/sub_franchise  
