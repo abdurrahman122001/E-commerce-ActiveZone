@@ -69,9 +69,15 @@
                         </ul>
 
                         {{-- Select Button --}}
-                        <button type="button" class="btn {{ $key == 1 ? 'btn-primary' : 'btn-soft-primary' }} btn-block rounded-0 py-3 fw-700 mt-auto shadow-none border-0" onclick="showPurchaseModal('{{ $package->id }}', '{{ $package->getTranslation('name') }}', '{{ single_price($package->price) }}')">
-                            {{ translate('Choose This Package') }} <i class="las la-arrow-right ml-2"></i>
-                        </button>
+                        @if(isset($vendor) && $vendor->franchise_package_id == $package->id)
+                            <button type="button" class="btn btn-success btn-block rounded-0 py-3 fw-700 mt-auto shadow-none border-0" disabled>
+                                {{ translate('Package Selected') }} <i class="las la-check ml-2"></i>
+                            </button>
+                        @else
+                            <button type="button" class="btn {{ $key == 1 ? 'btn-primary' : 'btn-soft-primary' }} btn-block rounded-0 py-3 fw-700 mt-auto shadow-none border-0" onclick="showPurchaseModal('{{ $package->id }}', '{{ $package->getTranslation('name') }}', '{{ single_price($package->price) }}')">
+                                {{ translate('Choose This Package') }} <i class="las la-arrow-right ml-2"></i>
+                            </button>
+                        @endif
                     </div>
                 </div>
             </div>

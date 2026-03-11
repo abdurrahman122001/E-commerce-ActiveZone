@@ -241,7 +241,7 @@ class VendorController extends Controller
             return view('vendors.packages.pending', compact('vendor'));
         }
         $packages = \App\Models\FranchisePackage::where('package_type', 'vendor')->where('status', 1)->get();
-        return view('vendors.packages.index', compact('packages'));
+        return view('vendors.packages.index', compact('packages', 'vendor'));
     }
         
         $data['total_products'] = \App\Models\Product::where('user_id', $authUserId)->count();
@@ -443,8 +443,9 @@ class VendorController extends Controller
 
     public function packages()
     {
+        $vendor = \App\Models\Vendor::where('user_id', Auth::id())->first();
         $packages = \App\Models\FranchisePackage::where('package_type', 'vendor')->where('status', 1)->get();
-        return view('vendors.packages.index', compact('packages'));
+        return view('vendors.packages.index', compact('packages', 'vendor'));
     }
 
     public function myReferrals()
