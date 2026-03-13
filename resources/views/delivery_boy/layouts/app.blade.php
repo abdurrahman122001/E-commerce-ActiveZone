@@ -118,7 +118,7 @@
             });
         }
 
-        @if(Auth::user()->user_type == 'delivery_boy' && Auth::user()->delivery_boy->online_status == 1)
+        @if(Auth::user()->user_type == 'delivery_boy' && optional(Auth::user()->delivery_boy)->online_status == 1)
             function update_location(){
                 if (navigator.geolocation) {
                     navigator.geolocation.getCurrentPosition(function(position) {

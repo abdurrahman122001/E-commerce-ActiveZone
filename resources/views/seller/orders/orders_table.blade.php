@@ -21,6 +21,7 @@
                 <th class="hide-xl text-uppercase fs-12 fw-700 text-secondary">{{ translate('Delivery Status') }}</th>
                 <th class="hide-xxl text-uppercase fs-12 fw-700 text-secondary">{{ translate('Payment method') }}</th>
                 <th class="hide-xxl text-uppercase fs-12 fw-700 text-secondary">{{ translate('Payment Status') }}</th>
+                <th class="hide-xxl text-uppercase fs-12 fw-700 text-secondary">{{ translate('Delivery Boy') }}</th>
                 <th class="text-right text-uppercase fs-10 fs-md-12 fw-700 text-secondary">{{ translate('Options') }}</th>
             </tr>
         </thead>
@@ -109,6 +110,14 @@
                     <span class="badge badge-inline badge-success">{{ translate('Paid') }}</span>
                     @else
                     <span class="badge badge-inline badge-danger">{{ translate('Unpaid') }}</span>
+                    @endif
+                </td>
+
+                <td class="hide-xxl align-middle" data-label="Delivery Boy">
+                    @if ($order->delivery_boy != null)
+                        {{ $order->delivery_boy->name }}
+                    @else
+                        {{ translate('Not Assigned') }}
                     @endif
                 </td>
 

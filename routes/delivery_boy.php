@@ -72,7 +72,9 @@ Route::group(['middleware' => ['user', 'verified', 'unbanned', 'prevent-back-his
 
     Route::controller(\App\Http\Controllers\DeliveryBoy\DeliveryBoyController::class)->group(function () {
         Route::get('/delivery-boy/order-detail/{id}', 'order_detail')->name('delivery-boy.order-detail');
+        Route::get('/delivery-boy/order-detail/{id}/directions/{type}', 'directions')->name('delivery-boy.order-directions');
         Route::get('/delivery-boy/wallet', 'wallet')->name('delivery-boy.wallet');
+        Route::post('/delivery-boy/withdraw-request', 'withdraw_request_store')->name('delivery-boy.withdraw_request.store');
         Route::get('/delivery-boy/profile', 'profile')->name('delivery-boy.profile');
         Route::post('/delivery-boy/profile/update', 'profile_update')->name('delivery-boy.profile.update');
         Route::post('/delivery-boy/update-online-status', 'update_online_status')->name('delivery-boy.update-online-status');

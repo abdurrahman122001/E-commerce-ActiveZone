@@ -32,7 +32,7 @@ class OrderController extends Controller
 
     public function show($id)
     {
-        $order = Order::findOrFail(decrypt($id));
+        $order = Order::with('delivery_boy')->findOrFail(decrypt($id));
         $order_shipping_address = json_decode($order->shipping_address);
         $delivery_boys = User::where('city', $order_shipping_address->city)
             ->where('user_type', 'delivery_boy')
@@ -211,7 +211,7 @@ class OrderController extends Controller
         $col_name = null;
         $query = null;
         $sort_search = null;
-        $orders = Order::orderBy('id', 'desc')->where('seller_id', Auth::user()->id);
+        $orders = Order::with('delivery_boy')->orderBy('id', 'desc')->where('seller_id', Auth::user()->id);
         if ($request->order_from) {
             $orders= $orders->where('order_from','pos');
         }

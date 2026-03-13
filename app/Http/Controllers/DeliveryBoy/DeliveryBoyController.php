@@ -15,18 +15,20 @@ class DeliveryBoyController extends Controller
     public function __construct()
     {
         $this->middleware(['auth']);
+        $this->middleware(function ($request, $next) {
+            $user = Auth::user();
+            if ($user && $user->user_type == 'delivery_boy' && !$user->delivery_boy) {
+                $delivery_boy = new DeliveryBoy();
+                $delivery_boy->user_id = $user->id;
+                $delivery_boy->save();
+                $user->load('delivery_boy');
+            }
+            return $next($request);
+        });
     }
 
     public function index()
     {
-        $delivery_boy = Auth::user()->delivery_boy;
-        if (!$delivery_boy) {
-            // Create delivery boy record if it doesn't exist for this user
-            $delivery_boy = new DeliveryBoy();
-            $delivery_boy->user_id = Auth::id();
-            $delivery_boy->save();
-        }
-
         $total_completed = Order::where('assign_delivery_boy', Auth::id())->where('delivery_status', 'delivered')->count();
         $total_pending = Order::where('assign_delivery_boy', Auth::id())->whereIn('delivery_status', ['ready_to_pick', 'picked_up', 'on_the_way'])->count();
         $total_cancelled = Order::where('assign_delivery_boy', Auth::id())->where('delivery_status', 'cancelled')->count();
@@ -134,6 +136,33 @@ class DeliveryBoyController extends Controller
         return view('delivery_boy.order_detail', compact('order'));
     }
 
+    public function directions(Request $request, $id, $type)
+    {
+        $order = Order::findOrFail($id);
+        $origin = $request->origin; // Can be lat,long
+
+        $destination = '';
+        if ($type == 'vendor') {
+            $vendor = $order->vendor;
+            $shop = $order->shop;
+            $destination = $vendor->address ?? ($shop->name ?? '');
+        } elseif ($type == 'shop') {
+            $shop = $order->shop;
+            $destination = $shop->address ?? ($shop->name ?? '');
+        } elseif ($type == 'customer') {
+            $shipping_address = json_decode($order->shipping_address);
+            $d_lat = $shipping_address->latitude ?? $shipping_address->lat ?? null;
+            $d_long = $shipping_address->longitude ?? $shipping_address->long ?? $shipping_address->lang ?? null;
+            if ($d_lat && $d_long) {
+                $destination = $d_lat . ',' . $d_long;
+            } else {
+                $destination = ($shipping_address->address ?? '') . ', ' . ($shipping_address->city ?? '') . ', ' . ($shipping_address->country ?? '');
+            }
+        }
+
+        return view('delivery_boy.directions', compact('order', 'type', 'origin', 'destination'));
+    }
+
     public function profile()
     {
         $user = Auth::user();
@@ -142,7 +171,35 @@ class DeliveryBoyController extends Controller
 
     public function wallet()
     {
-        return view('delivery_boy.wallet');
+        $withdraw_requests = \App\Models\DeliveryBoyWithdrawRequest::where('user_id', Auth::id())->latest()->paginate(10);
+        return view('delivery_boy.wallet', compact('withdraw_requests'));
+    }
+
+    public function withdraw_request_store(Request $request)
+    {
+        $user = Auth::user();
+        $delivery_boy = $user->delivery_boy;
+        $balance = ($delivery_boy->total_earning ?? 0) - ($delivery_boy->cash_collected ?? 0);
+
+        if ($request->amount > $balance) {
+            flash(translate('You do not have enough balance to send this withdraw request'))->warning();
+            return back();
+        }
+
+        $withdraw_request = new \App\Models\DeliveryBoyWithdrawRequest();
+        $withdraw_request->user_id = $user->id;
+        $withdraw_request->amount = $request->amount;
+        $withdraw_request->message = $request->message;
+        $withdraw_request->status = 0;
+        $withdraw_request->viewed = 0;
+        
+        if ($withdraw_request->save()) {
+            flash(translate('Withdraw request has been sent successfully'))->success();
+        } else {
+            flash(translate('Something went wrong'))->error();
+        }
+
+        return back();
     }
 
     public function update_online_status(Request $request)

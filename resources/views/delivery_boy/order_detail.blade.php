@@ -62,7 +62,7 @@
                             @endif
                             <tr>
                                 <td colspan="2" class="text-center pt-3 border-top-0">
-                                    <a href="https://www.google.com/maps/dir/?api=1&destination={{ urlencode($vendor->address ?? $shop->name ?? '') }}" target="_blank" class="btn btn-sm btn-outline-warning btn-block" onclick="appendOrigin(this)">
+                                    <a href="{{ route('delivery-boy.order-directions', ['id' => $order->id, 'type' => 'vendor']) }}" class="btn btn-sm btn-outline-warning btn-block" onclick="appendOrigin(this)">
                                         <i class="las la-directions fs-16"></i> {{ translate('Get Directions to Vendor') }}
                                     </a>
                                 </td>
@@ -80,7 +80,7 @@
                             </tr>
                             <tr>
                                 <td colspan="2" class="text-center pt-3 border-top-0">
-                                    <a href="https://www.google.com/maps/dir/?api=1&destination={{ urlencode($shop->address ?? $shop->name ?? '') }}" target="_blank" class="btn btn-sm btn-outline-warning btn-block" onclick="appendOrigin(this)">
+                                    <a href="{{ route('delivery-boy.order-directions', ['id' => $order->id, 'type' => 'shop']) }}" class="btn btn-sm btn-outline-warning btn-block" onclick="appendOrigin(this)">
                                         <i class="las la-directions fs-16"></i> {{ translate('Get Directions to Shop') }}
                                     </a>
                                 </td>
@@ -139,7 +139,7 @@
                                         $d_long = $shipping_address->longitude ?? $shipping_address->long ?? $shipping_address->lang ?? null;
                                         $d_addr = ($shipping_address->address ?? '') . ', ' . ($shipping_address->city ?? '') . ', ' . ($shipping_address->country ?? '');
                                     @endphp
-                                    <a href="https://www.google.com/maps/dir/?api=1&destination={{ $d_lat && $d_long ? $d_lat.','.$d_long : urlencode($d_addr) }}" target="_blank" class="btn btn-sm btn-primary btn-block fw-700" onclick="appendOrigin(this)">
+                                    <a href="{{ route('delivery-boy.order-directions', ['id' => $order->id, 'type' => 'customer']) }}" class="btn btn-sm btn-primary btn-block fw-700" onclick="appendOrigin(this)">
                                         <i class="las la-directions fs-16"></i> {{ translate('Get Directions to Customer') }}
                                     </a>
                                 </td>
@@ -263,8 +263,9 @@
     function appendOrigin(element) {
         var a = $(element);
         var href = a.attr('href');
-        if (currentLat && currentLong && href.indexOf('&origin=') === -1) {
-            a.attr('href', href + '&origin=' + currentLat + ',' + currentLong);
+        if (currentLat && currentLong && href.indexOf('origin=') === -1) {
+            var separator = href.indexOf('?') !== -1 ? '&' : '?';
+            a.attr('href', href + separator + 'origin=' + currentLat + ',' + currentLong);
         }
         return true;
     }

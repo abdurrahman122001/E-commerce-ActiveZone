@@ -163,6 +163,12 @@
                                 <td class="text-main text-bold">{{ translate('Additional Info') }}</td>
                                 <td class="text-right">{{ $order->additional_info }}</td>
                             </tr>
+                            @if ($order->delivery_boy != null)
+                            <tr>
+                                <td class="text-main text-bold">{{ translate('Delivery Boy') }}</td>
+                                <td class="text-right">{{ $order->delivery_boy->name }} @if($order->delivery_boy->phone) ({{ $order->delivery_boy->phone }}) @endif</td>
+                            </tr>
+                            @endif
                         </tbody>
                     </table>
                 </div>
