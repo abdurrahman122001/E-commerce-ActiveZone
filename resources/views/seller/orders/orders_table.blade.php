@@ -115,9 +115,12 @@
 
                 <td class="hide-xxl align-middle" data-label="Delivery Boy">
                     @if ($order->delivery_boy != null)
-                        {{ $order->delivery_boy->name }}
+                        <span class="d-block fw-600">{{ $order->delivery_boy->name }}</span>
+                        @if ($order->delivery_boy->phone)
+                            <span class="d-block fs-12 text-secondary">{{ $order->delivery_boy->phone }}</span>
+                        @endif
                     @else
-                        {{ translate('Not Assigned') }}
+                        <span class="text-muted">{{ translate('Not Assigned') }}</span>
                     @endif
                 </td>
 
