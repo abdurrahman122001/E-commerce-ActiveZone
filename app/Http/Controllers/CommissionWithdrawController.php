@@ -4,11 +4,13 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\CommissionWithdrawRequest;
+use App\Models\DeliveryBoyWithdrawRequest;
 use App\Models\VendorCommissionHistory;
 use App\Models\Franchise;
 use App\Models\SubFranchise;
 use App\Models\Vendor;
 use App\Models\FranchiseEmployee;
+use App\Models\DeliveryBoy;
 use Auth;
 
 class CommissionWithdrawController extends Controller
@@ -152,12 +154,79 @@ class CommissionWithdrawController extends Controller
     public function admin_index(Request $request)
     {
         $status = $request->status;
-        $withdraw_requests = CommissionWithdrawRequest::query();
+        $perPage = 15;
+        $page = $request->get('page', 1);
+
+        // Commission requests (franchise, vendor, sub_franchise, state_franchise, employee)
+        $commissionQuery = CommissionWithdrawRequest::query();
         if ($status) {
-            $withdraw_requests->where('status', $status);
+            $commissionQuery->where('status', $status);
         }
-        $requests = $withdraw_requests->latest()->paginate(15);
+        $commissionRequests = $commissionQuery->latest()->get()->map(function($r) {
+            $r->request_source = 'commission';
+            return $r;
+        });
+
+        // Delivery boy requests
+        $deliveryQuery = DeliveryBoyWithdrawRequest::with(['user', 'deliveryBoy']);
+        if ($status) {
+            // DB status: 0=pending, 1=approved, 2=rejected
+            $dbStatus = ($status == 'approved') ? 1 : (($status == 'rejected') ? 2 : 0);
+            $deliveryQuery->where('status', $dbStatus);
+        }
+        $deliveryRequests = $deliveryQuery->latest()->get()->map(function($r) {
+            $r->request_source = 'delivery_boy';
+            return $r;
+        });
+
+        // Merge and sort by created_at descending, then manual paginate
+        $merged = $commissionRequests->concat($deliveryRequests)
+            ->sortByDesc('created_at')
+            ->values();
+
+        $total = $merged->count();
+        $requests = new \Illuminate\Pagination\LengthAwarePaginator(
+            $merged->forPage($page, $perPage),
+            $total,
+            $perPage,
+            $page,
+            ['path' => $request->url(), 'query' => $request->query()]
+        );
+
         return view('backend.withdraw_requests.index', compact('requests', 'status'));
+    }
+
+    public function admin_approve_delivery_boy(Request $request, $id)
+    {
+        $withdraw_request = DeliveryBoyWithdrawRequest::findOrFail($id);
+        if ($withdraw_request->status != 0) {
+            flash(translate('Request is already processed'))->error();
+            return back();
+        }
+
+        $withdraw_request->status = 1; // approved
+        $withdraw_request->save();
+
+        // Deduct from delivery boy's total_earning
+        $delivery_boy = DeliveryBoy::where('user_id', $withdraw_request->user_id)->first();
+        if ($delivery_boy) {
+            $delivery_boy->total_earning -= $withdraw_request->amount;
+            if ($delivery_boy->total_earning < 0) $delivery_boy->total_earning = 0;
+            $delivery_boy->save();
+        }
+
+        flash(translate('Withdrawal request approved and amount deducted from balance'))->success();
+        return back();
+    }
+
+    public function admin_reject_delivery_boy(Request $request, $id)
+    {
+        $withdraw_request = DeliveryBoyWithdrawRequest::findOrFail($id);
+        $withdraw_request->status = 2; // rejected
+        $withdraw_request->save();
+
+        flash(translate('Withdrawal request rejected'))->success();
+        return back();
     }
 
     public function admin_approve(Request $request, $id)

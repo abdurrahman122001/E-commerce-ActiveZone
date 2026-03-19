@@ -122,6 +122,8 @@ Route::controller(App\Http\Controllers\FranchiseController::class)->group(functi
             Route::get('/admin/withdraw-requests', 'admin_index')->name('admin.withdraw_requests.index');
             Route::post('/admin/withdraw-requests/approve/{id}', 'admin_approve')->name('admin.withdraw_requests.approve');
             Route::post('/admin/withdraw-requests/reject/{id}', 'admin_reject')->name('admin.withdraw_requests.reject');
+            Route::post('/admin/withdraw-requests/delivery-boy/approve/{id}', 'admin_approve_delivery_boy')->name('admin.withdraw_requests.delivery_boy.approve');
+            Route::post('/admin/withdraw-requests/delivery-boy/reject/{id}', 'admin_reject_delivery_boy')->name('admin.withdraw_requests.delivery_boy.reject');
         });
     });
 });
