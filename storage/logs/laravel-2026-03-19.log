@@ -1,0 +1,10 @@
+[2026-03-19 07:28:26] local.INFO: Authenticated method called {"user_id":9,"user_type":"admin"} 
+[2026-03-19 07:30:40] local.ERROR: Maximum execution time of 60 seconds exceeded {"userId":9,"exception":"[object] (Symfony\\Component\\ErrorHandler\\Error\\FatalError(code: 0): Maximum execution time of 60 seconds exceeded at C:\\Users\\Dell\\Downloads\\E-Commerce ActiveZone\\storage\\framework\\views\\eedfdd48a122f454a60ac0dd78a0bf63.php:1)
+[stacktrace]
+#0 {main}
+"} 
+[2026-03-19 07:35:50] local.INFO: Authenticated method called {"user_id":63,"user_type":"sub_franchise"} 
+[2026-03-19 07:35:50] local.INFO: Redirecting franchise/sub_franchise  
+[2026-03-19 07:38:07] local.INFO: Authenticated method called {"user_id":8,"user_type":"customer"} 
+[2026-03-19 07:38:07] local.INFO: Redirecting to default dashboard  
+[2026-03-19 07:40:25] local.INFO: Authenticated method called {"user_id":71,"user_type":"delivery_boy"} 
