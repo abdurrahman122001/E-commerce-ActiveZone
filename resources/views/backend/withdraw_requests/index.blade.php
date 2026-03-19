@@ -61,13 +61,15 @@
                             $requesterExists = (bool)$requester;
                             if ($requesterExists) {
                                 if (in_array($withdraw_request->user_type, ['franchise', 'state_franchise'])) {
-                                    $requesterName = $requester->franchise_name ?? $requester->name;
-                                } elseif (in_array($withdraw_request->user_type, ['sub_franchise', 'employee'])) {
-                                    $requesterName = $requester->name;
+                                    $requesterName = $requester->franchise_name ?? $requester->name ?? $requester->user->name ?? translate('N/A');
+                                } elseif ($withdraw_request->user_type == 'sub_franchise') {
+                                    $requesterName = $requester->user->name ?? $requester->name ?? translate('N/A');
+                                } elseif ($withdraw_request->user_type == 'employee') {
+                                    $requesterName = $requester->name ?? $requester->user->name ?? translate('N/A');
                                 } elseif ($withdraw_request->user_type == 'vendor') {
                                     $requesterName = ($requester->user->name ?? translate('N/A')) . ' (' . $requester->shop_name . ')';
                                 } else {
-                                    $requesterName = $requester->name ?? translate('N/A');
+                                    $requesterName = $requester->name ?? $requester->user->name ?? translate('N/A');
                                 }
                             } else {
                                 $requesterName = translate('Deleted User');
