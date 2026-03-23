@@ -24,11 +24,13 @@ class ProductRequest extends FormRequest
      */
     protected function prepareForValidation()
     {
-        if ($this->has('category_ids') && !$this->has('category_id')) {
-            $categoryIds = $this->category_ids;
-            if (is_array($categoryIds) && count($categoryIds) > 0) {
-                $this->merge(['category_id' => $categoryIds[0]]);
+        if ($this->has('category_id')) {
+            $category_id = $this->category_id;
+            $category_ids = $this->category_ids ?? [];
+            if (!in_array($category_id, $category_ids)) {
+                $category_ids[] = $category_id;
             }
+            $this->merge(['category_ids' => $category_ids]);
         }
     }
 

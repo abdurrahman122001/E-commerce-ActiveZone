@@ -4,3 +4,6 @@
 [2026-03-23 06:23:54] local.INFO: Authenticated method called {"user_id":72,"user_type":"delivery_boy"} 
 [2026-03-23 06:43:06] local.INFO: Authenticated method called {"user_id":8,"user_type":"customer"} 
 [2026-03-23 06:43:06] local.INFO: Redirecting to default dashboard  
+[2026-03-23 07:38:48] local.INFO: Authenticated method called {"user_id":62,"user_type":"franchise"} 
+[2026-03-23 07:38:48] local.INFO: Redirecting franchise/sub_franchise  
+[2026-03-23 07:45:55] local.INFO: Authenticated method called {"user_id":64,"user_type":"vendor"} 

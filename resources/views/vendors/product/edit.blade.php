@@ -413,21 +413,45 @@
                             <h5 class="mb-0 h6">{{ translate('Product Category') }} <span class="text-danger">*</span></h5>
                         </div>
                         <div class="card-body">
-                            <div class="h-max-500px overflow-y-auto border p-3">
-                                <ul id="treeview" class="hummingbird-treeview-converter list-unstyled" data-checkbox-name="category_ids[]" data-radio-name="category_id">
+                            {{-- Main Category --}}
+                            <div class="form-group">
+                                <label class="col-from-label font-weight-bold">{{ translate('Main Category') }} <span class="text-danger">*</span></label>
+                                <select class="form-control aiz-selectpicker" name="category_id" id="main_category_select" data-live-search="true" required>
+                                    <option value="">{{ translate('Select Main Category') }}</option>
                                     @foreach ($categories as $category)
-                                        <li id="{{ $category->id }}" @if($product->categories->contains($category->id)) data-checked="true" @endif @if($product->category_id == $category->id) data-selected="true" @endif>{{ $category->getTranslation('name') }}
-                                            @if(count($category->childrenCategories) > 0)
-                                                <ul>
-                                                    @foreach ($category->childrenCategories as $childCategory)
-                                                        @include('vendors.product.child_category', ['child_category' => $childCategory, 'product' => $product])
-                                                    @endforeach
-                                                </ul>
-                                            @endif
-                                        </li>
+                                        <option value="{{ $category->id }}" @if($product->category_id == $category->id) selected @endif>{{ $category->getTranslation('name') }}</option>
                                     @endforeach
-                                </ul>
+                                </select>
                             </div>
+
+                            {{-- Sub Category --}}
+                            <div class="form-group" id="sub_category_wrapper" @if(!$product->category_id) style="display:none;" @endif>
+                                <label class="col-from-label font-weight-bold">{{ translate('Sub Category') }}</label>
+                                <div class="row gutters-5 border p-3 rounded bg-light mx-0" id="sub_categories_checkboxes">
+                                    @if($product->category_id)
+                                        @php
+                                            $main_category = \App\Models\Category::find($product->category_id);
+                                        @endphp
+                                        <div class="col-md-4 col-sm-6 mb-2">
+                                            <label class="aiz-checkbox">
+                                                <input type="checkbox" name="category_ids[]" value="{{ $product->category_id }}" checked>
+                                                <span class="aiz-square-check"></span>
+                                                <span>{{ optional($main_category)->getTranslation('name') }} ({{ translate('Main Category') }})</span>
+                                            </label>
+                                        </div>
+                                        @foreach (\App\Models\Category::where('parent_id', $product->category_id)->get() as $sub_category)
+                                            <div class="col-md-4 col-sm-6 mb-2">
+                                                <label class="aiz-checkbox">
+                                                    <input type="checkbox" name="category_ids[]" value="{{ $sub_category->id }}" @if($product->categories->contains($sub_category->id)) checked @endif>
+                                                    <span class="aiz-square-check"></span>
+                                                    <span>{{ $sub_category->getTranslation('name') }}</span>
+                                                </label>
+                                            </div>
+                                        @endforeach
+                                    @endif
+                                </div>
+                            </div>
+
                             <p class="text-danger" id="refundable-note"></p>
                         </div>
                     </div>
@@ -596,29 +620,21 @@
 @section('script')
 <script type="text/javascript">
     $(document).ready(function() {
-        $("#treeview").hummingbird();
-
-        // Initialize checked states for categories
-        let checked_ids = [];
-        $("#treeview li[data-checked='true']").each(function() {
-            checked_ids.push($(this).attr('id'));
-        });
-        if (checked_ids.length > 0) {
-            $("#treeview").hummingbird("checkNode", {sel: "id", vals: checked_ids});
-        }
-
-        // Initialize selected main category (radio)
-        let selected_id = $("#treeview li[data-selected='true']").attr('id');
-        if (selected_id) {
-            $('#treeview input:radio[value='+selected_id+']').prop('checked',true).trigger('change');
-        }
-
-        $('#treeview input:checkbox').on("click", function (){
-            let $this = $(this);
-            if ($this.prop('checked') && ($('#treeview input:radio:checked').length == 0)) {
-                let val = $this.val();
-                $('#treeview input:radio[value='+val+']').prop('checked',true).trigger('change');
+        $('#main_category_select').on('change', function() {
+            var category_id = $(this).val();
+            if (category_id > 0) {
+                $('#sub_category_wrapper').show();
+                $.post('{{ route('vendor.products.get_subcategories_by_category') }}', {
+                    _token: '{{ csrf_token() }}',
+                    category_id: category_id
+                }, function(data) {
+                    $('#sub_categories_checkboxes').html(JSON.parse(data));
+                });
+            } else {
+                $('#sub_category_wrapper').hide();
+                $('#sub_categories_checkboxes').html(null);
             }
+            isRefundable();
         });
         
         isRefundable();
@@ -719,7 +735,7 @@
     function isRefundable() {
         const refundType = "{{ get_setting('refund_type') }}";
         const $refundable = $('input[name="refundable"]');
-        const $mainCategoryRadio = $('input[name="category_id"]:checked');
+        const $mainCategorySelect = $('#main_category_select');
         const $note = $('#refundable-note');
 
         $refundable.off('change.isRefundableLock');
@@ -730,7 +746,7 @@
             return;
         }
 
-        if (!$mainCategoryRadio.length) {
+        if (!$mainCategorySelect.val()) {
             $refundable.prop('checked', false);
             $refundable.prop('disabled', true);
             $note.text('{{ translate("Your refund type is category based. At first select the main category.") }}')
@@ -738,7 +754,7 @@
             return;
         }
 
-        const categoryId = $mainCategoryRadio.val();
+        const categoryId = $mainCategorySelect.val();
         $.ajax({
             type: 'POST',
             url: '{{ route("vendor.products.check_refundable_category") }}',
@@ -761,9 +777,8 @@
         });
     }
 
-    $(document).on('change', 'input[name="category_id"]', function () {
-        isRefundable();
-    });
+    isRefundable();
+
 
     function check_filter(event) {
         // console.log('check_filter triggered');

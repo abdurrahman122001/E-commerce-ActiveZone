@@ -360,4 +360,36 @@ class ProductController extends Controller
             'is_refundable' => false
         ]);
     }
+
+    public function get_subcategories_by_category(Request $request)
+    {
+        $category_id = $request->category_id;
+        $main_category = Category::findOrFail($category_id);
+        $sub_categories = Category::where('parent_id', $category_id)->get();
+
+        // Main category checkbox (checked)
+        $html = '<div class="col-md-4 col-sm-6 mb-2">
+                    <label class="aiz-checkbox">
+                        <input type="checkbox" name="category_ids[]" value="' . $category_id . '" checked>
+                        <span class="aiz-square-check"></span>
+                        <span>' . $main_category->getTranslation('name') . ' (' . translate('Main Category') . ')</span>
+                    </label>
+                </div>';
+
+        foreach ($sub_categories as $sub_category) {
+            $html .= '<div class="col-md-4 col-sm-6 mb-2">
+                        <label class="aiz-checkbox">
+                            <input type="checkbox" name="category_ids[]" value="' . $sub_category->id . '">
+                            <span class="aiz-square-check"></span>
+                            <span>' . $sub_category->getTranslation('name') . '</span>
+                        </label>
+                    </div>';
+        }
+
+        if (count($sub_categories) == 0 && !$main_category) {
+            $html = '<div class="col-12 text-muted">' . translate('No subcategories found for this category') . '</div>';
+        }
+        
+        echo json_encode($html);
+    }
 }

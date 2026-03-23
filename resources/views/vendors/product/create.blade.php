@@ -372,21 +372,24 @@
                             <h5 class="mb-0 h6">{{ translate('Product Category') }} <span class="text-danger">*</span></h5>
                         </div>
                         <div class="card-body">
-                            <div class="h-max-500px overflow-y-auto border p-3">
-                                <ul id="treeview" class="hummingbird-treeview-converter list-unstyled" data-checkbox-name="category_ids[]" data-radio-name="category_id">
+                            {{-- Main Category --}}
+                            <div class="form-group">
+                                <label class="col-from-label font-weight-bold">{{ translate('Main Category') }} <span class="text-danger">*</span></label>
+                                <select class="form-control aiz-selectpicker" name="category_id" id="main_category_select" data-live-search="true" required>
+                                    <option value="">{{ translate('Select Main Category') }}</option>
                                     @foreach ($categories as $category)
-                                        <li id="{{ $category->id }}">{{ $category->getTranslation('name') }}
-                                            @if(count($category->childrenCategories) > 0)
-                                                <ul>
-                                                    @foreach ($category->childrenCategories as $childCategory)
-                                                        @include('vendors.product.child_category', ['child_category' => $childCategory])
-                                                    @endforeach
-                                                </ul>
-                                            @endif
-                                        </li>
+                                        <option value="{{ $category->id }}">{{ $category->getTranslation('name') }}</option>
                                     @endforeach
-                                </ul>
+                                </select>
                             </div>
+
+                            {{-- Sub Category --}}
+                            <div class="form-group" id="sub_category_wrapper" style="display:none;">
+                                <label class="col-from-label font-weight-bold">{{ translate('Sub Category') }}</label>
+                                <div class="row gutters-5 border p-3 rounded bg-light mx-0" id="sub_categories_checkboxes">
+                                </div>
+                            </div>
+
                             <p class="text-danger" id="refundable-note"></p>
                         </div>
                     </div>
@@ -551,19 +554,23 @@
             var data_type = $('#data_type').val();
             localStorage.setItem('tempdataproduct_'+data_type, '{}');
             localStorage.setItem('tempload_'+data_type, 'no');
-            // Remove the 'new' parameter from URL without reloading if you want, 
-            // but the product_temp_data.blade.php already loaded data.
-            // Actually, we should clear it BEFORE product_temp_data loads.
         }
 
-        $("#treeview").hummingbird();
-
-        $('#treeview input:checkbox').on("click", function (){
-            let $this = $(this);
-            if ($this.prop('checked') && ($('#treeview input:radio:checked').length == 0)) {
-                let val = $this.val();
-                $('#treeview input:radio[value='+val+']').prop('checked',true).trigger('change');
+        $('#main_category_select').on('change', function() {
+            var category_id = $(this).val();
+            if (category_id > 0) {
+                $('#sub_category_wrapper').show();
+                $.post('{{ route('vendor.products.get_subcategories_by_category') }}', {
+                    _token: '{{ csrf_token() }}',
+                    category_id: category_id
+                }, function(data) {
+                    $('#sub_categories_checkboxes').html(JSON.parse(data));
+                });
+            } else {
+                $('#sub_category_wrapper').hide();
+                $('#sub_categories_checkboxes').html(null);
             }
+            isRefundable();
         });
         
         isRefundable();
@@ -663,7 +670,7 @@
     function isRefundable() {
         const refundType = "{{ get_setting('refund_type') }}";
         const $refundable = $('input[name="refundable"]');
-        const $mainCategoryRadio = $('input[name="category_id"]:checked');
+        const $mainCategorySelect = $('#main_category_select');
         const $note = $('#refundable-note');
 
         $refundable.off('change.isRefundableLock');
@@ -674,7 +681,7 @@
             return;
         }
 
-        if (!$mainCategoryRadio.length) {
+        if (!$mainCategorySelect.val()) {
             $refundable.prop('checked', false);
             $refundable.prop('disabled', true);
             $note.text('{{ translate("Your refund type is category based. At first select the main category.") }}')
@@ -682,7 +689,7 @@
             return;
         }
 
-        const categoryId = $mainCategoryRadio.val();
+        const categoryId = $mainCategorySelect.val();
         $.ajax({
             type: 'POST',
             url: '{{ route("vendor.products.check_refundable_category") }}',
@@ -705,9 +712,7 @@
         });
     }
 
-    $(document).on('change', 'input[name="category_id"]', function () {
-        isRefundable();
-    });
+
 
     function check_filter(event) {
         // console.log('check_filter triggered');
