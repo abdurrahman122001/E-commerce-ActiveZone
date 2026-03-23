@@ -566,6 +566,10 @@ class OrderController extends Controller
             }
         }
 
+        if (Auth::user()->user_type == 'delivery_boy') {
+            return redirect()->route('delivery-boy.order-detail', $order->id);
+        }
+
         return 1;
     }
 

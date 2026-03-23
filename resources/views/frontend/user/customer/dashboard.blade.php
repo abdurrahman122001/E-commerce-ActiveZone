@@ -501,8 +501,13 @@
 
      @if(get_active_countries()->count() == 1)
     <script>
-        $(document).ready(function() {
-            get_states(@json(get_active_countries()[0]->id))
+        // When the new address modal opens, auto-load cities (or states) for the single active country
+        $('#new-address-modal').on('show.bs.modal', function () {
+            @if(get_setting('has_state') == 1)
+                get_states(@json(get_active_countries()[0]->id));
+            @else
+                get_city_by_country(@json(get_active_countries()[0]->id));
+            @endif
         });
     </script>
     @endif
