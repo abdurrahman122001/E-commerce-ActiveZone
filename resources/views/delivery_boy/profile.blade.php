@@ -98,7 +98,7 @@
                 </div>
                 <div class="col-md-6">
                     <div class="form-group">
-                        <label>{{ translate('Bank Routing Number') }}</label>
+                        <label>{{ translate('Branch Name') }}</label>
                         <input type="text" class="form-control" name="bank_routing_no" value="{{ $delivery_boy->bank_routing_no ?? '' }}" {{ !empty($delivery_boy->bank_routing_no) ? 'readonly' : '' }}>
                     </div>
                 </div>

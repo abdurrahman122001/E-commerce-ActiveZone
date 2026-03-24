@@ -74,7 +74,7 @@
                                 <a class="btn btn-soft-success btn-icon btn-circle btn-sm" href="{{ route('franchise.employees.approve', $employee->id) }}" title="{{ translate('Approve') }}">
                                     <i class="las la-check"></i>
                                 </a>
-                                <a class="btn btn-soft-danger btn-icon btn-circle btn-sm" href="{{ route('franchise.employees.reject', $employee->id) }}" title="{{ translate('Reject') }}">
+                                <a class="btn btn-soft-danger btn-icon btn-circle btn-sm confirm-reject" href="javascript:void(0);" data-href="{{ route('franchise.employees.reject', $employee->id) }}" title="{{ translate('Reject') }}">
                                     <i class="las la-times"></i>
                                 </a>
                             @endif

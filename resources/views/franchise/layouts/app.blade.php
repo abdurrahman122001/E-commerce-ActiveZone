@@ -85,6 +85,7 @@
 
     @include('modals.bulk_action_modal')
     @include('modals.delete_modal')
+    @include('modals.reject_modal')
     @yield('modal')
 
 

@@ -123,15 +123,15 @@
                     @enderror
                 </div>
             </div>
-            <div class="row">
-                <label class="col-md-3 col-form-label" for="bank_routing_no">{{ translate('Bank Routing Number') }}</label>
-                <div class="col-md-9">
-                    <input type="number" name="bank_routing_no" value="{{ $user->shop->bank_routing_no }}" id="bank_routing_no" lang="en" class="form-control mb-3" placeholder="{{ translate('Bank Routing Number')}}" {{ $user->shop->bank_routing_no ? 'readonly' : '' }}>
-                    @error('bank_routing_no')
-                    <small class="form-text text-danger">{{ $message }}</small>
-                    @enderror
+                <div class="row">
+                    <label class="col-md-3 col-form-label" for="bank_routing_no">{{ translate('Branch Name') }}</label>
+                    <div class="col-md-9">
+                        <input type="text" name="bank_routing_no" value="{{ $user->shop->bank_routing_no }}" id="bank_routing_no" class="form-control mb-3" placeholder="{{ translate('Branch Name')}}" {{ $user->shop->bank_routing_no ? 'readonly' : '' }}>
+                        @error('bank_routing_no')
+                        <small class="form-text text-danger">{{ $message }}</small>
+                        @enderror
+                    </div>
                 </div>
-            </div>
             <div class="row">
                 <label class="col-md-3 col-form-label" for="ifsc_code">{{ translate('IFSC Code') }}</label>
                 <div class="col-md-9">

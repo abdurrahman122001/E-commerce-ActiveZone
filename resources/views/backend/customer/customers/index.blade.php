@@ -68,6 +68,7 @@
                         <th data-breakpoints="lg">{{translate('Email Address')}}</th>
                         <th data-breakpoints="lg">{{translate('Phone')}}</th>
                         <th data-breakpoints="lg">{{translate('Package')}}</th>
+                        <th data-breakpoints="lg">{{translate('Status')}}</th>
                         <th data-breakpoints="lg">{{translate('Wallet Balance')}}</th>
                         <th data-breakpoints="lg">{{translate('Verification Status')}}</th>
                         <th class="text-right">{{translate('Options')}}</th>
@@ -101,6 +102,15 @@
                                 <td>
                                     @if ($user->customer_package != null)
                                         {{$user->customer_package->getTranslation('name')}}
+                                    @endif
+                                </td>
+                                <td>
+                                    @if($user->banned)
+                                        <span class="badge badge-inline badge-danger">{{ translate('Banned') }}</span>
+                                    @elseif($user->is_suspicious)
+                                        <span class="badge badge-inline badge-info">{{ translate('Suspicious') }}</span>
+                                    @else
+                                        <span class="badge badge-inline badge-success">{{ translate('Regular') }}</span>
                                     @endif
                                 </td>
                                 <td>{{single_price($user->balance)}}</td>

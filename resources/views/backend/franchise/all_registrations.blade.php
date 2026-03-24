@@ -123,7 +123,9 @@
                             @endif
                         </td>
                         <td>
-                            @if ($reg->status == 'pending')
+                            @if($reg->user && $reg->user->banned == 1)
+                                <span class="badge badge-inline badge-danger">{{translate('Banned')}}</span>
+                            @elseif ($reg->status == 'pending')
                                 <span class="badge badge-inline badge-warning">{{translate('Pending')}}</span>
                             @elseif ($reg->status == 'approved')
                                 <span class="badge badge-inline badge-success">{{translate('Approved')}}</span>
@@ -154,12 +156,12 @@
                                 </button>
                                 <div class="dropdown-menu dropdown-menu-right">
                                     @php
-                                        $type_param = match($reg->franchise_type) {
-                                            'State Franchise' => 'state',
-                                            'City Franchise' => 'franchise',
-                                            'Sub-Franchise' => 'sub_franchise',
-                                            default => 'franchise'
-                                        };
+                                         $type_param = match($reg->franchise_type) {
+                                             'State Franchise' => 'state_franchise',
+                                             'City Franchise' => 'franchise',
+                                             'Sub-Franchise' => 'sub_franchise',
+                                             default => 'franchise'
+                                         };
                                         $edit_route = match($reg->franchise_type) {
                                             'State Franchise' => route('admin.state_franchises.edit', $reg->id),
                                             'City Franchise' => route('admin.franchises.edit', $reg->id),
@@ -178,9 +180,9 @@
                                         <a href="{{ route('admin.franchise.approve', ['id'=>$reg->id, 'type'=>$type_param]) }}" class="dropdown-item">
                                             {{translate('Approve')}}
                                         </a>
-                                        <a href="{{ route('admin.franchise.reject', ['id'=>$reg->id, 'type'=>$type_param]) }}" class="dropdown-item">
-                                            {{translate('Reject')}}
-                                        </a>
+                                        <a href="javascript:void(0);" data-href="{{ route('admin.franchise.reject', ['id'=>$reg->id, 'type'=>$type_param]) }}" class="dropdown-item confirm-reject">
+                                             {{translate('Reject')}}
+                                         </a>
                                     @endif
 
                                     @if($reg->package_payment_status == 'pending')

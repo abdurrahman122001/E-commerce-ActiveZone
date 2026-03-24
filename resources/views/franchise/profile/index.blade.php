@@ -98,9 +98,9 @@
                     </div>
                 </div>
                 <div class="form-group row">
-                    <label class="col-md-2 col-from-label">{{ translate('Bank Routing Number') }}</label>
+                    <label class="col-md-2 col-from-label">{{ translate('Branch Name') }}</label>
                     <div class="col-md-10">
-                        <input type="text" class="form-control" placeholder="{{ translate('Bank Routing Number') }}" name="bank_routing_no" value="{{ $role_data->bank_routing_no ?? '' }}" {{ !empty($role_data->bank_routing_no) ? 'readonly' : '' }}>
+                        <input type="text" class="form-control" placeholder="{{ translate('Branch Name') }}" name="bank_routing_no" value="{{ $role_data->bank_routing_no ?? '' }}" {{ !empty($role_data->bank_routing_no) ? 'readonly' : '' }}>
                     </div>
                 </div>
                 <div class="form-group row">

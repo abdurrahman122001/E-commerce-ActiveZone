@@ -762,6 +762,7 @@
             var input = $(this);
             var file = this.files[0];
             var label = input.siblings('.custom-file-label');
+            var parent = input.closest('.col-md-9');
             
             if (file) {
                 var fileName = file.name;
@@ -771,15 +772,17 @@
                 if (file.type.match('image.*')) {
                     var reader = new FileReader();
                     reader.onload = function(e) {
-                        if ($('#id-proof-preview-img').length == 0) {
-                            input.closest('.col-md-9').append('<div class="mt-3 text-left" id="id-proof-preview-container"><img id="id-proof-preview-img" src="" class="img-fluid rounded shadow-sm" style="max-height: 120px; border: 1px solid #ddd; background: #f8f9fa; padding: 5px;"></div>');
+                        var previewContainer = parent.find('.id-proof-preview-container');
+                        if (previewContainer.length == 0) {
+                            parent.append('<div class="mt-3 text-left id-proof-preview-container"><img src="" class="id-proof-preview-img img-fluid rounded shadow-sm" style="max-height: 120px; border: 1px solid #ddd; background: #f8f9fa; padding: 5px;"></div>');
+                            previewContainer = parent.find('.id-proof-preview-container');
                         }
-                        $('#id-proof-preview-img').attr('src', e.target.result);
-                        $('#id-proof-preview-container').show();
+                        previewContainer.find('img').attr('src', e.target.result);
+                        previewContainer.show();
                     }
                     reader.readAsDataURL(file);
                 } else {
-                    $('#id-proof-preview-container').hide();
+                    parent.find('.id-proof-preview-container').hide();
                 }
             }
         });

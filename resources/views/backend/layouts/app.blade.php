@@ -145,6 +145,7 @@
     
     <!-- Bulk Action modal -->
     @include('modals.bulk_action_modal')
+    @include('modals.reject_modal')
     @yield('modal')
 
 

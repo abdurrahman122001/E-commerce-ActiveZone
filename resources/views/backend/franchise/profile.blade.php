@@ -159,7 +159,7 @@
                     <p class="h6 text-muted">{{ $bank_acc_no ?? translate('Not Provided') }}</p>
                 </div>
                 <div class="form-group text-center">
-                    <label class="d-block">{{translate('Bank Routing No')}}</label>
+                    <label class="d-block">{{translate('Branch Name')}}</label>
                     <p class="h6 text-muted">{{ $bank_routing_no ?? translate('Not Provided') }}</p>
                 </div>
             </div>

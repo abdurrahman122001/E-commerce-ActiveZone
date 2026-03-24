@@ -7,7 +7,7 @@
       <h5 class="mb-0 h6">{{ translate('Seller Verification') }}</h5>
       @if ($shop->verification_status != 1 && $shop->verification_info != null)
         <div class="pull-right clearfix">
-            <a href="{{ route('sellers.reject', $shop->id) }}" class="btn btn-circle btn-danger d-innline-block">{{translate('Reject')}}</a>
+            <a href="javascript:void(0);" data-href="{{ route('sellers.reject', $shop->id) }}" class="btn btn-circle btn-danger d-innline-block confirm-reject">{{translate('Reject')}}</a>
             <a href="{{ route('sellers.approve', $shop->id) }}" class="btn btn-circle btn-success d-innline-block">{{translate('Accept')}}</a>
             <button type="button" class="btn btn-circle btn-warning d-innline-block" data-toggle="modal" data-target="#requestDocsModal">
                 <i class="la la-file-upload"></i> {{translate('Request Docs')}}
@@ -103,7 +103,7 @@
 
         @if ($shop->verification_status != 1 && $shop->verification_info != null)
           <div class="text-center mt-3">
-              <a href="{{ route('sellers.reject', $shop->id) }}" class="btn btn-sm btn-danger">{{translate('Reject')}}</a>
+              <a href="javascript:void(0);" data-href="{{ route('sellers.reject', $shop->id) }}" class="btn btn-sm btn-danger confirm-reject">{{translate('Reject')}}</a>
               <a href="{{ route('sellers.approve', $shop->id) }}" class="btn btn-sm btn-success">{{translate('Accept')}}</a>
               <button type="button" class="btn btn-sm btn-warning" data-toggle="modal" data-target="#requestDocsModal">
                   {{translate('Request Additional Docs')}}

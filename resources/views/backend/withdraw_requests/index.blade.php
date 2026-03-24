@@ -130,7 +130,7 @@
                                 <b>{{ translate('Bank') }}:</b> {{ $bank_name }}<br>
                                 <b>{{ translate('Acc') }}:</b> {{ $bank_acc_name }}<br>
                                 <b>{{ translate('No') }}:</b> {{ $bank_acc_no }}<br>
-                                <b>{{ translate('Routing') }}:</b> {{ $bank_routing_no }}
+                                <b>{{ translate('Branch') }}:</b> {{ $bank_routing_no }}
                             </div>
                         </td>
                         <td class="text-right">

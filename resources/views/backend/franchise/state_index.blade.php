@@ -49,7 +49,9 @@
                         <td>{{ $franchise->state->name ?? '' }}</td>
                         <td>{{ $franchise->franchise_package ? $franchise->franchise_package->getTranslation('name') : '' }}</td>
                         <td>
-                            @if ($franchise->status == 'pending')
+                            @if($franchise->user && $franchise->user->banned == 1)
+                                <span class="badge badge-inline badge-danger">{{translate('Banned')}}</span>
+                            @elseif ($franchise->status == 'pending')
                                 <span class="badge badge-inline badge-warning">{{translate('Pending')}}</span>
                             @elseif ($franchise->status == 'approved')
                                 <span class="badge badge-inline badge-success">{{translate('Approved')}}</span>
@@ -96,9 +98,9 @@
                                         <a href="{{ route('admin.franchise.approve', ['id'=>$franchise->id, 'type'=>'state_franchise']) }}" class="dropdown-item">
                                             {{translate('Approve')}}
                                         </a>
-                                        <a href="{{ route('admin.franchise.reject', ['id'=>$franchise->id, 'type'=>'state_franchise']) }}" class="dropdown-item">
+                                        <a href="javascript:void(0);" data-href="{{ route('admin.franchise.reject', ['id'=>$franchise->id, 'type'=>'state_franchise']) }}" class="dropdown-item confirm-reject">
                                             {{translate('Reject')}}
-                                        </a>
+                                         </a>
                                     @endif
 
                                     <a href="{{route('admin.franchises.profile', encrypt($franchise->user_id))}}" class="dropdown-item">

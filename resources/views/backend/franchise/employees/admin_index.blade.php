@@ -108,7 +108,7 @@
                                 <a href="{{route('admin.franchise_employees.approve', $employee->id)}}" class="btn btn-soft-success btn-icon btn-circle btn-sm" title="{{ translate('Approve') }}">
                                     <i class="las la-check"></i>
                                 </a>
-                                <a href="{{route('admin.franchise_employees.reject', $employee->id)}}" class="btn btn-soft-danger btn-icon btn-circle btn-sm" title="{{ translate('Reject') }}">
+                                <a href="javascript:void(0);" data-href="{{route('admin.franchise_employees.reject', $employee->id)}}" class="btn btn-soft-danger btn-icon btn-circle btn-sm confirm-reject" title="{{ translate('Reject') }}">
                                     <i class="las la-times"></i>
                                 </a>
                             @endif

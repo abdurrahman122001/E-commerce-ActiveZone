@@ -54,7 +54,9 @@
                         <td>{{ $sub->franchise->franchise_name ?? translate('No Parent') }}</td>
                         <td>{{ $sub->franchise_package ? $sub->franchise_package->getTranslation('name') : '' }}</td>
                         <td>
-                            @if ($sub->status == 'pending')
+                            @if($sub->user && $sub->user->banned == 1)
+                                <span class="badge badge-inline badge-danger">{{translate('Banned')}}</span>
+                            @elseif ($sub->status == 'pending')
                                 <span class="badge badge-inline badge-warning">{{translate('Pending')}}</span>
                             @elseif ($sub->status == 'approved')
                                 <span class="badge badge-inline badge-success">{{translate('Approved')}}</span>
@@ -102,7 +104,7 @@
                                         <a href="{{ route('admin.franchise.approve', ['id'=>$sub->id, 'type'=>'sub_franchise']) }}" class="dropdown-item">
                                             {{translate('Approve')}}
                                         </a>
-                                        <a href="{{ route('admin.franchise.reject', ['id'=>$sub->id, 'type'=>'sub_franchise']) }}" class="dropdown-item">
+                                        <a href="javascript:void(0);" data-href="{{ route('admin.franchise.reject', ['id'=>$sub->id, 'type'=>'sub_franchise']) }}" class="dropdown-item confirm-reject">
                                             {{translate('Reject')}}
                                         </a>
                                     @endif

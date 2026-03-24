@@ -63,10 +63,14 @@
                                 @endif
                             </td>
                             <td>
-                                <label class="aiz-switch aiz-switch-success mb-0">
-                                    <input onchange="update_status(this)" value="{{ $delivery_boy->id }}" type="checkbox" <?php if($delivery_boy->status == 1) echo "checked";?> >
-                                    <span class="slider round"></span>
-                                </label>
+                                @if($delivery_boy->user && $delivery_boy->user->banned == 1)
+                                    <span class="badge badge-inline badge-danger">{{translate('Banned')}}</span>
+                                @else
+                                    <label class="aiz-switch aiz-switch-success mb-0">
+                                        <input onchange="update_status(this)" value="{{ $delivery_boy->id }}" type="checkbox" <?php if($delivery_boy->status == 1) echo "checked";?> >
+                                        <span class="slider round"></span>
+                                    </label>
+                                @endif
                             </td>
                             <td class="text-right">
                                 <a class="btn btn-soft-primary btn-icon btn-circle btn-sm" href="{{route('delivery-boys.edit', $delivery_boy->id)}}" title="{{ translate('Edit') }}">

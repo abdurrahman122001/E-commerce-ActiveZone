@@ -32,7 +32,7 @@
                       <td>{{ $shop->bank_acc_no }}</td>
                   </tr>
                   <tr>
-                      <td>{{ translate('Bank Routing Number') }}</td>
+                      <td>{{ translate('Branch Name') }}</td>
                       <td>{{ $shop->bank_routing_no }}</td>
                   </tr>
                   <tr>

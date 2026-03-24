@@ -166,10 +166,9 @@
                                    onclick="return confirm('{{ translate('Approve this vendor?') }}')">
                                     <i class="las la-check"></i>
                                 </a>
-                                <a href="{{ route('admin.vendors.reject', $vendor->id) }}"
-                                   class="btn btn-soft-danger btn-icon btn-circle btn-sm"
-                                   title="{{ translate('Reject Vendor') }}"
-                                   onclick="return confirm('{{ translate('Reject this vendor?') }}')">
+                                <a href="javascript:void(0);" data-href="{{ route('admin.vendors.reject', $vendor->id) }}"
+                                   class="btn btn-soft-danger btn-icon btn-circle btn-sm confirm-reject"
+                                   title="{{ translate('Reject Vendor') }}">
                                     <i class="las la-times"></i>
                                 </a>
                             @endif
