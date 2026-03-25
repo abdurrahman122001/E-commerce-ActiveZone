@@ -941,31 +941,53 @@
                 @endcanany
 
                 <!-- Franchise System -->
+                @php
+                    $pending_state_franchises = \App\Models\StateFranchise::where('status', 'pending')->count();
+                    $pending_franchises = \App\Models\Franchise::where('status', 'pending')->count();
+                    $pending_sub_franchises = \App\Models\SubFranchise::where('status', 'pending')->count();
+                    $total_pending_franchises = $pending_state_franchises + $pending_franchises + $pending_sub_franchises;
+                    $pending_vendor_registrations = \App\Models\Vendor::where('status', 'pending')->count();
+                @endphp
                 <li class="aiz-side-nav-item">
                     <a href="#" class="aiz-side-nav-link">
                         <i class="las la-store aiz-side-nav-icon"></i>
                         <span class="aiz-side-nav-text">{{ translate('Franchise System') }}</span>
+                        @if($total_pending_franchises + $pending_vendor_registrations > 0)
+                            <span class="badge badge-inline badge-danger ml-auto">{{ $total_pending_franchises + $pending_vendor_registrations }}</span>
+                        @endif
                         <span class="aiz-side-nav-arrow"></span>
                     </a>
                     <ul class="aiz-side-nav-list level-2">
                         <li class="aiz-side-nav-item">
                             <a href="{{ route('admin.all_franchises.registrations') }}" class="aiz-side-nav-link {{ areActiveRoutes(['admin.all_franchises.registrations']) }}">
                                 <span class="aiz-side-nav-text">{{ translate('All Registrations') }}</span>
+                                @if($total_pending_franchises > 0)
+                                    <span class="badge badge-inline badge-info">{{ $total_pending_franchises }}</span>
+                                @endif
                             </a>
                         </li>
                         <li class="aiz-side-nav-item">
                             <a href="{{ route('admin.state_franchises.index') }}" class="aiz-side-nav-link">
                                 <span class="aiz-side-nav-text">{{ translate('State Franchises') }}</span>
+                                @if($pending_state_franchises > 0)
+                                    <span class="badge badge-inline badge-info">{{ $pending_state_franchises }}</span>
+                                @endif
                             </a>
                         </li>
                         <li class="aiz-side-nav-item">
                             <a href="{{ route('admin.franchises.index') }}" class="aiz-side-nav-link">
                                 <span class="aiz-side-nav-text">{{ translate('City Franchises') }}</span>
+                                @if($pending_franchises > 0)
+                                    <span class="badge badge-inline badge-info">{{ $pending_franchises }}</span>
+                                @endif
                             </a>
                         </li>
                         <li class="aiz-side-nav-item">
                             <a href="{{ route('admin.sub_franchises.index') }}" class="aiz-side-nav-link">
                                 <span class="aiz-side-nav-text">{{ translate('Sub Franchises') }}</span>
+                                @if($pending_sub_franchises > 0)
+                                    <span class="badge badge-inline badge-info">{{ $pending_sub_franchises }}</span>
+                                @endif
                             </a>
                         </li>
                         <li class="aiz-side-nav-item">
@@ -991,6 +1013,9 @@
                         <li class="aiz-side-nav-item">
                             <a href="{{ route('admin.franchise_employees.vendor_registrations') }}" class="aiz-side-nav-link">
                                 <span class="aiz-side-nav-text">{{ translate('Vendor Registrations') }}</span>
+                                @if($pending_vendor_registrations > 0)
+                                    <span class="badge badge-inline badge-info">{{ $pending_vendor_registrations }}</span>
+                                @endif
                             </a>
                         </li>
                         <li class="aiz-side-nav-item">

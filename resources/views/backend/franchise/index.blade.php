@@ -50,7 +50,12 @@
                         <td>{{ $franchise->user->phone ?? '' }}</td>
                         <td>{{ $franchise->state->name ?? '' }}</td>
                         <td>{{ $franchise->city->name ?? '' }}</td>
-                        <td>{{ $franchise->franchise_package ? $franchise->franchise_package->getTranslation('name') : '' }}</td>
+                                                <td>
+                            {{ $franchise->franchise_package ? $franchise->franchise_package->getTranslation('name') : '' }}
+                            @if($franchise->franchise_package)
+                                <br><b>{{ single_price($franchise->franchise_package->price) }}</b>
+                            @endif
+                        </td>
                         <td>
                             @if($franchise->user && $franchise->user->banned == 1)
                                 <span class="badge badge-inline badge-danger">{{translate('Banned')}}</span>

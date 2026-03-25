@@ -52,7 +52,12 @@
                         <td>{{ $sub->city->name ?? '' }}</td>
                         <td>{{ $sub->area->name ?? '' }}</td>
                         <td>{{ $sub->franchise->franchise_name ?? translate('No Parent') }}</td>
-                        <td>{{ $sub->franchise_package ? $sub->franchise_package->getTranslation('name') : '' }}</td>
+                                                <td>
+                            {{ $sub->franchise_package ? $sub->franchise_package->getTranslation('name') : '' }}
+                            @if($sub->franchise_package)
+                                <br><b>{{ single_price($sub->franchise_package->price) }}</b>
+                            @endif
+                        </td>
                         <td>
                             @if($sub->user && $sub->user->banned == 1)
                                 <span class="badge badge-inline badge-danger">{{translate('Banned')}}</span>
