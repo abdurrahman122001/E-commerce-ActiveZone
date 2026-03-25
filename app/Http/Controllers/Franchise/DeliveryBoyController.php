@@ -166,4 +166,16 @@ class DeliveryBoyController extends Controller
         }
         return redirect()->route('franchise.delivery_boys.index');
     }
+    public function update_status(Request $request)
+    {
+        if (Auth::user()->user_type != 'state_franchise') {
+             return 0;
+        }
+        $delivery_boy = DeliveryBoy::findOrFail($request->id);
+        $delivery_boy->status = $request->status;
+        if($delivery_boy->save()){
+             return 1;
+        }
+        return 0;
+    }
 }

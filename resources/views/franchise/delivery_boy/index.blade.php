@@ -46,10 +46,17 @@
                             <td>{{$delivery_boy->user->phone}}</td>
                             <td>{{$delivery_boy->location}}</td>
                             <td>
-                                @if ($delivery_boy->status == 1)
-                                    <span class="badge badge-inline badge-success">{{translate('Approved')}}</span>
+                                @if (Auth::user()->user_type == 'state_franchise')
+                                    <label class="aiz-switch aiz-switch-success mb-0">
+                                        <input onchange="update_status(this)" value="{{ $delivery_boy->id }}" type="checkbox" <?php if($delivery_boy->status == 1) echo "checked";?>>
+                                        <span class="slider round"></span>
+                                    </label>
                                 @else
-                                    <span class="badge badge-inline badge-warning">{{translate('Pending')}}</span>
+                                    @if ($delivery_boy->status == 1)
+                                        <span class="badge badge-inline badge-success">{{translate('Approved')}}</span>
+                                    @else
+                                        <span class="badge badge-inline badge-warning">{{translate('Pending')}}</span>
+                                    @endif
                                 @endif
                             </td>
                             <td class="text-right">
@@ -68,4 +75,25 @@
     </div>
 </div>
 
+@endsection
+
+@section('script')
+    <script type="text/javascript">
+        function update_status(el){
+            if(el.checked){
+                var status = 1;
+            }
+            else{
+                var status = 0;
+            }
+            $.post('{{ route('franchise.delivery_boys.update_status') }}', {_token:'{{ csrf_token() }}', id:el.value, status:status}, function(data){
+                if(data == 1){
+                    AIZ.plugins.notify('success', '{{ translate('Status updated successfully') }}');
+                }
+                else{
+                    AIZ.plugins.notify('danger', '{{ translate('Something went wrong') }}');
+                }
+            });
+        }
+    </script>
 @endsection

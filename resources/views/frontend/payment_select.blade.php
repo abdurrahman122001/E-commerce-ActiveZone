@@ -565,40 +565,10 @@
                                     @endif
                                 </div>
 
-                                <!-- Offline Payment Fields -->
+                                <!-- Offline Payment Details Display -->
                                 @if (addon_is_activated('offline_payment'))
                                     <div class="d-none mb-3 rounded border bg-white p-3 text-left">
-                                        <div id="manual_payment_description">
-
-                                        </div>
-                                        <br>
-                                        <div class="row">
-                                            <div class="col-md-3">
-                                                <label>{{ translate('Transaction ID') }} <span
-                                                        class="text-danger">*</span></label>
-                                            </div>
-                                            <div class="col-md-9">
-                                                <input type="text" class="form-control mb-3" name="trx_id"
-                                                    id="trx_id" placeholder="{{ translate('Transaction ID') }}"
-                                                    required>
-                                            </div>
-                                        </div>
-                                        <div class="form-group row">
-                                            <label class="col-md-3 col-form-label">{{ translate('Photo') }}</label>
-                                            <div class="col-md-9">
-                                                <div class="input-group" data-toggle="aizuploader" data-type="image">
-                                                    <div class="input-group-prepend">
-                                                        <div class="input-group-text bg-soft-secondary font-weight-medium">
-                                                            {{ translate('Browse') }}</div>
-                                                    </div>
-                                                    <div class="form-control file-amount">{{ translate('Choose image') }}
-                                                    </div>
-                                                    <input type="hidden" name="photo" class="selected-files">
-                                                </div>
-                                                <div class="file-preview box sm">
-                                                </div>
-                                            </div>
-                                        </div>
+                                        <div id="manual_payment_description"></div>
                                     </div>
                                 @endif
 
@@ -652,6 +622,44 @@
                                         class="btn btn-primary fs-14 fw-700 rounded-0 px-4">{{ translate('Complete Order') }}</button>
                                 </div>
                             </div>
+
+                            @if (addon_is_activated('offline_payment'))
+                                <div class="modal fade" id="offline_payment_modal" tabindex="-1" role="dialog" aria-labelledby="offline_payment_modal_title" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title fs-16 fw-700" id="offline_payment_modal_title">{{ translate('Offline Payment Confirmation') }}</h5>
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body text-left">
+                                                <div id="manual_payment_description_modal"></div>
+                                                <hr>
+                                                <div class="form-group">
+                                                     <label class="fw-600">{{ translate('Transaction ID') }} <span class="text-danger">*</span></label>
+                                                     <input type="text" class="form-control" name="trx_id" id="trx_id" placeholder="{{ translate('Transaction ID') }}">
+                                                 </div>
+                                                 <div class="form-group">
+                                                     <label class="fw-600">{{ translate('Photo') }}</label>
+                                                     <div class="input-group" data-toggle="aizuploader" data-type="image">
+                                                         <div class="input-group-prepend">
+                                                             <div class="input-group-text bg-soft-secondary font-weight-medium">{{ translate('Browse') }}</div>
+                                                         </div>
+                                                         <div class="form-control file-amount">{{ translate('Choose image') }}</div>
+                                                         <input type="hidden" name="photo" class="selected-files">
+                                                     </div>
+                                                     <div class="file-preview box sm"></div>
+                                                 </div>
+                                            </div>
+                                            <div class="modal-footer justify-content-between">
+                                                <button type="button" class="btn btn-soft-secondary" data-dismiss="modal">{{ translate('Cancel') }}</button>
+                                                <button type="button" onclick="confirmOfflineSubmit()" class="btn btn-primary px-4">{{ translate('Confirm Order') }}</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            @endif
                         </div>
                     </form>
                 </div>
@@ -694,24 +702,31 @@
         }
 
         function submitOrder(el) {
-            $(el).prop('disabled', true);
             if ($('#agree_checkbox').is(":checked")) {
                 if (minimum_order_amount_check && $('#sub_total').val() < minimum_order_amount) {
                     AIZ.plugins.notify('danger',
                         '{{ translate('You order amount is less then the minimum order amount') }}');
                 } else {
                     var offline_payment_active = '{{ addon_is_activated('offline_payment') }}';
-                    if (offline_payment_active == '1' && $('.offline_payment_option').is(":checked") && $('#trx_id')
-                        .val() == '') {
-                        AIZ.plugins.notify('danger', '{{ translate('You need to put Transaction id') }}');
-                        $(el).prop('disabled', false);
+                    if (offline_payment_active == '1' && $('.offline_payment_option').is(":checked")) {
+                        $('#manual_payment_description_modal').html($('#manual_payment_description').html());
+                        $('#offline_payment_modal').modal('show');
                     } else {
+                        $(el).prop('disabled', true);
                         $('#checkout-form').submit();
                     }
                 }
             } else {
                 AIZ.plugins.notify('danger', '{{ translate('You need to agree with our policies') }}');
-                $(el).prop('disabled', false);
+            }
+        }
+
+        function confirmOfflineSubmit() {
+            if ($('#trx_id').val() == '') {
+                AIZ.plugins.notify('danger', '{{ translate('You need to put Transaction id') }}');
+            } else {
+                $('#offline_payment_modal').find('button').prop('disabled', true);
+                $('#checkout-form').submit();
             }
         }
 

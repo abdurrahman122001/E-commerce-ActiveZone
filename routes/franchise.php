@@ -105,6 +105,7 @@ Route::group(['prefix' => 'franchise', 'middleware' => ['auth', 'franchise', 'pr
         Route::post('/delivery-boys/store', 'store')->name('delivery_boys.store');
         Route::get('/delivery-boys/{id}/edit', 'edit')->name('delivery_boys.edit');
         Route::post('/delivery-boys/update/{id}', 'update')->name('delivery_boys.update');
+        Route::post('/delivery-boys/status', 'update_status')->name('delivery_boys.update_status');
     });
 
     // Support Tickets
