@@ -15,6 +15,8 @@ class SubFranchise extends Model
         'franchise_id',
         'city_id',
         'area_id',
+        'pincode',
+        'address',
         'referral_code',
         'business_experience',
         'id_proof',

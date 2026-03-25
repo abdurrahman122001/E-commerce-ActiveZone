@@ -47,6 +47,18 @@
                     </div>
                 </div>
                 <div class="form-group row">
+                    <label class="col-sm-3 col-from-label" for="pincode">{{translate('Pin Code')}}</label>
+                    <div class="col-sm-9">
+                        <input type="text" placeholder="{{translate('Pin Code')}}" id="pincode" name="pincode" class="form-control" required>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-3 col-from-label" for="address">{{translate('Address')}}</label>
+                    <div class="col-sm-9">
+                        <textarea name="address" rows="2" class="form-control" placeholder="{{translate('Address')}}" required></textarea>
+                    </div>
+                </div>
+                <div class="form-group row">
                     <label class="col-sm-3 col-from-label" for="franchise_package_id">{{translate('Package')}}</label>
                     <div class="col-sm-9">
                         <select class="form-control aiz-selectpicker" name="franchise_package_id" id="franchise_package_id" data-live-search="true" required>

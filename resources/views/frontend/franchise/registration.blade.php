@@ -126,6 +126,26 @@
                                 </div>
 
                                 <div class="form-group row">
+                                    <label class="col-md-3 col-form-label">{{ translate('Pin Code') }} <span class="text-danger">*</span></label>
+                                    <div class="col-md-9">
+                                        <input type="text" class="form-control rounded-0 @error('pincode') is-invalid @enderror" name="pincode" value="{{ old('pincode') }}" placeholder="{{ translate('Pin Code') }}" required>
+                                        @error('pincode')
+                                            <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <label class="col-md-3 col-form-label">{{ translate('Address') }} <span class="text-danger">*</span></label>
+                                    <div class="col-md-9">
+                                        <textarea class="form-control rounded-0 @error('address') is-invalid @enderror" name="address" rows="2" placeholder="{{ translate('Address') }}" required>{{ old('address') }}</textarea>
+                                        @error('address')
+                                            <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
                                     <label class="col-md-3 col-form-label">{{ translate('Package') }} <span class="text-danger">*</span></label>
                                     <div class="col-md-9">
                                         <select class="form-control aiz-selectpicker @error('franchise_package_id') is-invalid @enderror" name="franchise_package_id" id="franchise_package_id" data-live-search="true" required>

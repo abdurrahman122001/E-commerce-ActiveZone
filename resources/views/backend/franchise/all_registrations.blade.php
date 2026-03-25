@@ -88,8 +88,10 @@
                                     <b>{{ translate('City') }}:</b> {{ $reg->city->name ?? translate('N/A') }}<br>
                                 @endif
                                 @if($reg->franchise_type == 'Sub-Franchise')
-                                    <b>{{ translate('Area') }}:</b> {{ $reg->area->name ?? translate('N/A') }}
+                                    <b>{{ translate('Area') }}:</b> {{ $reg->area->name ?? translate('N/A') }}<br>
                                 @endif
+                                <b>{{ translate('Pin Code') }}:</b> {{ $reg->pincode ?? translate('N/A') }}<br>
+                                <b>{{ translate('Address') }}:</b> {{ $reg->address ?? translate('N/A') }}
                             </small>
                         </td>
                         <td>

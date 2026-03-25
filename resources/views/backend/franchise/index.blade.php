@@ -31,6 +31,8 @@
                     <th>{{translate('Phone')}}</th>
                     <th>{{translate('State')}}</th>
                     <th>{{translate('City')}}</th>
+                    <th>{{translate('Pin Code')}}</th>
+                    <th>{{translate('Address')}}</th>
                     <th>{{translate('Package')}}</th>
                     <th>{{translate('Status')}}</th>
                     <th>{{translate('Payment')}}</th>
@@ -50,6 +52,8 @@
                         <td>{{ $franchise->user->phone ?? '' }}</td>
                         <td>{{ $franchise->state->name ?? '' }}</td>
                         <td>{{ $franchise->city->name ?? '' }}</td>
+                        <td>{{ $franchise->pincode ?? '' }}</td>
+                        <td>{{ $franchise->address ?? '' }}</td>
                                                 <td>
                             {{ $franchise->franchise_package ? $franchise->franchise_package->getTranslation('name') : '' }}
                             @if($franchise->franchise_package)

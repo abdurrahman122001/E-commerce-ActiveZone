@@ -77,6 +77,8 @@ class FranchiseController extends Controller
             'state_id' => 'required|exists:states,id',
             'city_id' => 'nullable|required_if:franchise_type,city_franchise,sub_franchise|exists:cities,id',
             'area_id' => 'nullable|required_if:franchise_type,sub_franchise|exists:areas,id',
+            'pincode' => 'required|string|max:10',
+            'address' => 'required|string|max:500',
             'franchise_package_id' => 'required|exists:franchise_packages,id',
             'id_proof' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
             'id_proof_back' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
@@ -128,6 +130,8 @@ class FranchiseController extends Controller
                 $stateFranchise = new StateFranchise();
                 $stateFranchise->user_id = $user->id;
                 $stateFranchise->state_id = $request->state_id;
+                $stateFranchise->pincode = $request->pincode;
+                $stateFranchise->address = $request->address;
                 $stateFranchise->franchise_name = $request->name . ' State Franchise';
                 $stateFranchise->referral_code = 'STF' . strtoupper(Str::random(8));
                 $stateFranchise->business_experience = $request->business_experience;
@@ -147,6 +151,8 @@ class FranchiseController extends Controller
                 $franchise->user_id = $user->id;
                 $franchise->state_id = $request->state_id;
                 $franchise->city_id = $request->city_id;
+                $franchise->pincode = $request->pincode;
+                $franchise->address = $request->address;
                 $franchise->franchise_name = $request->name . ' Franchise';
                 $franchise->referral_code = 'CF' . strtoupper(Str::random(8));
                 $franchise->business_experience = $request->business_experience;
@@ -169,6 +175,8 @@ class FranchiseController extends Controller
                 $subFranchise->state_id = $request->state_id;
                 $subFranchise->city_id = $request->city_id;
                 $subFranchise->area_id = $request->area_id;
+                $subFranchise->pincode = $request->pincode;
+                $subFranchise->address = $request->address;
                 $subFranchise->referral_code = 'SF' . strtoupper(Str::random(8));
                 $subFranchise->business_experience = $request->business_experience;
                 $subFranchise->id_proof = $id_proof_path;
@@ -325,6 +333,8 @@ class FranchiseController extends Controller
             'phone' => 'required|string|unique:users,phone',
             'password' => 'required|string|min:6',
             'state_id' => 'required|exists:states,id',
+            'pincode' => 'required|string|max:10',
+            'address' => 'required|string|max:500',
             'franchise_package_id' => 'required|exists:franchise_packages,id',
         ]);
 
@@ -357,6 +367,8 @@ class FranchiseController extends Controller
         $stateFranchise = new StateFranchise();
         $stateFranchise->user_id = $user->id;
         $stateFranchise->state_id = $request->state_id;
+        $stateFranchise->pincode = $request->pincode;
+        $stateFranchise->address = $request->address;
         $stateFranchise->franchise_name = $request->name;
         $stateFranchise->referral_code = 'SF-' . strtoupper(Str::random(10));
         $stateFranchise->business_experience = $request->business_experience;
@@ -394,6 +406,8 @@ class FranchiseController extends Controller
             'password' => 'required|string|min:6',
             'state_id' => 'required|exists:states,id',
             'city_id' => 'required|exists:cities,id',
+            'pincode' => 'required|string|max:10',
+            'address' => 'required|string|max:500',
             'franchise_package_id' => 'required|exists:franchise_packages,id',
         ]);
 
@@ -472,6 +486,8 @@ class FranchiseController extends Controller
             'state_id' => 'required|exists:states,id',
             'city_id' => 'required|exists:cities,id',
             'area_id' => 'required|exists:areas,id',
+            'pincode' => 'required|string|max:10',
+            'address' => 'required|string|max:500',
             'franchise_package_id' => 'required|exists:franchise_packages,id',
         ]);
 
@@ -506,6 +522,8 @@ class FranchiseController extends Controller
         $subFranchise->state_id = $request->state_id;
         $subFranchise->city_id = $request->city_id;
         $subFranchise->area_id = $request->area_id;
+        $subFranchise->pincode = $request->pincode;
+        $subFranchise->address = $request->address;
         $subFranchise->referral_code = Str::random(10);
         $subFranchise->business_experience = $request->business_experience;
         $subFranchise->id_proof = $id_proof_path;
@@ -959,6 +977,8 @@ class FranchiseController extends Controller
         $stateFranchise->franchise_name = $request->name;
         $stateFranchise->business_experience = $request->business_experience;
         $stateFranchise->state_id = $request->state_id;
+        $stateFranchise->pincode = $request->pincode;
+        $stateFranchise->address = $request->address;
         $stateFranchise->franchise_package_id = $request->franchise_package_id;
         $stateFranchise->invalid_at = $request->invalid_at;
         $stateFranchise->commission_percentage = $request->commission_percentage ?? 0;
@@ -1028,6 +1048,9 @@ class FranchiseController extends Controller
         $franchise->business_experience = $request->business_experience;
         $franchise->state_id = $request->state_id;
         $franchise->city_id = $request->city_id;
+        $franchise->pincode = $request->pincode;
+        $franchise->address = $request->address;
+        $franchise->franchise_name = $request->name . ' Franchise';
         $franchise->franchise_package_id = $request->franchise_package_id;
         $franchise->invalid_at = $request->invalid_at;
         $franchise->commission_percentage = $request->commission_percentage ?? 0;
@@ -1098,6 +1121,8 @@ class FranchiseController extends Controller
         $subFranchise->state_id = $request->state_id;
         $subFranchise->city_id = $request->city_id;
         $subFranchise->area_id = $request->area_id;
+        $subFranchise->pincode = $request->pincode;
+        $subFranchise->address = $request->address;
         $subFranchise->franchise_package_id = $request->franchise_package_id;
         $subFranchise->franchise_id = $request->franchise_id;
         $subFranchise->invalid_at = $request->invalid_at;

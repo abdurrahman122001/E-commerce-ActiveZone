@@ -31,6 +31,8 @@
                     <th>{{translate('State')}}</th>
                     <th>{{translate('City')}}</th>
                     <th>{{translate('Area')}}</th>
+                    <th>{{translate('Pin Code')}}</th>
+                    <th>{{translate('Address')}}</th>
                     <th>{{translate('Parent Franchise')}}</th>
                     <th>{{translate('Package')}}</th>
                     <th>{{translate('Status')}}</th>
@@ -51,6 +53,8 @@
                         <td>{{ $sub->state->name ?? '' }}</td>
                         <td>{{ $sub->city->name ?? '' }}</td>
                         <td>{{ $sub->area->name ?? '' }}</td>
+                        <td>{{ $sub->pincode ?? '' }}</td>
+                        <td>{{ $sub->address ?? '' }}</td>
                         <td>{{ $sub->franchise->franchise_name ?? translate('No Parent') }}</td>
                                                 <td>
                             {{ $sub->franchise_package ? $sub->franchise_package->getTranslation('name') : '' }}

@@ -13,6 +13,8 @@ class Franchise extends Model
         'user_id',
         'state_id',
         'city_id',
+        'pincode',
+        'address',
         'franchise_name',
         'referral_code',
         'business_experience',

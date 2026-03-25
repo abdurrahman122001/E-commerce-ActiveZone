@@ -12,6 +12,8 @@ class StateFranchise extends Model
     protected $fillable = [
         'user_id',
         'state_id',
+        'pincode',
+        'address',
         'franchise_name',
         'referral_code',
         'business_experience',
