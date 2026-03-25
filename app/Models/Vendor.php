@@ -51,7 +51,8 @@ class Vendor extends Model
         'referral_code',
         'referred_by_id',
         'referral_balance',
-        'franchise_package_id'
+        'franchise_package_id',
+        'offline_payment_id'
     ];
 
     public function addedByEmployee()

@@ -66,17 +66,30 @@
                                 </p>
                             </div>
 
-                            @if($franchise->offline_package_payment_proof)
+                            @if($franchise->offline_package_payment_proof || $franchise->offline_payment_id)
                                 <div class="mb-4 text-center">
-                                    <h6 class="text-muted fw-600 mb-2">{{ translate('Currently Uploaded Proof') }}</h6>
-                                    <a href="{{ asset('storage/' . $franchise->offline_package_payment_proof) }}" target="_blank" class="btn btn-soft-info btn-sm">
-                                        <i class="las la-eye mr-1"></i>{{ translate('View Current Receipt') }}
-                                    </a>
+                                    @if($franchise->offline_package_payment_proof)
+                                        <h6 class="text-muted fw-600 mb-2">{{ translate('Currently Uploaded Proof') }}</h6>
+                                        <a href="{{ asset('storage/' . $franchise->offline_package_payment_proof) }}" target="_blank" class="btn btn-soft-info btn-sm">
+                                            <i class="las la-eye mr-1"></i>{{ translate('View Current Receipt') }}
+                                        </a>
+                                    @endif
+                                    @if($franchise->offline_payment_id)
+                                        <div class="mt-2 text-dark">
+                                            <strong>{{ translate('Transaction ID') }}:</strong> {{ $franchise->offline_payment_id }}
+                                        </div>
+                                    @endif
                                 </div>
                             @endif
 
                             <form action="{{ route('franchise.packages.payment_upload') }}" method="POST" enctype="multipart/form-data">
                                 @csrf
+                                <div class="form-group row">
+                                    <label class="col-md-3 col-form-label">{{ translate('Transaction ID') }} <span class="text-danger">*</span></label>
+                                    <div class="col-md-9">
+                                        <input type="text" name="offline_payment_id" class="form-control" placeholder="{{ translate('Enter Transaction ID') }}" required value="{{ $franchise->offline_payment_id }}">
+                                    </div>
+                                </div>
                                 <div class="form-group row">
                                     <label class="col-md-3 col-form-label">{{ translate('Payment Receipt (Image/PDF)') }} <span class="text-danger">*</span></label>
                                     <div class="col-md-9">

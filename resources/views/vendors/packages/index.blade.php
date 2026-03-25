@@ -120,6 +120,13 @@
                                 {{-- Add other payment methods here like stripe, paypal etc if available --}}
                             </select>
                         </div>
+
+                        <div id="offline_payment_fields">
+                            <div class="form-group">
+                                <label class="fs-13 fw-600 text-muted">{{ translate('Transaction ID') }} <span class="text-danger">*</span></label>
+                                <input type="text" name="offline_payment_id" class="form-control" placeholder="{{ translate('Enter Transaction ID') }}" required>
+                            </div>
+                        </div>
                         
                         <div class="alert alert-info rounded-0 fs-12 mb-4">
                             <i class="las la-info-circle mr-1"></i>

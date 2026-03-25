@@ -32,6 +32,7 @@ class StateFranchise extends Model
         'commission_type',
         'package_payment_status',
         'offline_package_payment_proof',
+        'offline_payment_id',
         'additional_doc_request',
         'additional_doc_request_note'
     ];

@@ -430,6 +430,7 @@ class VendorController extends Controller
         $vendor = \App\Models\Vendor::where('user_id', Auth::id())->first();
         if ($vendor) {
             $vendor->franchise_package_id = $request->package_id;
+            $vendor->offline_payment_id = $request->offline_payment_id;
             $vendor->status = 'pending'; // Change from unpaid to pending after selection
             $vendor->save();
             

@@ -31,6 +31,7 @@
                         <th>{{ translate('Status') }}</th>
                         <th>{{ translate('Registered By') }}</th>
                         <th>{{ translate('Referred By') }}</th>
+                        <th>{{ translate('Package') }}</th>
                         <th>{{ translate('Franchise Info') }}</th>
                         <th width="10%">{{translate('Options')}}</th>
                     </tr>
@@ -52,6 +53,9 @@
                                     <span class="badge badge-inline badge-success">{{ translate('Approved') }}</span>
                                 @elseif($vendor->status == 'pending')
                                     <span class="badge badge-inline badge-warning">{{ translate('Pending') }}</span>
+                                    @if($vendor->offline_payment_id)
+                                        <div class="mt-1 small text-muted">TXN ID: {{ $vendor->offline_payment_id }}</div>
+                                    @endif
                                 @else
                                     <span class="badge badge-inline badge-danger">{{ translate('Rejected') }}</span>
                                 @endif
@@ -68,6 +72,14 @@
                                     {{ $vendor->referrer->shop_name }} ({{ $vendor->referrer->referral_code }})
                                 @else
                                     <span class="badge badge-inline badge-secondary">{{ translate('Direct') }}</span>
+                                @endif
+                            </td>
+                            <td>
+                                @if($vendor->franchise_package)
+                                    {{ $vendor->franchise_package->getTranslation('name') }}
+                                    <br><b>{{ single_price($vendor->franchise_package->price) }}</b>
+                                @else
+                                    <span class="text-muted">{{ translate('No Package') }}</span>
                                 @endif
                             </td>
                             <td>

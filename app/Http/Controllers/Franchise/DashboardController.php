@@ -402,11 +402,14 @@ class DashboardController extends Controller
         }
 
         if ($franchise) {
+            $franchise->offline_payment_id = $request->offline_payment_id;
             if ($request->hasFile('payment_proof')) {
                 $franchise->offline_package_payment_proof = $request->file('payment_proof')->store('uploads/franchise/package_payments', 'public');
                 $franchise->package_payment_status = 'pending';
                 $franchise->save();
                 flash(translate('Payment proof uploaded successfully. Wait for admin verification.'))->success();
+            } else {
+                $franchise->save();
             }
         }
 
