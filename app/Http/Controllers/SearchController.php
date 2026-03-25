@@ -16,6 +16,7 @@ use App\Models\PreorderProductCategory;
 use App\Models\ProductCategory;
 use App\Utility\CategoryUtility;
 use Carbon\Carbon;
+use Session;
 
 class SearchController extends Controller
 {
@@ -662,7 +663,29 @@ class SearchController extends Controller
 
         $categories = Category::where('name', 'like', '%' . $query . '%')->get()->take(3);
 
-        $shops = Shop::whereIn('user_id', verified_sellers_id())->where('name', 'like', '%' . $query . '%')->get()->take(3);
+        $shop_query = Shop::whereIn('user_id', verified_sellers_id())->where('name', 'like', '%' . $query . '%');
+        if (Session::has('selected_area_id')) {
+            $area_id = Session::get('selected_area_id');
+            $shop_query->whereHas('user.vendor', function($q) use ($area_id) {
+                $q->where('area_id', $area_id);
+            });
+        } elseif (Session::has('selected_city_id')) {
+            $city_id = Session::get('selected_city_id');
+            $shop_query->whereHas('user.vendor', function($q) use ($city_id) {
+                $q->where('city_id', $city_id);
+            });
+        } elseif (Session::has('selected_state_id')) {
+            $state_id = Session::get('selected_state_id');
+            $shop_query->whereHas('user.vendor', function($q) use ($state_id) {
+                $q->where('state_id', $state_id);
+            });
+        } elseif (Session::has('selected_country_id')) {
+            $country_id = Session::get('selected_country_id');
+            $shop_query->whereHas('user.vendor.city', function($q) use ($country_id) {
+                $q->where('country_id', $country_id);
+            });
+        }
+        $shops = $shop_query->get()->take(3);
 
         if (addon_is_activated('preorder')) {
             $preorder_products =  PreorderProduct::where('is_published', 1)

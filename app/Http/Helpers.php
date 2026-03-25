@@ -147,15 +147,25 @@ if (!function_exists('filter_products')) {
             $products = $products->where('wholesale_product', 0);
         }
 
-        // Location Filtering
-        if (Session::has('selected_city_id')) {
+        // Location Filtering — most specific wins (area > city > state > country)
+        if (Session::has('selected_area_id')) {
+            $area_id = Session::get('selected_area_id');
+            $products = $products->whereHas('user.vendor', function($q) use ($area_id) {
+                $q->where('area_id', $area_id);
+            });
+        } elseif (Session::has('selected_city_id')) {
             $city_id = Session::get('selected_city_id');
             $products = $products->whereHas('user.vendor', function($q) use ($city_id) {
                 $q->where('city_id', $city_id);
             });
+        } elseif (Session::has('selected_state_id')) {
+            $state_id = Session::get('selected_state_id');
+            $products = $products->whereHas('user.vendor', function($q) use ($state_id) {
+                $q->where('state_id', $state_id);
+            });
         } elseif (Session::has('selected_country_id')) {
             $country_id = Session::get('selected_country_id');
-            $products = $products->whereHas('user.vendor', function($q) use ($country_id) {
+            $products = $products->whereHas('user.vendor.city', function($q) use ($country_id) {
                 $q->where('country_id', $country_id);
             });
         }
@@ -2541,8 +2551,31 @@ if (!function_exists('get_user_wishlist')) {
 if (!function_exists('get_best_sellers')) {
     function get_best_sellers($limit = '')
     {
-        return Cache::remember('best_selers', 86400, function () use ($limit) {
-            return Shop::where('verification_status', 1)->orderBy('num_of_sale', 'desc')->take($limit)->get();
+        $cache_key = 'best_sellers_' . $limit . '_' . Session::get('selected_area_id','0') . '_' . Session::get('selected_city_id','0') . '_' . Session::get('selected_state_id','0') . '_' . Session::get('selected_country_id','0');
+        return Cache::remember($cache_key, 86400, function () use ($limit) {
+            $shop_query = Shop::where('verification_status', 1)->orderBy('num_of_sale', 'desc');
+            if (Session::has('selected_area_id')) {
+                $area_id = Session::get('selected_area_id');
+                $shop_query->whereHas('user.vendor', function($q) use ($area_id) {
+                    $q->where('area_id', $area_id);
+                });
+            } elseif (Session::has('selected_city_id')) {
+                $city_id = Session::get('selected_city_id');
+                $shop_query->whereHas('user.vendor', function($q) use ($city_id) {
+                    $q->where('city_id', $city_id);
+                });
+            } elseif (Session::has('selected_state_id')) {
+                $state_id = Session::get('selected_state_id');
+                $shop_query->whereHas('user.vendor', function($q) use ($state_id) {
+                    $q->where('state_id', $state_id);
+                });
+            } elseif (Session::has('selected_country_id')) {
+                $country_id = Session::get('selected_country_id');
+                $shop_query->whereHas('user.vendor.city', function($q) use ($country_id) {
+                    $q->where('country_id', $country_id);
+                });
+            }
+            return $shop_query->take($limit)->get();
         });
     }
 }
@@ -3456,6 +3489,29 @@ if (!function_exists('preorder_payment_type')) {
 if (!function_exists('filter_preorder_product')) {
     function filter_preorder_product($products)
     {
+        // Location Filtering — most specific wins (area > city > state > country)
+        if (Session::has('selected_area_id')) {
+            $area_id = Session::get('selected_area_id');
+            $products = $products->whereHas('user.vendor', function($q) use ($area_id) {
+                $q->where('area_id', $area_id);
+            });
+        } elseif (Session::has('selected_city_id')) {
+            $city_id = Session::get('selected_city_id');
+            $products = $products->whereHas('user.vendor', function($q) use ($city_id) {
+                $q->where('city_id', $city_id);
+            });
+        } elseif (Session::has('selected_state_id')) {
+            $state_id = Session::get('selected_state_id');
+            $products = $products->whereHas('user.vendor', function($q) use ($state_id) {
+                $q->where('state_id', $state_id);
+            });
+        } elseif (Session::has('selected_country_id')) {
+            $country_id = Session::get('selected_country_id');
+            $products = $products->whereHas('user.vendor.city', function($q) use ($country_id) {
+                $q->where('country_id', $country_id);
+            });
+        }
+
         if (get_setting('vendor_system_activation') == 1) {
             return $products->where(function ($query) {
                 $query->whereHas('user', function ($q) {

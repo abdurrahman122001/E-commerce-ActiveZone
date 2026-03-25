@@ -95,7 +95,8 @@ class HomeController extends Controller
                 ->get();
             return view('frontend.' . get_setting('homepage_select') . '.partials.newest_products_section', compact('newest_products'));
         }
-        $newest_products = Cache::remember('newest_products', 3600, function () use ($limit) {
+        $cache_key = 'newest_products_' . $limit . '_' . Session::get('selected_area_id', '0') . '_' . Session::get('selected_city_id', '0') . '_' . Session::get('selected_country_id', '0');
+        $newest_products = Cache::remember($cache_key, 3600, function () use ($limit) {
             return filter_products(Product::latest())->take($limit)->get();
         });
 
@@ -134,14 +135,8 @@ class HomeController extends Controller
     {
 
         // $preorder_products = Cache::remember('preorder_products', 3600, function () {
-            $preorder_products = PreorderProduct::where('is_published', 1)->where('is_featured',1)
-            ->where(function ($query) {
-                $query->whereHas('user', function ($q) {
-                    $q->where('user_type', 'admin');
-                })->orWhereHas('user.shop', function ($q) {
-                    $q->where('verification_status', 1);
-                });
-            })
+            $preorder_products = PreorderProduct::where('is_published', 1)->where('is_featured',1);
+            $preorder_products = filter_preorder_product($preorder_products)
             ->latest()
             ->limit(12)
             ->get();
@@ -1026,8 +1021,31 @@ class HomeController extends Controller
         if (get_setting('vendor_system_activation') != 1) {
             return redirect()->route('home');
         }
-        $shops = Shop::whereIn('user_id', verified_sellers_id())
-            ->paginate(15);
+        $shop_query = Shop::whereIn('user_id', verified_sellers_id());
+
+        if (Session::has('selected_area_id')) {
+            $area_id = Session::get('selected_area_id');
+            $shop_query->whereHas('user.vendor', function($q) use ($area_id) {
+                $q->where('area_id', $area_id);
+            });
+        } elseif (Session::has('selected_city_id')) {
+            $city_id = Session::get('selected_city_id');
+            $shop_query->whereHas('user.vendor', function($q) use ($city_id) {
+                $q->where('city_id', $city_id);
+            });
+        } elseif (Session::has('selected_state_id')) {
+            $state_id = Session::get('selected_state_id');
+            $shop_query->whereHas('user.vendor', function($q) use ($state_id) {
+                $q->where('state_id', $state_id);
+            });
+        } elseif (Session::has('selected_country_id')) {
+            $country_id = Session::get('selected_country_id');
+            $shop_query->whereHas('user.vendor.city', function($q) use ($country_id) {
+                $q->where('country_id', $country_id);
+            });
+        }
+
+        $shops = $shop_query->paginate(15);
 
         return view('frontend.shop_listing', compact('shops'));
     }
