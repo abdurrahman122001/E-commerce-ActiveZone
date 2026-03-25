@@ -130,7 +130,8 @@
                         <td>
                             @if($vendor->referrer)
                                 <span class="badge badge-inline badge-info">{{ $vendor->referrer->referral_code }}</span>
-                                <br><small class="text-muted">({{ $vendor->referrer->user->name ?? translate('N/A') }})</small>
+                                <br><small class="text-muted"><b>{{ translate('Referrer') }}:</b> {{ $vendor->referrer->shop_name ?? translate('N/A') }}</small>
+                                <br><small class="text-muted text-truncate-1">({{ $vendor->referrer->user->name ?? translate('N/A') }})</small>
                             @else
                                 <span class="text-muted">{{ translate('None') }}</span>
                             @endif

@@ -43,15 +43,8 @@ class FranchiseEmployeeController extends Controller
         $employee_id = $request->employee_id;
         $date_range = $request->date_range;
         $search = $request->search;
-        $vendors = \App\Models\Vendor::with(['user', 'franchise_package', 'referrer', 'area', 'city', 'state']);
-        if (Auth::user()->user_type == 'admin') {
-            // Show vendors linked to any level of franchise
-            $vendors = $vendors->where(function($q) {
-                $q->whereNotNull('franchise_id')
-                  ->orWhereNotNull('sub_franchise_id')
-                  ->orWhereNotNull('state_franchise_id');
-            });
-        } elseif (Auth::user()->user_type == 'state_franchise') {
+        $vendors = \App\Models\Vendor::with(['user', 'franchise_package', 'referrer', 'referrer.user', 'area', 'city', 'state']);
+        if (Auth::user()->user_type == 'state_franchise') {
             $state_franchise_id = Auth::user()->state_franchise->id;
             $vendors = $vendors->where(function($q) use ($state_franchise_id) {
                 $q->where('state_franchise_id', $state_franchise_id)
@@ -95,6 +88,13 @@ class FranchiseEmployeeController extends Controller
                       $q2->where('name', 'like', '%'.$search.'%')
                         ->orWhere('email', 'like', '%'.$search.'%')
                         ->orWhere('phone', 'like', '%'.$search.'%');
+                  })
+                  ->orWhereHas('referrer', function($q3) use ($search) {
+                      $q3->where('referral_code', 'like', '%'.$search.'%')
+                        ->orWhere('shop_name', 'like', '%'.$search.'%')
+                        ->orWhereHas('user', function($q4) use ($search) {
+                            $q4->where('name', 'like', '%'.$search.'%');
+                        });
                   });
             });
         }

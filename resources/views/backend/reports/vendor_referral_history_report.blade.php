@@ -55,13 +55,14 @@
                         @foreach ($referral_history as $key => $history)
                         <tr>
                             <td>{{ ($key+1) + ($referral_history->currentPage() - 1)*$referral_history->perPage() }}</td>
-                            <td>
-                                @if($history->referrer)
-                                    {{ $history->referrer->user->name ?? $history->referrer->shop_name }}
-                                @else
-                                    <span class="text-danger">{{ translate('Deleted') }}</span>
-                                @endif
-                            </td>
+                             <td>
+                                 @if($history->referrer)
+                                     {{ $history->referrer->shop_name ?? ($history->referrer->user->name ?? translate('N/A')) }}
+                                     <br><small class="badge badge-inline badge-info">{{ $history->referrer->referral_code }}</small>
+                                 @else
+                                     <span class="text-danger">{{ translate('Deleted') }}</span>
+                                 @endif
+                             </td>
                             <td>
                                 @if($history->referredVendor)
                                     {{ $history->referredVendor->user->name ?? $history->referredVendor->shop_name }}

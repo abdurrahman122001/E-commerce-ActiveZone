@@ -645,3 +645,9 @@ Route::controller(PageController::class)->group(function () {
 Route::controller(ContactController::class)->group(function () {
     Route::post('/contact', 'contact')->name('contact');
 });
+
+// Location Selection
+Route::controller(App\Http\Controllers\LocationController::class)->group(function () {
+    Route::post('/location/set', 'setLocation')->name('location.set');
+    Route::post('/location/get-cities-by-country', 'getCitiesByCountry')->name('location.get-city-by-country');
+});

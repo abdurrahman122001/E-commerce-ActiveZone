@@ -166,7 +166,7 @@
 
                 </button>
                 <!-- Header Logo -->
-                <div class="col-auto pl-0 pr-3 d-flex align-items-center">
+                <div class="col-auto pl-0 pr-3 d-flex align-items-center border-right">
                     <a class="d-block py-20px mr-3 ml-0" href="{{ route('home') }}">
                         @php
                             $header_logo = get_setting('header_logo');
@@ -180,6 +180,12 @@
                         @endif
                     </a>
                 </div>
+                
+                <!-- Location Picker -->
+                <div class="col-auto d-none d-lg-block">
+                    @include('frontend.partials.location_picker')
+                </div>
+
                 <!-- Search Icon for small device -->
                 <div class="d-lg-none ml-auto mr-0">
                     <a class="p-2 d-block text-reset" href="javascript:void(0);" data-toggle="class-toggle"
@@ -188,7 +194,7 @@
                     </a>
                 </div>
                 <!-- Search field -->
-                <div class="flex-grow-1 front-header-search d-flex align-items-center bg-white mx-xl-5">
+                <div class="flex-grow-1 front-header-search d-flex align-items-center bg-white mx-xl-3">
                     <div class="position-relative flex-grow-1 px-3 px-lg-0">
                         <form action="{{ route('search') }}" method="GET" class="stop-propagation">
                             <div class="d-flex position-relative align-items-center">

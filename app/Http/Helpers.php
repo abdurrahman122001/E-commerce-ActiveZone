@@ -146,6 +146,20 @@ if (!function_exists('filter_products')) {
         if (!addon_is_activated('wholesale')) {
             $products = $products->where('wholesale_product', 0);
         }
+
+        // Location Filtering
+        if (Session::has('selected_city_id')) {
+            $city_id = Session::get('selected_city_id');
+            $products = $products->whereHas('user.vendor', function($q) use ($city_id) {
+                $q->where('city_id', $city_id);
+            });
+        } elseif (Session::has('selected_country_id')) {
+            $country_id = Session::get('selected_country_id');
+            $products = $products->whereHas('user.vendor', function($q) use ($country_id) {
+                $q->where('country_id', $country_id);
+            });
+        }
+
         $verified_sellers = verified_sellers_id();
         if (get_setting('vendor_system_activation') == 1) {
             return $products->where(function ($p) use ($verified_sellers) {

@@ -29,8 +29,18 @@ class VendorReferralCommissionHistory extends Model
         return $this->belongsTo(Vendor::class, 'referred_vendor_id');
     }
 
+    public function referredVendor()
+    {
+        return $this->belongsTo(Vendor::class, 'referred_vendor_id');
+    }
+
     public function franchise_package()
     {
         return $this->belongsTo(FranchisePackage::class);
+    }
+
+    public function package()
+    {
+        return $this->belongsTo(FranchisePackage::class, 'franchise_package_id');
     }
 }
