@@ -144,13 +144,16 @@
                             @elseif($reg->package_payment_status == 'pending')
                                 <span class="badge badge-inline badge-warning">{{translate('Pending')}}</span>
                                 @if($reg->offline_package_payment_proof)
-                                    <a href="{{ asset('storage/'.$reg->offline_package_payment_proof) }}" target="_blank" class="btn btn-xs btn-outline-info ml-1">{{ translate('Proof') }}</a>
-                                @endif
-                                @if($reg->offline_payment_id)
-                                    <div class="mt-1 small text-muted">TXN ID: {{ $reg->offline_payment_id }}</div>
+                                    <a href="{{ asset('public/storage/'.$reg->offline_package_payment_proof) }}" target="_blank" class="btn btn-xs btn-outline-info ml-1">{{ translate('Proof') }}</a>
                                 @endif
                             @else
                                 <span class="badge badge-inline badge-danger">{{translate('Unpaid')}}</span>
+                            @endif
+
+                            @if($reg->offline_payment_id)
+                                <div class="mt-1 small text-dark">
+                                    <b>{{ translate('TXN ID') }}:</b> {{ $reg->offline_payment_id }}
+                                </div>
                             @endif
                         </td>
                         <td>{{ $reg->created_at->format('Y-m-d H:i:s') }}</td>

@@ -70,7 +70,7 @@
                                 <div class="mb-4 text-center">
                                     @if($franchise->offline_package_payment_proof)
                                         <h6 class="text-muted fw-600 mb-2">{{ translate('Currently Uploaded Proof') }}</h6>
-                                        <a href="{{ asset('storage/' . $franchise->offline_package_payment_proof) }}" target="_blank" class="btn btn-soft-info btn-sm">
+                                        <a href="{{ asset('public/storage/' . $franchise->offline_package_payment_proof) }}" target="_blank" class="btn btn-soft-info btn-sm">
                                             <i class="las la-eye mr-1"></i>{{ translate('View Current Receipt') }}
                                         </a>
                                     @endif

@@ -79,7 +79,7 @@
                             @elseif($sub->package_payment_status == 'pending')
                                 <span class="badge badge-inline badge-warning">{{translate('Pending')}}</span>
                                 @if($sub->offline_package_payment_proof)
-                                    <a href="{{ asset('storage/'.$sub->offline_package_payment_proof) }}" target="_blank" class="btn btn-xs btn-outline-info ml-1">{{ translate('View Proof') }}</a>
+                                    <a href="{{ asset('public/storage/'.$sub->offline_package_payment_proof) }}" target="_blank" class="btn btn-xs btn-outline-info ml-1">{{ translate('View Proof') }}</a>
                                 @endif
                                 <a href="{{ route('admin.franchise.payment_approve', ['id'=>$sub->id, 'type'=>'sub_franchise']) }}" class="btn btn-xs btn-outline-success ml-1" title="{{ translate('Approve Payment') }}"><i class="las la-check"></i></a>
                             @else
@@ -88,10 +88,10 @@
                         </td>
                         <td>
                             @if($sub->id_proof)
-                                <a href="{{ asset('storage/'.$sub->id_proof) }}" target="_blank" class="btn btn-sm btn-info mb-1">{{ translate('Front') }}</a>
+                                <a href="{{ asset('public/storage/'.$sub->id_proof) }}" target="_blank" class="btn btn-sm btn-info mb-1">{{ translate('Front') }}</a>
                             @endif
                             @if($sub->id_proof_back)
-                                <a href="{{ asset('storage/'.$sub->id_proof_back) }}" target="_blank" class="btn btn-sm btn-info">{{ translate('Back') }}</a>
+                                <a href="{{ asset('public/storage/'.$sub->id_proof_back) }}" target="_blank" class="btn btn-sm btn-info">{{ translate('Back') }}</a>
                             @endif
                         </td>
                         <td>{{ $sub->pan_number }}</td>

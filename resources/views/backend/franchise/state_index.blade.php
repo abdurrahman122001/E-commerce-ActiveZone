@@ -74,7 +74,7 @@
                             @elseif($franchise->package_payment_status == 'pending')
                                 <span class="badge badge-inline badge-warning">{{translate('Pending')}}</span>
                                 @if($franchise->offline_package_payment_proof)
-                                    <a href="{{ asset('storage/'.$franchise->offline_package_payment_proof) }}" target="_blank" class="btn btn-xs btn-outline-info ml-1">{{ translate('View Proof') }}</a>
+                                    <a href="{{ asset('public/storage/'.$franchise->offline_package_payment_proof) }}" target="_blank" class="btn btn-xs btn-outline-info ml-1">{{ translate('View Proof') }}</a>
                                 @endif
                                 <a href="{{ route('admin.franchise.payment_approve', ['id'=>$franchise->id, 'type'=>'state_franchise']) }}" class="btn btn-xs btn-outline-success ml-1" title="{{ translate('Approve Payment') }}"><i class="las la-check"></i></a>
                             @else
@@ -83,10 +83,10 @@
                         </td>
                         <td>
                             @if($franchise->id_proof)
-                                <a href="{{ asset('storage/'.$franchise->id_proof) }}" target="_blank" class="btn btn-sm btn-info mb-1">{{ translate('Front') }}</a>
+                                <a href="{{ asset('public/storage/'.$franchise->id_proof) }}" target="_blank" class="btn btn-sm btn-info mb-1">{{ translate('Front') }}</a>
                             @endif
                             @if($franchise->id_proof_back)
-                                <a href="{{ asset('storage/'.$franchise->id_proof_back) }}" target="_blank" class="btn btn-sm btn-info">{{ translate('Back') }}</a>
+                                <a href="{{ asset('public/storage/'.$franchise->id_proof_back) }}" target="_blank" class="btn btn-sm btn-info">{{ translate('Back') }}</a>
                             @endif
                         </td>
                         <td>

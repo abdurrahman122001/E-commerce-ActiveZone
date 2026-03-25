@@ -15015,3 +15015,4 @@
 #33 C:\\Users\\Dell\\Downloads\\E-Commerce ActiveZone\\artisan(35): Illuminate\\Foundation\\Console\\Kernel->handle(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
 #34 {main}
 "} 
+[2026-03-25 12:55:36] local.INFO: Authenticated method called {"user_id":9,"user_type":"admin"} 

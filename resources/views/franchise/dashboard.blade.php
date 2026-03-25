@@ -94,7 +94,7 @@
                                     @enderror
                                     @if($id_proof)
                                         <div class="mt-2">
-                                            <a href="{{ asset('storage/' . $id_proof) }}" target="_blank" class="btn btn-sm btn-soft-info">{{ translate('View Current Front') }}</a>
+                                            <a href="{{ asset('public/storage/' . $id_proof) }}" target="_blank" class="btn btn-sm btn-soft-info">{{ translate('View Current Front') }}</a>
                                         </div>
                                     @endif
                                 </div>
@@ -111,7 +111,7 @@
                                     @enderror
                                     @if($id_proof_back)
                                         <div class="mt-2">
-                                            <a href="{{ asset('storage/' . $id_proof_back) }}" target="_blank" class="btn btn-sm btn-soft-info">{{ translate('View Current Back') }}</a>
+                                            <a href="{{ asset('public/storage/' . $id_proof_back) }}" target="_blank" class="btn btn-sm btn-soft-info">{{ translate('View Current Back') }}</a>
                                         </div>
                                     @endif
                                 </div>

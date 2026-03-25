@@ -51,6 +51,8 @@ use App\Http\Controllers\SupportTicketController;
 use App\Http\Controllers\WalletController;
 use App\Http\Controllers\WishlistController;
 use App\Http\Controllers\SizeChartController;
+use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\File;
 
 /*
   |--------------------------------------------------------------------------
@@ -653,4 +655,70 @@ Route::controller(App\Http\Controllers\LocationController::class)->group(functio
     Route::post('/location/get-states-by-country', 'getStatesByCountry')->name('location.get-states-by-country');
     Route::post('/location/get-cities-by-state', 'getCitiesByState')->name('location.get-cities-by-state');
     Route::post('/location/get-areas-by-city', 'getAreasByCity')->name('location.get-areas-by-city');
+});
+
+Route::get('/storage-link', function () {
+    $target = storage_path('app/public');
+    $link = public_path('storage');
+    $relativePath = '../storage/app/public';
+
+    // 1. Check if it already exists
+    if (file_exists($link)) {
+        return 'The "public/storage" directory or link already exists. If it is not working, you MUST delete it via File Manager before running this again.';
+    }
+
+    // 2. Ensure target exists
+    if (!is_dir($target)) {
+        File::makeDirectory($target, 0775, true);
+    }
+
+    // 3. Try Artisan command
+    try {
+        Artisan::call('storage:link');
+        if (file_exists($link)) return 'Storage linked successfully via Artisan!';
+    } catch (\Exception $e) {}
+
+    // 4. Try Shell Command (Best for Hostinger)
+    try {
+        if (function_exists('exec')) {
+            $command = "ln -s $relativePath $link";
+            exec($command);
+            if (file_exists($link)) return 'Storage linked successfully via Shell Command (Hostinger Trick)!';
+        }
+    } catch (\Exception $e) {}
+
+    // 5. Try PHP symlink function
+    try {
+        if (function_exists('symlink')) {
+            if (symlink($relativePath, $link)) return 'Storage linked successfully via PHP symlink()!';
+        }
+    } catch (\Exception $e) {}
+
+    // 6. Final Fallback: Copy (Not recommended but allows images to show)
+    try {
+        if (File::copyDirectory($target, $link)) {
+            return 'WARNING: Symlink failed. Files were COPIED instead. New uploads will not show up until you run this again. Please enable "symlink" in Hostinger PHP settings.';
+        }
+    } catch (\Exception $e) {
+        return 'Error: ' . $e->getMessage();
+    }
+
+    return 'Could not link or copy storage. Please check server permissions.';
+});
+
+Route::get('/migrate', function () {
+    try {
+        Artisan::call('migrate', ['--force' => true]);
+        return 'Database migrated successfully.';
+    } catch (\Exception $e) {
+        return 'Error: ' . $e->getMessage();
+    }
+});
+
+Route::get('/clear-cache', function () {
+    Artisan::call('cache:clear');
+    Artisan::call('config:clear');
+    Artisan::call('route:clear');
+    Artisan::call('view:clear');
+    return 'All cache cleared successfully.';
 });

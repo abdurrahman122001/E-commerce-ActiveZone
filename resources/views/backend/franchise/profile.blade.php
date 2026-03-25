@@ -117,7 +117,7 @@
                     <label>{{translate('Aadhar Card Front')}}</label>
                     @if($id_proof)
                         <div>
-                            <a href="{{ asset('storage/'.$id_proof) }}" target="_blank" class="btn btn-sm btn-soft-info">{{ translate('View Document') }}</a>
+                            <a href="{{ asset('public/storage/'.$id_proof) }}" target="_blank" class="btn btn-sm btn-soft-info">{{ translate('View Document') }}</a>
                         </div>
                     @else
                         <p>{{ translate('Not Provided') }}</p>
@@ -127,7 +127,7 @@
                     <label>{{translate('Aadhar Card Back')}}</label>
                     @if($id_proof_back)
                         <div>
-                            <a href="{{ asset('storage/'.$id_proof_back) }}" target="_blank" class="btn btn-sm btn-soft-info">{{ translate('View Document') }}</a>
+                            <a href="{{ asset('public/storage/'.$id_proof_back) }}" target="_blank" class="btn btn-sm btn-soft-info">{{ translate('View Document') }}</a>
                         </div>
                     @else
                         <p>{{ translate('Not Provided') }}</p>
@@ -167,6 +167,53 @@
     </div>
 
     <div class="col-lg-9">
+        @php
+            $franchise_data = $user->franchise ?? $user->sub_franchise ?? $user->state_franchise ?? null;
+        @endphp
+        @if($franchise_data)
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0 h6">{{translate('Payment Info')}}</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-4 text-center">
+                        <label class="d-block">{{translate('Payment Status')}}</label>
+                        @if($franchise_data->package_payment_status == 'paid')
+                            <span class="badge badge-inline badge-success">{{translate('Paid')}}</span>
+                        @elseif($franchise_data->package_payment_status == 'pending')
+                            <span class="badge badge-inline badge-warning">{{translate('Pending')}}</span>
+                        @else
+                            <span class="badge badge-inline badge-danger">{{translate('Unpaid')}}</span>
+                        @endif
+                    </div>
+                    
+                    @if($franchise_data->offline_payment_id)
+                    <div class="col-md-4 text-center border-left">
+                        <label class="d-block font-weight-bold text-dark">{{translate('Payment Method')}}</label>
+                        <span class="badge badge-inline badge-info">{{translate('Offline')}}</span>
+                    </div>
+                    <div class="col-md-4 text-center border-left">
+                        <label class="d-block font-weight-bold text-dark">{{translate('Transaction ID')}}</label>
+                        <p class="mb-0 font-weight-bold text-dark" style="font-size: 14px; letter-spacing: 0.5px; word-break: break-all;">
+                            {{ $franchise_data->offline_payment_id }}
+                        </p>
+                    </div>
+                    @endif
+
+                    @if($franchise_data->offline_package_payment_proof)
+                    <div class="col-md-12 text-center mt-3 pt-3 border-top">
+                        <label class="mr-2">{{translate('Payment Proof')}}:</label>
+                        <a href="{{ asset('public/storage/'.$franchise_data->offline_package_payment_proof) }}" target="_blank" class="btn btn-sm btn-soft-info">
+                            <i class="las la-eye"></i> {{translate('View Proof')}}
+                        </a>
+                    </div>
+                    @endif
+                </div>
+            </div>
+        </div>
+        @endif
+
         <div class="row">
             <div class="col-md-3">
                 <div class="card bg-primary text-white">

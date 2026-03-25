@@ -119,6 +119,56 @@
             </form>
         </div>
     </div>
+
+    <div class="card mt-4">
+        <div class="card-header">
+            <h5 class="mb-0 h6">{{ translate('Payment Info') }}</h5>
+        </div>
+        <div class="card-body">
+            @if($role_data)
+                <div class="form-group row">
+                    <label class="col-md-2 col-from-label">{{ translate('Payment Status') }}</label>
+                    <div class="col-md-10">
+                        @if($role_data->package_payment_status == 'paid')
+                            <span class="badge badge-inline badge-success">{{ translate('Paid') }}</span>
+                        @elseif($role_data->package_payment_status == 'pending')
+                            <span class="badge badge-inline badge-warning">{{ translate('Pending') }}</span>
+                        @else
+                            <span class="badge badge-inline badge-danger">{{ translate('Unpaid') }}</span>
+                        @endif
+                    </div>
+                </div>
+
+                @if($role_data->offline_payment_id)
+                    <div class="form-group row">
+                        <label class="col-md-2 col-from-label">{{ translate('Payment Method') }}</label>
+                        <div class="col-md-10">
+                            <span class="badge badge-inline badge-info">{{ translate('Offline') }}</span>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-md-2 col-from-label">{{ translate('Transaction ID') }}</label>
+                        <div class="col-md-10">
+                            <span class="font-weight-bold text-dark" style="font-size: 14px; letter-spacing: 0.5px; word-break: break-all;">
+                                {{ $role_data->offline_payment_id }}
+                            </span>
+                        </div>
+                    </div>
+                @endif
+                
+                @if($role_data->offline_package_payment_proof)
+                    <div class="form-group row">
+                        <label class="col-md-2 col-from-label">{{ translate('Payment Proof') }}</label>
+                        <div class="col-md-10">
+                            <a href="{{ asset('public/storage/'.$role_data->offline_package_payment_proof) }}" target="_blank" class="btn btn-sm btn-soft-info">
+                                <i class="las la-eye"></i> {{ translate('View Proof') }}
+                            </a>
+                        </div>
+                    </div>
+                @endif
+            @endif
+        </div>
+    </div>
 @endsection
 @section('script')
     <script type="text/javascript">
